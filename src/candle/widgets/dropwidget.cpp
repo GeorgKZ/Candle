@@ -72,9 +72,11 @@ void DropWidget::dragMoveEvent(QDragMoveEvent *dme)
             foreach (QGroupBox* b, bl) yl << b->pos().y();
             qSort(yl.begin(), yl.end());
 
-            int i = 0;
-            while (y >= yl.at(i) && i < yl.count()) i++;
-
+            int i;
+            for (i = 0; i < yl.count(); ++i) {
+                if (yl.at(i) > y) break;
+            }
+            
             if (i != m_layoutIndex) {
                 static_cast<QVBoxLayout*>(layout())->insertWidget(i - 1, f);
                 if (!f->isVisible()) f->setVisible(true);
