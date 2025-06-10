@@ -4,8 +4,8 @@
 #ifndef GCODETABLEMODEL_H
 #define GCODETABLEMODEL_H
 
-#include <QAbstractTableModel>
-#include <QString>
+#include <QtCore/QAbstractTableModel>
+#include <QtCore/QString>
 
 struct GCodeItem
 {

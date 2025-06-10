@@ -4,10 +4,10 @@
 #ifndef HEIGHTMAPINTERPOLATIONDRAWER_H
 #define HEIGHTMAPINTERPOLATIONDRAWER_H
 
-#include <QObject>
-#include <QVector>
-#include <QVector3D>
-#include <QColor>
+#include <QtCore/QObject>
+#include <QtCore/QVector>
+#include <QtGui/QVector4D>
+#include <QtGui/QColor>
 #include "shaderdrawable.h"
 #include "utils/util.h"
 

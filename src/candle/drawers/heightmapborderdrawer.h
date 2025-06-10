@@ -4,7 +4,7 @@
 #ifndef HEIGHTMAPBORDERDRAWER_H
 #define HEIGHTMAPBORDERDRAWER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 #include "shaderdrawable.h"
 
 class HeightMapBorderDrawer : public ShaderDrawable

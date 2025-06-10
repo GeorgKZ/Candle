@@ -1,14 +1,15 @@
 #ifndef WIDGETMIMEDATA_H
 #define WIDGETMIMEDATA_H
 
-#include <QMimeData>
-#include <QWidget>
+#include <QtCore/QMimeData>
+#include <QtWidgets/QWidget>
 
 class WidgetMimeData: public QMimeData
 {
 public:
     WidgetMimeData(): QMimeData()
     {
+        m_widget = nullptr;
     }
 
     static QString mimeType()

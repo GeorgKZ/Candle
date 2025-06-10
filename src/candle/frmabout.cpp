@@ -1,7 +1,8 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#include <QDesktopServices>
+#include <QtGui/QDesktopServices>
+#include <QtCore/QFile>
 #include "frmabout.h"
 #include "ui_frmabout.h"
 
@@ -11,7 +12,7 @@ frmAbout::frmAbout(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->lblAbout->setText(ui->lblAbout->text().arg(qApp->applicationVersion()));
+    ui->lblAbout->setText(ui->lblAbout->text().arg(qApp->applicationVersion() + ", Qt " + QString(qVersion()) + ", " + QSysInfo::prettyProductName()));
 
     QFile file(qApp->applicationDirPath() + "/LICENSE");
 

@@ -76,8 +76,5 @@ bin
 #pdb
 *.pdb
 
-#script bindings binaries
-src/scriptbindings/plugins/script
-
 #rc
 src/candle/Candle_resource.rc

@@ -4,9 +4,9 @@
 #ifndef TOOLDRAWER_H
 #define TOOLDRAWER_H
 
-#include <QVector3D>
-#include <QTimer>
-#include <QColor>
+#include <QtCore/QTimer>
+#include <QtGui/QVector4D>
+#include <QtGui/QColor>
 #include <cmath>
 #include "shaderdrawable.h"
 
@@ -21,8 +21,8 @@ public:
     double toolLength() const;
     void setToolLength(double toolLength);
 
-    QVector3D toolPosition() const;
-    void setToolPosition(const QVector3D &toolPosition);
+    QVector4D toolPosition() const;
+    void setToolPosition(const QVector4D &toolPosition);
 
     double rotationAngle() const;
     void setRotationAngle(double rotationAngle);
@@ -45,13 +45,13 @@ private:
     double m_toolDiameter;
     double m_toolLength;
     double m_endLength;
-    QVector3D m_toolPosition;
+    QVector4D m_toolPosition;
     double m_rotationAngle;
     double m_toolAngle;
     QColor m_color;
 
     double normalizeAngle(double angle);
-    QVector<VertexData> createCircle(QVector3D center, double radius, int arcs, QVector3D color);
+    QVector<VertexData> createCircle(QVector4D center, double radius, int arcs, QVector3D color);
 };
 
 #endif // TOOLDRAWER_H

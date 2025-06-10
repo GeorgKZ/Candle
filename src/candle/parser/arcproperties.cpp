@@ -11,4 +11,5 @@ ArcProperties::ArcProperties()
 {
     radius = 0;
     center = NULL;
+    isClockwise = false;
 }

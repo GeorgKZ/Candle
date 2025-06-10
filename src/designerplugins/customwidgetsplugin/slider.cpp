@@ -12,7 +12,7 @@ void Slider::paintEvent(QPaintEvent *ev)
     if (this->currentValue() != this->value()) {
 
         QPainter painter(this);
-        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setRenderHint(QPainter::Antialiasing, true);
 
         QImage image(":/images/handle2s1.png");
         int pos = ((double)this->width() - 18) / (this->maximum() - this->minimum()) * (this->m_currentValue - this->minimum()) + 9;

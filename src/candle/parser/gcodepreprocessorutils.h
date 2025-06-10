@@ -8,8 +8,8 @@
 #ifndef GCODEPREPROCESSORUTILS_H
 #define GCODEPREPROCESSORUTILS_H
 
-#include <QObject>
-#include <QMatrix4x4>
+#include <QtCore/QObject>
+#include <QtGui/QMatrix4x4>
 #include <cmath>
 #include "pointsegment.h"
 
@@ -27,16 +27,16 @@ public:
     static QList<int> parseMCodes(QString command);
     static QStringList splitCommand(const QString &command);
     static double parseCoord(QStringList argList, char c);
-    static QVector3D updatePointWithCommand(const QVector3D &initial, double x, double y, double z, bool absoluteMode);
-    static QVector3D updatePointWithCommand(const QStringList &commandArgs, const QVector3D &initial, bool absoluteMode);
-    static QVector3D updatePointWithCommand(const QString &command, const QVector3D &initial, bool absoluteMode);
-    static QVector3D convertRToCenter(QVector3D start, QVector3D end, double radius, bool absoluteIJK, bool clockwise);
-    static QVector3D updateCenterWithCommand(QStringList commandArgs, QVector3D initial, QVector3D nextPoint, bool absoluteIJKMode, bool clockwise);
-    static QString generateG1FromPoints(QVector3D start, QVector3D end, bool absoluteMode, int precision);
-    static double getAngle(QVector3D start, QVector3D end);
+    static QVector4D updatePointWithCommand(const QVector4D &initial, double x, double y, double z, bool absoluteMode);
+    static QVector4D updatePointWithCommand(const QStringList &commandArgs, const QVector4D &initial, bool absoluteMode);
+    static QVector4D updatePointWithCommand(const QString &command, const QVector4D &initial, bool absoluteMode);
+    static QVector4D convertRToCenter(QVector4D start, QVector4D end, double radius, bool absoluteIJK, bool clockwise);
+    static QVector4D updateCenterWithCommand(QStringList commandArgs, QVector4D initial, QVector4D nextPoint, bool absoluteIJKMode, bool clockwise);
+    static QString generateG1FromPoints(QVector4D start, QVector4D end, bool absoluteMode, int precision);
+    static double getAngle(QVector4D start, QVector4D end);
     static double calculateSweep(double startAngle, double endAngle, bool isCw);
-    static QList<QVector3D> generatePointsAlongArcBDring(PointSegment::planes plane, QVector3D start, QVector3D end, QVector3D center, bool clockwise, double R, double minArcLength, double arcPrecision, bool arcDegreeMode);
-    static QList<QVector3D> generatePointsAlongArcBDring(PointSegment::planes plane, QVector3D p1, QVector3D p2, QVector3D center, bool isCw, double radius, double startAngle, double sweep, int numPoints);
+    static QList<QVector4D> generatePointsAlongArcBDring(PointSegment::planes plane, QVector4D start, QVector4D end, QVector4D center, bool clockwise, double R, double minArcLength, double arcPrecision, bool arcDegreeMode);
+    static QList<QVector4D> generatePointsAlongArcBDring(PointSegment::planes plane, QVector4D p1, QVector4D p2, QVector4D center, bool isCw, double radius, double startAngle, double sweep, int numPoints);
     static inline bool isDigit(char c);
     static inline bool isLetter(char c);
     static inline char toUpper(char c);

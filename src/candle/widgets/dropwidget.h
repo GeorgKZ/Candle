@@ -4,7 +4,7 @@
 #ifndef DROPWIDGET_H
 #define DROPWIDGET_H
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 
 class DropWidget : public QWidget
 {

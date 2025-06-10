@@ -1,11 +1,11 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-script.importExtension("qt.core");
-script.importExtension("qt.gui");
-script.importExtension("qt.widgets");
-script.importExtension("qt.custom");
-script.importExtension("qt.uitools");
+//script.importExtension("qt.core");
+//script.importExtension("qt.gui");
+//script.importExtension("qt.widgets");
+//script.importExtension("qt.custom");
+//script.importExtension("qt.uitools");
 
 // Vars
 var appPath = app.path;
@@ -25,6 +25,7 @@ function init()
 {
     loader.setWorkingDirectory(new QDir(pluginPath));
     loader.addPluginPath(appPath);
+    loader.addPluginPath(appPath + "/libs");
 
     app.deviceStateChanged.connect(onAppDeviceStateChanged);
     app.senderStateChanged.connect(onAppSenderStateChanged);
@@ -50,13 +51,13 @@ function createPanelWidget()
         uiPanel = loader.load(f);
 
         for (var i = 54; i <= 57; i++) {
-            uiPanel["cmdG" + i].clicked.connect(onCsClicked("G" + i));
+            uiPanel.findChild("cmdG" + i).clicked.connect(onCsClicked("G" + i));
         }
 
-        uiPanel.cmdX0.clicked.connect(onZeroClicked("X0"));
-        uiPanel.cmdY0.clicked.connect(onZeroClicked("Y0"));
-        uiPanel.cmdZ0.clicked.connect(onZeroClicked("Z0"));
-        uiPanel.cmdAll0.clicked.connect(onZeroClicked("X0 Y0 Z0"));
+        uiPanel.findChild("cmdX0").clicked.connect(onZeroClicked("X0"));
+        uiPanel.findChild("cmdY0").clicked.connect(onZeroClicked("Y0"));
+        uiPanel.findChild("cmdZ0").clicked.connect(onZeroClicked("Z0"));
+        uiPanel.findChild("cmdAll0").clicked.connect(onZeroClicked("X0 Y0 Z0"));
     }
     return uiPanel;
 }
@@ -66,16 +67,16 @@ function onAppSettingsLoaded()
     var u = app.settings.units;
     var b = u ? 999 : 9999;
 
-    uiPanel.txtOffsetX.decimals = u ? 4 : 3;
-    uiPanel.txtOffsetY.decimals = u ? 4 : 3;
-    uiPanel.txtOffsetZ.decimals = u ? 4 : 3;
+    uiPanel.findChild("txtOffsetX").decimals = u ? 4 : 3;
+    uiPanel.findChild("txtOffsetY").decimals = u ? 4 : 3;
+    uiPanel.findChild("txtOffsetZ").decimals = u ? 4 : 3;
 
-    uiPanel.txtOffsetX.mimimum = -b;
-    uiPanel.txtOffsetX.maximum = b;
-    uiPanel.txtOffsetY.mimimum = -b;
-    uiPanel.txtOffsetY.maximum = b;
-    uiPanel.txtOffsetZ.mimimum = -b;
-    uiPanel.txtOffsetZ.maximum = b;
+    uiPanel.findChild("txtOffsetX").mimimum = -b;
+    uiPanel.findChild("txtOffsetX").maximum = b;
+    uiPanel.findChild("txtOffsetY").mimimum = -b;
+    uiPanel.findChild("txtOffsetY").maximum = b;
+    uiPanel.findChild("txtOffsetZ").mimimum = -b;
+    uiPanel.findChild("txtOffsetZ").maximum = b;
 }
 
 function onAppDeviceStateChanged(status)
@@ -99,9 +100,9 @@ function onAppResponseReceived(command, index, response)
         var s = r.match(gx);
         if (s) {
             for (var i = 0; i < s.length; i++) {
-                uiPanel.txtOffsetX.value = parseFloat(s[1]);
-                uiPanel.txtOffsetY.value = parseFloat(s[2]);
-                uiPanel.txtOffsetZ.value = parseFloat(s[3]);
+                uiPanel.findChild("txtOffsetX").value = parseFloat(s[1]);
+                uiPanel.findChild("txtOffsetY").value = parseFloat(s[2]);
+                uiPanel.findChild("txtOffsetZ").value = parseFloat(s[3]);
             }
         }
     }

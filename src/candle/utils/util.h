@@ -4,13 +4,13 @@
 #ifndef UTIL
 #define UTIL
 
-#include <QColor>
-#include <QIcon>
-#include <QImage>
-#include <QAbstractButton>
-#include <QVector3D>
-#include <QEventLoop>
-#include <QTimer>
+#include <QtCore/QEventLoop>
+#include <QtCore/QTimer>
+#include <QtGui/QColor>
+#include <QtGui/QIcon>
+#include <QtGui/QImage>
+#include <QtGui/QVector3D>
+#include <QtWidgets/QAbstractButton>
 
 class Util
 {

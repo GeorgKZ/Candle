@@ -5,8 +5,8 @@
 
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
+#include <QtCore/QDebug>
 #include "linesegment.h"
-#include <QDebug>
 
 LineSegment::LineSegment()
 {
@@ -21,7 +21,7 @@ LineSegment::LineSegment()
     m_vertexIndex = -1;
 }
 
-LineSegment::LineSegment(QVector3D a, QVector3D b, int num)
+LineSegment::LineSegment(QVector4D a, QVector4D b, int num)
 {
     m_toolhead = 0;
     m_isZMovement = false;
@@ -64,9 +64,9 @@ int LineSegment::getLineNumber() {
     return m_lineNumber;
 }
 
-QList<QVector3D> LineSegment::getPointArray()
+QList<QVector4D> LineSegment::getPointArray()
 {
-    QList<QVector3D> pointarr;
+    QList<QVector4D> pointarr;
     pointarr.append(m_first);
     pointarr.append(m_second);
     return pointarr;
@@ -84,20 +84,20 @@ QList<double> LineSegment::getPoints()
     return points;
 }
 
-QVector3D &LineSegment::getStart() {
+QVector4D &LineSegment::getStart() {
     return this->m_first;
 }
 
-void LineSegment::setStart(QVector3D vector)
+void LineSegment::setStart(QVector4D vector)
 {
     m_first = vector;
 }
 
-QVector3D &LineSegment::getEnd() {
+QVector4D &LineSegment::getEnd() {
     return this->m_second;
 }
 
-void LineSegment::setEnd(QVector3D vector)
+void LineSegment::setEnd(QVector4D vector)
 {
     m_second = vector;
 }
@@ -144,11 +144,11 @@ bool LineSegment::isFastTraverse() {
     return this->m_isFastTraverse;
 }
 
-bool LineSegment::contains(const QVector3D &point)
+bool LineSegment::contains(const QVector4D &point)
 {
     double delta;
-    QVector3D line = this->getEnd() - this->getStart();
-    QVector3D pt = point - this->getStart();
+    QVector4D line = this->getEnd() - this->getStart();
+    QVector4D pt = point - this->getStart();
 
     delta = (line - pt).length() - (line.length() - pt.length());
 

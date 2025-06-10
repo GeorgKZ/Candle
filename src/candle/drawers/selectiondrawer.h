@@ -8,21 +8,21 @@ class SelectionDrawer : public ShaderDrawable
 public:
     SelectionDrawer();
 
-    QVector3D startPosition() const;
-    void setStartPosition(const QVector3D &startPosition);
+    QVector4D startPosition() const;
+    void setStartPosition(const QVector4D &startPosition);
 
     QColor color() const;
     void setColor(const QColor &color);
 
-    QVector3D endPosition() const;
-    void setEndPosition(const QVector3D &endPosition);
+    QVector4D endPosition() const;
+    void setEndPosition(const QVector4D &endPosition);
 
 protected:
     bool  updateData();
 
 private:
-    QVector3D m_startPosition;
-    QVector3D m_endPosition;
+    QVector4D m_startPosition;
+    QVector4D m_endPosition;
 
     QColor m_color;
 };

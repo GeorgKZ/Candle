@@ -4,8 +4,8 @@
 #ifndef GCODEDRAWER_H
 #define GCODEDRAWER_H
 
-#include <QObject>
-#include <QVector3D>
+#include <QtCore/QObject>
+#include <QtGui/QVector3D>
 #include "parser/linesegment.h"
 #include "parser/gcodeviewparse.h"
 #include "shaderdrawable.h"
@@ -23,9 +23,9 @@ public:
     void update(QList<int> indexes);
     bool updateData();
 
-    QVector3D getSizes();
-    QVector3D getMinimumExtremes();
-    QVector3D getMaximumExtremes();
+    QVector4D getSizes();
+    QVector4D getMinimumExtremes();
+    QVector4D getMaximumExtremes();
 
     void setViewParser(GcodeViewParse* viewParser);
     GcodeViewParse* viewParser();        

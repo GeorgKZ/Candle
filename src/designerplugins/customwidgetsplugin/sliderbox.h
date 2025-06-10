@@ -1,9 +1,9 @@
 #ifndef SLIDERBOX_H
 #define SLIDERBOX_H
 
-#include <QWidget>
-#include <QTimer>
-#include "customwidgetsshared.h"
+#include <QtWidgets/QWidget>
+#include <QtCore/QTimer>
+#include "../customwidgetsshared.h"
 
 namespace Ui {
 class SliderBox;
@@ -27,19 +27,19 @@ public:
     explicit SliderBox(QWidget *parent = 0);
     ~SliderBox();
 
-    int value();
+    int value() const;
     void setValue(int value);
 
-    int currentValue();
+    int currentValue() const;
     void setCurrentValue(int value);
 
-    int sliderPosition();
+    int sliderPosition() const;
     void setSliderPosition(int position);
 
     bool isCheckable() const;
     void setCheckable(bool checkable);
 
-    bool isChecked();
+    bool isChecked() const;
     void setChecked(bool checked);
 
     int ratio() const;
@@ -51,10 +51,10 @@ public:
     int maximum() const;
     void setMaximum(int maximum);
 
-    QString suffix();
+    QString suffix() const;
     void setSuffix(QString suffix);
 
-    QString title();
+    QString title() const;
     void setTitle(QString title);
 
 signals:

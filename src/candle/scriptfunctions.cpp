@@ -80,12 +80,12 @@ int ScriptFunctions::buttonSize()
     return m_frmMain->buttonSize();
 }
 
-void ScriptFunctions::addAction(QAction *action)
+void ScriptFunctions::addAction(wrapper_QAction *action)
 {
-    m_frmMain->addAction(action);
+    m_frmMain->addAction(action->get_selfptr());
 }
 
-void ScriptFunctions::removeAction(QAction *action)
+void ScriptFunctions::removeAction(wrapper_QAction *action)
 {
-    m_frmMain->removeAction(action);
+    m_frmMain->removeAction(action->get_selfptr());
 }

@@ -4,12 +4,12 @@
 #ifndef FRMSETTINGS_H
 #define FRMSETTINGS_H
 
-#include <QDialog>
-#include <QMessageBox>
-#include <QListWidgetItem>
-#include <QSettings>
-#include <QGroupBox>
-#include <QVector3D>
+#include <QtCore/QSettings>
+#include <QtGui/QVector3D>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QListWidgetItem>
+#include <QtWidgets/QGroupBox>
 #include "colorpicker.h"
 
 namespace Ui {
@@ -46,6 +46,7 @@ class frmSettings : public QDialog
     Q_PROPERTY(bool simplify READ simplify WRITE setSimplify)
     Q_PROPERTY(double simplifyPrecision READ simplifyPrecision WRITE setSimplifyPrecision)
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize)
+    Q_PROPERTY(QString font READ font WRITE setFont)
     Q_PROPERTY(bool grayscaleSegments READ grayscaleSegments WRITE setGrayscaleSegments)
     Q_PROPERTY(bool grayscaleSCode READ grayscaleSCode WRITE setGrayscaleSCode)
     Q_PROPERTY(bool drawModeVectors READ drawModeVectors WRITE setDrawModeVectors)
@@ -63,7 +64,7 @@ class frmSettings : public QDialog
     Q_PROPERTY(bool units READ units WRITE setUnits)
     Q_PROPERTY(int rapidSpeed READ rapidSpeed WRITE setRapidSpeed)
     Q_PROPERTY(int acceleration READ acceleration WRITE setAcceleration)
-    Q_PROPERTY(QVector3D machineBounds READ machineBounds WRITE setMachineBounds)
+    Q_PROPERTY(QVector4D machineBounds READ machineBounds WRITE setMachineBounds)
     Q_PROPERTY(bool homingEnabled READ homingEnabled WRITE setHomingEnabled)
     Q_PROPERTY(bool softLimitsEnabled READ softLimitsEnabled WRITE setSoftLimitsEnabled)
 
@@ -137,7 +138,9 @@ public:
     void setSimplifyPrecision(double simplifyPrecision);
     QList<ColorPicker*> colors();
     QColor colors(QString name);
+    QString font();
     int fontSize();
+    void setFont(const QString& fontName);
     void setFontSize(int fontSize);
     bool grayscaleSegments();
     void setGrayscaleSegments(bool value);
@@ -167,8 +170,8 @@ public:
     void setToolChangeUseCommandsConfirm(bool value);
     QString language();
     void setLanguage(QString language);
-    QVector3D machineBounds();
-    void setMachineBounds(QVector3D bounds);
+    QVector4D machineBounds();
+    void setMachineBounds(QVector4D bounds);
     bool homingEnabled();
     void setHomingEnabled(bool homing);
     bool softLimitsEnabled();
@@ -194,14 +197,18 @@ private slots:
     void on_cboToolType_currentIndexChanged(int index);
     void on_listCategories_currentRowChanged(int currentRow);
     void on_cmdDefaults_clicked();
+    void on_cboFont_currentTextChanged(const QString &arg1);
     void on_cboFontSize_currentTextChanged(const QString &arg1);
     void on_radDrawModeVectors_toggled(bool checked);
     void on_radDrawModeRaster_toggled(bool checked);
     void on_radGrayscaleS_toggled(bool checked);
     void on_radGrayscaleZ_toggled(bool checked);
+    void on_cboLanguageChanged(int language_index);
+
 
 private:
     void searchPorts();
+    void set_defaults();
 
     QList<double> m_storedValues;
     QList<bool> m_storedChecks;
@@ -217,7 +224,7 @@ private:
     int m_units;
     int m_acceleration;
     int m_rapidSpeed;
-    QVector3D m_machineBounds;
+    QVector4D m_machineBounds;
     bool m_homingEnabled;
     bool m_softLimitsEnabled;
 };

@@ -1,9 +1,9 @@
 #ifndef SCRIPTVARS_H
 #define SCRIPTVARS_H
 
-#include <QObject>
-#include <QMap>
-#include <QVector3D>
+#include <QtCore/QObject>
+#include <QtCore/QMap>
+#include <QtGui/QVector4D>
 
 class ScriptVars: public QObject
 {
@@ -66,7 +66,7 @@ class ScriptVars: public QObject
 
     Q_PROPERTY(QString CS READ CS)
 
-    Q_PROPERTY(int tool READ tool);
+    Q_PROPERTY(int tool READ tool)
 
 public:
     ScriptVars();
@@ -123,14 +123,14 @@ public:
     double PRBy() const;
     double PRBz() const;
 
-    QVector3D coords(QString name) const;
+    QVector4D coords(QString name) const;
     QString CS() const;
 
     int tool() const;
 
 public slots:
 
-    void setCoords(QString name, QVector3D coords);
+    void setCoords(QString name, QVector4D coords);
     void setCS(QString cs);
     void setTool(int tool);
 
@@ -143,7 +143,7 @@ public slots:
     double z(QString name) const;
 
 private:
-    QMap<QString, QVector3D> m_coords;
+    QMap<QString, QVector4D> m_coords;
     QString m_cs;
     int m_tool;
 };

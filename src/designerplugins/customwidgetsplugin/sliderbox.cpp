@@ -25,7 +25,7 @@ SliderBox::~SliderBox()
     delete ui;
 }
 
-int SliderBox::value()
+int SliderBox::value() const
 {
     return ui->txtValue->value();
 }
@@ -36,7 +36,7 @@ void SliderBox::setValue(int value)
     ui->sliValue->setValue(value / m_ratio);
 }
 
-int SliderBox::currentValue()
+int SliderBox::currentValue() const
 {
     return m_currentValue;
 }
@@ -49,7 +49,7 @@ void SliderBox::setCurrentValue(int value)
     ui->txtValue->setStyleSheet(value == ui->txtValue->value() || !this->isChecked() ? "color: palette(text);" : "color: red;");
 }
 
-int SliderBox::sliderPosition()
+int SliderBox::sliderPosition() const
 {
     return ui->sliValue->sliderPosition();
 }
@@ -72,7 +72,7 @@ void SliderBox::setCheckable(bool checkable)
     ui->lblTitle->setVisible(!checkable);
 }
 
-bool SliderBox::isChecked()
+bool SliderBox::isChecked() const
 {
     return ui->chkTitle->isChecked();
 }
@@ -138,7 +138,7 @@ void SliderBox::setMaximum(int maximum)
     ui->sliValue->setMaximum(maximum / m_ratio);
 }
 
-QString SliderBox::suffix()
+QString SliderBox::suffix() const
 {
     return ui->txtValue->suffix();
 }
@@ -148,7 +148,7 @@ void SliderBox::setSuffix(QString suffix)
     ui->txtValue->setSuffix(suffix);
 }
 
-QString SliderBox::title()
+QString SliderBox::title() const
 {
     return ui->chkTitle->text();
 }

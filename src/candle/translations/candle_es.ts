@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_ES">
+<TS version="2.1" language="es_ES" sourcelanguage="en_US">
 <context>
     <name>GCodeTableModel</name>
     <message>
@@ -62,7 +62,7 @@
 <context>
     <name>GLWidget</name>
     <message>
-        <location filename="../widgets/glwidget.cpp" line="502"/>
+        <location filename="../widgets/glwidget.cpp" line="490"/>
         <source>Vertices: %1</source>
         <translation>Vertices: %1</translation>
     </message>
@@ -101,37 +101,37 @@
         <translation type="vanished">GRBL Control</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3891"/>
+        <location filename="../frmmain.cpp" line="4116"/>
         <source>G-code program</source>
         <translation>Programa de G-Code</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2489"/>
-        <location filename="../frmmain.ui" line="2993"/>
+        <location filename="../frmmain.ui" line="2549"/>
+        <location filename="../frmmain.ui" line="3055"/>
         <source>Isometric view</source>
         <translation>Vista isometrica</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2463"/>
-        <location filename="../frmmain.ui" line="2988"/>
+        <location filename="../frmmain.ui" line="2523"/>
+        <location filename="../frmmain.ui" line="3050"/>
         <source>Top view</source>
         <translation>Vista superior</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2515"/>
-        <location filename="../frmmain.ui" line="2998"/>
+        <location filename="../frmmain.ui" line="2575"/>
+        <location filename="../frmmain.ui" line="3060"/>
         <source>Front view</source>
         <translation>Vista Frontal</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2541"/>
-        <location filename="../frmmain.ui" line="3003"/>
+        <location filename="../frmmain.ui" line="2601"/>
+        <location filename="../frmmain.ui" line="3065"/>
         <source>Left view</source>
         <translation>Vista izquierda</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2437"/>
-        <location filename="../frmmain.ui" line="2983"/>
+        <location filename="../frmmain.ui" line="2497"/>
+        <location filename="../frmmain.ui" line="3045"/>
         <source>Fit</source>
         <translation>Ajustar vista</translation>
     </message>
@@ -140,57 +140,28 @@
         <translation type="vanished">Ajuste de alturas</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="680"/>
+        <location filename="../frmmain.ui" line="682"/>
         <source>Border:</source>
         <translation>Bordes:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="689"/>
-        <location filename="../frmmain.ui" line="872"/>
-        <location filename="../frmmain.ui" line="1098"/>
-        <source>X:</source>
-        <translation>X:</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="749"/>
-        <source>H:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="781"/>
-        <location filename="../frmmain.ui" line="966"/>
-        <location filename="../frmmain.ui" line="1091"/>
-        <source>Y:</source>
-        <translation>Y:</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="788"/>
-        <source>W:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="827"/>
-        <location filename="../frmmain.ui" line="3058"/>
+        <location filename="../frmmain.ui" line="829"/>
+        <location filename="../frmmain.ui" line="3120"/>
         <source>Show border</source>
         <translation>Mostrar borde</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="843"/>
-        <source>Auto</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="856"/>
+        <location filename="../frmmain.ui" line="858"/>
         <source>Probe grid:</source>
         <translation>Grilla de medición:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="973"/>
+        <location filename="../frmmain.ui" line="975"/>
         <source>Zb:</source>
         <translation>Zн:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="865"/>
+        <location filename="../frmmain.ui" line="867"/>
         <source>Zt:</source>
         <translation>Zв:</translation>
     </message>
@@ -199,17 +170,17 @@
         <translation type="vanished">Mostrar grilla</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1082"/>
+        <location filename="../frmmain.ui" line="1084"/>
         <source>Interpolation grid:</source>
         <translation>Grilla de interpolación:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1171"/>
+        <location filename="../frmmain.ui" line="1173"/>
         <source>Type:</source>
         <translation>Tipo:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1188"/>
+        <location filename="../frmmain.ui" line="1190"/>
         <source>Bicubic</source>
         <translation>Bicubico</translation>
     </message>
@@ -227,92 +198,75 @@
     </message>
     <message>
         <location filename="../frmmain.ui" line="308"/>
-        <location filename="../frmmain.ui" line="638"/>
-        <location filename="../frmmain.ui" line="3048"/>
-        <location filename="../frmmain.cpp" line="687"/>
-        <location filename="../frmmain.cpp" line="701"/>
-        <location filename="../frmmain.cpp" line="1379"/>
+        <location filename="../frmmain.ui" line="640"/>
+        <location filename="../frmmain.ui" line="3110"/>
+        <location filename="../frmmain.cpp" line="722"/>
+        <location filename="../frmmain.cpp" line="737"/>
+        <location filename="../frmmain.cpp" line="1417"/>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
     <message>
         <location filename="../frmmain.ui" line="315"/>
-        <location filename="../frmmain.ui" line="1688"/>
-        <location filename="../frmmain.ui" line="2898"/>
-        <location filename="../frmmain.ui" line="3018"/>
+        <location filename="../frmmain.ui" line="1692"/>
+        <location filename="../frmmain.ui" line="2960"/>
+        <location filename="../frmmain.ui" line="3080"/>
         <source>Reset</source>
         <translation>Reiniciar</translation>
     </message>
     <message>
         <location filename="../frmmain.ui" line="334"/>
-        <location filename="../frmmain.ui" line="3023"/>
-        <location filename="../frmmain.cpp" line="3909"/>
+        <location filename="../frmmain.ui" line="3085"/>
+        <location filename="../frmmain.cpp" line="4135"/>
         <source>Send</source>
         <translation>Enviar</translation>
     </message>
     <message>
         <location filename="../frmmain.ui" line="341"/>
-        <location filename="../frmmain.ui" line="3028"/>
+        <location filename="../frmmain.ui" line="3090"/>
         <source>Pause</source>
         <translation>Pausar</translation>
     </message>
     <message>
         <location filename="../frmmain.ui" line="351"/>
-        <location filename="../frmmain.ui" line="3033"/>
-        <location filename="../frmmain.cpp" line="1016"/>
-        <location filename="../frmmain.cpp" line="3338"/>
-        <location filename="../frmmain.cpp" line="3507"/>
+        <location filename="../frmmain.ui" line="3095"/>
+        <location filename="../frmmain.cpp" line="1054"/>
+        <location filename="../frmmain.cpp" line="3551"/>
+        <location filename="../frmmain.cpp" line="3732"/>
         <source>Abort</source>
         <translation>Abandono</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1312"/>
+        <location filename="../frmmain.ui" line="1316"/>
         <source>State</source>
         <translation>Estado</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1325"/>
+        <location filename="../frmmain.ui" line="1329"/>
         <source>Work coordinates:</source>
         <translation>Coordenadas de trabajo:</translation>
     </message>
     <message>
-        <source>0</source>
-        <translation type="vanished">0</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="1455"/>
+        <location filename="../frmmain.ui" line="1459"/>
         <source>Machine coordinates:</source>
         <translation>Coordenadas de máquina:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1586"/>
+        <location filename="../frmmain.ui" line="1590"/>
         <source>Status:</source>
         <translation>Estado:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1639"/>
+        <location filename="../frmmain.ui" line="1643"/>
         <source>Control</source>
         <translation>Control</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1717"/>
-        <location filename="../frmmain.ui" line="2885"/>
-        <location filename="../frmmain.cpp" line="50"/>
+        <location filename="../frmmain.ui" line="1721"/>
+        <location filename="../frmmain.ui" line="2947"/>
+        <location filename="../frmmain.cpp" line="60"/>
         <source>Home</source>
         <translation>Origen</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="1662"/>
-        <location filename="../frmmain.ui" line="1691"/>
-        <location filename="../frmmain.ui" line="1720"/>
-        <location filename="../frmmain.ui" line="1749"/>
-        <location filename="../frmmain.ui" line="1781"/>
-        <location filename="../frmmain.ui" line="1813"/>
-        <location filename="../frmmain.ui" line="1842"/>
-        <location filename="../frmmain.ui" line="1871"/>
-        <location filename="../frmmain.ui" line="2044"/>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Z-probe</source>
@@ -327,24 +281,12 @@
         <translation type="vanished">Cero Z</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="489"/>
-        <location filename="../frmmain.cpp" line="931"/>
-        <location filename="../frmmain.cpp" line="933"/>
-        <source>Overriding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Restore XYZ</source>
         <translation type="vanished">Restaurar XYZ</translation>
     </message>
     <message>
         <source>Safe Z</source>
         <translation type="vanished">Distancia de seguridad Z</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="17"/>
-        <source>Candle</source>
-        <translation></translation>
     </message>
     <message>
         <source>Restore origin</source>
@@ -355,36 +297,36 @@
         <translation type="vanished">Posición segura</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1659"/>
-        <location filename="../frmmain.ui" line="2903"/>
+        <location filename="../frmmain.ui" line="1663"/>
+        <location filename="../frmmain.ui" line="2965"/>
         <source>Unlock</source>
         <translation>Desbloquear</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="550"/>
-        <location filename="../frmmain.cpp" line="3891"/>
+        <location filename="../frmmain.ui" line="552"/>
+        <location filename="../frmmain.cpp" line="4116"/>
         <source>Heightmap</source>
         <translation>Mapa de alturas</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="577"/>
-        <location filename="../frmmain.ui" line="3038"/>
+        <location filename="../frmmain.ui" line="579"/>
+        <location filename="../frmmain.ui" line="3100"/>
         <source>Use heightmap</source>
         <translation>Usar mapa de alturas</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="608"/>
+        <location filename="../frmmain.ui" line="610"/>
         <source>Map:</source>
         <translation>Mapa:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="599"/>
+        <location filename="../frmmain.ui" line="601"/>
         <source>Absent</source>
         <translation>Ausente</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="625"/>
-        <location filename="../frmmain.ui" line="3043"/>
+        <location filename="../frmmain.ui" line="627"/>
+        <location filename="../frmmain.ui" line="3105"/>
         <source>Create</source>
         <translation>Crear</translation>
     </message>
@@ -393,23 +335,23 @@
         <translation type="vanished">Modo edición</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1902"/>
-        <location filename="../frmmain.cpp" line="888"/>
-        <location filename="../frmmain.cpp" line="890"/>
-        <location filename="../frmmain.cpp" line="946"/>
-        <location filename="../frmmain.cpp" line="949"/>
-        <location filename="../frmmain.cpp" line="2444"/>
+        <location filename="../frmmain.ui" line="1906"/>
+        <location filename="../frmmain.cpp" line="927"/>
+        <location filename="../frmmain.cpp" line="929"/>
+        <location filename="../frmmain.cpp" line="985"/>
+        <location filename="../frmmain.cpp" line="987"/>
+        <location filename="../frmmain.cpp" line="2576"/>
         <source>Spindle</source>
         <translation>Husillo</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="283"/>
+        <location filename="../frmmain.cpp" line="290"/>
         <source>Speed:</source>
         <translation>Velocidad:</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1945"/>
-        <location filename="../frmmain.ui" line="2918"/>
+        <location filename="../frmmain.ui" line="1996"/>
+        <location filename="../frmmain.ui" line="2980"/>
         <source>Spindle on/off</source>
         <translation>Husillo on/off</translation>
     </message>
@@ -426,53 +368,17 @@
         <translation type="vanished">%</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1974"/>
-        <location filename="../frmmain.cpp" line="59"/>
-        <location filename="../frmmain.cpp" line="3961"/>
-        <location filename="../frmmain.cpp" line="3963"/>
+        <location filename="../frmmain.ui" line="2032"/>
+        <location filename="../frmmain.cpp" line="69"/>
+        <location filename="../frmmain.cpp" line="4187"/>
+        <location filename="../frmmain.cpp" line="4189"/>
         <source>Jog</source>
         <translation>Control manual</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2041"/>
-        <location filename="../frmmain.ui" line="2938"/>
-        <source>X-</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2070"/>
-        <location filename="../frmmain.ui" line="2928"/>
-        <source>Y-</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2012"/>
-        <location filename="../frmmain.ui" line="2933"/>
-        <source>X+</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2128"/>
-        <location filename="../frmmain.ui" line="2923"/>
-        <source>Y+</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2292"/>
+        <location filename="../frmmain.ui" line="2350"/>
         <source>Step:</source>
         <translation>Pasos:</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2172"/>
-        <location filename="../frmmain.ui" line="2943"/>
-        <source>Z+</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2218"/>
-        <location filename="../frmmain.ui" line="2948"/>
-        <source>Z-</source>
-        <translation></translation>
     </message>
     <message>
         <source>Presets:</source>
@@ -491,31 +397,12 @@
         <translation type="obsolete">3</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2279"/>
-        <location filename="../frmmain.ui" line="2313"/>
-        <source>10</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2284"/>
-        <location filename="../frmmain.ui" line="2323"/>
-        <source>100</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2299"/>
-        <source>Feed:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2328"/>
         <source>500</source>
-        <translation type="unfinished">500</translation>
+        <translation type="obsolete">500</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2318"/>
         <source>50</source>
-        <translation type="unfinished">50</translation>
+        <translation type="obsolete">50</translation>
     </message>
     <message>
         <location filename="../frmmain.ui" line="202"/>
@@ -538,217 +425,241 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="437"/>
+        <location filename="../frmmain.ui" line="439"/>
         <source>Modification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="653"/>
-        <location filename="../frmmain.ui" line="3053"/>
+        <location filename="../frmmain.ui" line="491"/>
+        <location filename="../frmmain.cpp" line="970"/>
+        <location filename="../frmmain.cpp" line="972"/>
+        <source>Overriding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.ui" line="655"/>
+        <location filename="../frmmain.ui" line="3115"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1011"/>
-        <source>F:</source>
+        <location filename="../frmmain.ui" line="751"/>
+        <source>H:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1053"/>
-        <location filename="../frmmain.ui" line="3063"/>
+        <location filename="../frmmain.ui" line="790"/>
+        <source>W:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.ui" line="845"/>
+        <source>Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.ui" line="1055"/>
+        <location filename="../frmmain.ui" line="3125"/>
         <source>Show probe grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1200"/>
-        <location filename="../frmmain.ui" line="3068"/>
+        <location filename="../frmmain.ui" line="1202"/>
+        <location filename="../frmmain.ui" line="3130"/>
         <source>Show interpolation grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1263"/>
+        <location filename="../frmmain.ui" line="1267"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1342"/>
-        <location filename="../frmmain.ui" line="1472"/>
-        <source>X</source>
+        <location filename="../frmmain.ui" line="1814"/>
+        <location filename="../frmmain.ui" line="3209"/>
+        <location filename="../frmmain.ui" line="3212"/>
+        <location filename="../frmmain.cpp" line="70"/>
+        <source>Sleep</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1379"/>
-        <location filename="../frmmain.ui" line="1509"/>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="1416"/>
-        <location filename="../frmmain.ui" line="1546"/>
-        <source>Z</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="1868"/>
-        <location filename="../frmmain.ui" line="3163"/>
+        <location filename="../frmmain.ui" line="1872"/>
+        <location filename="../frmmain.ui" line="3225"/>
         <source>Flood</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2099"/>
-        <location filename="../frmmain.ui" line="2953"/>
+        <location filename="../frmmain.ui" line="1936"/>
+        <source>Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.ui" line="1943"/>
+        <source>Cutter mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.ui" line="1953"/>
+        <source>Laser mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.ui" line="2157"/>
+        <location filename="../frmmain.ui" line="3015"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2254"/>
+        <location filename="../frmmain.ui" line="2312"/>
         <source>Continuously</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2259"/>
         <source>0.01</source>
-        <translation type="unfinished">0.01</translation>
+        <translation type="obsolete">0.01</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2264"/>
         <source>0.1</source>
-        <translation type="unfinished">0.1</translation>
+        <translation type="obsolete">0.1</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2269"/>
         <source>1</source>
-        <translation type="unfinished">1</translation>
+        <translation type="obsolete">1</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2274"/>
         <source>5</source>
-        <translation type="unfinished">5</translation>
+        <translation type="obsolete">5</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2333"/>
+        <source>10</source>
+        <translation type="obsolete">10</translation>
+    </message>
+    <message>
+        <source>100</source>
+        <translation type="obsolete">100</translation>
+    </message>
+    <message>
+        <location filename="../frmmain.ui" line="2357"/>
+        <source>Feed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1000</source>
-        <translation type="unfinished">1000</translation>
+        <translation type="obsolete">1000</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2338"/>
         <source>2000</source>
-        <translation type="unfinished">2000</translation>
+        <translation type="obsolete">2000</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2348"/>
-        <location filename="../frmmain.ui" line="2978"/>
+        <location filename="../frmmain.ui" line="2406"/>
+        <location filename="../frmmain.ui" line="3040"/>
         <source>Keyboard control</source>
         <translation>Control desde teclado</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2388"/>
+        <location filename="../frmmain.ui" line="2448"/>
         <source>Visualizer</source>
         <translation type="unfinished">Visualizador</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2569"/>
+        <location filename="../frmmain.ui" line="2631"/>
         <source>Console</source>
         <translation>Consola</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2647"/>
+        <location filename="../frmmain.ui" line="2709"/>
         <source>Send command</source>
         <translation>Enviar comando</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2664"/>
-        <location filename="../frmmain.ui" line="3073"/>
+        <location filename="../frmmain.ui" line="2726"/>
+        <location filename="../frmmain.ui" line="3135"/>
         <source>Clear console</source>
         <translation>Limpiar cosola</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2748"/>
-        <source>User</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2908"/>
+        <location filename="../frmmain.ui" line="2970"/>
         <source>Spindle speed +</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2913"/>
+        <location filename="../frmmain.ui" line="2975"/>
         <source>Spindle speed -</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2958"/>
+        <location filename="../frmmain.ui" line="3020"/>
         <source>Jog step next</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2963"/>
+        <location filename="../frmmain.ui" line="3025"/>
         <source>Jog step previous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2968"/>
+        <location filename="../frmmain.ui" line="3030"/>
         <source>Jog feed next</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2973"/>
+        <location filename="../frmmain.ui" line="3035"/>
         <source>Jog feed previous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3078"/>
+        <location filename="../frmmain.ui" line="3140"/>
         <source>Feed override +</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3083"/>
+        <location filename="../frmmain.ui" line="3145"/>
         <source>Feed override -</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3088"/>
+        <location filename="../frmmain.ui" line="3150"/>
         <source>Rapid override +</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3093"/>
+        <location filename="../frmmain.ui" line="3155"/>
         <source>Rapid override -</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3098"/>
+        <location filename="../frmmain.ui" line="3160"/>
         <source>Spindle override +</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3103"/>
+        <location filename="../frmmain.ui" line="3165"/>
         <source>Spindle override -</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3108"/>
+        <location filename="../frmmain.ui" line="3170"/>
         <source>Feed override</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3113"/>
+        <location filename="../frmmain.ui" line="3175"/>
         <source>Rapid speed override</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3118"/>
+        <location filename="../frmmain.ui" line="3180"/>
         <source>Spindle speed override</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3126"/>
+        <location filename="../frmmain.ui" line="3188"/>
         <source>&amp;Lock windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="3134"/>
+        <location filename="../frmmain.ui" line="3196"/>
         <source>L&amp;ock panels</source>
         <translation type="unfinished"></translation>
     </message>
@@ -773,126 +684,108 @@
         <translation>&amp;Ayuda</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2691"/>
-        <source>_spacerTop</source>
+        <location filename="../frmmain.ui" line="2810"/>
+        <source>User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2708"/>
-        <source>_spacerLeft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2725"/>
-        <source>_spacerRight</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="2845"/>
+        <location filename="../frmmain.ui" line="2907"/>
         <source>&amp;Open</source>
         <translation>&amp;Abrir</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2870"/>
+        <location filename="../frmmain.ui" line="2932"/>
         <source>E&amp;xit</source>
         <translation>S&amp;alir</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2875"/>
+        <location filename="../frmmain.ui" line="2937"/>
         <source>&amp;Settings</source>
         <translation>&amp;Opciones</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2840"/>
+        <location filename="../frmmain.ui" line="2902"/>
         <source>&amp;New</source>
         <translation>&amp;Nuevo</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2850"/>
+        <location filename="../frmmain.ui" line="2912"/>
         <source>&amp;Save</source>
         <translation>&amp;Guardar</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2855"/>
+        <location filename="../frmmain.ui" line="2917"/>
         <source>Save &amp;as...</source>
         <translation>Guardar &amp;como...</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2880"/>
+        <location filename="../frmmain.ui" line="2942"/>
         <source>&amp;About</source>
         <translation>&amp;Acerca de</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2865"/>
+        <location filename="../frmmain.ui" line="2927"/>
         <source>&amp;Clear</source>
         <translation>&amp;Limpiar</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="2860"/>
+        <location filename="../frmmain.ui" line="2922"/>
         <source>Save &amp;transformed as...</source>
         <translation>Salve &amp;transformado como...</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="47"/>
+        <location filename="../frmmain.cpp" line="57"/>
         <source>Idle</source>
         <translation>Listo</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="48"/>
+        <location filename="../frmmain.cpp" line="58"/>
         <source>Alarm</source>
         <translation>Alarma</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="49"/>
+        <location filename="../frmmain.cpp" line="59"/>
         <source>Run</source>
         <translation>Iniciar</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1746"/>
-        <location filename="../frmmain.ui" line="3139"/>
-        <location filename="../frmmain.ui" line="3142"/>
-        <location filename="../frmmain.cpp" line="51"/>
-        <location filename="../frmmain.cpp" line="52"/>
+        <location filename="../frmmain.ui" line="1750"/>
+        <location filename="../frmmain.ui" line="3201"/>
+        <location filename="../frmmain.ui" line="3204"/>
+        <location filename="../frmmain.cpp" line="61"/>
+        <location filename="../frmmain.cpp" line="62"/>
         <source>Hold</source>
         <translation>Parada</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="53"/>
+        <location filename="../frmmain.cpp" line="63"/>
         <source>Queue</source>
         <translation>En cola</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1778"/>
-        <location filename="../frmmain.ui" line="2890"/>
-        <location filename="../frmmain.ui" line="2893"/>
-        <location filename="../frmmain.ui" line="3008"/>
-        <location filename="../frmmain.cpp" line="54"/>
+        <location filename="../frmmain.ui" line="1782"/>
+        <location filename="../frmmain.ui" line="2952"/>
+        <location filename="../frmmain.ui" line="2955"/>
+        <location filename="../frmmain.ui" line="3070"/>
+        <location filename="../frmmain.cpp" line="64"/>
         <source>Check</source>
         <translation>Chequeo</translation>
     </message>
     <message>
-        <location filename="../frmmain.ui" line="1839"/>
-        <location filename="../frmmain.ui" line="3155"/>
-        <location filename="../frmmain.ui" line="3158"/>
-        <location filename="../frmmain.cpp" line="55"/>
-        <location filename="../frmmain.cpp" line="56"/>
-        <location filename="../frmmain.cpp" line="57"/>
-        <location filename="../frmmain.cpp" line="58"/>
+        <location filename="../frmmain.ui" line="1843"/>
+        <location filename="../frmmain.ui" line="3217"/>
+        <location filename="../frmmain.ui" line="3220"/>
+        <location filename="../frmmain.cpp" line="65"/>
+        <location filename="../frmmain.cpp" line="66"/>
+        <location filename="../frmmain.cpp" line="67"/>
+        <location filename="../frmmain.cpp" line="68"/>
         <source>Door</source>
         <translation>Puerta</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="46"/>
+        <location filename="../frmmain.cpp" line="56"/>
         <source>Unknown</source>
         <translation>Desconocido</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.ui" line="1810"/>
-        <location filename="../frmmain.ui" line="3147"/>
-        <location filename="../frmmain.ui" line="3150"/>
-        <location filename="../frmmain.cpp" line="60"/>
-        <source>Sleep</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../frmmain.cpp" line="173"/>
@@ -926,107 +819,14 @@
     </message>
     <message>
         <location filename="../frmmain.cpp" line="250"/>
-        <location filename="../frmmain.cpp" line="2073"/>
+        <location filename="../frmmain.cpp" line="2169"/>
         <source>Don&apos;t show again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="1740"/>
-        <source>PS: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="1758"/>
-        <source>AS: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="1769"/>
-        <source>F/S: %1 / %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="2014"/>
-        <source>Error message(s) received:
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="2063"/>
-        <source>Change tool and press &apos;Pause&apos; button to continue job</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="2070"/>
-        <source>M6 command detected. Send tool change commands?
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="2210"/>
-        <source>Buffer: %1 / %2 / %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="2371"/>
-        <source>Following commands will be sent before selected line:
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="2374"/>
-        <source>Skip</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="558"/>
+        <location filename="../frmmain.cpp" line="592"/>
         <source>Command</source>
         <translation type="unfinished">Comando</translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="558"/>
-        <source>Text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="558"/>
-        <source>Shortcuts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="933"/>
-        <source> (%1/%2/%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="3963"/>
-        <source> (%1/%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="3964"/>
-        <source>C</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="1016"/>
-        <source>Applying heightmap...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="1034"/>
-        <source>Subdividing segments...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="1057"/>
-        <source>Updating Z-coordinates...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="1080"/>
-        <source>Modifying G-code program...</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Restore XYZ:
@@ -1035,38 +835,28 @@
 %1, %2, %3</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3570"/>
+        <location filename="../frmmain.cpp" line="3795"/>
         <source>G-code program file was changed. Save?</source>
         <translation>El programa de G-code ha cambiado. Desea guardar?</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3578"/>
+        <location filename="../frmmain.cpp" line="3803"/>
         <source>Heightmap file was changed. Save?</source>
         <translation>El programa mapa de alturas ha cambiado. Desea guardar?</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3855"/>
+        <location filename="../frmmain.cpp" line="4080"/>
         <source>Not connected</source>
         <translation>Sin Conexión</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3909"/>
+        <location filename="../frmmain.cpp" line="4135"/>
         <source>Probe</source>
         <translation>Medición</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3507"/>
-        <source>Opening file...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="3338"/>
-        <source>Updating...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="503"/>
         <location filename="../frmmain.cpp" line="532"/>
+        <location filename="../frmmain.cpp" line="565"/>
         <source>G-Code files (*.nc *.ncc *.ngc *.tap *.txt)</source>
         <translation>Archivos de G-Code (*.nc *.ncc *.ngc *.tap *.txt)</translation>
     </message>
@@ -1075,7 +865,7 @@
         <translation type="vanished">Conectado</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4470"/>
+        <location filename="../frmmain.cpp" line="4695"/>
         <source>Job done.
 Time elapsed: %1</source>
         <translation>Trabajo terminado.
@@ -1086,18 +876,17 @@ Tiempo transcurrido: %1</translation>
         <translation type="vanished">Procesado</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="2179"/>
         <source>Serial port error </source>
-        <translation>Error en puerto serie </translation>
+        <translation type="vanished">Error en puerto serie </translation>
     </message>
     <message>
         <location filename="../frmmain.ui" line="288"/>
-        <location filename="../frmmain.ui" line="3013"/>
+        <location filename="../frmmain.ui" line="3075"/>
         <source>Scroll</source>
         <translation>Desplazamiento</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="394"/>
+        <location filename="../frmmain.cpp" line="422"/>
         <source>File sending in progress. Terminate and exit?</source>
         <translation>Envio de archivo en progreso. Detener y salir?</translation>
     </message>
@@ -1114,16 +903,164 @@ Tiempo transcurrido: %1</translation>
         <translation type="vanished">Archivos de G-Code (*.nc *.ncc *.tap *.txt)</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="515"/>
-        <location filename="../frmmain.cpp" line="701"/>
-        <location filename="../frmmain.cpp" line="1379"/>
+        <location filename="../frmmain.cpp" line="546"/>
+        <location filename="../frmmain.cpp" line="738"/>
+        <location filename="../frmmain.cpp" line="1418"/>
         <source>Heightmap files (*.map)</source>
         <translation>Mapa de alturas (*.map)</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3176"/>
+        <location filename="../frmmain.cpp" line="592"/>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="592"/>
+        <source>Shortcuts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="972"/>
+        <source> (%1/%2/%3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="1054"/>
+        <source>Applying heightmap...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="1072"/>
+        <source>Subdividing segments...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="1095"/>
+        <source>Updating Z-coordinates...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="1118"/>
+        <source>Modifying G-code program...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="1816"/>
+        <source>PS: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="1836"/>
+        <source>AS: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="1848"/>
+        <source>F/S: %1 / %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2110"/>
+        <source>Error message(s) received:
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2159"/>
+        <source>Change tool and press &apos;Pause&apos; button to continue job</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2166"/>
+        <source>M6 command detected. Send tool change commands?
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2280"/>
+        <source>Error opening a non-existing serial port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2283"/>
+        <source>Error opening a serial port without permission or an already opened port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2286"/>
+        <source>Error opening an already opened serial port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2289"/>
+        <source>An error occurred during the operation when using a closed port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2292"/>
+        <source>Error writing to the serial port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2295"/>
+        <source>Error reading from the serial port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2298"/>
+        <source>Serial port unavailability error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2301"/>
+        <source>An unsupported serial port operation error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2304"/>
+        <source>Serial port timeout error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2307"/>
+        <source>Serial port unknown error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2341"/>
+        <source>Buffer: %1 / %2 / %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2502"/>
+        <source>Following commands will be sent before selected line:
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="2505"/>
+        <source>Skip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="3185"/>
+        <source>Loading plugins:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="3381"/>
         <source>Port opened</source>
         <translation>Puerto se abrió</translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="4189"/>
+        <source> (%1/%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="4190"/>
+        <source>C</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Restore origin:
@@ -1132,13 +1069,18 @@ Tiempo transcurrido: %1</translation>
 %1, %2, %3</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="688"/>
+        <location filename="../frmmain.cpp" line="723"/>
         <source>G-Code files (*.nc *.ncc *.ngc *.tap *.txt);;All files (*.*)</source>
         <translation>Archivos de G-Code (*.nc *.ncc *.ngc *.tap *.txt);;Todos los archivos (*.*)</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3443"/>
-        <location filename="../frmmain.cpp" line="3618"/>
+        <location filename="../frmmain.cpp" line="3551"/>
+        <source>Updating...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="3668"/>
+        <location filename="../frmmain.cpp" line="3843"/>
         <source>Can&apos;t open file:
 </source>
         <translation>No se puede abrir el archivo:
@@ -1153,26 +1095,24 @@ Tiempo transcurrido: %1</translation>
         <translation type="vanished">Enviado</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="2232"/>
+        <location filename="../frmmain.cpp" line="2363"/>
         <source>Delete lines?</source>
         <translation>Borrar lineas?</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="888"/>
-        <location filename="../frmmain.cpp" line="949"/>
-        <location filename="../frmmain.cpp" line="2444"/>
-        <source> (%1)</source>
-        <translation></translation>
+        <location filename="../frmmain.cpp" line="3732"/>
+        <source>Opening file...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3780"/>
+        <location filename="../frmmain.cpp" line="4005"/>
         <source>Untitled</source>
         <translation>Sin-título</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="503"/>
-        <location filename="../frmmain.cpp" line="515"/>
-        <location filename="../frmmain.cpp" line="532"/>
+        <location filename="../frmmain.cpp" line="531"/>
+        <location filename="../frmmain.cpp" line="545"/>
+        <location filename="../frmmain.cpp" line="564"/>
         <source>Save file as</source>
         <translation>Guardar archivo como</translation>
     </message>
@@ -1181,7 +1121,7 @@ Tiempo transcurrido: %1</translation>
         <translation type="vanished">Archivos de G-Code (*.nc;*.ncc;*.tap)</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4026"/>
+        <location filename="../frmmain.cpp" line="4252"/>
         <source>Changing grid settings will reset probe data. Continue?</source>
         <translation>El cambio de configuraciones de grilla reiniciará los datos de medición. Desea continuar?</translation>
     </message>
@@ -1204,45 +1144,9 @@ Tiempo transcurrido: %1</translation>
         <translation>Puerto:</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="176"/>
-        <source>...</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../frmsettings.ui" line="104"/>
         <source>Baud:</source>
         <translation>Baud:</translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="121"/>
-        <location filename="../frmsettings.ui" line="125"/>
-        <source>9600</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="130"/>
-        <source>14400</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="135"/>
-        <source>19200</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="140"/>
-        <source>38400</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="145"/>
-        <source>57600</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="150"/>
-        <source>115200</source>
-        <translation></translation>
     </message>
     <message>
         <source>GRBL</source>
@@ -1344,26 +1248,6 @@ Tiempo transcurrido: %1</translation>
         <translation>Bloqueo de FPS:</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="730"/>
-        <source>30</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="735"/>
-        <source>60</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="740"/>
-        <source>120</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="670"/>
-        <source>Z-buffer</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Tool graphic representation</source>
         <translation type="vanished">Represeantación gráfica de herramienta</translation>
     </message>
@@ -1396,6 +1280,11 @@ Tiempo transcurrido: %1</translation>
         <location filename="../frmsettings.ui" line="1070"/>
         <source>Length:</source>
         <translation>Largo:</translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="1174"/>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../frmsettings.ui" line="1190"/>
@@ -1440,21 +1329,6 @@ Tiempo transcurrido: %1</translation>
     <message>
         <source>Jog</source>
         <translation type="vanished">Control manual</translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="592"/>
-        <source>Sender</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="645"/>
-        <source>Ignore error responses</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="652"/>
-        <source>Automatically set parser state before sending from selected line</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../frmsettings.ui" line="884"/>
@@ -1510,11 +1384,6 @@ Tiempo transcurrido: %1</translation>
         <translation>Período de la pregunta de estado:</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="263"/>
-        <source>Laser power min.:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Control</source>
         <translation type="vanished">Control</translation>
     </message>
@@ -1549,6 +1418,64 @@ Tiempo transcurrido: %1</translation>
         <translation>Por ángulo</translation>
     </message>
     <message>
+        <location filename="../frmsettings.ui" line="858"/>
+        <source>Precision:</source>
+        <translation>Precisión:</translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="1020"/>
+        <source>Tool model</source>
+        <translation>Herramientas modelo</translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="925"/>
+        <source>Highlight:</source>
+        <translation>Resaltado:</translation>
+    </message>
+    <message>
+        <source>9600</source>
+        <translation type="obsolete">9600</translation>
+    </message>
+    <message>
+        <source>14400</source>
+        <translation type="obsolete">14400</translation>
+    </message>
+    <message>
+        <source>19200</source>
+        <translation type="obsolete">19200</translation>
+    </message>
+    <message>
+        <source>38400</source>
+        <translation type="obsolete">38400</translation>
+    </message>
+    <message>
+        <source>57600</source>
+        <translation type="obsolete">57600</translation>
+    </message>
+    <message>
+        <source>115200</source>
+        <translation type="obsolete">115200</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="obsolete">...</translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="263"/>
+        <source>Laser power min.:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="365"/>
+        <source>Reference position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="592"/>
+        <source>Sender</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../frmsettings.ui" line="598"/>
         <source>Use program start commands:</source>
         <translation type="unfinished"></translation>
@@ -1572,6 +1499,33 @@ Tiempo transcurrido: %1</translation>
         <location filename="../frmsettings.ui" line="638"/>
         <source>Pause sender on M6 command</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="645"/>
+        <source>Ignore error responses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="652"/>
+        <source>Automatically set parser state before sending from selected line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="670"/>
+        <source>Z-buffer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation type="obsolete">30</translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation type="obsolete">60</translation>
+    </message>
+    <message>
+        <source>120</source>
+        <translation type="obsolete">120</translation>
     </message>
     <message>
         <location filename="../frmsettings.ui" line="750"/>
@@ -1604,58 +1558,8 @@ Tiempo transcurrido: %1</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="858"/>
-        <source>Precision:</source>
-        <translation>Precisión:</translation>
-    </message>
-    <message>
         <location filename="../frmsettings.ui" line="865"/>
         <source>V-sync</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="1020"/>
-        <source>Tool model</source>
-        <translation>Herramientas modelo</translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="925"/>
-        <source>Highlight:</source>
-        <translation>Resaltado:</translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="365"/>
-        <source>Reference position:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="381"/>
-        <source>X-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="391"/>
-        <source>X+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="410"/>
-        <source>Y-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="420"/>
-        <source>Y+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="439"/>
-        <source>Z-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="449"/>
-        <source>Z+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1690,8 +1594,8 @@ Tiempo transcurrido: %1</translation>
         <translation type="unfinished">Comando</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1174"/>
-        <source>Text</source>
+        <location filename="../frmsettings.ui" line="1220"/>
+        <source>User interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1703,73 +1607,67 @@ Tiempo transcurrido: %1</translation>
         <translation type="vanished">Tamaño:</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1257"/>
-        <location filename="../frmsettings.ui" line="1267"/>
-        <source>8</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="1272"/>
-        <source>9</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="1277"/>
-        <source>10</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="1282"/>
-        <source>11</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../frmsettings.ui" line="1287"/>
-        <source>12</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../frmsettings.ui" line="1241"/>
         <source>pt</source>
         <translation>Puntos</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1220"/>
-        <source>User interface</source>
-        <translation type="unfinished"></translation>
+        <source>8</source>
+        <translation type="obsolete">8</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1295"/>
+        <source>9</source>
+        <translation type="obsolete">9</translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation type="obsolete">10</translation>
+    </message>
+    <message>
+        <source>11</source>
+        <translation type="obsolete">11</translation>
+    </message>
+    <message>
+        <source>12</source>
+        <translation type="obsolete">12</translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="1274"/>
         <source>Font size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1302"/>
+        <location filename="../frmsettings.ui" line="1248"/>
+        <source>Font:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../frmsettings.ui" line="1330"/>
         <source>Language:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1331"/>
+        <location filename="../frmsettings.ui" line="1359"/>
         <source>(restart needed)</source>
         <translation>(Se requiere reinicio)</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1353"/>
+        <location filename="../frmsettings.ui" line="1381"/>
         <source>Set to defaults</source>
         <translation>Opciones por defecto</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1376"/>
+        <location filename="../frmsettings.ui" line="1404"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../frmsettings.ui" line="1386"/>
+        <location filename="../frmsettings.ui" line="1414"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../frmsettings.cpp" line="745"/>
+        <location filename="../frmsettings.cpp" line="810"/>
         <source>Reset settings to default values?</source>
         <translation>Restablecer la configuración a sus valores predeterminados?</translation>
     </message>

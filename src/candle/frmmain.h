@@ -4,20 +4,22 @@
 #ifndef FRMMAIN_H
 #define FRMMAIN_H
 
-#include <QMainWindow>
+#include <QtCore/QSettings>
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QBasicTimer>
+#include <QtCore/QStringList>
+#include <QtCore/QList>
+#include <QtCore/QTime>
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDropEvent>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QProgressDialog>
 #include <QtSerialPort/QSerialPort>
-#include <QSettings>
-#include <QTimer>
-#include <QBasicTimer>
-#include <QStringList>
-#include <QList>
-#include <QTime>
-#include <QMenu>
-#include <QDragEnterEvent>
-#include <QDropEvent>
-#include <QProgressDialog>
-#include <QScriptEngine>
-#include <QGroupBox>
+
+#include <QtQml/QJSEngine>
+
+#include <QtWidgets/QGroupBox>
 #include <exception>
 
 #include "parser/gcodeviewparse.h"
@@ -47,7 +49,7 @@
 #include "scriptfunctions.h"
 
 #ifdef WINDOWS
-    #include <QtWinExtras/QtWinExtras>
+//!!!    #include <QtWinExtras/QtWinExtras>
     #include "shobjidl.h"
 #endif
 
@@ -229,20 +231,22 @@ private slots:
     void onCboCommandReturnPressed();
     void onDockTopLevelChanged(bool topLevel);
     void onScroolBarAction(int action);
-    void onScriptException(const QScriptValue &exception);
+
+    void onRadUseCutterToggled(bool checked);
+    void onRadUseLaserToggled(bool checked);
 
     void updateHeightMapInterpolationDrawer(bool reset = false);
     void placeVisualizerButtons();
 
 protected:
-    void showEvent(QShowEvent *se);
-    void hideEvent(QHideEvent *he);
-    void resizeEvent(QResizeEvent *re);
-    void timerEvent(QTimerEvent *);
-    void closeEvent(QCloseEvent *ce);
-    void dragEnterEvent(QDragEnterEvent *dee);
-    void dropEvent(QDropEvent *de);
-    QMenu *createPopupMenu() override;
+    virtual void showEvent(QShowEvent *se) override;
+    virtual void hideEvent(QHideEvent *he) override;
+    virtual void resizeEvent(QResizeEvent *re) override;
+    virtual void timerEvent(QTimerEvent *) override;
+    virtual void closeEvent(QCloseEvent *ce) override;
+    virtual void dragEnterEvent(QDragEnterEvent *dee) override;
+    virtual void dropEvent(QDropEvent *de) override;
+    virtual QMenu *createPopupMenu() override;
 
 private:
     static const int BUFFERLENGTH = 127;
@@ -293,10 +297,6 @@ private:
 
     QMenu *m_tableMenu;
     QMessageBox* m_senderErrorBox;
-#ifdef WINDOWS
-    QWinTaskbarButton *m_taskBarButton;
-    QWinTaskbarProgress *m_taskBarProgress;
-#endif
 
     // Parsers
     GcodeViewParse m_viewParser;
@@ -349,7 +349,7 @@ private:
     QTimer m_timerConnection;
     QTimer m_timerStateQuery;
     QBasicTimer m_timerToolAnimation;
-    QTime m_startTime;
+    QElapsedTimer m_startTime;
 
     // Stored parser params
     QString m_storedParserStatus;
@@ -387,10 +387,10 @@ private:
     bool m_spindleCW;
 
     // Jog
-    QVector3D m_jogVector;
+    QVector4D m_jogVector;
 
     // Script
-    QScriptEngine m_scriptEngine;
+    QJSEngine m_scriptEngine;
     ScriptVars m_storedVars;
     ScriptFunctions m_scriptFunctions;
 
@@ -448,7 +448,7 @@ private:
     bool updateHeightMapGrid();
     void updateHeightMapGrid(double arg1);
     void resizeTableHeightMapSections();
-    bool eventFilter(QObject *obj, QEvent *event);
+    virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
     // Utility
     int bufferLength();
@@ -472,7 +472,6 @@ private:
 
     static bool actionLessThan(const QAction *a1, const QAction *a2);
     static bool actionTextLessThan(const QAction *a1, const QAction *a2);
-    static QScriptValue importExtension(QScriptContext *context, QScriptEngine *engine);
 };
 
 typedef QMap<QString, QList<QKeySequence>> ShortcutsMap;

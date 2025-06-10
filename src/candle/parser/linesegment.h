@@ -8,26 +8,26 @@
 #ifndef LINESEGMENT_H
 #define LINESEGMENT_H
 
-#include <QVector3D>
+#include <QtGui/QVector4D>
 #include "pointsegment.h"
 
 class LineSegment
 {
 public:
     LineSegment();
-    LineSegment(QVector3D a, QVector3D b, int num);
+    LineSegment(QVector4D a, QVector4D b, int num);
     LineSegment(LineSegment *initial);
     ~LineSegment();
 
     int getLineNumber();
-    QList<QVector3D> getPointArray();
+    QList<QVector4D> getPointArray();
     QList<double> getPoints();
 
-    QVector3D &getStart();
-    void setStart(QVector3D vector);
+    QVector4D &getStart();
+    void setStart(QVector4D vector);
 
-    QVector3D &getEnd();
-    void setEnd(QVector3D vector);
+    QVector4D &getEnd();
+    void setEnd(QVector4D vector);
 
     void setToolHead(int head);
     int getToolhead();
@@ -40,7 +40,7 @@ public:
     void setIsFastTraverse(bool isF);
     bool isFastTraverse();
 
-    bool contains(const QVector3D &point);
+    bool contains(const QVector4D &point);
 
     bool drawn() const;
     void setDrawn(bool drawn);
@@ -74,7 +74,7 @@ private:
     double m_speed;
     double m_spindleSpeed;
     double m_dwell;
-    QVector3D m_first, m_second;
+    QVector4D m_first, m_second;
 
     // Line properties
     bool m_isZMovement;

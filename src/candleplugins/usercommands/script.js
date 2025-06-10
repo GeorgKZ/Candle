@@ -1,12 +1,6 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-script.importExtension("qt.core");
-script.importExtension("qt.gui");
-script.importExtension("qt.widgets");
-script.importExtension("qt.custom");
-script.importExtension("qt.uitools");
-
 // Vars
 var appPath = app.path;
 var pluginPath = script.path;
@@ -25,6 +19,8 @@ function init()
 {
     loader.setWorkingDirectory(new QDir(pluginPath));
     loader.addPluginPath(appPath);
+    loader.addPluginPath(appPath + "/libs");
+//    loader.setLanguageChangeEnabled(true);
     
     app.settingsLoaded.connect(onAppSettingsLoaded);
     app.settingsSaved.connect(onAppSettingsSaved);
@@ -46,33 +42,40 @@ function createPanelWidget()
 
 function createSettingsWidget()
 {
+
+console.log("JAVA: usercommands::createSettingsWidget()");
+
     var f = new QFile(pluginPath + "/settings.ui");
 
     if (f.open(QIODevice.ReadOnly)) {        
         uiSettings = loader.load(f);
         
-        var t = uiSettings.tblButtons;
+        var t = uiSettings.findChild("tblButtons");
         t.verticalHeader().defaultAlignment = Qt.AlignCenter;
         t.setItemDelegateForColumn(0, new CodeDelegate(t));
-        t.setItemDelegateForColumn(1, new IconDelegate(t));
+        t.setItemDelegateForColumn(1, new IconDelegate(pluginPath, t));
+
         var d = new CodeDelegate(t);
         d.alignment = Qt.AlignLeft | Qt.AlignTop;
         d.adjustHeight = false;
         t.setItemDelegateForColumn(2, d);
         t.minimumHeight = t.verticalHeader().defaultSectionSize * 4 + t.horizontalHeader().height + t.frameWidth * 2;
 
-        uiSettings.cmdUp.clicked.connect(onCmdUpClicked);
-        uiSettings.cmdDown.clicked.connect(onCmdDownClicked);
-        uiSettings.cmdAdd.clicked.connect(onCmdAddClicked);
-        uiSettings.cmdRemove.clicked.connect(onCmdRemoveClicked);
-        uiSettings.cmdRemoveAll.clicked.connect(onCmdRemoveAllClicked);
+        uiSettings.findChild("cmdUp").clicked.connect(onCmdUpClicked);
+        uiSettings.findChild("cmdDown").clicked.connect(onCmdDownClicked);
+        uiSettings.findChild("cmdAdd").clicked.connect(onCmdAddClicked);
+        uiSettings.findChild("cmdRemove").clicked.connect(onCmdRemoveClicked);
+        uiSettings.findChild("cmdRemoveAll").clicked.connect(onCmdRemoveAllClicked);
     }
     return uiSettings;
 }
 
 function onCmdAddClicked()
 {
-    var t = uiSettings.tblButtons;
+
+console.log("JAVA: usercommands::onCmdAddClicked()");
+
+    var t = uiSettings.findChild("tblButtons");
     var r = t.rowCount++;
 
     var h = new QTableWidgetItem();
@@ -82,13 +85,16 @@ function onCmdAddClicked()
     t.setItem(r, 0, h);
     t.setItem(r, 1, new QTableWidgetItem());
     t.setItem(r, 2, new QTableWidgetItem("(Description: ...)\n(Params: ...)\n"));
-
+//!!!
     t.verticalHeader().setFixedWidth(t.verticalHeader().sizeHint.width() + 11);
 }
 
 function onCmdRemoveClicked()
 {
-    var t = uiSettings.tblButtons;
+
+console.log("JAVA: usercommands::onCmdRemoveClicked()");
+
+    var t = uiSettings.findChild("tblButtons");
     var r = t.currentRow();
     var c = t.currentColumn();
 
@@ -98,12 +104,18 @@ function onCmdRemoveClicked()
 
 function onCmdRemoveAllClicked()
 {
-    uiSettings.tblButtons.rowCount = 0;
+
+console.log("JAVA: usercommands::onCmdRemoveAllClicked()");
+
+    uiSettings.findChild("tblButtons").rowCount = 0;
 }
 
 function onCmdUpClicked()
 {
-    var t = uiSettings.tblButtons;
+
+console.log("JAVA: usercommands::onCmdUpClicked()");
+
+    var t = uiSettings.findChild("tblButtons");
     var r = t.currentRow();
     var c = t.currentColumn();
 
@@ -119,7 +131,10 @@ function onCmdUpClicked()
 
 function onCmdDownClicked()
 {
-    var t = uiSettings.tblButtons;
+
+console.log("JAVA: usercommands::onCmdDownClicked()");
+
+    var t = uiSettings.findChild("tblButtons");
     var r = t.currentRow();
     var c = t.currentColumn();
 
@@ -135,6 +150,8 @@ function onCmdDownClicked()
 
 function onAppSettingsLoaded()
 {
+console.log("JAVA: usercommands::onAppSettingLoaded()");
+
     buttonSize = app.buttonSize();
 
     var b = settings.value("buttons");
@@ -146,11 +163,15 @@ function onAppSettingsLoaded()
 
 function onAppSettingsSaved()
 {
+    console.log("JAVA: onAppSettingsSaved()");
+
     settings.setValue("buttons", storeButtonsTable());
 }
 
 function onAppSettingsAboutToShow()
 {
+    console.log("JAVA: onAppSettingsAboutToShow()");
+
     storedButtons = storeButtonsTable();
 }
 
@@ -162,13 +183,18 @@ function onAppSettingsAccepted()
 
 function onAppSettingsRejected()
 {
+    console.log("JAVA: onAppSettingsRejected()");
+
     restoreButtonsTable(storedButtons);
 }
 
 function onAppDeviceStateChanged(status)
 {
-    var t = uiSettings.tblButtons;
-    var lay = uiPanel.verticalLayout.layButtons;
+
+console.log("JAVA: usercommands::onAppDeviceStateChanged()");
+
+    var t = uiSettings.findChild("tblButtons");
+    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
 
     for (var i = 0; i < t.rowCount; i++) {
         lay.itemAt(i).widget().setEnabled(status != -1);
@@ -183,28 +209,38 @@ function onAppDeviceStateChanged(status)
 
 function onButtonClicked(button)
 {
-    app.sendCommands(uiSettings.tblButtons.item(button, 2).data(Qt.DisplayRole));
+console.log("JAVA: usercommands::onButtonClicked()");
+
+    app.sendCommands(uiSettings.findChild("tblButtons").item(button, 2).data(Qt.DisplayRole));
 }
 
 function storeButtonsTable()
 {
-    var t = uiSettings.tblButtons;
+    var t = uiSettings.findChild("tblButtons");
     var b = new Array();
+
+console.log("JAVA: storeButtonsTable() begin with b=" + b);
 
     for (var i = 0; i < t.rowCount; i++) {
         var q = new Array();
         for (var j = 0; j < 3; j++) {
-            q.push(t.item(i, j).data(Qt.DisplayRole));
+            var data = t.item(i, j).data(Qt.DisplayRole);
+            q.push(data);
         }
         b.push(q);
     }
+
+console.log("JAVA: storeButtonsTable() end");
 
     return b;
 }
 
 function restoreButtonsTable(b)
 {
-    var t = uiSettings.tblButtons;
+
+console.log("JAVA: usercommands::restoreButtonsTable()");
+
+    var t = uiSettings.findChild("tblButtons");
     t.rowCount = 0;
 
     if (b) {
@@ -214,26 +250,29 @@ function restoreButtonsTable(b)
                 var q = new QTableWidgetItem();
                 q.setText(b[i][j]);
                 if (j == 1) {
-                    c = new QIcon(pluginPath + "/images/" + b[i][j]);
+                    var c = new QIcon(pluginPath + "/images/" + b[i][j]);
                     q.setData(Qt.DecorationRole, c);
                 }
                 t.setItem(t.rowCount - 1, j, q);
             }
         }
-        t.verticalHeader().setFixedWidth(t.verticalHeader().sizeHint.width() + 11);
+        t.verticalHeader().setFixedWidth(t.verticalHeader().sizeHint().width() + 11);
     }
 }
 
 function updateButtons()
 {
-    var t = uiSettings.tblButtons;
-    var lay = uiPanel.verticalLayout.layButtons;
+console.log("JAVA: usercommands::updateButtons()");
+
+    var t = uiSettings.findChild("tblButtons");
+    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
     var k = lay.count();
     var c = t.rowCount;
 
     // Delete buttons
     for (var i = 0; i < k; i++) {
         var w = lay.takeAt(0).widget();
+        // if (!w.is_nil_self())
         w.deleteLater();
     }
 
@@ -277,7 +316,10 @@ function updateButtons()
 
 function updateActions()
 {
-    var t = uiSettings.tblButtons;
+
+    console.log("JAVA: usercommands::updateActions()");
+
+    var t = uiSettings.findChild("tblButtons");
 
     function onTriggered(i)
     {
@@ -292,7 +334,6 @@ function updateActions()
         app.removeAction(a);
         a.deleteLater();
     }
-
     for (var i = l; i < n; i++) {
         var a = new QAction(qsTr("User button") + " " + (i + 1), uiPanel);
         a.objectName = "actUserCommandsButton" + (i + 1);
@@ -303,140 +344,5 @@ function updateActions()
 
     for (var i = 0; i < storedActions.length; i++) {
         storedActions[i].setEnabled(deviceState != -1);
-    }
-}
-
-// Icon cell delegate
-function IconDelegate(parent)
-{
-    QStyledItemDelegate.call(this, parent);
-}
-
-IconDelegate.prototype = new QStyledItemDelegate();
-
-IconDelegate.prototype.createEditor = function(parent, option, index)
-{
-    var d = new QDir(pluginPath + "/images");
-    var l = d.entryList(QDir.Filters(QDir.Files));
-    var b = new QComboBox(parent);
-
-    for (var i = 0; i < l.length; i++) {
-        q = new QIcon(pluginPath + "/images/" + l[i]);
-        b.addItem(q, l[i]);
-    }
-
-    return b;
-}
-
-IconDelegate.prototype.setEditorData = function(editor, index)
-{
-    editor.currentText = index.data();
-}
-
-IconDelegate.prototype.setModelData = function(editor, model, index)
-{
-    model.setData(index, editor.currentText);
-    model.setData(index, editor.itemIcon(editor.currentIndex), Qt.DecorationRole);
-}
-
-IconDelegate.prototype.updateEditorGeometry = function(editor, option, index)
-{
-    editor.geometry = option.rect();
-}
-
-IconDelegate.prototype.paint = function(painter, option, index)
-{
-    var q = index.data(Qt.DecorationRole);
-
-    if (option.state() & QStyle.State_Selected) {
-        painter.fillRect(option.rect(), new QColor(0xcdcdff));
-    }
-
-    if (q) {
-        q.paint(painter, option.rect());
-    }
-
-    if (option.state() & QStyle.State_HasFocus) {
-        var p = new QPen();
-        p.setStyle(Qt.DotLine);
-        painter.setPen(p);
-        painter.drawRect(option.rect().adjusted(1, 0, -2, -1));
-    }
-}
-
-// Code cell delegate
-function CodeDelegate(parent)
-{
-    QStyledItemDelegate.call(this, parent);
-
-    this.alignment = Qt.AlignCenter;
-    this.adjustHeight = false;
-}
-
-CodeDelegate.prototype = new QStyledItemDelegate();
-
-CodeDelegate.prototype.createEditor = function(parent, option, index)
-{
-    var b = new QTextEdit(parent);
-
-    return b;
-}
-
-CodeDelegate.prototype.setEditorData = function(editor, index)
-{
-    editor.plainText = index.data();
-
-    var c = editor.textCursor();
-    c.movePosition(QTextCursor.End);
-    editor.setTextCursor(c);    
-}
-
-CodeDelegate.prototype.setModelData = function(editor, model, index)
-{
-    model.setData(index, editor.plainText);
-}
-
-CodeDelegate.prototype.updateEditorGeometry = function(editor, option, index)
-{
-    var r = option.rect();
-
-    if (this.adjustHeight) {
-        var t = this.parent();
-        r.setTop(0);
-        r.setHeight(t.height - t.horizontalHeader().height - t.frameWidth * 2);
-    }
-
-    editor.geometry = r;
-}
-
-CodeDelegate.prototype.paint = function(painter, option, index)
-{
-    var q = index.data();
-    
-    if (option.state() & QStyle.State_Selected) {
-        painter.fillRect(option.rect(), new QColor(0xcdcdff));
-    }
-
-    if (q) {
-        var m = new QFontMetrics(option.font());
-        var r = option.rect().adjusted(4, 4, -4, -4);
-        var l = q.split("\n");
-        var n = l.length;
-        var k = Math.min(parseInt(r.height() / m.lineSpacing()), n);
-        var s = "";
-
-        for (var i = 0; i < k; i++) {
-            if ((i == (k - 1)) && (k < n)) s += "..."; else s += l[i];
-            if (i < (k - 1)) s += "\n";
-        }
-    
-        painter.drawText(r, this.alignment | 0, s, r);
-    }
-    
-    if (option.state() & QStyle.State_HasFocus) {
-        var p = new QPen();
-        p.setStyle(Qt.DotLine);
-        painter.setPen(p);
-        painter.drawRect(option.rect().adjusted(1, 0, -2, -1));
     }
 }

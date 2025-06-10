@@ -8,7 +8,7 @@
 #ifndef POINTSEGMENT_H
 #define POINTSEGMENT_H
 
-#include <QVector3D>
+#include <QtGui/QVector4D>
 
 #include "arcproperties.h"
 
@@ -23,11 +23,11 @@ public:
 
     PointSegment();
     PointSegment(PointSegment *ps);
-    PointSegment(const QVector3D *b, int num);
-    PointSegment(QVector3D *point, int num, QVector3D *center, double radius, bool clockwise);
+    PointSegment(const QVector4D *b, int num);
+    PointSegment(QVector4D *point, int num, QVector4D *center, double radius, bool clockwise);
     ~PointSegment();
-    void setPoint(QVector3D m_point);
-    QVector3D* point();
+    void setPoint(QVector4D m_point);
+    QVector4D* point();
 
     QVector<double> points();
     void setToolHead(int head);
@@ -44,9 +44,9 @@ public:
     bool isArc();
     void setIsFastTraverse(bool isF);
     bool isFastTraverse();
-    void setArcCenter(QVector3D *center);
+    void setArcCenter(QVector4D *center);
     QVector<double> centerPoints();
-    QVector3D *center();
+    QVector4D *center();
     void setIsClockwise(bool clockwise);
     bool isClockwise();
     void setRadius(double rad);
@@ -71,7 +71,7 @@ private:
     double m_speed;
     double m_spindleSpeed;
     double m_dwell;
-    QVector3D *m_point;
+    QVector4D *m_point;
     bool m_isMetric;
     bool m_isZMovement;
     bool m_isArc;

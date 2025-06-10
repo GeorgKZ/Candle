@@ -1,18 +1,43 @@
 #include "camerawidget.h"
 
-#include <QCamera>
-#include <QCameraViewfinder>
-#include <QCameraImageCapture>
-#include <QImageEncoderSettings>
-#include <QScrollBar>
-#include <QMouseEvent>
-#include <QPainter>
-#include <QVBoxLayout>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPainter>
+#include <QtMultimedia/QCamera>
+#include <QtMultimedia/QCameraDevice>
+#include <QtMultimedia/QMediaCaptureSession>
+#include <QtMultimedia/QMediaDevices>
+#include <QtMultimediaWidgets/QGraphicsVideoItem>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QGraphicsScene>
+#ifdef QT_FEATUTE_permissions
+  #include <QtCore/QPermission>
+#endif
 
-CameraWidget::CameraWidget(QWidget *parent): QWidget(parent), m_camera(0), m_viewFinder(0), 
-    m_resolution(QSize(1280, 720)), m_zoom(1.0), m_mousePos(QPoint(0, 0))
+CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(new QMediaCaptureSession)
 {
-    m_viewFinder = new QCameraViewfinder(this);
+
+    qDebug() << "CameraWidget::constructor(parent=" << (unsigned long long)(parent) << ")";
+
+    /** 
+     * Для MacOS в файле Info.plist должны быть установлены разрешения:
+     * <key>NSCameraUsageDescription</key>
+     * <string>The camera is used by CameraWidget plugin.</string>
+     * <key>com.apple.security.device.camera</key>
+     * <true/>
+     * https://doc.qt.io/qt-6/macos.html
+     */
+
+    m_view = new myGraphicsView(this);
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    m_scene = new QGraphicsScene(m_view);
+    m_item = new QGraphicsVideoItem();
+    m_view->setScene(m_scene);
+    m_scene->addItem(m_item);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
@@ -22,25 +47,100 @@ CameraWidget::CameraWidget(QWidget *parent): QWidget(parent), m_camera(0), m_vie
     m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_scrollArea->horizontalScrollBar()->setEnabled(false);
     m_scrollArea->verticalScrollBar()->setEnabled(false);
-    m_scrollArea->setWidget(m_viewFinder);
+    m_scrollArea->setWidget(m_view);
 
     layout->addWidget(m_scrollArea);
-    layout->setMargin(0);
+    layout->setContentsMargins(0,0,0,0);
 
-    m_overlay = new Overlay(m_viewFinder);
+    m_zoom = 1.0;
+    m_videoScale = 1.0;
+    m_camera = nullptr;
+    m_aimColor = -65536;
+    m_aimSize = 20;
+    m_aimLineWidth = 1;
+    m_aimPosition = QPoint(0,0);
+
+    if (!permissionChecking()) {
+        return;
+    }
+
+    QCameraDevice dev;
+    if (QMediaDevices::videoInputs().empty()) {
+        /** Взять камеру по умолчанию */
+        dev = QMediaDevices::defaultVideoInput();
+        m_cameraName = QString();
+        /** Взять разрешение по умолчанию */
+        m_resolution = QSize(1280,720);
+        qDebug() << "CameraWidget::CameraWidget - got default camera";
+    } else {
+        /** Взять первую доступную камеру */
+        dev = QMediaDevices::videoInputs()[0];
+        m_cameraName = dev.description();
+        /** Взять первое доступное разрешение */
+        m_resolution = dev.videoFormats()[0].resolution();
+        qDebug() << "CameraWidget::CameraWidget - got first available camera" << m_cameraName << ", resolution=" << m_resolution;
+    }
+    setCamera(dev);
+}
+
+bool CameraWidget::permissionChecking()
+{
+#ifdef QT_FEATUTE_permissions
+    QCameraPermission cameraPermission;
+    /**
+     * Алгоритм:
+     *
+     * 1. Проверить наличие разрешения на использование камеры (камер).
+     */
+    switch (qApp->checkPermission(cameraPermission)) {
+    /**
+     * 1.1. Если ни разрешение, ни запрет на использование камеры не были объявлены, запросить
+     * разрешение, функция будет вызвана повторно.
+     */
+    case Qt::PermissionStatus::Undetermined:
+        qApp->requestPermission(cameraPermission, this, &CameraWidget::permissionChecking);
+//!!!
+        return true;
+    /**
+     * 1.2. Если явно объявлен запрет на использование камеры, закончить инициализацию.
+     */
+    case Qt::PermissionStatus::Denied:
+        qWarning("Camera permission is not granted!");
+        return false;
+    /**
+     * 1.3. Если явно объявлено разрешение на использование камеры, продолжить инициализацию.
+     */
+    case Qt::PermissionStatus::Granted:
+        return true;
+    }
+#else
+    return true;
+#endif
+}
+
+CameraWidget::~CameraWidget()
+{
+    m_scrollArea->deleteLater();
+    layout()->deleteLater();
+    m_scene->removeItem(m_item);
+    m_item->deleteLater();
+    m_scene->deleteLater();
+    m_view->deleteLater();
 }
 
 void CameraWidget::setCameraName(QString cameraName)
 {
-    m_cameraName = cameraName;
+    qDebug() << "CameraWidget::setCameraName(" << cameraName << ")";
 
     if (m_cameraName.isEmpty()) {
-        setCamera(QCameraInfo::defaultCamera());
+        m_cameraName = cameraName;
+        setCamera(QMediaDevices::defaultVideoInput());
         return;
     }
 
-    foreach (const QCameraInfo &i, QCameraInfo::availableCameras()) {
-        if (i.description() == m_cameraName) {
+    foreach (const QCameraDevice &i, QMediaDevices::videoInputs()) {
+        if (i.description() == cameraName) {
+            m_cameraName = cameraName;
             setCamera(i);
             break;
         }
@@ -55,249 +155,446 @@ QString CameraWidget::cameraName() const
 QStringList CameraWidget::availableCameras() const
 {
     QStringList l;
-
-    foreach (const QCameraInfo &i, QCameraInfo::availableCameras()) l << i.description();
-
+    foreach (const QCameraDevice &i, QMediaDevices::videoInputs()) {
+        l << i.description();
+    }
     return l;
 }
 
 QStringList CameraWidget::availableResolutions() const
 {
-    if (m_camera) {
-        QStringList l;
-        foreach (QSize s, m_camera->supportedViewfinderResolutions()) l.append(QString("%1x%2").arg(s.width()).arg(s.height()));
-        return l;
+    QStringList l;
+    foreach(QCameraFormat f, m_camera->cameraDevice().videoFormats()) {
+        l.append(QString("%1x%2").arg(f.resolution().width()).arg(f.resolution().height()));
+    }
+    return l;
+}
+
+void CameraWidget::setCamera(const QCameraDevice& cameraDevice)
+{
+    if (m_camera == nullptr || m_camera->cameraDevice() != cameraDevice) {
+
+        if (m_captureSession->camera() != nullptr && m_captureSession->camera() != m_camera) {
+          m_captureSession->camera()->stop();
+          delete m_captureSession->camera();
+          qDebug() << "CameraWidget::setCamera - delete prev. capture camera";
+        }
+
+        if (m_camera != nullptr) {
+            if (m_camera->isActive()) {
+               qDebug() << "CameraWidget::setCamera - stop prev. camera";
+               this->stop();
+            }
+            m_camera->deleteLater();
+            qDebug() << "CameraWidget::setCamera - delete prev. camera";
+        }
+
+        qDebug() << "CameraWidget::setCamera - creating new camera";
+        m_camera = new QCamera(cameraDevice);
+
+        qDebug() << "CameraWidget::setCamera - setting new capture camera";
+        m_captureSession->setCamera(m_camera);
+
+        // Установить preview для сессии захвата
+        qDebug() << "CameraWidget::setCamera - setting new preview";
+        m_captureSession->setVideoOutput(m_item);
+
+        if (isVisible()) {
+            qDebug() << "CameraWidget::setCamera - starting new camera";
+            this->start();
+        }
+        setResolution(m_resolution);
     } else {
-        return QStringList();
+        qDebug() << "CameraWidget::setCamera - ignoring (same device)";
     }
 }
 
-void CameraWidget::setCamera(const QCameraInfo &cameraInfo)
+bool CameraWidget::isCameraActive() const
 {
-    if (m_camera) {
-        m_camera->stop();
-        m_camera->deleteLater();
-    }
-
-    m_camera = new QCamera(cameraInfo);
-    m_camera->setViewfinder(m_viewFinder);
-
-    m_camera->load();
-    m_camera->setCaptureMode(QCamera::CaptureViewfinder);
-
-    QCameraViewfinderSettings fs = m_camera->viewfinderSettings();
-    fs.setResolution(m_resolution);
-    m_camera->setViewfinderSettings(fs);
-
-    if (isVisible()) m_camera->start();
-
-    updateSize();
+    return m_camera->isActive();
 }
 
 void CameraWidget::start()
 {
-    if (m_camera) m_camera->start();
+    qDebug() << "CameraWidget::start()";
+    m_camera->start();
 }
 
 void CameraWidget::stop()
 {
-    if (m_camera) m_camera->stop();
+    qDebug() << "CameraWidget::stop()";
+    m_camera->stop();
 }
 
-void CameraWidget::resizeEvent(QResizeEvent *e)
+qreal CameraWidget::videoScale() const
 {
-    QWidget::resizeEvent(e);
-
-    updateSize();
-
-    setAimPos(QVariantList() << m_overlay->aimPosition().x() << m_overlay->aimPosition().y());
+    return m_videoScale;
 }
 
 void CameraWidget::updateSize()
 {
-    QSize size = contentsRect().size();
+    qreal widthRatio = ((qreal)m_scrollArea->contentsRect().size().width()) / m_resolution.width();
+    qreal heightRatio = ((qreal)m_scrollArea->contentsRect().size().height()) / m_resolution.height();
 
-    double aspect = (double)(size.width()) / (size.height());
-    double cameraAspect = (double)m_resolution.width() / m_resolution.height();
+    m_videoScale = qMax(qMax(heightRatio, widthRatio), m_zoom);
 
-    if (aspect >= cameraAspect) {
-        m_viewFinder->resize(size.width() * m_zoom, size.width() / cameraAspect * m_zoom);
-    } else {
-        m_viewFinder->resize(size.height() * cameraAspect * m_zoom, size.height() * m_zoom);
+    m_item->setSize(m_videoScale * m_resolution);
+    m_view->resize(m_videoScale * m_resolution);
+}
+
+void CameraWidget::setResolution(const QSize &resolution)
+{
+    foreach(QCameraFormat f, m_camera->cameraDevice().videoFormats()) {
+        if (f.resolution() == resolution) {
+            m_resolution = resolution;
+            m_camera->setCameraFormat(f);
+            updateSize();
+            qDebug() << "CameraWidget::setResolution, resol=" << m_camera->cameraFormat().resolution();
+            emit resolutionChanged(m_resolution);
+            return;
+        }
     }
-
-    m_overlay->resize(m_viewFinder->size());
+    qDebug() << "CameraWidget::setResolution - ignoring wrong resolution";
 }
 
-void CameraWidget::setResolution(QVariantList resolution)
+QSize CameraWidget::resolution() const
 {
-    qDebug() << "setResolution" << resolution;
-    if (resolution.size() != 2) return;
-    m_resolution = QSize(resolution.at(0).toInt(), resolution.at(1).toInt());
+    return m_resolution;
 }
 
-QVariantList CameraWidget::resolution() const
+void CameraWidget::setZoom(qreal zoom)
 {
-    return QVariantList() << m_resolution.width() << m_resolution.height();
-}
+    qDebug() << "CameraWidget::setZoom(" << zoom << ")";
 
-void CameraWidget::setZoom(double zoom)
-{
-    qDebug() << "setZoom" << zoom;
-    if (zoom >= 1) {
+    zoom = qBound<qreal>(1.0, zoom, 8.0);
+    if (m_zoom != zoom) {
         m_zoom = zoom;
         updateSize();
+        emit zoomChanged(m_zoom);
     }
 }
 
-double CameraWidget::zoom() const
+qreal CameraWidget::zoom() const
 {
+    qDebug() << "CameraWidget::zoom()";
     return m_zoom;
 }
 
-void CameraWidget::setPos(QVariantList pos)
+void CameraWidget::setPos(const QPoint &position)
 {
-    if (pos.size() != 2) return;
+    QPoint oldPos = pos();
 
-    m_pos = QPoint(pos.at(0).toInt(), pos.at(1).toInt());
+    m_scrollArea->horizontalScrollBar()->setValue(position.x());
+    m_scrollArea->verticalScrollBar()->setValue(position.y());
 
-    m_scrollArea->horizontalScrollBar()->setValue(m_pos.x());
-    m_scrollArea->verticalScrollBar()->setValue(m_pos.y());
-
-    emit posChanged(pos);
+    QPoint newPos = pos();
+    if (oldPos != newPos) {
+        emit posChanged(newPos);
+    }
 }
 
-QVariantList CameraWidget::pos() const
+QPoint CameraWidget::pos() const
 {
-    return QVariantList() << m_pos.x() << m_pos.y();
+    return QPoint(m_scrollArea->horizontalScrollBar()->value(),
+                  m_scrollArea->verticalScrollBar()->value());
 }
 
-void CameraWidget::setAimPos(QVariantList aimPos)
+void CameraWidget::setAimPos(const QPoint &aimPos)
 {
-    if (aimPos.size() != 2) return;
 
-    if (qIsNaN(aimPos.at(0).toDouble()) || qIsNaN(aimPos.at(1).toDouble())) return;
+    qDebug() << "CameraWidget::setAimPos()";
 
-    m_overlay->setAimPosition(QPointF(aimPos.at(0).toDouble(), aimPos.at(1).toDouble()));
-    m_overlay->update();
+    int maxx = m_view->frameSize().width() - m_aimLineWidth;
+    int maxy = m_view->frameSize().height() - m_aimLineWidth;
 
-    emit aimPosChanged(aimPos);
+    if (maxx <= 0 || maxy <= 0) return;
+
+    QPoint newAimPos( qBound<int>(0, aimPos.x(), maxx), qBound<int>(0, aimPos.y(), maxy) );
+
+    if (newAimPos != m_aimPosition) {
+        m_aimPosition = newAimPos;
+        emit aimPosChanged(m_aimPosition);
+    }
 }
 
-QVariantList CameraWidget::aimPos() const
+QPoint CameraWidget::aimPos() const
 {
-    QPointF p = m_overlay->aimPosition();
-
-    return QVariantList() << p.x() << p.y();
+    qDebug() << "CameraWidget::aimPos()";
+    return m_aimPosition;
 }
 
 void CameraWidget::setAimSize(int aimSize)
 {
-    m_overlay->setAimSize(aimSize);
-
-    emit aimSizeChanged(aimSize);
+    if (aimSize >= 0 && m_aimSize != aimSize) {
+        m_aimSize = aimSize;
+        emit aimSizeChanged(aimSize);
+    }
 }
 
 int CameraWidget::aimSize() const
 {
-    return m_overlay->aimSize();
+    return m_aimSize;
 }
 
 void CameraWidget::setAimLineWidth(int aimLineWidth)
 {
-    m_overlay->setAimLineWidth(aimLineWidth);
-
-    emit aimLineWidthChanged(aimLineWidth);
+    if (m_aimLineWidth >= 0 && m_aimLineWidth != aimLineWidth) {
+        m_aimLineWidth = aimLineWidth;
+        emit aimLineWidthChanged(aimLineWidth);
+    }
 }
 
 int CameraWidget::aimLineWidth() const
 {
-    return m_overlay->aimLineWidth();
+    return m_aimLineWidth;
 }
 
 void CameraWidget::setAimColor(int aimColor)
 {
-    m_overlay->setAimColor(aimColor);
-
-    emit aimColorChanged(aimColor);
+    if (m_aimColor != aimColor) {
+        m_aimColor = aimColor;
+        emit aimColorChanged(aimColor);
+    }
 }
 
 int CameraWidget::aimColor() const
 {
-    return m_overlay->aimColor();
+    return m_aimColor;
 }
 
-void CameraWidget::mousePressEvent(QMouseEvent *e)
+void CameraWidget::resizeEvent(QResizeEvent *e)
 {
-    if (e->buttons() == Qt::LeftButton) {
-        m_mousePos = e->pos();
-        m_aimPos = m_overlay->aimPosition();
-    }
+    /**
+     * Алгоритм:
+     *
+     * Вызвать стандартный обработчик события изменения размера.
+     */
+    QWidget::resizeEvent(e);
 
-    QWidget::mousePressEvent(e);
-}
+    /**
+     * Запомнить предыдущие координаты прицельных элементов и сдвига видеокадра,
+     * предыдущий коэффициент масштабирования изображения камеры.
+     */
+    QPoint prevAim = aimPos();
+    QPoint prevPos = pos();
+    qreal prevScale = m_videoScale;
 
-void CameraWidget::mouseMoveEvent(QMouseEvent *e)
-{
-
-    if (e->buttons() == Qt::LeftButton && e->modifiers() == Qt::ShiftModifier) {
-
-        QPointF d = QPointF((double)(e->pos() - m_mousePos).x() / m_overlay->width(), 
-            (double)(e->pos() - m_mousePos).y() / m_overlay->height());
-
-        QPointF o = m_aimPos + d;
-        setAimPos(QVariantList() << o.x() << o.y());
-
-    } else if (e->buttons() == Qt::LeftButton) {
-        QPoint d = e->pos() - m_mousePos;
-
-        setPos(QVariantList() << m_scrollArea->horizontalScrollBar()->value() - d.x() 
-            << m_scrollArea->verticalScrollBar()->value() - d.y());
-
-        m_mousePos = e->pos();
-    }
-
-    QWidget::mouseMoveEvent(e);
-}
-
-void CameraWidget::wheelEvent(QWheelEvent *e)
-{
-    double f =  e->delta() > 0 ? 1.25 : 0.8;
-
-    double prevZoom = m_zoom;
-    m_zoom = qBound<double>(1, m_zoom * f, 8);
-
-    QPointF deltaPos = e->posF() / prevZoom - m_scrollArea->widget()->pos() / prevZoom;
-    QPointF delta = deltaPos * m_zoom - deltaPos * prevZoom;
-    QPoint d = delta.toPoint();
-
+    /**
+     * Выполнить пересчёт коэффициента масштабирования изображения камеры и
+     * изменение размера видеокадра.
+     */
     updateSize();
 
-    setPos(QVariantList() << m_scrollArea->horizontalScrollBar()->value() + d.x() <<
-        m_scrollArea->verticalScrollBar()->value() + d.y());
+    /**
+     * Пересчитать координаты прицельных элементов, чтобы они указывали по возможности
+     * на ту же самую точку изображения
+     */
+    setAimPos(aimPos() * m_videoScale / prevScale);
 
-    setAimPos(QVariantList() << m_overlay->aimPosition().x() << m_overlay->aimPosition().y());
-
-    emit zoomChanged(m_zoom);
+    /**
+     * Пересчитать координаты сдвига видеокадра, чтобы координаты прицельных элементов
+     * относительно окна виджета по возможности остались прежними.
+     */
+    setPos(prevPos + aimPos() - prevAim);
 }
 
-void CameraWidget::hideEvent(QHideEvent *e)
+void CameraWidget::hideEvent(QHideEvent *event)
 {
-    QWidget::hideEvent(e);
+    qDebug() << "CameraWidget::hideEvent";
 
-    if (m_camera && m_camera->state() == QCamera::ActiveState) {
-        m_camera->stop();
+    /**
+     * Алгоритм:
+     *
+     * Вызвать стандартный обработчик события выключения отображения.
+     */
+    QWidget::hideEvent(event);
+
+    /**
+     * Если текущая камера работает, выключить её.
+     */
+    if (isCameraActive()) {
+        stop();
     }
 }
 
-void CameraWidget::showEvent(QShowEvent *e)
+void CameraWidget::showEvent(QShowEvent *event)
 {
-    QWidget::showEvent(e);
+    qDebug() << "CameraWidget::showEvent";
 
-    if (m_camera && m_camera->state() == QCamera::LoadedState) {
+    /**
+     * Алгоритм:
+     *
+     * Вызвать стандартный обработчик события включения отображения.
+     */
+    QWidget::showEvent(event);
+
+    if (m_camera->isAvailable()) {
         setCameraName(m_cameraName);
     }
 
-    m_scrollArea->horizontalScrollBar()->setValue(m_pos.x());
-    m_scrollArea->verticalScrollBar()->setValue(m_pos.y());
+    /**
+     * Если текущая камера не работает, включить её.
+     */
+    if (!isCameraActive()) {
+        start();
+    }
+}
+
+myGraphicsView::myGraphicsView(CameraWidget *parent) :
+    QGraphicsView(static_cast<QWidget*>(parent)), m_parent(parent) {}
+
+void myGraphicsView::paintEvent(QPaintEvent *event)
+{
+    /**
+     * Алгоритм:
+     *
+     * Вызвать стандартный обработчик события отрисовки вида.
+     */
+    QGraphicsView::paintEvent(event);
+
+    /**
+     * Если текущая камера не работает, то больше ничего не делать.
+     */
+    if (!m_parent->isCameraActive()) {
+        return;
+    }
+
+    /** Создать экземпляр QPainter на основе родительского виджета. */
+    QPainter painter(viewport());
+
+    /** Настроить "карандаш", который будет использоваться при отображении. */
+    QPen pen(Qt::DashLine);
+    pen.setWidth(m_parent->aimLineWidth());
+    pen.setColor(QColor::fromRgb(m_parent->aimColor()));
+
+    /** Получить координаты перекрестия прицельных элементов в системе координат окна виджета */
+    int x = m_parent->aimPos().x();
+    int y = m_parent->aimPos().y();
+
+    /** Получить размеры видеокадра, приведённого к окну виджета */
+    int width = frameSize().width();
+    int height = frameSize().height();
+
+    /** Установить "карандаш" в качестве используемого при отображении. */
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setPen(pen);
+
+    /** Нарисовать прицельные линии. */
+    if (x > m_parent->aimSize() / 2) {
+        painter.drawLine(0, y, x - m_parent->aimSize() / 2, y);
+    }
+    if (x <= width - m_parent->aimSize() / 2) {
+        painter.drawLine(x + m_parent->aimSize() / 2, y, width, y);
+    }
+    if (y > m_parent->aimSize() / 2) {
+        painter.drawLine(x, 0, x, y - m_parent->aimSize() / 2);
+    }
+    if (y <= width - m_parent->aimSize() / 2) {
+        painter.drawLine(x, y + m_parent->aimSize() / 2, x, height);
+    }
+
+    /** Нарисовать прицельную окружность. */
+    painter.drawEllipse(m_parent->aimPos(), m_parent->aimSize() / 2, m_parent->aimSize() / 2);
+}
+
+void myGraphicsView::mouseMoveEvent(QMouseEvent *event)
+{
+    /**
+     * Алгоритм:
+     *
+     * Вызвать стандартный обработчик события изменения координат "мыши".
+     */
+    QGraphicsView::mouseMoveEvent(event);
+
+    /**
+     * Если текущая камера не работает, то ничего не делать.
+     */
+    if (!m_parent->isCameraActive()) {
+        return;
+    }
+
+    /**
+     * Определить изменение координат "мыши" относительно последних сохранённых.
+     */
+    QPoint d = (event->globalPosition() - m_mousePos).toPoint();
+
+    /** Сохранить новые координаты мыши */
+    m_mousePos = event->globalPosition();
+
+    if (event->buttons() == Qt::LeftButton) {
+
+        /** Если было нажатие левой кнопки мыши с шифтом,... */
+        if (event->modifiers() == Qt::ShiftModifier) {
+
+            /** установить новые координаты перекрестия прицельных линий... */
+             m_parent->setAimPos(m_parent->aimPos() + d);
+
+        /** Если было нажатие левой кнопки мыши без шифта,... */
+        } else {
+
+            /** установить новые координаты сдвига видеокадра относительно окна виджета. */
+            m_parent->setPos(m_parent->pos() - d);
+        }
+    }
+}
+
+void myGraphicsView::wheelEvent(QWheelEvent *event)
+{
+
+    /**
+     * Алгоритм:
+     *
+     * Сандартный обработчик события поворота колёсика "мыши" не вызывать, так как он
+     * обычно приводит к сдвигу видекадра (действует на скроллеры).
+     *
+     * Если текущая камера не работает, то ничего не делать.
+     */
+    if (!m_parent->isCameraActive()) {
+        return;
+    }
+
+    /**
+     * Запомнить предыдущие координаты прицельных элементов и сдвига видеокадра,
+     * предыдущий коэффициент масштабирования изображения камеры.
+     */
+    QPoint prevAim = m_parent->aimPos();
+    QPoint prevPos = m_parent->pos();
+    qreal prevScale = m_parent->videoScale();
+
+    /**
+     * Установить новый коэффициент масштабирования видеокадра в зависимости от
+     * угла поворота колёсика "мыши" --- сильнее при "наезде" и слабее при "отъезде".
+     * Если видеокадр уже масштабирован из-за размеров окна виджета, превышающих
+     * размер видеокадра, повторить изменение коэффициента.
+     */
+    for (int i = 0; m_parent->videoScale() == prevScale && i < 3; ++i) {
+        m_parent->setZoom(m_parent->zoom() * (event->angleDelta().y() > 0 ? 1.25 : 0.8));
+    }
+
+    /**
+     * Пересчитать координаты прицельных элементов, чтобы они указывали по возможности
+     * на ту же самую точку изображения
+     */
+    m_parent->setAimPos(m_parent->aimPos() * m_parent->videoScale() / prevScale);
+
+    /**
+     * Пересчитать координаты сдвига видеокадра, чтобы координаты прицельных элементов
+     * относительно окна виджета по возможности остались прежними.
+     */
+    m_parent->setPos(prevPos + m_parent->aimPos() - prevAim);
+}
+
+void myGraphicsView::mousePressEvent(QMouseEvent *event)
+{
+    /**
+     * Алгоритм:
+     *
+     * Вызвать стандартный обработчик события нажатия клавиши "мыши".
+     */
+    QGraphicsView::mousePressEvent(event);
+
+    /**
+     * Сохранить новые координаты мыши
+     */
+    m_mousePos = event->globalPosition();
 }

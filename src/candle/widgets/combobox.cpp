@@ -1,8 +1,8 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#include <QDebug>
-#include <QKeyEvent>
+#include <QtCore/QDebug>
+#include <QtGui/QKeyEvent>
 #include "combobox.h"
 
 ComboBox::ComboBox(QWidget *parent) : QComboBox(parent)

@@ -8,6 +8,8 @@ StyledToolButtonPlugin::StyledToolButtonPlugin(QObject *parent): QObject(parent)
 
 void StyledToolButtonPlugin::initialize(QDesignerFormEditorInterface *core)
 {
+    Q_UNUSED(core)
+
     if (m_initialized) return;
 
     m_initialized = true;

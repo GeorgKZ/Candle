@@ -1,20 +1,21 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#include "frmsettings.h"
-#include "ui_frmsettings.h"
+#include <QtCore/QDir>
+#include <QtCore/QLocale>
+#include <QtCore/QRegularExpression>
+#include <QtCore/QTranslator>
+#include <QtGui/QKeyEvent>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QColorDialog>
+#include <QtWidgets/QStyledItemDelegate>
+#include <QtWidgets/QKeySequenceEdit>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPlainTextEdit>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
-#include <QDebug>
-#include <QScrollBar>
-#include <QColorDialog>
-#include <QStyledItemDelegate>
-#include <QKeySequenceEdit>
-#include <QKeyEvent>
-#include <QLineEdit>
-#include <QPlainTextEdit>
-#include <QDir>
-#include <QLocale>
+#include "frmsettings.h"
+#include "ui_frmsettings.h"
 
 class CustomKeySequenceEdit : public QKeySequenceEdit
 {
@@ -48,6 +49,9 @@ public:
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override
     {
+        Q_UNUSED(option)
+        Q_UNUSED(index)
+
         return new CustomKeySequenceEdit(parent);
     }
 
@@ -90,17 +94,30 @@ frmSettings::frmSettings(QWidget *parent) :
 
     searchPorts();
 
-    // Languages
+    /**
+     * Заполнить выпадающий список языков локализации cboLanguage языками, соответствующими
+     * файлам qm в директории translations.
+     */
     QDir d(qApp->applicationDirPath() + "/translations");
     QStringList fl = QStringList() << "candle_*.qm";
     QStringList tl = d.entryList(fl, QDir::Files);
-    QRegExp fx("_([^\\.]+)");
+    QRegularExpression fx("_([^\\.]+)");
     foreach (const QString &t, tl) {
-        if (fx.indexIn(t) != -1) {
-            QLocale l(fx.cap(1));
+
+        QRegularExpressionMatch match = fx.match(t);
+        if (match.hasMatch()) {
+            QLocale l(match.captured(1));
             ui->cboLanguage->addItem(l.nativeLanguageName(), l.name().left(2));
         }
     }
+    /**
+     * Связать изменение выбранного текста в выпадающем списке языков локализации cboLanguage
+     * с функцией обработки этого события.
+     */
+    connect(ui->cboLanguage, SIGNAL(currentIndexChanged(int)), this, SLOT(on_cboLanguageChanged(int)));
+
+
+    set_defaults();
 }
 
 frmSettings::~frmSettings()
@@ -497,6 +514,17 @@ int frmSettings::fontSize()
     return ui->cboFontSize->currentText().toInt();
 }
 
+QString frmSettings::font()
+{
+    return ui->cboFont->currentText();
+}
+
+void frmSettings::setFont(const QString& fontName)
+{
+//!!!
+    ui->cboFont->setCurrentText(fontName);
+}
+
 void frmSettings::setFontSize(int fontSize)
 {
     ui->cboFontSize->setCurrentText(QString::number(fontSize));
@@ -639,18 +667,55 @@ QString frmSettings::language()
     return ui->cboLanguage->currentData().toString();
 }
 
+extern QTranslator* candle_translator;
+
 void frmSettings::setLanguage(QString language)
 {
     int i = ui->cboLanguage->findData(language);
-    if (i != -1) ui->cboLanguage->setCurrentIndex(i);
+    if (i != -1) {
+        ui->cboLanguage->setCurrentIndex(i);
+
+        QString translationsFolder = qApp->applicationDirPath() + "/translations/";
+        QString translationFileName = translationsFolder + "candle_" + language + ".qm";
+
+        if (QFile::exists(translationFileName)) {
+            qInfo() << "Loading Candle translation from" << translationFileName << "...";
+            QTranslator* new_translator = new QTranslator();
+            if (new_translator->load(translationFileName)) {
+                qApp->removeTranslator(candle_translator);
+                delete candle_translator;
+                candle_translator = new_translator;
+                qInfo() << "Candle translation" << translationFileName << "loaded";
+                qApp->installTranslator(candle_translator);
+            } else {
+                qCritical() << "Error loading Candle translation";
+                delete new_translator;
+            }
+            //!!! TODO загрузить и переводы для Qt, для плюгинов
+
+            // Изменить язык для этой формы
+            ui->retranslateUi(this);
+
+            //!!! TODO обработать события изменения языка
+
+        } else {
+            qCritical() << "Error - no such Candle translation file";
+        }
+    }
 }
 
-QVector3D frmSettings::machineBounds()
+void frmSettings::on_cboLanguageChanged(int language_index)
+{
+    setLanguage(ui->cboLanguage->itemData(language_index).toString());
+}
+
+
+QVector4D frmSettings::machineBounds()
 {
     return m_machineBounds;
 }
 
-void frmSettings::setMachineBounds(QVector3D bounds)
+void frmSettings::setMachineBounds(QVector4D bounds)
 {
     m_machineBounds = bounds;
 }
@@ -744,7 +809,14 @@ void frmSettings::on_cmdDefaults_clicked()
 {
     if (QMessageBox::warning(this, qApp->applicationDisplayName(), tr("Reset settings to default values?"),
                              QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel) != QMessageBox::Yes) return;
+    set_defaults();
+    setLanguage("en");
 
+    emit settingsSetByDefault();
+}
+
+void frmSettings::set_defaults()
+{
     setPort("");
     setBaud(115200);
 
@@ -794,6 +866,7 @@ void frmSettings::on_cmdDefaults_clicked()
     ui->clpToolpathStart->setColor(QColor(255, 0, 0));
     ui->clpToolpathEnd->setColor(QColor(0, 255, 0));
 
+    setFont("Ubuntu-Regular");
     setFontSize(9);
 
     // Shortcuts
@@ -831,14 +904,16 @@ void frmSettings::on_cmdDefaults_clicked()
     ui->chkToolChangePause->setChecked(false);
     ui->chkToolChangeUseCommands->setChecked(false);
     ui->chkToolChangeUseCommandsConfirm->setChecked(false);
-    setLanguage("en");
-
-    emit settingsSetByDefault();
 }
 
 void frmSettings::on_cboFontSize_currentTextChanged(const QString &arg1)
 {
-    qApp->setStyleSheet(QString(qApp->styleSheet()).replace(QRegExp("font-size:\\s*\\d+"), "font-size: " + arg1));
+    qApp->setStyleSheet(QString(qApp->styleSheet()).replace(QRegularExpression("font-size:\\s*\\d+"), "font-size: " + arg1));
+}
+
+void frmSettings::on_cboFont_currentTextChanged(const QString &arg1)
+{
+    qDebug() << "Need to change font to" << arg1 << "in" << QString(qApp->styleSheet());
 }
 
 void frmSettings::on_radDrawModeVectors_toggled(bool checked)

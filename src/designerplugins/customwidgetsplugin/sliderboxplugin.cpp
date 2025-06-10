@@ -8,6 +8,8 @@ SliderBoxPlugin::SliderBoxPlugin(QObject *parent): QObject(parent), m_initialize
 
 void SliderBoxPlugin::initialize(QDesignerFormEditorInterface *core)
 {
+    Q_UNUSED(core)
+
     if (m_initialized) return;
 
     m_initialized = true;

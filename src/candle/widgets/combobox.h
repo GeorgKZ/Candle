@@ -4,8 +4,8 @@
 #ifndef COMBOBOX_H
 #define COMBOBOX_H
 
-#include <QWidget>
-#include <QComboBox>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QComboBox>
 
 class ComboBox : public QComboBox
 {

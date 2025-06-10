@@ -17,8 +17,11 @@ bool HeightMapGridDrawer::updateData()
 
     // Prepare vertex
     VertexData vertex;
-    vertex.start = QVector3D(sNan, sNan, m_pointSize);
+    vertex.start = QVector4D(sNan, sNan, m_pointSize, 1.0);
 
+    if (m_model == nullptr) {
+        return false;
+    }
     // Calculate grid parameters
     int gridPointsX = m_model->columnCount();
     int gridPointsY = m_model->rowCount();
@@ -29,15 +32,15 @@ bool HeightMapGridDrawer::updateData()
     // Probe path / dots
     for (int i = 0; i < gridPointsY; i++) {
         for (int j = 0; j < gridPointsX; j++) {
-            if (m_model == NULL || qIsNaN(m_model->data(m_model->index(i, j), Qt::UserRole).toDouble())) {
+            if (/* m_model == NULL || */ qIsNaN(m_model->data(m_model->index(i, j), Qt::UserRole).toDouble())) {
                 vertex.color = QVector3D(1.0f, 0.6f, 0.0f);
-                vertex.position = QVector3D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_zTop);
+                vertex.position = QVector4D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_zTop, 1.0);
                 m_lines.append(vertex);
-                vertex.position = QVector3D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_zBottom);
+                vertex.position = QVector4D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_zBottom, 1.0);
                 m_lines.append(vertex);
             } else {
                 vertex.color = QVector3D(0.0, 0.0, 1.0);
-                vertex.position = QVector3D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j), Qt::UserRole).toDouble());
+                vertex.position = QVector4D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j), Qt::UserRole).toDouble(), 1.0);
                 m_points.append(vertex);
             }
         }
@@ -49,10 +52,10 @@ bool HeightMapGridDrawer::updateData()
         for (int j = 1; j < gridPointsX; j++) {
             if (qIsNaN(m_model->data(m_model->index(i, j), Qt::UserRole).toDouble())) continue;
 
-            vertex.position = QVector3D(m_borderRect.x() + gridStepX * (j - 1), m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j - 1), Qt::UserRole).toDouble());
+            vertex.position = QVector4D(m_borderRect.x() + gridStepX * (j - 1), m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j - 1), Qt::UserRole).toDouble(), 1.0);
             m_lines.append(vertex);
 
-            vertex.position = QVector3D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j), Qt::UserRole).toDouble());
+            vertex.position = QVector4D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j), Qt::UserRole).toDouble(), 1.0);
             m_lines.append(vertex);
         }
     }
@@ -63,10 +66,10 @@ bool HeightMapGridDrawer::updateData()
         for (int i = 1; i < gridPointsY; i++) {
             if (qIsNaN(m_model->data(m_model->index(i, j), Qt::UserRole).toDouble())) continue;
 
-            vertex.position = QVector3D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * (i - 1), m_model->data(m_model->index(i - 1, j), Qt::UserRole).toDouble());
+            vertex.position = QVector4D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * (i - 1), m_model->data(m_model->index(i - 1, j), Qt::UserRole).toDouble(), 1.0);
             m_lines.append(vertex);
 
-            vertex.position = QVector3D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j), Qt::UserRole).toDouble());
+            vertex.position = QVector4D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_model->data(m_model->index(i, j), Qt::UserRole).toDouble(), 1.0);
             m_lines.append(vertex);
         }
     }
@@ -126,8 +129,3 @@ void HeightMapGridDrawer::setModel(QAbstractTableModel *model)
     m_model = model;
     update();
 }
-
-
-
-
-

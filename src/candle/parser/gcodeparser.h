@@ -8,8 +8,8 @@
 #ifndef GCODEPARSER_H
 #define GCODEPARSER_H
 
-#include <QObject>
-#include <QVector3D>
+#include <QtCore/QObject>
+#include <QtGui/QVector4D>
 #include <cmath>
 #include "pointsegment.h"
 #include "gcodepreprocessorutils.h"
@@ -33,10 +33,10 @@ public:
     void setSpeedOverride(double speedOverride);
     int getTruncateDecimalLength();
     void setTruncateDecimalLength(int truncateDecimalLength);
-    void reset(const QVector3D &initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN()));
+    void reset(const QVector4D &initialPoint = QVector4D(qQNaN(), qQNaN(), qQNaN(), 1.0));
     PointSegment *addCommand(QString command);
     PointSegment *addCommand(const QStringList &args);
-    QVector3D* getCurrentPoint();
+    QVector4D* getCurrentPoint();
     QList<PointSegment *> expandArc();
     QStringList preprocessCommands(QStringList commands);
     QStringList preprocessCommand(QString command);
@@ -57,7 +57,7 @@ private:
     bool m_inAbsoluteMode;
     bool m_inAbsoluteIJKMode;
     float m_lastGcodeCommand;
-    QVector3D m_currentPoint;
+    QVector4D m_currentPoint;
     int m_commandNumber;
     PointSegment::planes m_currentPlane;
 
@@ -80,8 +80,8 @@ private:
     PointSegment *processCommand(const QStringList &args);
     void handleMCode(float code, const QStringList &args);
     PointSegment *handleGCode(float code, const QStringList &args);
-    PointSegment *addLinearPointSegment(const QVector3D &nextPoint, bool fastTraverse);
-    PointSegment *addArcPointSegment(const QVector3D &nextPoint, bool clockwise, const QStringList &args);
+    PointSegment *addLinearPointSegment(const QVector4D &nextPoint, bool fastTraverse);
+    PointSegment *addArcPointSegment(const QVector4D &nextPoint, bool clockwise, const QStringList &args);
     void setLastGcodeCommand(float num);
 };
 

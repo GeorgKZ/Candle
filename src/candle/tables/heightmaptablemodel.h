@@ -4,8 +4,8 @@
 #ifndef HEIGHTMAPTABLEMODEL_H
 #define HEIGHTMAPTABLEMODEL_H
 
-#include <QObject>
-#include <QAbstractTableModel>
+#include <QtCore/QObject>
+#include <QtCore/QAbstractTableModel>
 
 class HeightMapTableModel : public QAbstractTableModel
 {

@@ -1,9 +1,9 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
+#include <QtCore/QDebug>
+#include <QtCore/QEvent>
 #include "styledtoolbutton.h"
-#include <QDebug>
-#include <QEvent>
 
 StyledToolButton::StyledToolButton(QWidget *parent) : QToolButton(parent)
 {
@@ -18,7 +18,7 @@ bool StyledToolButton::isHover()
     return m_hovered;
 }
 
-void StyledToolButton::enterEvent(QEvent *e)
+void StyledToolButton::enterEvent(QEnterEvent *e)
 {
     Q_UNUSED(e)
 
@@ -42,8 +42,7 @@ void StyledToolButton::paintEvent(QPaintEvent *e)
 
     QPainter painter(this);
 
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
     // Highlight
     QPen highlightPen;

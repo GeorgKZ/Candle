@@ -23,7 +23,7 @@ bool HeightMapInterpolationDrawer::updateData()
 
     // Prepare vertex
     VertexData vertex;
-    vertex.start = QVector3D(sNan, sNan, sNan);
+    vertex.start = QVector4D(sNan, sNan, sNan, 1.0);
 
     // Calculate grid parameters
     int interpolationPointsX = m_data->at(0).count();
@@ -50,13 +50,13 @@ bool HeightMapInterpolationDrawer::updateData()
             color.setHsvF(0.67 * (max - m_data->at(i).at(j - 1)) / (max - min), 1.0, 1.0);
             vertex.color = QVector3D(color.redF(), color.greenF(), color.blueF());
 
-            vertex.position = QVector3D(m_borderRect.x() + interpolationStepX * (j - 1), m_borderRect.y() + interpolationStepY * i, m_data->at(i).at(j - 1));
+            vertex.position = QVector4D(m_borderRect.x() + interpolationStepX * (j - 1), m_borderRect.y() + interpolationStepY * i, m_data->at(i).at(j - 1), 1.0);
             m_lines.append(vertex);
 
             color.setHsvF(0.67 * (max - m_data->at(i).at(j)) / (max - min), 1.0, 1.0);
             vertex.color = QVector3D(color.redF(), color.greenF(), color.blueF());
 
-            vertex.position = QVector3D(m_borderRect.x() + interpolationStepX * j, m_borderRect.y() + interpolationStepY * i, m_data->at(i).at(j));
+            vertex.position = QVector4D(m_borderRect.x() + interpolationStepX * j, m_borderRect.y() + interpolationStepY * i, m_data->at(i).at(j), 1.0);
             m_lines.append(vertex);
         }
     }
@@ -68,13 +68,13 @@ bool HeightMapInterpolationDrawer::updateData()
             color.setHsvF(0.67 * (max - m_data->at(i - 1).at(j)) / (max - min), 1.0, 1.0);
             vertex.color = QVector3D(color.redF(), color.greenF(), color.blueF());
 
-            vertex.position = QVector3D(m_borderRect.x() + interpolationStepX * j, m_borderRect.y() + interpolationStepY * (i - 1), m_data->at(i - 1).at(j));
+            vertex.position = QVector4D(m_borderRect.x() + interpolationStepX * j, m_borderRect.y() + interpolationStepY * (i - 1), m_data->at(i - 1).at(j), 1.0);
             m_lines.append(vertex);
 
             color.setHsvF(0.67 * (max - m_data->at(i).at(j)) / (max - min), 1.0, 1.0);
             vertex.color = QVector3D(color.redF(), color.greenF(), color.blueF());
 
-            vertex.position = QVector3D(m_borderRect.x() + interpolationStepX * j, m_borderRect.y() + interpolationStepY * i, m_data->at(i).at(j));
+            vertex.position = QVector4D(m_borderRect.x() + interpolationStepX * j, m_borderRect.y() + interpolationStepY * i, m_data->at(i).at(j), 1.0);
             m_lines.append(vertex);
         }
     }

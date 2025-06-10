@@ -8,7 +8,8 @@ uniform mat4 mvp_matrix;
 uniform mat4 mv_matrix;
 
 attribute vec4 a_position;
-attribute vec4 a_color;
+//attribute vec4 a_color;
+attribute vec3 a_color;
 attribute vec4 a_start;
 
 varying vec4 v_color;
@@ -43,5 +44,5 @@ void main()
     // Calculate vertex position in screen space
     gl_Position = mvp_matrix * a_position;
 
-    v_color = a_color;
+    v_color = vec4(a_color.x, a_color.y, a_color.z, 0.0);
 }

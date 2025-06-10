@@ -80,7 +80,7 @@ bool GcodeDrawer::prepareVectors()
             vertex.color = Util::colorToVector(m_colorStart);
             vertex.position = list->at(i)->getEnd();
             if (m_ignoreZ) vertex.position.setZ(0);
-            vertex.start = QVector3D(sNan, sNan, m_pointSize);
+            vertex.start = QVector4D(sNan, sNan, m_pointSize, 1.0);
             m_points.append(vertex);
 
             drawFirstPoint = false;
@@ -89,13 +89,13 @@ bool GcodeDrawer::prepareVectors()
 
         // Prepare vertices
         if (list->at(i)->isFastTraverse()) vertex.start = list->at(i)->getStart();
-        else vertex.start = QVector3D(sNan, sNan, sNan);
+        else vertex.start = QVector4D(sNan, sNan, sNan, 1.0);
 
         // Simplify geometry
         int j = i;
         if (m_simplify && i < list->count() - 1) {
-            QVector3D start = list->at(i)->getEnd() - list->at(i)->getStart();
-            QVector3D next;
+            QVector4D start = list->at(i)->getEnd() - list->at(i)->getStart();
+            QVector4D next;
             double length = start.length();
             bool straight = false;
 
@@ -133,7 +133,7 @@ bool GcodeDrawer::prepareVectors()
             vertex.color = Util::colorToVector(m_colorEnd);
             vertex.position = list->at(i)->getEnd();
             if (m_ignoreZ) vertex.position.setZ(0);
-            vertex.start = QVector3D(sNan, sNan, m_pointSize);
+            vertex.start = QVector4D(sNan, sNan, m_pointSize, 1.0);
             m_points.append(vertex);
         }
     }
@@ -192,7 +192,7 @@ bool GcodeDrawer::prepareRaster()
         qDebug() << "lines count" << list->count();
 
         double pixelSize = m_viewParser->getMinLength();
-        QVector3D origin = m_viewParser->getMinimumExtremes();
+        QVector4D origin = m_viewParser->getMinimumExtremes();
 
         for (int i = 0; i < list->count(); i++) {
             if (!qIsNaN(list->at(i)->getEnd().length())) {
@@ -221,28 +221,28 @@ bool GcodeDrawer::prepareRaster()
     vertex.color = Util::colorToVector(Qt::red);
 
     // Rect
-    vertex.start = QVector3D(sNan, 0, 0);
-    vertex.position = QVector3D(getMinimumExtremes().x(), getMinimumExtremes().y(), 0);
+    vertex.start = QVector4D(sNan, 0, 0, 1.0);
+    vertex.position = QVector4D(getMinimumExtremes().x(), getMinimumExtremes().y(), 0, 1.0);
     vertices.append(vertex);
 
-    vertex.start = QVector3D(sNan, 1, 1);
-    vertex.position = QVector3D(getMaximumExtremes().x(), getMaximumExtremes().y(), 0);
+    vertex.start = QVector4D(sNan, 1, 1, 1.0);
+    vertex.position = QVector4D(getMaximumExtremes().x(), getMaximumExtremes().y(), 0, 1.0);
     vertices.append(vertex);
 
-    vertex.start = QVector3D(sNan, 0, 1);
-    vertex.position = QVector3D(getMinimumExtremes().x(), getMaximumExtremes().y(), 0);
+    vertex.start = QVector4D(sNan, 0, 1, 1.0);
+    vertex.position = QVector4D(getMinimumExtremes().x(), getMaximumExtremes().y(), 0, 1.0);
     vertices.append(vertex);
 
-    vertex.start = QVector3D(sNan, 0, 0);
-    vertex.position = QVector3D(getMinimumExtremes().x(), getMinimumExtremes().y(), 0);
+    vertex.start = QVector4D(sNan, 0, 0, 1.0);
+    vertex.position = QVector4D(getMinimumExtremes().x(), getMinimumExtremes().y(), 0, 1.0);
     vertices.append(vertex);
 
-    vertex.start = QVector3D(sNan, 1, 0);
-    vertex.position = QVector3D(getMaximumExtremes().x(), getMinimumExtremes().y(), 0);
+    vertex.start = QVector4D(sNan, 1, 0, 1.0);
+    vertex.position = QVector4D(getMaximumExtremes().x(), getMinimumExtremes().y(), 0, 1.0);
     vertices.append(vertex);
 
-    vertex.start = QVector3D(sNan, 1, 1);
-    vertex.position = QVector3D(getMaximumExtremes().x(), getMaximumExtremes().y(), 0);
+    vertex.start = QVector4D(sNan, 1, 1, 1.0);
+    vertex.position = QVector4D(getMaximumExtremes().x(), getMaximumExtremes().y(), 0, 1.0);
     vertices.append(vertex);
 
     if (!image.isNull()) {
@@ -250,7 +250,7 @@ bool GcodeDrawer::prepareRaster()
         m_triangles += vertices;
         m_image = image;
     } else {
-        for (int i = 0; i < vertices.count(); i++) vertices[i].start = QVector3D(sNan, sNan, sNan);
+        for (int i = 0; i < vertices.count(); i++) vertices[i].start = QVector4D(sNan, sNan, sNan, 1.0);
         m_lines += vertices;
         m_image = QImage();
     }
@@ -267,7 +267,7 @@ bool GcodeDrawer::updateRaster()
         QList<LineSegment*> *list = m_viewParser->getLines();
 
         double pixelSize = m_viewParser->getMinLength();
-        QVector3D origin = m_viewParser->getMinimumExtremes();
+        QVector4D origin = m_viewParser->getMinimumExtremes();
 
         foreach (int i, m_indexes) setImagePixelColor(m_image, (list->at(i)->getEnd().x() - origin.x()) / pixelSize,
                                                       (list->at(i)->getEnd().y() - origin.y()) / pixelSize, getSegmentColor(list->at(i)).rgb());
@@ -318,25 +318,25 @@ int GcodeDrawer::getSegmentType(LineSegment* segment)
     return segment->isFastTraverse() + segment->isZMovement() * 2;
 }
 
-QVector3D GcodeDrawer::getSizes()
+QVector4D GcodeDrawer::getSizes()
 {
-    QVector3D min = m_viewParser->getMinimumExtremes();
-    QVector3D max = m_viewParser->getMaximumExtremes();
+    QVector4D min = m_viewParser->getMinimumExtremes();
+    QVector4D max = m_viewParser->getMaximumExtremes();
 
-    return QVector3D(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
+    return QVector4D(max.x() - min.x(), max.y() - min.y(), max.z() - min.z(), 1.0);
 }
 
-QVector3D GcodeDrawer::getMinimumExtremes()
+QVector4D GcodeDrawer::getMinimumExtremes()
 {
-    QVector3D v = m_viewParser->getMinimumExtremes();
+    QVector4D v = m_viewParser->getMinimumExtremes();
     if (m_ignoreZ) v.setZ(0);
 
     return v;
 }
 
-QVector3D GcodeDrawer::getMaximumExtremes()
+QVector4D GcodeDrawer::getMaximumExtremes()
 {
-    QVector3D v = m_viewParser->getMaximumExtremes();
+    QVector4D v = m_viewParser->getMaximumExtremes();
     if (m_ignoreZ) v.setZ(0);
 
     return v;

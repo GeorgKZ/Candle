@@ -1,4 +1,4 @@
-#include <QDesignerCustomWidgetCollectionInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class CustomWidgetsPlugin: public QObject, public QDesignerCustomWidgetCollectionInterface
 {

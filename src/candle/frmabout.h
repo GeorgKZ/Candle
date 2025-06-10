@@ -4,7 +4,7 @@
 #ifndef FRMABOUT_H
 #define FRMABOUT_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
 class frmAbout;

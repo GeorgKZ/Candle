@@ -23,14 +23,14 @@ bool MachineBoundsDrawer::updateData()
 
     // Vertices
     m_lines
-        << VertexData(QVector3D(r.x(), r.y(), 0), c, QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(r.x(), r.y() + r.height(), 0), c, QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(r.x(), r.y() + r.height(), 0), c, QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(r.x() + r.width(), r.y() + r.height(), 0), c, QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(r.x() + r.width(), r.y() + r.height(), 0), c, QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(r.x() + r.width(), r.y(), 0), c, QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(r.x() + r.width(), r.y(), 0), c, QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(r.x(), r.y(), 0), c, QVector3D(sNan, sNan, sNan));
+        << VertexData(QVector4D(r.x(),             r.y(),              0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(r.x(),             r.y() + r.height(), 0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(r.x(),             r.y() + r.height(), 0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(r.x() + r.width(), r.y() + r.height(), 0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(r.x() + r.width(), r.y() + r.height(), 0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(r.x() + r.width(), r.y(),              0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(r.x() + r.width(), r.y(),              0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(r.x(),             r.y(),              0, 1.0), c, QVector4D(sNan, sNan, sNan, 1.0));
 
     return true;
 }
@@ -67,12 +67,12 @@ void MachineBoundsDrawer::setOffset(const QPointF &offset)
     update();
 }
 
-QVector3D MachineBoundsDrawer::getMinimumExtremes()
+QVector4D MachineBoundsDrawer::getMinimumExtremes()
 {
-    return QVector3D();
+    return QVector4D();
 }
 
-QVector3D MachineBoundsDrawer::getMaximumExtremes()
+QVector4D MachineBoundsDrawer::getMaximumExtremes()
 {
-    return QVector3D(m_borderRect.width(), m_borderRect.height(), 0);
+    return QVector4D(m_borderRect.width(), m_borderRect.height(), 0, 1.0);
 }

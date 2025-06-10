@@ -5,9 +5,9 @@
 
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#include <QRegExp>
-#include <QDebug>
-#include <QVector3D>
+#include <QtCore/QRegularExpression>
+#include <QtCore/QDebug>
+#include <QtGui/QVector4D>
 #include "gcodepreprocessorutils.h"
 #include "limits"
 #include "../tables/gcodetablemodel.h"
@@ -20,12 +20,16 @@
 */
 QString GcodePreprocessorUtils::overrideSpeed(QString command, double speed, double *original)
 {
-    static QRegExp re("[Ff]([0-9.]+)");
+    static QRegularExpression re("[Ff]([0-9.]+)");
 
-    if (re.indexIn(command) != -1) {
-        command.replace(re, QString("F%1").arg(re.cap(1).toDouble() / 100 * speed));
-
-        if (original) *original = re.cap(1).toDouble();
+    QRegularExpressionMatch match = re.match(command);
+    if (match.hasMatch()) {
+      QString matched = match.captured(1);
+//!!!    if (re.indexIn(command) != -1) {
+//!!!        command.replace(re, QString("F%1").arg(re.cap(1).toDouble() / 100 * speed));
+//!!!        if (original) *original = re.cap(1).toDouble();
+        command.replace(re, QString("F%1").arg(matched.toDouble() / 100 * speed));
+        if (original) *original = matched.toDouble();
     }
 
     return command;
@@ -36,8 +40,8 @@ QString GcodePreprocessorUtils::overrideSpeed(QString command, double speed, dou
 */
 QString GcodePreprocessorUtils::removeComment(QString command)
 {
-    static QRegExp rx1("\\(+[^\\(]*\\)+");
-    static QRegExp rx2(";.*");
+    static QRegularExpression rx1("\\(+[^\\(]*\\)+");
+    static QRegularExpression rx2(";.*");
 
     // Remove any comments within ( parentheses ) using regex "\([^\(]*\)"
     if (command.contains('(')) command.remove(rx1);
@@ -57,24 +61,35 @@ QString GcodePreprocessorUtils::parseComment(QString command)
     // "(?<=\()[^\(\)]*|(?<=\;)[^;]*"
     // "(?<=\\()[^\\(\\)]*|(?<=\\;)[^;]*"
 
-    static QRegExp re("(\\([^\\(\\)]*\\)|;[^;].*)");
+    static QRegularExpression re("(\\([^\\(\\)]*\\)|;[^;].*)");
 
-    if (re.indexIn(command) != -1) {
-        return re.cap(1);
+    QRegularExpressionMatch match = re.match(command);
+    if (match.hasMatch()) {
+      return match.captured(1);
+//!!!    if (re.indexIn(command) != -1) {
+//!!!        return re.cap(1);
     }
     return "";
 }
 
 QString GcodePreprocessorUtils::truncateDecimals(int length, QString command)
 {
-    static QRegExp re("(\\d*\\.\\d*)");
+    static QRegularExpression re("(\\d*\\.\\d*)");
     int pos = 0;
 
-    while ((pos = re.indexIn(command, pos)) != -1)
-    {
-        QString newNum = QString::number(re.cap(1).toDouble(), 'f', length);
-        command = command.left(pos) + newNum + command.mid(pos + re.matchedLength());
-        pos += newNum.length() + 1;
+//!!!    while ((pos = re.indexIn(command, pos)) != -1) {
+//!!!        QString newNum = QString::number(re.cap(1).toDouble(), 'f', length);
+//!!!        command = command.left(pos) + newNum + command.mid(pos + re.matchedLength());
+//!!!        pos += newNum.length() + 1;
+    while (1) {
+        QRegularExpressionMatch match = re.match(command, pos);
+        if (!match.hasMatch()) break;
+        QString matchedStr = match.captured(1);
+        pos = match.capturedEnd();
+        QString newNum = QString::number(matchedStr.toDouble(), 'f', length);
+        command = command.left(pos) + newNum + command.mid(pos + match.capturedLength());
+        pos ++;
+
     }
 
     return command;
@@ -82,7 +97,7 @@ QString GcodePreprocessorUtils::truncateDecimals(int length, QString command)
 
 QString GcodePreprocessorUtils::removeAllWhitespace(QString command)
 {
-    static QRegExp rx("\\s");
+    static QRegularExpression rx("\\s");
 
     return command.remove(rx);
 }
@@ -100,14 +115,22 @@ QList<float> GcodePreprocessorUtils::parseCodes(const QStringList &args, char co
 
 QList<int> GcodePreprocessorUtils::parseGCodes(QString command)
 {
-    static QRegExp re("[Gg]0*(\\d+)");
+    static QRegularExpression re("[Gg]0*(\\d+)");
 
     QList<int> codes;
     int pos = 0;
 
-    while ((pos = re.indexIn(command, pos)) != -1) {
-        codes.append(re.cap(1).toInt());
-        pos += re.matchedLength();
+//!!!    while ((pos = re.indexIn(command, pos)) != -1) {
+//!!!        codes.append(re.cap(1).toInt());
+//!!!        pos += re.matchedLength();
+//!!!    }
+    while (1) {
+        QRegularExpressionMatch match = re.match(command, pos);
+        if (!match.hasMatch()) break;
+        QString matchedStr = match.captured(1);
+        pos = match.capturedEnd();
+        codes.append(matchedStr.toInt());
+//        pos += /* re.matchedLength(); */ 1;
     }
 
     return codes;
@@ -115,14 +138,21 @@ QList<int> GcodePreprocessorUtils::parseGCodes(QString command)
 
 QList<int> GcodePreprocessorUtils::parseMCodes(QString command)
 {
-    static QRegExp re("[Mm]0*(\\d+)");
+    static QRegularExpression re("[Mm]0*(\\d+)");
 
     QList<int> codes;
     int pos = 0;
 
-    while ((pos = re.indexIn(command, pos)) != -1) {
-        codes.append(re.cap(1).toInt());
-        pos += re.matchedLength();
+//!!!    while ((pos = re.indexIn(command, pos)) != -1) {
+//!!!        codes.append(re.cap(1).toInt());
+//!!!        pos += re.matchedLength();
+//!!!    }
+    while (1) {
+        QRegularExpressionMatch match = re.match(command, pos);
+        if (!match.hasMatch()) break;
+        QString matchedStr = match.captured(1);
+        pos = match.capturedEnd();
+        codes.append(matchedStr.toInt());
     }
 
     return codes;
@@ -131,7 +161,7 @@ QList<int> GcodePreprocessorUtils::parseMCodes(QString command)
 /**
 * Update a point given the arguments of a command.
 */
-QVector3D GcodePreprocessorUtils::updatePointWithCommand(const QString &command, const QVector3D &initial, bool absoluteMode)
+QVector4D GcodePreprocessorUtils::updatePointWithCommand(const QString &command, const QVector4D &initial, bool absoluteMode)
 {
     QStringList l = splitCommand(command);
     return updatePointWithCommand(l, initial, absoluteMode);
@@ -140,7 +170,7 @@ QVector3D GcodePreprocessorUtils::updatePointWithCommand(const QString &command,
 /**
 * Update a point given the arguments of a command, using a pre-parsed list.
 */
-QVector3D GcodePreprocessorUtils::updatePointWithCommand(const QStringList &commandArgs, const QVector3D &initial,
+QVector4D GcodePreprocessorUtils::updatePointWithCommand(const QStringList &commandArgs, const QVector4D &initial,
                                                          bool absoluteMode)
 {
     double x = qQNaN();
@@ -171,9 +201,9 @@ QVector3D GcodePreprocessorUtils::updatePointWithCommand(const QStringList &comm
 /**
 * Update a point given the new coordinates.
 */
-QVector3D GcodePreprocessorUtils::updatePointWithCommand(const QVector3D &initial, double x, double y, double z, bool absoluteMode)
+QVector4D GcodePreprocessorUtils::updatePointWithCommand(const QVector4D &initial, double x, double y, double z, bool absoluteMode)
 {
-    QVector3D newPoint(initial.x(), initial.y(), initial.z());
+    QVector4D newPoint(initial.x(), initial.y(), initial.z(), 1.0);
 
     if (absoluteMode) {
         if (!qIsNaN(x)) newPoint.setX(x);
@@ -188,7 +218,7 @@ QVector3D GcodePreprocessorUtils::updatePointWithCommand(const QVector3D &initia
     return newPoint;
 }
 
-QVector3D GcodePreprocessorUtils::updateCenterWithCommand(QStringList commandArgs, QVector3D initial, QVector3D nextPoint, bool absoluteIJKMode, bool clockwise)
+QVector4D GcodePreprocessorUtils::updateCenterWithCommand(QStringList commandArgs, QVector4D initial, QVector4D nextPoint, bool absoluteIJKMode, bool clockwise)
 {
     double i = qQNaN();
     double j = qQNaN();
@@ -224,7 +254,7 @@ QVector3D GcodePreprocessorUtils::updateCenterWithCommand(QStringList commandArg
     return updatePointWithCommand(initial, i, j, k, absoluteIJKMode);
 }
 
-QString GcodePreprocessorUtils::generateG1FromPoints(QVector3D start, QVector3D end, bool absoluteMode, int precision)
+QString GcodePreprocessorUtils::generateG1FromPoints(QVector4D start, QVector4D end, bool absoluteMode, int precision)
 {
     QString sb("G1");
 
@@ -315,9 +345,9 @@ double GcodePreprocessorUtils::parseCoord(QStringList argList, char c)
 //    return l;
 //}
 
-QVector3D GcodePreprocessorUtils::convertRToCenter(QVector3D start, QVector3D end, double radius, bool absoluteIJK, bool clockwise) {
+QVector4D GcodePreprocessorUtils::convertRToCenter(QVector4D start, QVector4D end, double radius, bool absoluteIJK, bool clockwise) {
     double R = radius;
-    QVector3D center;
+    QVector4D center;
 
     double x = end.x() - start.x();
     double y = end.y() - start.y();
@@ -353,7 +383,7 @@ QVector3D GcodePreprocessorUtils::convertRToCenter(QVector3D start, QVector3D en
 /**
 * Return the angle in radians when going from start to end.
 */
-double GcodePreprocessorUtils::getAngle(QVector3D start, QVector3D end) {
+double GcodePreprocessorUtils::getAngle(QVector4D start, QVector4D end) {
     double deltaX = end.x() - start.x();
     double deltaY = end.y() - start.y();
 
@@ -414,7 +444,7 @@ double GcodePreprocessorUtils::calculateSweep(double startAngle, double endAngle
 /**
 * Generates the points along an arc including the start and end points.
 */
-QList<QVector3D> GcodePreprocessorUtils::generatePointsAlongArcBDring(PointSegment::planes plane, QVector3D start, QVector3D end, QVector3D center, bool clockwise, double R, double minArcLength, double arcPrecision, bool arcDegreeMode)
+QList<QVector4D> GcodePreprocessorUtils::generatePointsAlongArcBDring(PointSegment::planes plane, QVector4D start, QVector4D end, QVector4D center, bool clockwise, double R, double minArcLength, double arcPrecision, bool arcDegreeMode)
 {
     double radius = R;
 
@@ -436,7 +466,7 @@ QList<QVector3D> GcodePreprocessorUtils::generatePointsAlongArcBDring(PointSegme
     center = m * center;
 
     // Check center
-    if (qIsNaN(center.length())) return QList<QVector3D>();
+    if (qIsNaN(center.length())) return QList<QVector4D>();
 
     // Calculate radius if necessary.
     if (radius == 0) {
@@ -473,8 +503,8 @@ QList<QVector3D> GcodePreprocessorUtils::generatePointsAlongArcBDring(PointSegme
 /**
 * Generates the points along an arc including the start and end points.
 */
-QList<QVector3D> GcodePreprocessorUtils::generatePointsAlongArcBDring(PointSegment::planes plane, QVector3D p1, QVector3D p2,
-                                                                      QVector3D center, bool isCw,
+QList<QVector4D> GcodePreprocessorUtils::generatePointsAlongArcBDring(PointSegment::planes plane, QVector4D p1, QVector4D p2,
+                                                                      QVector4D center, bool isCw,
                                                                       double radius, double startAngle,
                                                                       double sweep, int numPoints)
 {
@@ -492,8 +522,8 @@ QList<QVector3D> GcodePreprocessorUtils::generatePointsAlongArcBDring(PointSegme
         break;
     }
 
-    QVector3D lineEnd(p2.x(), p2.y(), p1.z());
-    QList<QVector3D> segments;
+    QVector4D lineEnd(p2.x(), p2.y(), p1.z(), p1.w());
+    QList<QVector4D> segments;
     double angle;
 
     // Calculate radius if necessary.

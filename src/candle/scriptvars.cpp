@@ -2,19 +2,19 @@
 
 ScriptVars::ScriptVars()
 {
-    m_coords["M"] = QVector3D();
-    m_coords["W"] = QVector3D();
-    m_coords["G54"] = QVector3D();
-    m_coords["G55"] = QVector3D();
-    m_coords["G56"] = QVector3D();
-    m_coords["G57"] = QVector3D();
-    m_coords["G58"] = QVector3D();
-    m_coords["G59"] = QVector3D();
-    m_coords["G28"] = QVector3D();
-    m_coords["G30"] = QVector3D();
-    m_coords["G92"] = QVector3D();
-    m_coords["TLO"] = QVector3D();
-    m_coords["PRB"] = QVector3D();
+    m_coords["M"] = QVector4D();
+    m_coords["W"] = QVector4D();
+    m_coords["G54"] = QVector4D();
+    m_coords["G55"] = QVector4D();
+    m_coords["G56"] = QVector4D();
+    m_coords["G57"] = QVector4D();
+    m_coords["G58"] = QVector4D();
+    m_coords["G59"] = QVector4D();
+    m_coords["G28"] = QVector4D();
+    m_coords["G30"] = QVector4D();
+    m_coords["G92"] = QVector4D();
+    m_coords["TLO"] = QVector4D();
+    m_coords["PRB"] = QVector4D();
     m_tool = 0;
 }
 
@@ -213,14 +213,14 @@ double ScriptVars::PRBz() const
     return m_coords["PRB"].z();
 }
 
-void ScriptVars::setCoords(QString name, QVector3D coords)
+void ScriptVars::setCoords(QString name, QVector4D coords)
 {
     m_coords[name] = coords;
 }
 
-QVector3D ScriptVars::coords(QString name) const
+QVector4D ScriptVars::coords(QString name) const
 {
-    return m_coords.keys().contains(name) ? m_coords[name] : QVector3D();
+    return m_coords.keys().contains(name) ? m_coords[name] : QVector4D();
 }
 
 double ScriptVars::x(QString name) const

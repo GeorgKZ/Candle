@@ -5,7 +5,7 @@
 
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#include <QVector>
+#include <QtCore/QVector>
 
 #include "pointsegment.h"
 
@@ -23,6 +23,7 @@ PointSegment::PointSegment()
     m_spindleSpeed = 0;
     m_dwell = 0;
     m_plane = XY;
+    m_point = nullptr;
 }
 
 PointSegment::PointSegment(PointSegment *ps)
@@ -40,7 +41,7 @@ PointSegment::PointSegment(PointSegment *ps)
     m_dwell = 0;
     m_plane = XY;
 
-    this->m_point = new QVector3D(ps->point()->x(), ps->point()->y(), ps->point()->z());
+    this->m_point = new QVector4D(ps->point()->x(), ps->point()->y(), ps->point()->z(), ps->point()->w());
     this->m_lineNumber = ps->getLineNumber();
 
     this->m_toolhead = ps->getToolhead();
@@ -58,7 +59,7 @@ PointSegment::PointSegment(PointSegment *ps)
     }
 }
 
-PointSegment::PointSegment(const QVector3D *b, int num)
+PointSegment::PointSegment(const QVector4D *b, int num)
 {
     m_toolhead = 0;
     m_isMetric = true;
@@ -73,11 +74,11 @@ PointSegment::PointSegment(const QVector3D *b, int num)
     m_dwell = 0;
     m_plane = XY;
 
-    this->m_point = new QVector3D(b->x(), b->y(), b->z());
+    this->m_point = new QVector4D(b->x(), b->y(), b->z(), b->w());
     this->m_lineNumber = num;
 }
 
-PointSegment::PointSegment(QVector3D *point, int num, QVector3D *center, double radius, bool clockwise)
+PointSegment::PointSegment(QVector4D *point, int num, QVector4D *center, double radius, bool clockwise)
 {
     m_toolhead = 0;
     m_isMetric = true;
@@ -92,12 +93,12 @@ PointSegment::PointSegment(QVector3D *point, int num, QVector3D *center, double 
     m_dwell = 0;
     m_plane = XY;
 
-    this->m_point = new QVector3D(point->x(), point->y(), point->z());
+    this->m_point = new QVector4D(point->x(), point->y(), point->z(), point->w());
     this->m_lineNumber = num;
 
     this->m_isArc = true;
     this->m_arcProperties = new ArcProperties();
-    this->m_arcProperties->center = new QVector3D(center->x(), center->y(), center->z());
+    this->m_arcProperties->center = new QVector4D(center->x(), center->y(), center->z(), center->w());
     this->m_arcProperties->radius = radius;
     this->m_arcProperties->isClockwise = clockwise;
 }
@@ -109,11 +110,11 @@ PointSegment::~PointSegment()
     if (this->m_point != NULL) delete this->m_point;
 }
 
-void PointSegment::setPoint(QVector3D point) {
-    this->m_point = new QVector3D(point.x(), point.y(), point.z());
+void PointSegment::setPoint(QVector4D point) {
+    this->m_point = new QVector4D(point.x(), point.y(), point.z(), point.w());
 }
 
-QVector3D *PointSegment::point()
+QVector4D *PointSegment::point()
 {
     return m_point;
 }
@@ -186,10 +187,10 @@ bool PointSegment::isFastTraverse() {
 
 // Arc properties.
 
-void PointSegment::setArcCenter(QVector3D *center) {
+void PointSegment::setArcCenter(QVector4D *center) {
     if (this->m_arcProperties == NULL) this->m_arcProperties = new ArcProperties();
 
-    this->m_arcProperties->center = new QVector3D(center->x(), center->y(), center->z());
+    this->m_arcProperties->center = new QVector4D(center->x(), center->y(), center->z(), center->w());
     this->setIsArc(true);
 }
 
@@ -204,7 +205,7 @@ QVector<double> PointSegment::centerPoints()
     return points;
 }
 
-QVector3D *PointSegment::center() {
+QVector4D *PointSegment::center() {
     if (this->m_arcProperties != NULL && this->m_arcProperties->center != NULL) return this->m_arcProperties->center;
     return NULL;
 }

@@ -1,26 +1,26 @@
 ﻿#ifndef SHADERDRAWABLE_H
 #define SHADERDRAWABLE_H
 
-#include <QObject>
-#include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLBuffer>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLTexture>
+#include <QtCore/QObject>
+#include <QtGui/QOpenGLFunctions>
+#include <QtOpenGL/QOpenGLShaderProgram>
+#include <QtOpenGL/QOpenGLBuffer>
+#include <QtOpenGL/QOpenGLVertexArrayObject>
+#include <QtOpenGL/QOpenGLTexture>
 #include "utils/util.h"
 
 struct VertexData
 {
     VertexData() {}
-    VertexData(QVector3D pos, QVector3D col, QVector3D sta) {
+    VertexData(QVector4D pos, QVector3D col, QVector4D sta) {
         position = pos;
         color = col;
         start = sta;
     }
 
-    QVector3D position;
+    QVector4D position;
     QVector3D color;
-    QVector3D start;
+    QVector4D start;
 };
 
 class ShaderDrawable : protected QOpenGLFunctions
@@ -34,9 +34,9 @@ public:
     bool needsUpdateGeometry() const;
     void updateGeometry(QOpenGLShaderProgram *shaderProgram = 0);
 
-    virtual QVector3D getSizes();
-    virtual QVector3D getMinimumExtremes();
-    virtual QVector3D getMaximumExtremes();
+    virtual QVector4D getSizes();
+    virtual QVector4D getMinimumExtremes();
+    virtual QVector4D getMaximumExtremes();
     virtual int getVertexCount();
 
     double lineWidth() const;

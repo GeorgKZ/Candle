@@ -4,9 +4,9 @@
 #ifndef INTERPOLATION
 #define INTERPOLATION
 
-#include <QVector>
-#include <QRectF>
-#include <QAbstractTableModel>
+#include <QtCore/QVector>
+#include <QtCore/QRectF>
+#include <QtCore/QAbstractTableModel>
 
 class Interpolation
 {

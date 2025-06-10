@@ -8,7 +8,7 @@
 #ifndef ARCPROPERTIES_H
 #define ARCPROPERTIES_H
 
-#include <QVector3D>
+#include <QtGui/QVector4D>
 
 class ArcProperties
 {
@@ -16,7 +16,7 @@ public:
     explicit ArcProperties();
     bool isClockwise;
     double radius;
-    QVector3D *center;
+    QVector4D *center;
 };
 
 #endif // ARCPROPERTIES_H

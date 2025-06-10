@@ -4,13 +4,13 @@
 #ifndef STYLEDTOOLBUTTON_H
 #define STYLEDTOOLBUTTON_H
 
-#include <QWidget>
-#include <QAbstractButton>
-#include <QPainter>
-#include <QStyle>
-#include <QStyleOptionFrame>
-#include <QToolButton>
-#include "customwidgetsshared.h"
+#include <QtGui/QPainter>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOptionFrame>
+#include <QtWidgets/QToolButton>
+#include "../customwidgetsshared.h"
 
 class CUSTOMWIDGETS_DLLSPEC StyledToolButton : public QToolButton
 {
@@ -34,7 +34,7 @@ public:
     void setHighlightColor(const QColor &highlightColor);
 
 protected:
-    void enterEvent(QEvent *);
+    void enterEvent(QEnterEvent *);
     void leaveEvent(QEvent *);
 
 private:

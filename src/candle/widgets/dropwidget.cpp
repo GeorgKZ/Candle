@@ -1,17 +1,19 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#include <QDebug>
-#include <QDragEnterEvent>
-#include <QFrame>
-#include <QGroupBox>
-#include <QVBoxLayout>
-#include <QApplication>
+#include <QtCore/QDebug>
+#include <QtGui/QDragEnterEvent>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QVBoxLayout>
+#include <algorithm>
 #include "dropwidget.h"
 #include "widgetmimedata.h"
 
 DropWidget::DropWidget(QWidget *parent) : QWidget(parent)
 {
+    m_layoutIndex = -2;
 }
 
 void DropWidget::restoreState(QObject* parent, QStringList panels)
@@ -62,26 +64,55 @@ void DropWidget::dragMoveEvent(QDragMoveEvent *dme)
 {
     if (dme->mimeData()->hasFormat(WidgetMimeData::mimeType())) {
 
+        /**
+         * Алгоритм:
+         *
+         * 1. Найти прямой дочерний фрейм виджета.
+         */
         QFrame *f = findChild<QFrame*>(QString(), Qt::FindDirectChildrenOnly);
 
         if (f) {
-            int y = dme->pos().y();
+
+            /**
+             * 2. Получить горизонтальную позицию из сообщения о перемещении.
+             */
+            int y = dme->position().toPoint().y();
+
+            /**
+             * Получить список прямых дочерних QGroupBox виджета.
+             */
             QList<QGroupBox*> bl = findChildren<QGroupBox*>(QString(), Qt::FindDirectChildrenOnly);
 
+            /**
+             * 3. Составить сортированный список горизонтальных позиций дочерних QGroupBox виджета,
+             * соответствующих индексам layout.
+             */
             QList<int> yl;
             foreach (QGroupBox* b, bl) yl << b->pos().y();
-            qSort(yl.begin(), yl.end());
+            std::sort(yl.begin(), yl.end());
 
+            /**
+             * 4. Найти значение первого индекса, для которого горизонтальная позиция 
+             * превышает горизонтальную позицию из сообщения о перемещении.
+             */
             int i;
             for (i = 0; i < yl.count(); ++i) {
                 if (yl.at(i) > y) break;
             }
-            
+
+            /**
+             * 5. Если полученное значение индекса не соответствует индексу layout виджета,
+             * вставить дочерний фрейм виджета с предыдущим индексом.
+             */
             if (i != m_layoutIndex) {
                 static_cast<QVBoxLayout*>(layout())->insertWidget(i - 1, f);
                 if (!f->isVisible()) f->setVisible(true);
                 f->update();
             }
+
+            /**
+             * 6. Присвоить индексу layout виджета полученное значение индекса.
+             */
             m_layoutIndex = i;
         }
     }

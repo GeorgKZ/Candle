@@ -1,10 +1,10 @@
 #ifndef COMBOBOXKEY_H
 #define COMBOBOXKEY_H
 
-#include <QWidget>
-#include <QComboBox>
-#include <QKeyEvent>
-#include <QDebug>
+#include <QtCore/QDebug>
+#include <QtGui/QKeyEvent>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QComboBox>
 
 class ComboBoxKey : public QComboBox
 {

@@ -4,8 +4,8 @@
 #ifndef MACHINEBOUNDSDRAWER_H
 #define MACHINEBOUNDSDRAWER_H
 
-#include <QObject>
-#include <QAbstractTableModel>
+#include <QtCore/QObject>
+#include <QtCore/QAbstractTableModel>
 #include "shaderdrawable.h"
 
 class MachineBoundsDrawer : public ShaderDrawable
@@ -22,8 +22,8 @@ public:
     QPointF offset() const;
     void setOffset(const QPointF &offset);
 
-    QVector3D getMinimumExtremes();
-    QVector3D getMaximumExtremes();
+    QVector4D getMaximumExtremes();
+    QVector4D getMinimumExtremes();
 
 protected:
     bool updateData();

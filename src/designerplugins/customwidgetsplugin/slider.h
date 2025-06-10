@@ -1,12 +1,12 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
-#include <QWidget>
-#include <QSlider>
-#include <QPaintEvent>
-#include <QPainter>
-#include <QDebug>
-#include "customwidgetsshared.h"
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QSlider>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QPainter>
+#include <QtCore/QDebug>
+#include "../customwidgetsshared.h"
 
 class CUSTOMWIDGETS_DLLSPEC Slider : public QSlider
 {

@@ -8,6 +8,8 @@ CameraPlugin::CameraPlugin(QObject *parent): QObject(parent), m_initialized(fals
 
 void CameraPlugin::initialize(QDesignerFormEditorInterface *core)
 {
+    Q_UNUSED(core)
+
     if (m_initialized) return;
 
     m_initialized = true;

@@ -31,14 +31,14 @@ bool HeightMapBorderDrawer::updateData()
     //     {QVector3D(m_borderRect.x(), m_borderRect.y(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan)},
     // };
     m_lines = QVector<VertexData>()
-        << VertexData(QVector3D(m_borderRect.x(), m_borderRect.y(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(m_borderRect.x(), m_borderRect.y() + m_borderRect.height(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(m_borderRect.x(), m_borderRect.y() + m_borderRect.height(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y() + m_borderRect.height(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y() + m_borderRect.height(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan))
-        << VertexData(QVector3D(m_borderRect.x(), m_borderRect.y(), 0), QVector3D(1.0, 0.0, 0.0), QVector3D(sNan, sNan, sNan));
+        << VertexData(QVector4D(m_borderRect.x(),                        m_borderRect.y(),                         0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(m_borderRect.x(),                        m_borderRect.y() + m_borderRect.height(), 0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(m_borderRect.x(),                        m_borderRect.y() + m_borderRect.height(), 0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y() + m_borderRect.height(), 0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y() + m_borderRect.height(), 0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y(),                         0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(m_borderRect.x() + m_borderRect.width(), m_borderRect.y(),                         0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0))
+        << VertexData(QVector4D(m_borderRect.x(),                        m_borderRect.y(),                         0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0));
     return true;
 }
 

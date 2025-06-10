@@ -8,6 +8,8 @@ ColorPickerPlugin::ColorPickerPlugin(QObject *parent): QObject(parent), m_initia
 
 void ColorPickerPlugin::initialize(QDesignerFormEditorInterface *core)
 {
+    Q_UNUSED(core)
+
     if (m_initialized) return;
 
     m_initialized = true;

@@ -3,23 +3,14 @@
 
 #include "glwidget.h"
 #include "drawers/tooldrawer.h"
-#include <QDebug>
-#include <QtWidgets>
-#include <QPainter>
-#include <QEasingCurve>
-
-#ifdef GLES
-#include <GLES/gl.h>
-#endif
+#include <QtCore/QDebug>
+#include <QtCore/QEasingCurve>
+#include <QtGui/QPainter>
+#include <QtWidgets/QtWidgets>
 
 #define ZOOMSTEP 1.1
 
-#ifdef GLES
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_shaderProgram(0)
-#else
-GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent), m_shaderProgram(0)
-#endif
-
 {
     m_frames = 0;
     m_fps = 0;
@@ -362,23 +353,24 @@ void GLWidget::setSpendTime(const QTime &spendTime)
 
 void GLWidget::initializeGL()
 {
-#ifndef GLES
-    // Initialize functions
     initializeOpenGLFunctions();
-#endif
 
     // Create shader program
     m_shaderProgram = new QOpenGLShaderProgram();
 
-    if (m_shaderProgram) {
-        // Compile vertex shader
-        m_shaderProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vshader.glsl");
-        // Compile fragment shader
-        m_shaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/fshader.glsl");
-        // Link shader pipeline
-        m_shaderProgram->link();
-        qDebug() << "shader program created";
+    // Compile vertex shader
+    if (!m_shaderProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vshader.glsl")) {
+        qCritical() << "vertex shader load/compile error";
     }
+    // Compile fragment shader
+    if (!m_shaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/fshader.glsl")) {
+        qCritical() << "fragment shader load/compile error";
+    }
+    // Link shader pipeline
+    if (!m_shaderProgram->link()) {
+        qCritical() << "shader linking error";
+    }
+    qDebug() << "shader program created";
 }
 
 void GLWidget::resizeGL(int width, int height)
@@ -419,12 +411,8 @@ void GLWidget::updateView()
     m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0);
 }
 
-#ifdef GLES
 void GLWidget::paintGL() {
-#else
-void GLWidget::paintEvent(QPaintEvent *pe) {
-    Q_UNUSED(pe)
-#endif
+
     QPainter painter(this);
 
     // Segment counter
@@ -500,21 +488,19 @@ void GLWidget::paintEvent(QPaintEvent *pe) {
     painter.drawText(QPoint(x, fm.height() * 3 + 10), m_pinState);
 
     QString str = QString(tr("Vertices: %1")).arg(vertices);
-    painter.drawText(QPoint(this->width() - fm.width(str) - 10, y + 30), str);
+    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + 30), str);
     str = QString("FPS: %1").arg(m_fps);
-    painter.drawText(QPoint(this->width() - fm.width(str) - 10, y + 45), str);
+    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + 45), str);
 
     str = m_spendTime.toString("hh:mm:ss") + " / " + m_estimatedTime.toString("hh:mm:ss");
-    painter.drawText(QPoint(this->width() - fm.width(str) - 10, y), str);
+    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y), str);
 
     str = m_bufferState;
-    painter.drawText(QPoint(this->width() - fm.width(str) - 10, y + 15), str);
+    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + 15), str);
 
     m_frames++;
-
-#ifdef GLES
+//!!! Нужно ли?
     update();
-#endif
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -555,16 +541,16 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void GLWidget::wheelEvent(QWheelEvent *we)
 {
-    if (m_zoom > 0.1 && we->delta() < 0) {
-        m_xPan -= ((double)we->pos().x() / width() - 0.5 + m_xPan) * (1 - 1 / ZOOMSTEP);
-        m_yPan += ((double)we->pos().y() / height() - 0.5 - m_yPan) * (1 - 1 / ZOOMSTEP);
+    if (m_zoom > 0.1 && we->angleDelta().y() < 0) {
+        m_xPan -= ((double)we->position().x() / width() - 0.5 + m_xPan) * (1 - 1 / ZOOMSTEP);
+        m_yPan += ((double)we->position().y() / height() - 0.5 - m_yPan) * (1 - 1 / ZOOMSTEP);
 
         m_zoom /= ZOOMSTEP;
     }
-    else if (m_zoom < 10 && we->delta() > 0)
+    else if (m_zoom < 10 && we->angleDelta().y() > 0)
     {
-        m_xPan -= ((double)we->pos().x() / width() - 0.5 + m_xPan) * (1 - ZOOMSTEP);
-        m_yPan += ((double)we->pos().y() / height() - 0.5 - m_yPan) * (1 - ZOOMSTEP);
+        m_xPan -= ((double)we->position().x() / width() - 0.5 + m_xPan) * (1 - ZOOMSTEP);
+        m_yPan += ((double)we->position().y() / height() - 0.5 - m_yPan) * (1 - ZOOMSTEP);
 
         m_zoom *= ZOOMSTEP;
     }
@@ -577,15 +563,9 @@ void GLWidget::timerEvent(QTimerEvent *te)
 {
     if (te->timerId() == m_timerPaint.timerId()) {
         if (m_animateView) viewAnimation();
-#ifndef GLES
-        update();
-#endif
+//!!!        update();
     } else {
-#ifdef GLES
         QOpenGLWidget::timerEvent(te);
-#else
-        QGLWidget::timerEvent(te);
-#endif
     }
 }
 
