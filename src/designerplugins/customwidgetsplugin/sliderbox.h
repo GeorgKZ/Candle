@@ -24,7 +24,7 @@ class CUSTOMWIDGETS_DLLSPEC SliderBox : public QWidget
     Q_PROPERTY(QString title READ title WRITE setTitle)
     
 public:
-    explicit SliderBox(QWidget *parent = 0);
+    explicit SliderBox(QWidget *parent = nullptr);
     ~SliderBox();
 
     int value() const;

@@ -31,7 +31,12 @@ find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
 ##############################################################################
 
 # Директория для промежуточных и собранных файлов
-set(BUILD_PATH "${CMAKE_BINARY_DIR}/..")
+if(DEFINED ENV{BUILDDIR}) 
+    set(BUILD_PATH "$ENV{BUILDDIR}")
+else()
+    set(BUILD_PATH "${CMAKE_BINARY_DIR}/..")
+endif()
+
 # Директория для результирующих бинарных файлов
 set(BIN_PATH "${BUILD_PATH}/bin")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_PATH})
@@ -47,6 +52,9 @@ set(DOC_PATH "${BUILD_PATH}/docs")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
 # Директория для сборки установочного набора
 set(DEST_PATH "${BUILD_PATH}/install")
+if(APPLE)
+    set(DEST_PATH "${BUILD_PATH}/install/candle.app/Contents/MacOS")
+endif()
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/translations)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/plugins)
@@ -78,9 +86,9 @@ endif()
 # Определение битности исполняемого файла
 ##############################################################################
 
-if ("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
+if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
     set(BIT_WIDTH "64")
-elseif ("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
+elseif("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
     set(BIT_WIDTH "32")
 else()
     message(WARNING "Неизвестная битность исполняемого файла - ${CMAKE_SIZEOF_VOID_P} байт")

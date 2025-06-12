@@ -1,12 +1,6 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-//script.importExtension("qt.core");
-//script.importExtension("qt.gui");
-//script.importExtension("qt.widgets");
-//script.importExtension("qt.custom");
-//script.importExtension("qt.uitools");
-
 // Vars
 var appPath = app.path;
 var pluginPath = script.path;

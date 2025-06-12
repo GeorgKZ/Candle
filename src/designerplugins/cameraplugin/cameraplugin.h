@@ -7,7 +7,7 @@ class CameraPlugin: public QObject, QDesignerCustomWidgetInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    explicit CameraPlugin(QObject *parent = 0);
+    explicit CameraPlugin(QObject *parent = nullptr);
 
     bool isContainer() const override;
     bool isInitialized() const override;

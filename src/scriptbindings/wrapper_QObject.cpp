@@ -9,6 +9,6 @@ QJSValue wrapper_QObject::findChild(const QString &aName, Qt::FindChildOptions o
     return QJSValue();
   }
   const char* widgetClass = widget->metaObject()->className();
-  qInfo() << "found child class" << widgetClass << "by name" << aName;
+  qDebug() << "found child class" << widgetClass << "by name" << aName;
   return wrapperFactory(widgetClass, widget);
 }

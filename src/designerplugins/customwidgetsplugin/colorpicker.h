@@ -14,7 +14,7 @@ class CUSTOMWIDGETS_DLLSPEC ColorPicker : public QWidget
     Q_PROPERTY(int colorInt READ colorInt WRITE setColorInt)
 
 public:
-    explicit ColorPicker(QWidget *parent = 0);
+    explicit ColorPicker(QWidget *parent = nullptr);
 
     QColor color() const;
     void setColor(const QColor &color);

@@ -19,6 +19,13 @@
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QStyledItemDelegate>
 #include <QtQml/QJSValueIterator>
+
+#if QT_CONFIG(permissions)
+  #include <QPermission>
+#endif
+
+
+
 #include <algorithm>
 #include "frmmain.h"
 #include "ui_frmmain.h"
@@ -117,6 +124,8 @@ frmMain::frmMain(QWidget *parent) :
     m_senderState = SenderUnknown;
 
     m_spindleCW = true;
+
+    permissionChecking();
 
     // Loading settings
     m_settingsFileName = qApp->applicationDirPath() + "/settings.ini";
@@ -366,6 +375,43 @@ frmMain::~frmMain()
     delete ui;
     ui = nullptr;
 }
+
+void frmMain::permissionChecking()
+{
+#ifdef QT_FEATURE_permissions
+    QCameraPermission cameraPermission;
+    /**
+     * Алгоритм:
+     *
+     * 1. Проверить наличие разрешения на использование камеры (камер).
+     */
+    switch (qApp->checkPermission(cameraPermission)) {
+    /**
+     * 1.1. Если ни разрешение, ни запрет на использование камеры не были объявлены, запросить
+     * разрешение, функция будет вызвана повторно.
+     */
+    case Qt::PermissionStatus::Undetermined:
+        qDebug() << "Camera permission is undetermined, requesting...";
+        qApp->requestPermission(cameraPermission, this,
+            &frmMain::permissionChecking);
+        qDebug() << "Camera permission requested";
+        break;
+    /**
+     * 1.2. Если явно объявлен запрет на использование камеры, закончить инициализацию.
+     */
+    case Qt::PermissionStatus::Denied:
+        qWarning() << "Camera permission is not granted!";
+        break;
+    /**
+     * 1.3. Если явно объявлено разрешение на использование камеры, продолжить инициализацию.
+     */
+    case Qt::PermissionStatus::Granted:
+        qDebug() << "Camera permission is granted";
+        break;
+    }
+#endif
+}
+
 
 void frmMain::showEvent(QShowEvent *se)
 {
@@ -3188,8 +3234,8 @@ void frmMain::loadPlugins()
         // Config
         QSettings set(pluginsDir + p + "/config.ini", QSettings::IniFormat);
         QString title = set.value("title").toString();
-        QString name = set.value("name").toString();
-        qInfo() << "Loading plugin:" << p << title << name;
+        QString name = p + "Plugin";
+        qInfo() << "Loading plugin:" << p << title;
 
         // Translation
         QString loc = m_settings->language();
@@ -3224,7 +3270,7 @@ void frmMain::loadPlugins()
             app.setProperty("path", qApp->applicationDirPath());
             se->globalObject().setProperty("app", app);
 
-            // // Settings
+            // Settings
             QJSValue settings = se->newQObject(m_settings);
             app.setProperty("settings", settings);
 
@@ -3266,6 +3312,21 @@ void frmMain::loadPlugins()
                 qInfo() << "Plugin function init() OK";
             }
             //!!! проверить exceptionStackTrace->isEmpty()
+
+            // Получить название окна или панели
+            sv = se->evaluate("getTitle()", p, 1, &exceptionStackTrace);
+            if (sv.isError()) {
+                int errLine = sv.property("lineNumber").toInt();
+                if (errLine != 1) {
+                    qCritical() << "ERROR: exception in" << p << "plugin's getTitle() function at line"
+                             << errLine << ": "
+                             << sv.toString();
+                }
+            } else {
+                qInfo() << "Plugin function getTitle() OK:" << sv.toString();
+            }
+            //!!! проверить exceptionStackTrace->isEmpty()
+
 
             // Panel widget
             sv = se->evaluate("createPanelWidget()", p, 1, &exceptionStackTrace);
@@ -4345,9 +4406,9 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
                 ks = QKeySequence(ev->key() | ev->modifiers());
             }
         }
-
+  //!!! ui != nullptr
         if ((m_senderState != SenderTransferring) && (m_senderState != SenderStopping) 
-            && ui->chkKeyboardControl->isChecked() && !ev->isAutoRepeat()) 
+            && ui != nullptr && ui->chkKeyboardControl->isChecked() && !ev->isAutoRepeat()) 
         {
             static QList<QAction*> acts;
             if (acts.isEmpty()) acts << ui->actJogXMinus << ui->actJogXPlus 

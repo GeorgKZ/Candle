@@ -50,7 +50,7 @@ class wrapper_CameraWidget : public wrapper_QWidget {
 
 public:
 
-  // CameraWidget(QWidget *parent = 0);
+  // CameraWidget(QWidget *parent = nullptr);
   Q_INVOKABLE wrapper_CameraWidget(const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
     wrapper_QWidget(new CameraWidget((QWidget*)jsvalueToObject_ptr("QWidget", parent))) {
     qDebug() << "wrapper_CameraWidget::constructor(parent=" << (unsigned long long)(get_selfptr())->parent() << ")";

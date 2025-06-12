@@ -7,19 +7,27 @@
 #include <QtMultimedia/QMediaCaptureSession>
 #include <QtMultimedia/QMediaDevices>
 #include <QtMultimediaWidgets/QGraphicsVideoItem>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QGraphicsScene>
-#ifdef QT_FEATUTE_permissions
+//#ifdef QT_FEATURE_permissions
+#if QT_CONFIG(permissions)
   #include <QtCore/QPermission>
 #endif
 
 CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(new QMediaCaptureSession)
 {
 
-    qDebug() << "CameraWidget::constructor(parent=" << (unsigned long long)(parent) << ")";
+//    qDebug() << "CameraWidget::constructor(parent=" << (unsigned long long)(parent) << ")";
+
+//#ifdef QT_FEATURE_permissions
+#if QT_CONFIG(permissions)
+    qDebug() << "Using premissions feature";
+#endif
+
 
     /** 
      * Для MacOS в файле Info.plist должны быть установлены разрешения:
@@ -60,9 +68,7 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(
     m_aimLineWidth = 1;
     m_aimPosition = QPoint(0,0);
 
-    if (!permissionChecking()) {
-        return;
-    }
+    permissionChecking();
 
     QCameraDevice dev;
     if (QMediaDevices::videoInputs().empty()) {
@@ -83,9 +89,9 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(
     setCamera(dev);
 }
 
-bool CameraWidget::permissionChecking()
+void CameraWidget::permissionChecking()
 {
-#ifdef QT_FEATUTE_permissions
+#ifdef QT_FEATURE_permissions
     QCameraPermission cameraPermission;
     /**
      * Алгоритм:
@@ -98,23 +104,24 @@ bool CameraWidget::permissionChecking()
      * разрешение, функция будет вызвана повторно.
      */
     case Qt::PermissionStatus::Undetermined:
-        qApp->requestPermission(cameraPermission, this, &CameraWidget::permissionChecking);
-//!!!
-        return true;
+        qDebug() << "Camera (p) permission is undetermined, requesting...";
+        qApp->requestPermission(cameraPermission, // this,
+            &CameraWidget::permissionChecking);
+        qDebug() << "Camera (p) permission requested";
+        break;
     /**
      * 1.2. Если явно объявлен запрет на использование камеры, закончить инициализацию.
      */
     case Qt::PermissionStatus::Denied:
-        qWarning("Camera permission is not granted!");
-        return false;
+        qWarning() << "Camera (p) permission is not granted!";
+        break;
     /**
      * 1.3. Если явно объявлено разрешение на использование камеры, продолжить инициализацию.
      */
     case Qt::PermissionStatus::Granted:
-        return true;
+        qDebug() << "Camera (p) permission is granted";
+        break;
     }
-#else
-    return true;
 #endif
 }
 
@@ -264,8 +271,6 @@ QSize CameraWidget::resolution() const
 
 void CameraWidget::setZoom(qreal zoom)
 {
-    qDebug() << "CameraWidget::setZoom(" << zoom << ")";
-
     zoom = qBound<qreal>(1.0, zoom, 8.0);
     if (m_zoom != zoom) {
         m_zoom = zoom;
@@ -276,7 +281,6 @@ void CameraWidget::setZoom(qreal zoom)
 
 qreal CameraWidget::zoom() const
 {
-    qDebug() << "CameraWidget::zoom()";
     return m_zoom;
 }
 
@@ -301,9 +305,6 @@ QPoint CameraWidget::pos() const
 
 void CameraWidget::setAimPos(const QPoint &aimPos)
 {
-
-    qDebug() << "CameraWidget::setAimPos()";
-
     int maxx = m_view->frameSize().width() - m_aimLineWidth;
     int maxy = m_view->frameSize().height() - m_aimLineWidth;
 
@@ -319,7 +320,6 @@ void CameraWidget::setAimPos(const QPoint &aimPos)
 
 QPoint CameraWidget::aimPos() const
 {
-    qDebug() << "CameraWidget::aimPos()";
     return m_aimPosition;
 }
 
@@ -400,7 +400,7 @@ void CameraWidget::resizeEvent(QResizeEvent *e)
 
 void CameraWidget::hideEvent(QHideEvent *event)
 {
-    qDebug() << "CameraWidget::hideEvent";
+//    qDebug() << "CameraWidget::hideEvent";
 
     /**
      * Алгоритм:
@@ -419,7 +419,7 @@ void CameraWidget::hideEvent(QHideEvent *event)
 
 void CameraWidget::showEvent(QShowEvent *event)
 {
-    qDebug() << "CameraWidget::showEvent";
+//    qDebug() << "CameraWidget::showEvent";
 
     /**
      * Алгоритм:

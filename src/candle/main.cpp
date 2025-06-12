@@ -19,6 +19,7 @@
 #include "frmmain.h"
 
 QTranslator* candle_translator = nullptr;
+QTranslator* qt_translator = nullptr;
 
 static QtMessageHandler originalHandler = nullptr;
 static bool debugOutput = false;
@@ -46,19 +47,21 @@ static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, c
     fMessFile.close();
 }
 
-
 int main(int argc, char *argv[]) {
 
   // Установить свой обработчик отладочных/информационных/предупреждающих/аварийных сообщений
   // qDebug(), qInfo(), qWarning(), qCritical(), qFatal()
-  originalHandler = qInstallMessageHandler(myMessageOutput);
+    originalHandler = qInstallMessageHandler(myMessageOutput);
 
-  for (auto i = 0; i < argc; i++) {
-      if (QString(argv[i]).toUpper() == "-DEBUG") {
-          debugOutput = true;
-          break;
-      }
-  }
+    /**
+     * При наличии в командной строке ключа -DEBUG включить вывод отладочной информации
+     */
+    for (auto i = 0; i < argc; i++) {
+        if (QString(argv[i]).toUpper() == "-DEBUG") {
+            debugOutput = true;
+            break;
+        }
+    }
 
 
 //#ifdef UNIX
@@ -90,7 +93,7 @@ int main(int argc, char *argv[]) {
     QString translationsFolder = qApp->applicationDirPath() + "/translations/";
     QString translationFileName = translationsFolder + "candle_" + loc + ".qm";
 
-    if(QFile::exists(translationFileName)) {
+    if (QFile::exists(translationFileName)) {
         qInfo() << "Loading Candle translation from" << translationFileName << "...";
         candle_translator = new QTranslator();
         if (candle_translator->load(translationFileName)) {
@@ -103,15 +106,15 @@ int main(int argc, char *argv[]) {
     }
 
     QString baseTranslationFileName = translationsFolder + "qtbase_" + loc + ".qm";
-    if(QFile::exists(baseTranslationFileName)) {
+    if (QFile::exists(baseTranslationFileName)) {
         qInfo() << "Loading Qt translation from" << baseTranslationFileName << "...";
-        QTranslator* baseTranslator = new QTranslator();
-        if (baseTranslator->load(baseTranslationFileName)) {
+        qt_translator = new QTranslator();
+        if (qt_translator->load(baseTranslationFileName)) {
             qInfo() << "Qt translation" << baseTranslationFileName << "loaded";
-            a.installTranslator(baseTranslator);
+            a.installTranslator(qt_translator);
         } else {
             qCritical() << "Error loading Qt translation";
-            delete baseTranslator;
+            delete qt_translator;
         }
     }
 
@@ -141,6 +144,8 @@ int main(int argc, char *argv[]) {
     a.setStyleSheet("QWidget {font-family: \"Ubuntu\";}\
                     QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white;}\
                     QDialog {border: 1px solid palette(mid);}");
+    a.setStyleSheet(a.styleSheet() + "QWidget {font-size: 8pt}");
+
 #if 0
                     QMenuBar {background-color: #303030; padding-top: 2px; padding-bottom: 2px;}
                     QMenuBar::item {spacing: 3px; padding: 2px 8px; background: transparent; color: white;}
@@ -150,7 +155,6 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    a.setStyleSheet(a.styleSheet() + "QWidget {font-size: 8pt}");
 
     frmMain w;
     w.show();

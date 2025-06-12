@@ -100,17 +100,12 @@ public:
     /**
      * \brief Конструктор
      */
-    CameraWidget(QWidget *parent = 0);
+    CameraWidget(QWidget *parent = nullptr);
 
     /**
      * \brief Деструктор
      */
     ~CameraWidget();
-
-    /**
-     * \brief Проверка разрешений на использование камеры
-     */
-    bool permissionChecking();
 
     /**
      * \brief Проверить, работает ли текущая камера
@@ -262,6 +257,13 @@ public slots:
     void start();
 
     void stop();
+
+private slots:
+
+    /**
+     * \brief Проверка разрешений на использование камеры
+     */
+    static void permissionChecking();
 
 private:
 

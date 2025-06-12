@@ -110,7 +110,7 @@ class frmMain : public QMainWindow
     friend class ScriptFunctions;
 
 public:
-    explicit frmMain(QWidget *parent = 0);
+    explicit frmMain(QWidget *parent = nullptr);
     ~frmMain();
 
 signals:
@@ -237,6 +237,8 @@ private slots:
 
     void updateHeightMapInterpolationDrawer(bool reset = false);
     void placeVisualizerButtons();
+
+    void permissionChecking();
 
 protected:
     virtual void showEvent(QShowEvent *se) override;

@@ -20,7 +20,7 @@
 class CustomKeySequenceEdit : public QKeySequenceEdit
 {
 public:
-    explicit CustomKeySequenceEdit(QWidget *parent = 0): QKeySequenceEdit(parent) {}
+    explicit CustomKeySequenceEdit(QWidget *parent = nullptr): QKeySequenceEdit(parent) {}
     ~CustomKeySequenceEdit() {}
 
 protected:

@@ -10,7 +10,7 @@ class DropWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DropWidget(QWidget *parent = 0);
+    explicit DropWidget(QWidget *parent = nullptr);
     
     void restoreState(QObject* parent, QStringList panels);
     QStringList saveState();

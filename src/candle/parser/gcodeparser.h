@@ -18,7 +18,7 @@ class GcodeParser : public QObject
 {
     Q_OBJECT
 public:
-    explicit GcodeParser(QObject *parent = 0);
+    explicit GcodeParser(QObject *parent = nullptr);
     ~GcodeParser();
 
     bool getConvertArcsToLines();

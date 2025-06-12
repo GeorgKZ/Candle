@@ -33,17 +33,21 @@
 	<string>${MACOSX_BUNDLE_ICON_FILE}</string>
 
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>en</string>
 
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 
-	<key>NSCameraUsageDescription</key>
-	<string>Qt Multimedia Example</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Qt Multimedia Example</string>
+        <key>NSCameraUsageDescription</key>
+        <string>The camera is used by CameraWidget plugin.</string>
+        <key>com.apple.security.device.camera</key>
+        <true/>
 
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
+
+	<key>NSHighResolutionCapable</key>
+	<string>True</string>
+
 </dict>
 </plist>

@@ -13,7 +13,7 @@ class ScriptFunctions: public QObject
 {
     Q_OBJECT
 public:
-    ScriptFunctions(QObject *parent = 0);
+    ScriptFunctions(QObject *parent = nullptr);
     
     void setFrmMain(frmMain *f);
     frmMain *getFrmMain();

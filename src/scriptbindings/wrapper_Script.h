@@ -11,7 +11,7 @@ class Script: public QObject {
 
 public:
 //!!! без враппера?
-  Q_INVOKABLE Script(QObject* parent = 0) : QObject(parent) {
+  Q_INVOKABLE Script(QObject* parent = nullptr) : QObject(parent) {
     qDebug() << "Script::constructor(parent =" << (unsigned long long)parent << ")";
   }
 

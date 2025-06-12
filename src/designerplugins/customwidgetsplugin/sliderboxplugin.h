@@ -6,7 +6,7 @@ class SliderBoxPlugin: public QObject, public QDesignerCustomWidgetInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    explicit SliderBoxPlugin(QObject *parent = 0);
+    explicit SliderBoxPlugin(QObject *parent = nullptr);
 
     bool isContainer() const override;
     bool isInitialized() const override;

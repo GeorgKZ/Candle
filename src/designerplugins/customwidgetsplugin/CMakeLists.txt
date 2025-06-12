@@ -50,17 +50,6 @@ add_library(${MAIN_NAME} SHARED
         ${UI}
 )
 
-# Дополнения для macOS/OS X
-if(APPLE)
-#    add_library(${MAIN_NAME} SHARED
-#        MACOSX_BUNDLE
-#    )
-    set_target_properties(${MAIN_NAME}
-        PROPERTIES MACOSX_BUNDLE_INFO_PLIST
-        ${PROJECT_SOURCE_DIR}/macos/Info.plist
-    )
-endif()
-
 # Добавить библиотеки Qt
 target_link_libraries(${MAIN_NAME} PRIVATE
     Qt6::Core

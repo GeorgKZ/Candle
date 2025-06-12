@@ -20,7 +20,7 @@ class CUSTOMWIDGETS_DLLSPEC StyledToolButton : public QToolButton
     Q_PROPERTY(QColor highlightColor READ highlightColor WRITE setHighlightColor)
     
 public:
-    explicit StyledToolButton(QWidget *parent = 0);
+    explicit StyledToolButton(QWidget *parent = nullptr);
 
     bool isHover();
 

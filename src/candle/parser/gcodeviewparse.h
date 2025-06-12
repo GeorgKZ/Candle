@@ -19,7 +19,7 @@ class GcodeViewParse : public QObject
 {
     Q_OBJECT
 public:
-    explicit GcodeViewParse(QObject *parent = 0);
+    explicit GcodeViewParse(QObject *parent = nullptr);
     ~GcodeViewParse();
 
     QVector4D &getMinimumExtremes();

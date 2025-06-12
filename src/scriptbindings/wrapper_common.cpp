@@ -151,6 +151,30 @@ bool 	isUrl() const
       qDebug() << "jsvalueToVariant - returning QIcon";
       return QVariant(*(QIcon*)ptr);
   }
+  if (typeString == "qint32") {
+      qDebug() << "jsvalueToVariant - returning qint32";
+      return QVariant(*(qint32*)ptr);
+  }
+  if (typeString == "QString") {
+      qDebug() << "jsvalueToVariant - returning QString";
+      return QVariant(*(QString*)ptr);
+  }
+  if (typeString == "QVariantList") {
+      qDebug() << "jsvalueToVariant - returning QVariantList";
+      return QVariant(*(QVariantList*)ptr);
+  }
+#if 0
+  if (typeString == "QVariantList") {
+    QVariantList oldvarlist = variant.toList();
+    QVariantList newvarlist;
+    for (qsizetype i = 0; i < oldvarlist.size(); ++i) {
+      QVariant oldvar = oldvarlist[i];
+      QVariant newvar = oldvar;
+      newvarlist += newvar;
+    }
+    return newvarlist;
+  }
+#endif
 
 
 #if 0
@@ -220,7 +244,7 @@ bool 	isUrl() const
   return value.toVariant(QJSValue::RetainJSObjects);
 #endif
 
-    qDebug() << "jsvalueToVariant - unknown type, returning empty QVariant";
+    qWarning() << "jsvalueToVariant - unknown type, returning empty QVariant";
     return QVariant();
 }
 
@@ -378,10 +402,12 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
 
     if (strcmp(typeName, "QString") == 0) {
       qDebug() << "jsvalueToObject_ptr - returning QString pointer";
+      if (returnType != nullptr) *returnType = "QString";
       return new QString(variant.toString());
     }
     if (strcmp(typeName, "int") == 0) {
-      qDebug() << "jsvalueToVariant - returning qint32 pointer";
+      qDebug() << "jsvalueToObject_ptr - returning qint32 pointer";
+      if (returnType != nullptr) *returnType = "qint32";
       return new qint32(variant.toInt());
     }
 
@@ -393,7 +419,8 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
         QVariant newvar = oldvar;
         *newvarlist += newvar;
       }
-      qDebug() << "jsvalueToVariant - returning QVariantList pointer";
+      qDebug() << "jsvalueToObject_ptr - returning QVariantList pointer";
+      if (returnType != nullptr) *returnType = "QVariantList";
       return newvarlist;
     }
 

@@ -69,7 +69,7 @@ class frmSettings : public QDialog
     Q_PROPERTY(bool softLimitsEnabled READ softLimitsEnabled WRITE setSoftLimitsEnabled)
 
 public:
-    explicit frmSettings(QWidget *parent = 0);
+    explicit frmSettings(QWidget *parent = nullptr);
     ~frmSettings();
 
     Ui::frmSettings *ui;

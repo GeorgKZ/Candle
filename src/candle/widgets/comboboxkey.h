@@ -9,7 +9,7 @@
 class ComboBoxKey : public QComboBox
 {
 public:
-    explicit ComboBoxKey(QWidget *parent = 0);
+    explicit ComboBoxKey(QWidget *parent = nullptr);
 
     void setEditable(bool editable);
 

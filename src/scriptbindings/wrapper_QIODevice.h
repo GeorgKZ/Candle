@@ -272,7 +272,8 @@ public:
 
   // Деструктор
   virtual ~wrapper_QFileDevice() {
-    delete static_cast<QFileDevice*>(wrapper_QIODevice::get_selfptr());
+    qDebug() << "wrapper_QFileDevice::destructor";
+    //!!! delete static_cast<QFileDevice*>(wrapper_QIODevice::get_selfptr());
   }
 
   // Получение константного указателя на объект

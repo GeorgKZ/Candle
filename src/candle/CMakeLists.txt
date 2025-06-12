@@ -75,6 +75,19 @@ if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"
         -D_UNICODE
         -DUNICODE
     )
+
+# При сборке для работы в среде MacOS
+elif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+    )
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE TRUE
+    )
+
+
 endif()
 
 ##############################################################################
@@ -149,22 +162,31 @@ find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
 file(GLOB UI "${SOURCES_PATH}/*.ui")
 
 # Зависимости исполняемого файла приложения
-add_executable(${MAIN_NAME}
+qt_add_executable(${MAIN_NAME}
+    MACOSX_BUNDLE
     ${SOURCE_FILE_LIST}
     ${SOURCE_HEADERS_LIST}
     ${UI}
     ${RESOURCES_DEP}
 )
 
-# Дополнения для macOS/OS X
-if(APPLE)
-#    add_executable(${MAIN_NAME}
-#        MACOSX_BUNDLE
-#    )
-    set_target_properties(${MAIN_NAME}
-        PROPERTIES MACOSX_BUNDLE_INFO_PLIST
-        ${PROJECT_SOURCE_DIR}/macos/Info.plist
+# !!!! win32!!
+if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        WIN32_EXECUTABLE TRUE
     )
+endif()
+
+# Дополнения для macOS/OS X
+if(APPLE AND NOT IOS)
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+    )
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE TRUE
+    )
+
 endif()
 
 # Сформировать список шрифтов-ресурсов
@@ -217,6 +239,8 @@ target_link_libraries(${MAIN_NAME} PRIVATE
     scriptbindings
     cameraplugin
     customwidgets
+)
+target_link_libraries(${MAIN_NAME} PUBLIC
     Qt6::Core
     Qt6::Gui
     Qt6::OpenGL
@@ -230,7 +254,8 @@ target_link_libraries(${MAIN_NAME} PRIVATE
     Qt6::MultimediaWidgets
 )
 
-if(WIN32)
+# При сборке для Windows
+if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
     target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
 endif()
 
@@ -325,7 +350,15 @@ install(FILES ${QM_FILES}
     DESTINATION ${DEST_PATH}/translations)
 
 # Исполняемый файл
-install(FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}
-    DESTINATION ${DEST_PATH}
-    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-)
+if(APPLE AND NOT IOS)
+    install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MAIN_NAME}.app
+        DESTINATION ${BUILD_PATH}/install
+        USE_SOURCE_PERMISSIONS
+#        FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    )
+else()
+    install(FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}
+        DESTINATION ${DEST_PATH}
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    )
+endif()

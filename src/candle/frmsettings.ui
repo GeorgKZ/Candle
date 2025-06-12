@@ -1235,13 +1235,6 @@ QSplitter::handle:horizontal {
                </property>
               </spacer>
              </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="label_30">
-               <property name="text">
-                <string>pt</string>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="0">
               <widget class="QLabel" name="lblFont">
                <property name="text">
@@ -1320,6 +1313,13 @@ QSplitter::handle:horizontal {
                  <string notr="true">12</string>
                 </property>
                </item>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>pt</string>
+               </property>
               </widget>
              </item>
 

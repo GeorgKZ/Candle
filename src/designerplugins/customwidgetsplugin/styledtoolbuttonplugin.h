@@ -6,7 +6,7 @@ class StyledToolButtonPlugin: public QObject, public QDesignerCustomWidgetInterf
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    explicit StyledToolButtonPlugin(QObject *parent = 0);
+    explicit StyledToolButtonPlugin(QObject *parent = nullptr);
 
     bool isContainer() const override;
     bool isInitialized() const override;

@@ -4,6 +4,7 @@
 // Vars
 var appPath = app.path;
 var pluginPath = script.path;
+var pluginName;
 var loader = new QUiLoader();
 var settings = new QSettings(pluginPath + "/settings.ini", QSettings.IniFormat);
 var storedName;
@@ -45,8 +46,20 @@ function createWindowWidget()
 
     if (f.open(QIODevice.ReadOnly)) {        
         uiWindow = loader.load(f);
+        pluginName = uiWindow.windowTitle;
     }
     return uiWindow;
+}
+
+function getTitle()
+{
+    var f = new QFile(pluginPath + "/widget.ui");
+
+    if (f.open(QIODevice.ReadOnly)) {        
+        uiWindow = loader.load(f);
+    }
+
+    return uiWindow.windowTitle;
 }
 
 function createSettingsWidget()
@@ -81,10 +94,15 @@ function onAppSettingsLoaded()
     console.log("JAVA: camera: function onAppSettingsLoaded()");
 
     // Load settings
+    uiSettings.findChild("cboCameraName").clear();
     uiSettings.findChild("cboCameraName").addItems(uiWindow.findChild("camMain").availableCameras);
-    uiSettings.findChild("cboCameraName").currentText = settings.value("name");
-    uiSettings.findChild("cboCameraResolution").currentText = settings.value("resolution", "1280x720");
-    uiSettings.findChild("txtCameraZoom").text = settings.value("zoom", 1);
+//!!! если это значение определено и есть среди возможных, выбрать его 
+//   uiSettings.findChild("cboCameraName").currentText = settings.value("name");
+    uiSettings.findChild("cboCameraResolution").clear();
+    uiSettings.findChild("cboCameraResolution").addItems(uiWindow.findChild("camMain").availableResolutions);
+//!!! если это значение определено и есть среди возможных, выбрать его 
+ //   uiSettings.findChild("cboCameraResolution").currentText = settings.value("resolution");
+    uiSettings.findChild("txtCameraZoom").text = settings.value("zoom", "1.0");
     uiSettings.findChild("txtCameraPosition").text = settings.value("position", "0, 0");
     uiSettings.findChild("txtCameraAimPosition").text = settings.value("aimPosition", "0, 0");
     uiSettings.findChild("txtCameraAimSize").value = settings.value("aimSize", 20);
@@ -95,9 +113,9 @@ function onAppSettingsLoaded()
     applySettings();
 
     // Update resolutions list
-    var r = uiSettings.findChild("cboCameraResolution").currentText;
-    uiSettings.findChild("cboCameraResolution").addItems(uiWindow.findChild("camMain").availableResolutions);
-    uiSettings.findChild("cboCameraResolution").currentText = r;
+//    var r = uiSettings.findChild("cboCameraResolution").currentText;
+//    uiSettings.findChild("cboCameraResolution").addItems(uiWindow.findChild("camMain").availableResolutions);
+//    uiSettings.findChild("cboCameraResolution").currentText = r;
 
     // Connect signals/slots
     uiWindow.findChild("camMain").posChanged.connect(onPosChanged);
@@ -140,9 +158,10 @@ function onAppSettingsRejected()
 function onAppSettingsDefault()
 {
     console.log("JAVA: camera: function onAppSettingsDefault()");
-
+//!!! выбрать первую доступную камеру или пусто
     uiSettings.findChild("cboCameraName").currentText = "";
-    uiSettings.findChild("cboCameraResolution").currentText = "";
+//!!! выбрать первое доступное разрешение или пусто
+    uiSettings.findChild("cboCameraResolution").currentText = "1280x720";
     uiSettings.findChild("txtCameraZoom").text = "1.0";
     uiSettings.findChild("txtCameraPosition").text = "0, 0";
     uiSettings.findChild("txtCameraAimPosition").text = "0, 0";
@@ -196,10 +215,11 @@ function onCameraNameChanged(name)
     uiWindow.findChild("camMain").cameraName = name;
     
     // Update resolutions list
-    var r = uiSettings.findChild("cboCameraResolution").currentText;
+//!!!    var r = uiSettings.findChild("cboCameraResolution").currentText;
     uiSettings.findChild("cboCameraResolution").clear();
     uiSettings.findChild("cboCameraResolution").addItems(uiWindow.findChild("camMain").availableResolutions);
-    uiSettings.findChild("cboCameraResolution").currentText = r;
+//!!!    uiSettings.findChild("cboCameraResolution").currentText = r;
+//!!! Выбрать старое, если такое есть в новом списке, или первое новое
 }
 
 function onPosChanged(pos)

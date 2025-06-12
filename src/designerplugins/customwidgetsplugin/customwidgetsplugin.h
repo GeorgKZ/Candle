@@ -7,7 +7,7 @@ class CustomWidgetsPlugin: public QObject, public QDesignerCustomWidgetCollectio
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
 public:
-    CustomWidgetsPlugin(QObject *parent = 0);
+    CustomWidgetsPlugin(QObject *parent = nullptr);
 
     QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
 
