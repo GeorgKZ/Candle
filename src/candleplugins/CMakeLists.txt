@@ -79,7 +79,6 @@ foreach(I ${SUBDIRS})
         # Установка файлов плюгина
         install(FILES
             ${PLUGIN_PATH}/script.js
-            ${PLUGIN_PATH}/config.ini
             ${SRC_FILES}
             ${QM_FILES}
             DESTINATION ${DEST_PATH}/plugins/${I}

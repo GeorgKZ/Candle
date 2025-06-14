@@ -4,6 +4,11 @@
 <context>
     <name>CoordinateSystem</name>
     <message>
+        <location filename="widget.ui" line="14"/>
+        <source>Coordinate system</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="widget.ui" line="39"/>
         <source>Offsets:</source>
         <translation type="unfinished"></translation>

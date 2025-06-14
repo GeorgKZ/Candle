@@ -13,8 +13,9 @@
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QGraphicsScene>
-//#ifdef QT_FEATURE_permissions
-#if QT_CONFIG(permissions)
+
+#ifdef QT_FEATURE_permissions
+//#if QT_CONFIG(permissions)
   #include <QtCore/QPermission>
 #endif
 
@@ -23,8 +24,8 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(
 
 //    qDebug() << "CameraWidget::constructor(parent=" << (unsigned long long)(parent) << ")";
 
-//#ifdef QT_FEATURE_permissions
-#if QT_CONFIG(permissions)
+#ifdef QT_FEATURE_permissions
+//#if QT_CONFIG(permissions)
     qDebug() << "Using premissions feature";
 #endif
 

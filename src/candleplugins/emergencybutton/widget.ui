@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string notr="true">Form</string>
+   <string>Emergency button</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
@@ -39,7 +39,7 @@
      </property>
     <property name="icon">
     <iconset>
-        <normaloff>images/stop4_.png</normaloff>images/stop4_.png</iconset>
+        <normaloff>images/stop3.png</normaloff>images/stop3.png</iconset>
     </property>
      <property name="iconSize">
       <size>

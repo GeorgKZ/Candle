@@ -14,6 +14,7 @@
 #include <QtWidgets/QPlainTextEdit>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+#include "frmmain.h"
 #include "frmsettings.h"
 #include "ui_frmsettings.h"
 
@@ -521,7 +522,7 @@ QString frmSettings::font()
 
 void frmSettings::setFont(const QString& fontName)
 {
-//!!!
+//TODO !!!
     ui->cboFont->setCurrentText(fontName);
 }
 
@@ -668,6 +669,7 @@ QString frmSettings::language()
 }
 
 extern QTranslator* candle_translator;
+extern QTranslator* qt_translator;
 
 void frmSettings::setLanguage(QString language)
 {
@@ -676,32 +678,23 @@ void frmSettings::setLanguage(QString language)
         ui->cboLanguage->setCurrentIndex(i);
 
         QString translationsFolder = qApp->applicationDirPath() + "/translations/";
+
         QString translationFileName = translationsFolder + "candle_" + language + ".qm";
-
         if (QFile::exists(translationFileName)) {
-            qInfo() << "Loading Candle translation from" << translationFileName << "...";
-            QTranslator* new_translator = new QTranslator();
-            if (new_translator->load(translationFileName)) {
-                qApp->removeTranslator(candle_translator);
-                delete candle_translator;
-                candle_translator = new_translator;
-                qInfo() << "Candle translation" << translationFileName << "loaded";
-                qApp->installTranslator(candle_translator);
-            } else {
-                qCritical() << "Error loading Candle translation";
-                delete new_translator;
-            }
-            //!!! TODO загрузить и переводы для Qt, для плюгинов
-
-            // Изменить язык для этой формы
-            ui->retranslateUi(this);
-
-            //!!! TODO обработать события изменения языка
-
+            setTranslator(translationFileName, &candle_translator);
         } else {
             qCritical() << "Error - no such Candle translation file";
         }
-    }
+
+        translationFileName = translationsFolder + "qt_" + language + ".qm";
+        if (QFile::exists(translationFileName)) {
+            setTranslator(translationFileName, &qt_translator);
+        } else {
+            qCritical() << "Error - no such Qt translation file";
+        }
+
+        //!!! TODO загрузить переводы для плюгинов
+     }
 }
 
 void frmSettings::on_cboLanguageChanged(int language_index)
@@ -768,6 +761,30 @@ bool frmSettings::referenceZPlus()
 void frmSettings::setReferenceZPlus(bool value)
 {
     ui->radReferenceZPlus->setChecked(value);
+}
+
+void frmSettings::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+    {
+//TODO изменить строки заданные не в ui
+//        setWindowTitle(qtTrId(ID_APP_TITLE));
+//        ui->menuFile->setTitle(qtTrId(ID_MENU_FILE));
+//        ui->menuSettings->setTitle(qtTrId(ID_MENU_SETTINGS));
+//        ui->actionOpen->setText(qtTrId(ID_MENU_FILE_OPEN));
+//        ui->actionSave->setText(qtTrId(ID_MENU_FILE_SAVE));
+//        ui->actionClose->setText(qtTrId(ID_MENU_FILE_CLOSE));
+//        ui->action_Exit->setText(qtTrId(ID_MENU_FILE_EXIT));
+//        ui->actionSelect_Language->setText(qtTrId(ID_MENU_SETTINGS_SELECT));
+//        okPushButton->setText(tr("&OK"));
+ 
+       // Изменить язык для этого окна
+        ui->retranslateUi(this);
+    }
+    else
+    {
+        QDialog::changeEvent(event);
+    }
 }
 
 void frmSettings::showEvent(QShowEvent *se)

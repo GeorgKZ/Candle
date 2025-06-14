@@ -20,7 +20,8 @@
 #include <QtWidgets/QStyledItemDelegate>
 #include <QtQml/QJSValueIterator>
 
-#if QT_CONFIG(permissions)
+#ifdef QT_FEATURE_permissions
+//#if QT_CONFIG(permissions)
   #include <QPermission>
 #endif
 
@@ -412,6 +413,30 @@ void frmMain::permissionChecking()
 #endif
 }
 
+
+void frmMain::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+    {
+        // Set all text.
+//TODO изменить строки заданные не в ui
+//        setWindowTitle(qtTrId(ID_APP_TITLE));
+//        ui->menuFile->setTitle(qtTrId(ID_MENU_FILE));
+//        ui->menuSettings->setTitle(qtTrId(ID_MENU_SETTINGS));
+//        ui->actionOpen->setText(qtTrId(ID_MENU_FILE_OPEN));
+//        ui->actionSave->setText(qtTrId(ID_MENU_FILE_SAVE));
+//        ui->actionClose->setText(qtTrId(ID_MENU_FILE_CLOSE));
+//        ui->action_Exit->setText(qtTrId(ID_MENU_FILE_EXIT));
+//        ui->actionSelect_Language->setText(qtTrId(ID_MENU_SETTINGS_SELECT));
+ 
+       // Изменить язык для этого окна
+        ui->retranslateUi(this);
+    }
+    else
+    {
+        QMainWindow::changeEvent(event);
+    }
+}
 
 void frmMain::showEvent(QShowEvent *se)
 {
@@ -3231,15 +3256,11 @@ void frmMain::loadPlugins()
     qInfo() << tr("Loading plugins:") << pl;
 
     foreach (QString p, pl) {
-        // Config
-        QSettings set(pluginsDir + p + "/config.ini", QSettings::IniFormat);
-        QString title = set.value("title").toString();
-        QString name = p + "Plugin";
-        qInfo() << "Loading plugin:" << p << title;
+
+        qInfo() << "Loading plugin" << p;
 
         // Translation
-        QString loc = m_settings->language();
-        QString translationFileName = pluginsDir + p + "/" + p + "_" + loc + ".qm";
+        QString translationFileName = pluginsDir + p + "/" + p + "_" + m_settings->language() + ".qm";
         if(QFile::exists(translationFileName)) {
             QTranslator *translator = new QTranslator();
             if (translator->load(translationFileName)) {
@@ -3258,11 +3279,8 @@ void frmMain::loadPlugins()
             register_wrappers(se);
             QJSValue sv = se->newQObject(new Script(this));
 
-
             sv.setProperty("path", pluginsDir + p);            
             se->globalObject().setProperty("script", sv);
-
-
 
             // Delegate objects
             // Main form
@@ -3287,7 +3305,7 @@ void frmMain::loadPlugins()
 
             qInfo() << "Starting plugin:" << p;
             sv = se->evaluate(script, p, 1, &exceptionStackTrace);
-            if (sv.isError()) {
+            if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
                 if (errLine != 1) {
                     qCritical() << "ERROR: exception when loading" << p << "plugin at line"
@@ -3297,11 +3315,10 @@ void frmMain::loadPlugins()
             } else {
                 qInfo() << "Plugin started OK";
             }
-            //!!! проверить exceptionStackTrace->isEmpty()
 
             // Init
             sv = se->evaluate("init()", p, 1, &exceptionStackTrace);
-            if (sv.isError()) {
+            if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
                 if (errLine != 1) {
                     qCritical() << "ERROR: exception in" << p << "plugin's init() function at line"
@@ -3311,26 +3328,10 @@ void frmMain::loadPlugins()
             } else {
                 qInfo() << "Plugin function init() OK";
             }
-            //!!! проверить exceptionStackTrace->isEmpty()
-
-            // Получить название окна или панели
-            sv = se->evaluate("getTitle()", p, 1, &exceptionStackTrace);
-            if (sv.isError()) {
-                int errLine = sv.property("lineNumber").toInt();
-                if (errLine != 1) {
-                    qCritical() << "ERROR: exception in" << p << "plugin's getTitle() function at line"
-                             << errLine << ": "
-                             << sv.toString();
-                }
-            } else {
-                qInfo() << "Plugin function getTitle() OK:" << sv.toString();
-            }
-            //!!! проверить exceptionStackTrace->isEmpty()
-
 
             // Panel widget
             sv = se->evaluate("createPanelWidget()", p, 1, &exceptionStackTrace);
-            if (sv.isError()) {
+            if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
                 if (errLine != 1) {
                     qCritical() << "ERROR: exception in" << p << "plugin's createPanelWidget() function at line"
@@ -3339,17 +3340,16 @@ void frmMain::loadPlugins()
                 }
             } else {
                 qDebug() << "Plugin function createPanelWidget() OK";
-                //!!! проверить exceptionStackTrace->isEmpty()
                 QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
                 if (w) {
-                    qInfo() << "Creating PanelWidget";
+                    qInfo() << "Creating Panel Widget" << w->windowTitle();
                     // Create panel
                     QGroupBox *box = new QGroupBox(this);
                     QVBoxLayout *layout1 = new QVBoxLayout(box);
                     QWidget *bw = new QWidget(box);
                     QVBoxLayout *layout2 = new QVBoxLayout(bw);
-                    box->setObjectName("grp" + name);
-                    box->setTitle(tr(title.toLatin1()));
+                    box->setObjectName("grp" + p + "Plugin");
+                    box->setTitle(w->windowTitle());
                     box->setLayout(layout1);
                     box->setCheckable(true);
                     box->setProperty("overrided", false);
@@ -3366,7 +3366,7 @@ void frmMain::loadPlugins()
 
             // Window widget
             sv = se->evaluate("createWindowWidget()", p, 1, &exceptionStackTrace);
-            if (sv.isError()) {
+            if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
                 if (errLine != 1) {
                     qCritical() << "ERROR: exception in" << p << "plugin's createWindowWidget() function at line"
@@ -3375,18 +3375,17 @@ void frmMain::loadPlugins()
                 }
             } else {
                 qInfo() << "Plugin function createWindowWidget() OK";
-                //!!! проверить exceptionStackTrace->isEmpty()
                 QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
                 if (w) {
-                    qInfo() << "Creating Window Widget";
+                    qInfo() << "Creating Window Widget" << w->windowTitle();
                     // Create dock widget
                     QDockWidget *dock = new QDockWidget(this);
                     QWidget *contents = new QWidget(dock);
                     QFrame *frame = new QFrame(contents);
                     QVBoxLayout *layout1 = new QVBoxLayout(contents);
                     QVBoxLayout *layout2 = new QVBoxLayout(frame);
-                    dock->setObjectName("dock" + name);
-                    dock->setWindowTitle(tr(title.toLatin1()));
+                    dock->setObjectName("dock" + p + "Plugin");
+                    dock->setWindowTitle(w->windowTitle());
                     dock->setWidget(contents);
                     contents->setLayout(layout1);
                     layout1->addWidget(frame);
@@ -3405,7 +3404,7 @@ void frmMain::loadPlugins()
 
             // Settings widget
             sv = se->evaluate("createSettingsWidget()", p, 1, &exceptionStackTrace);
-            if (sv.isError()) {
+            if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
                 if (errLine != 1) {
                     qCritical() << "ERROR: exception in" << p << "plugin's createSettingsWidget() function at line"
@@ -3414,23 +3413,22 @@ void frmMain::loadPlugins()
                 }
             } else {
                 qInfo() << "Plugin function createSettingsWidget() OK";
-                //!!! проверить exceptionStackTrace->isEmpty()
                 QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
                 if (w) {
-                    qInfo() << "Creating Settings Widget";
+                    qInfo() << "Creating Settings Widget" << w->windowTitle();
                     // Create groupbox
                     QGroupBox *box = new QGroupBox(m_settings);
                     QVBoxLayout *layout1 = new QVBoxLayout(box);
-                    box->setObjectName("grpSettings" + name);
-                    box->setTitle(tr(title.toLatin1()));
+                    box->setObjectName("grpSettings" + p + "Plugin");
+                    box->setTitle(w->windowTitle());
                     box->setLayout(layout1);
                     layout1->addWidget(w);
 
-                    // Add to settings form
+                    // Дополнить левый список окна настроек названием плюгина,
+                    // а правое окно виджетом настройки плюгина
                     m_settings->addCustomSettings(box);
                 }
             }
-
             f.close();
         }
     }
@@ -4698,6 +4696,7 @@ bool frmMain::isGCodeFile(QString fileName)
           || fileName.endsWith(".nc", Qt::CaseInsensitive)
           || fileName.endsWith(".ncc", Qt::CaseInsensitive)
           || fileName.endsWith(".ngc", Qt::CaseInsensitive)
+          || fileName.endsWith(".gcode", Qt::CaseInsensitive)
           || fileName.endsWith(".tap", Qt::CaseInsensitive);
 }
 
@@ -4830,3 +4829,4 @@ bool frmMain::actionTextLessThan(const QAction *a1, const QAction *a2)
 {
     return a1->text() < a2->text();
 }
+

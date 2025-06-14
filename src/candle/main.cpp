@@ -18,8 +18,9 @@
 
 #include "frmmain.h"
 
-QTranslator* candle_translator = nullptr;
-QTranslator* qt_translator = nullptr;
+QTranslator *candle_translator = nullptr;
+QTranslator *qt_translator = nullptr;
+frmMain *mainWindow = nullptr;
 
 static QtMessageHandler originalHandler = nullptr;
 static bool debugOutput = false;
@@ -45,6 +46,22 @@ static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, c
     tsTextStream << qFormatLogMessage(type, context, msg);
     fMessFile.flush();
     fMessFile.close();
+}
+
+
+
+void setTranslator(const QString &translationFileName, QTranslator **translator) {
+    QTranslator* new_translator = new QTranslator();
+    if (new_translator->load(translationFileName)) {
+        qApp->removeTranslator(*translator);
+        delete *translator;
+        *translator = new_translator;
+        qApp->installTranslator(*translator);
+        qInfo() << "Translation" << translationFileName << "loaded abd installed";
+    } else {
+        qCritical() << "Error loading" << translationFileName << "translation";
+        delete new_translator;
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -90,34 +107,32 @@ int main(int argc, char *argv[]) {
     QSettings set(a.applicationDirPath() + "/settings.ini", QSettings::IniFormat);
     QString loc = set.value("language", "en").toString();
 
+    /**
+     * Установить перевод согласно выбранному в настройках языку
+     */
     QString translationsFolder = qApp->applicationDirPath() + "/translations/";
+
     QString translationFileName = translationsFolder + "candle_" + loc + ".qm";
-
     if (QFile::exists(translationFileName)) {
-        qInfo() << "Loading Candle translation from" << translationFileName << "...";
-        candle_translator = new QTranslator();
-        if (candle_translator->load(translationFileName)) {
-            qInfo() << "Candle translation" << translationFileName << "loaded";
-            a.installTranslator(candle_translator);
-        } else {
-            qCritical() << "Error loading Candle translation";
-            delete candle_translator;
-        }
+        setTranslator(translationFileName, &candle_translator);
     }
 
-    QString baseTranslationFileName = translationsFolder + "qtbase_" + loc + ".qm";
-    if (QFile::exists(baseTranslationFileName)) {
-        qInfo() << "Loading Qt translation from" << baseTranslationFileName << "...";
-        qt_translator = new QTranslator();
-        if (qt_translator->load(baseTranslationFileName)) {
-            qInfo() << "Qt translation" << baseTranslationFileName << "loaded";
-            a.installTranslator(qt_translator);
-        } else {
-            qCritical() << "Error loading Qt translation";
-            delete qt_translator;
-        }
+    translationFileName = translationsFolder + "qtbase_" + loc + ".qm";
+    if (QFile::exists(translationFileName)) {
+        setTranslator(translationFileName, &qt_translator);
     }
 
+//TODO !!!
+#if 0
+    QString pluginsDir = qApp->applicationDirPath() + "/plugins/";
+    QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach (QString p, pl) {
+        translationFileName = pluginsDir + p + "/" + p + "_" + loc + ".qm";
+        if(QFile::exists(translationFileName)) {
+            setTranslator(baseTranslationFileName, &plugin_translator[i++]);
+        }
+    }
+#endif
 
 #ifdef UNIX
 //    if (!styleOverrided) {
@@ -157,6 +172,7 @@ int main(int argc, char *argv[]) {
 
 
     frmMain w;
+    mainWindow = &w;
     w.show();
 
     return a.exec();

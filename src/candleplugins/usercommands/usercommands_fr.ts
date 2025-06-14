@@ -2,7 +2,20 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_US">
 <context>
+    <name>UserCommands</name>
+    <message>
+        <location filename="widget.ui" line="14"/>
+        <source>User commands</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UserCommandsSettings</name>
+    <message>
+        <location filename="settings.ui" line="14"/>
+        <source>User commands</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="settings.ui" line="63"/>
         <source>0</source>

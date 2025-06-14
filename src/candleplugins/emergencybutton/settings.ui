@@ -9,7 +9,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string notr="true">Form</string>
+   <string>Emergency button</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">

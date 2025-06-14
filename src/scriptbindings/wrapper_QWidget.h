@@ -64,7 +64,9 @@ class wrapper_QWidget : public wrapper_QObject { // , public wrapper_QPaintDevic
         READ minimumSizeHint)
 #if 0
     Q_PROPERTY(bool acceptDrops READ acceptDrops WRITE setAcceptDrops)
+#endif
     Q_PROPERTY(QString windowTitle READ windowTitle WRITE setWindowTitle NOTIFY windowTitleChanged)
+#if 0
     Q_PROPERTY(QIcon windowIcon READ windowIcon WRITE setWindowIcon NOTIFY windowIconChanged)
     Q_PROPERTY(QString windowIconText READ windowIconText WRITE setWindowIconText NOTIFY windowIconTextChanged) // deprecated
     Q_PROPERTY(double windowOpacity READ windowOpacity WRITE setWindowOpacity)
@@ -266,18 +268,25 @@ public:
 
 #endif
 
-#if 0
-
 public Q_SLOTS:
-    void setWindowTitle(const QString &);
+
+//  void setWindowTitle(const QString &);
+    Q_INVOKABLE void setWindowTitle(const QString &str) { get_selfptr()->setWindowTitle(str); }
 #ifndef QT_NO_STYLE_STYLESHEET
-    void setStyleSheet(const QString& styleSheet);
+//  void setStyleSheet(const QString& styleSheet);
+    Q_INVOKABLE void setStyleSheet(const QString &styleSheet) { get_selfptr()->setStyleSheet(styleSheet); }
 #endif
+
 public:
+
 #ifndef QT_NO_STYLE_STYLESHEET
-    QString styleSheet() const;
+//  QString styleSheet() const;
+    Q_INVOKABLE QString styleSheet() const { return get_selfptr()->styleSheet(); }
 #endif
-    QString windowTitle() const;
+//  QString windowTitle() const;
+    Q_INVOKABLE QString windowTitle() const { return get_selfptr()->windowTitle(); }
+
+#if 0
     void setWindowIcon(const QIcon &icon);
     QIcon windowIcon() const;
     void setWindowIconText(const QString &);
@@ -570,6 +579,7 @@ public:
 #endif
 
 Q_SIGNALS:
+
     void windowTitleChanged(const QString &title);
     // QIcon
     void windowIconChanged(const QJSValue &icon);

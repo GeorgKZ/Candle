@@ -11,6 +11,11 @@
 <context>
     <name>pluginCamera</name>
     <message>
+        <location filename="widget.ui" line="14"/>
+        <source>Camera</source>
+        <translation>Камера</translation>
+    </message>
+    <message>
         <location filename="widget.ui" line="35"/>
         <source>&amp;Send</source>
         <translation type="unfinished"></translation>
@@ -32,6 +37,11 @@
         <location filename="settings.ui" line="42"/>
         <source>Position:</source>
         <translation>Позиция:</translation>
+    </message>
+    <message>
+        <location filename="settings.ui" line="14"/>
+        <source>Camera</source>
+        <translation>Камера</translation>
     </message>
     <message>
         <location filename="settings.ui" line="56"/>

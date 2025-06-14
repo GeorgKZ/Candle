@@ -9,7 +9,20 @@
     </message>
 </context>
 <context>
+    <name>UserCommands</name>
+    <message>
+        <location filename="widget.ui" line="14"/>
+        <source>User commands</source>
+        <translation type="unfinished">Пользовательские команды</translation>
+    </message>
+</context>
+<context>
     <name>UserCommandsSettings</name>
+    <message>
+        <location filename="settings.ui" line="14"/>
+        <source>User commands</source>
+        <translation type="unfinished">Пользовательские команды</translation>
+    </message>
     <message>
         <location filename="settings.ui" line="63"/>
         <source>0</source>

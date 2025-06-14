@@ -2807,7 +2807,7 @@ padding-right: 8;</string>
     <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle">
-    <string>User</string>
+    <string>Plugins</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>

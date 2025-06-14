@@ -10,6 +10,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QList>
 #include <QtCore/QTime>
+#include <QtCore/QTranslator>
 #include <QtGui/QDragEnterEvent>
 #include <QtGui/QDropEvent>
 #include <QtWidgets/QMainWindow>
@@ -89,6 +90,19 @@ struct CommandQueue {
         showInConsole = show;
     }
 };
+
+
+/**
+ * \brief Установить перевод согласно языковому файлу
+ */
+void setTranslator(const QString &translationFileName, QTranslator **translator);
+
+/**
+ * \brief Связный список путей к плюгинам и дескрипторов переводов 
+ */
+typedef QMap<QString, QTranslator*> pluginTranslatorMap;
+
+
 
 class CancelException : public std::exception {
 public:
@@ -241,6 +255,7 @@ private slots:
     void permissionChecking();
 
 protected:
+    virtual void changeEvent(QEvent *event) override;
     virtual void showEvent(QShowEvent *se) override;
     virtual void hideEvent(QHideEvent *he) override;
     virtual void resizeEvent(QResizeEvent *re) override;
@@ -477,5 +492,7 @@ private:
 };
 
 typedef QMap<QString, QList<QKeySequence>> ShortcutsMap;
+
+extern frmMain *mainWindow;
 
 #endif // FRMMAIN_H

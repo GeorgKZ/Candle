@@ -59,6 +59,8 @@ function getTitle()
         uiWindow = loader.load(f);
     }
 
+    console.log("JAVA: getTitle: got " + uiWindow.windowTitle);
+
     return uiWindow.windowTitle;
 }
 

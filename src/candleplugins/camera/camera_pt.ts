@@ -4,6 +4,11 @@
 <context>
     <name>pluginCamera</name>
     <message>
+        <location filename="widget.ui" line="14"/>
+        <source>Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="widget.ui" line="35"/>
         <source>&amp;Send</source>
         <translation type="unfinished"></translation>
@@ -11,6 +16,11 @@
 </context>
 <context>
     <name>pluginCameraSettings</name>
+    <message>
+        <location filename="settings.ui" line="14"/>
+        <source>Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="settings.ui" line="32"/>
         <source>Name:</source>

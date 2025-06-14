@@ -187,7 +187,8 @@ signals:
     void settingsSetByDefault();
 
 protected:
-    void showEvent(QShowEvent *se);
+    virtual void changeEvent(QEvent *event) override;
+    virtual void showEvent(QShowEvent *se) override;
 
 private slots:
     void onScrollBarValueChanged(int value);
