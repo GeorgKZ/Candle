@@ -1238,9 +1238,7 @@ QLabel[overrided=&quot;false&quot;] {
             </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QGroupBox {
-	margin-top: 7;
-}</string>
+            <string notr="true">QGroupBox { margin-top: 7; }</string>
            </property>
            <property name="title">
             <string/>
@@ -1637,6 +1635,7 @@ QLabel[overrided=&quot;false&quot;] {
            </property>
           </widget>
          </item>
+
          <item>
           <widget class="QGroupBox" name="grpControl">
            <property name="title">
@@ -1897,6 +1896,8 @@ QLabel[overrided=&quot;false&quot;] {
            </layout>
           </widget>
          </item>
+
+
          <item>
           <widget class="QGroupBox" name="grpSpindle">
            <property name="enabled">
@@ -1911,116 +1912,118 @@ QLabel[overrided=&quot;false&quot;] {
            <property name="overrided" stdset="0">
             <bool>false</bool>
            </property>
+
            <layout class="QVBoxLayout" name="verticalLayout_100">
+
             <item>
-             <widget class="QWidget" name="widgetLaserSpindle" native="true">
-               <layout class="QHBoxLayout" name="horizontalLayout_100">
-               <property name="spacing">
-                <number>5</number>
-               </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
+
+             <!-- widget class="QWidget" name="widgetCutterLaser" native="true" -->
+
+
+             <layout class="QHBoxLayout" name="horizontalLayout_100">
+              <property name="spacing">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_100">
+                <property name="text">
+                 <string>Mode:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radUseCutter">
+                <property name="text">
+                 <string>Cutter</string>
+                </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radUseLaser">
+                <property name="text">
+                 <string>Laser</string>
+                </property>
+               </widget>
+              </item>
+
+             </layout>
+            
+             <!-- /widget -->
+
+
+            </item>
+
+             <!-- /widget>
+            </item -->
+
+
+
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QWidget" name="widgetSpindle" native="true">
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <property name="spacing">
+                  <number>10</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
                  <item>
-                  <widget class="QLabel" name="label_100">
-                   <property name="text">
-                    <string>Mode:</string>
+                  <widget class="SliderBox" name="slbSpindle" native="true">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="radUseCutter">
-                   <property name="text">
-                    <string>Cutter mode</string>
+                  <widget class="StyledToolButton" name="cmdSpindle">
+                   <property name="enabled">
+                    <bool>true</bool>
                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="radUseLaser">
-                   <property name="text">
-                    <string>Laser mode</string>
+                   <property name="toolTip">
+                    <string>Spindle on/off</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="images.qrc">
+                     <normaloff>:/images/cutter.png</normaloff>:/images/cutter.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>32</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="adjustSize" stdset="0">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
                 </layout>
-             </widget>
+               </widget>
+              </item>
+             </layout>
             </item>
-           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QWidget" name="widgetSpindle" native="true">
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
-               <property name="spacing">
-                <number>10</number>
-               </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="SliderBox" name="slbSpindle" native="true">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="StyledToolButton" name="cmdSpindle">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>Spindle on/off</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="images.qrc">
-                   <normaloff>:/images/cutter.png</normaloff>:/images/cutter.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="checkable">
-                  <bool>true</bool>
-                 </property>
-                 <property name="adjustSize" stdset="0">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
+
            </layout>
-
-          </item>
-          </layout>
-
 
           </widget>
          </item>
@@ -2413,6 +2416,7 @@ QLabel[overrided=&quot;false&quot;] {
            </layout>
           </widget>
          </item>
+
          <item>
           <widget class="QGroupBox" name="spacerDevice">
            <property name="sizePolicy">
@@ -2422,9 +2426,7 @@ QLabel[overrided=&quot;false&quot;] {
             </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QGroupBox {
-	margin-top: 7;
-}</string>
+            <string notr="true">QGroupBox { margin-top: 7; }</string>
            </property>
            <property name="title">
             <string/>
@@ -2685,9 +2687,7 @@ QLabel[overrided=&quot;false&quot;] {
           <item>
            <widget class="ComboBox" name="cboCommand">
             <property name="styleSheet">
-             <string notr="true">padding-top: 3;
-padding-bottom: 3;
-padding-right: 8;</string>
+             <string notr="true">padding-top: 3; padding-bottom: 3; padding-right: 8;</string>
             </property>
             <property name="editable">
              <bool>true</bool>
@@ -2796,6 +2796,9 @@ padding-right: 8;</string>
     <bool>false</bool>
    </attribute>
   </widget>
+
+  <!--
+
   <widget class="QDockWidget" name="dockUser">
    <property name="minimumSize">
     <size>
@@ -2897,6 +2900,9 @@ padding-right: 8;</string>
     </layout>
    </widget>
   </widget>
+
+  -->
+
   <action name="actFileNew">
    <property name="text">
     <string>&amp;New</string>

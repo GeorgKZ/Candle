@@ -64,17 +64,8 @@ uic_*
 #vscode
 .vscode
 
-#makefiles
-Makefile*
-
 #binaries
 bin
 
-#wrappers
-*_wrapper.bat
-
 #pdb
 *.pdb
-
-#rc
-src/candle/Candle_resource.rc

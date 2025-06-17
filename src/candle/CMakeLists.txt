@@ -76,6 +76,10 @@ if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"
         -DUNICODE
     )
 
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+
 # При сборке для работы в среде MacOS
 elif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
@@ -84,6 +88,10 @@ elif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     )
 
     set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE_ICON_FILE qdia.icns
         MACOSX_BUNDLE TRUE
     )
 
@@ -171,23 +179,23 @@ qt_add_executable(${MAIN_NAME}
 )
 
 # !!!! win32!!
-if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
-endif()
+#if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+#    set_target_properties(${MAIN_NAME} PROPERTIES
+#        WIN32_EXECUTABLE TRUE
+#    )
+#endif()
 
 # Дополнения для macOS/OS X
-if(APPLE AND NOT IOS)
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-    )
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE TRUE
-    )
-
-endif()
+#if(APPLE AND NOT IOS)
+#    set_target_properties(${MAIN_NAME} PROPERTIES
+#        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+#    )
+#
+#    set_target_properties(${MAIN_NAME} PROPERTIES
+#        MACOSX_BUNDLE TRUE
+#    )
+#
+#endif()
 
 # Сформировать список шрифтов-ресурсов
 set(RESOURCE_FONTS_PATH "${SOURCES_PATH}/fonts")
@@ -254,7 +262,7 @@ target_link_libraries(${MAIN_NAME} PUBLIC
     Qt6::MultimediaWidgets
 )
 
-# При сборке для Windows
+# !!! При сборке для Windows
 if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
     target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
 endif()
@@ -306,16 +314,6 @@ FOREACH(L ${QT_LANG})
     list(APPEND QM_FILES ${QM_FILE})
 
 ENDFOREACH(L)
-
-
-
-
-
-
-
-
-
-
 
 ##############################################################################
 # Установка

@@ -12,7 +12,8 @@ var storedButtons = new Array();
 var storedActions = new Array();
 
 // Ui
-var uiPanel;
+//var uiPanel;
+var uiWindow;
 var uiSettings;
 
 function init()
@@ -30,14 +31,24 @@ function init()
     app.deviceStateChanged.connect(onAppDeviceStateChanged);
 }
 
-function createPanelWidget()
+//function createPanelWidget()
+//{
+//    var f = new QFile(pluginPath + "/widget.ui");
+//
+//    if (f.open(QIODevice.ReadOnly)) {        
+//        uiPanel = loader.load(f);
+//    }
+//    return uiPanel;
+//}
+
+function createWindowWidget()
 {
     var f = new QFile(pluginPath + "/widget.ui");
 
     if (f.open(QIODevice.ReadOnly)) {        
-        uiPanel = loader.load(f);
+        uiWindow = loader.load(f);
     }
-    return uiPanel;
+    return uiWindow;
 }
 
 function createSettingsWidget()
@@ -155,6 +166,9 @@ console.log("JAVA: usercommands::onAppSettingLoaded()");
     buttonSize = app.buttonSize();
 
     var b = settings.value("buttons");
+
+console.log("JAVA: usercommands::onAppSettingLoaded(), b=" + b);
+
     
     restoreButtonsTable(b);
     updateButtons();
@@ -194,7 +208,8 @@ function onAppDeviceStateChanged(status)
 console.log("JAVA: usercommands::onAppDeviceStateChanged()");
 
     var t = uiSettings.findChild("tblButtons");
-    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
+//    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
+    var lay = uiWindow.layout().itemAt(0).layout(); // Widget -> layout -> first layout
 
     for (var i = 0; i < t.rowCount; i++) {
         lay.itemAt(i).widget().setEnabled(status != -1);
@@ -265,7 +280,8 @@ function updateButtons()
 console.log("JAVA: usercommands::updateButtons()");
 
     var t = uiSettings.findChild("tblButtons");
-    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
+//    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
+    var lay = uiWindow.layout().itemAt(0).layout(); // Widget -> layout -> first layout
     var k = lay.count();
     var c = t.rowCount;
 
@@ -335,7 +351,8 @@ function updateActions()
         a.deleteLater();
     }
     for (var i = l; i < n; i++) {
-        var a = new QAction(qsTr("User button") + " " + (i + 1), uiPanel);
+//        var a = new QAction(qsTr("User button") + " " + (i + 1), uiPanel);
+        var a = new QAction(qsTr("User button") + " " + (i + 1), uiWindow);
         a.objectName = "actUserCommandsButton" + (i + 1);
         a.triggered.connect(onTriggered(i));
         storedActions.push(a);

@@ -11,7 +11,8 @@ var senderState = -1;
 var holdSent = false;
 
 // Ui
-var uiPanel;
+//var uiPanel;
+var uiWindow;
 
 function init()
 {
@@ -23,17 +24,18 @@ function init()
     app.responseReceived.connect(onAppResponseReceived);
 }
 
-function createPanelWidget()
+function createWindowWidget()
 {
     var f = new QFile(pluginPath + "/widget.ui");
 
     if (f.open(QIODevice.ReadOnly)) {
-        uiPanel = loader.load(f);
+        uiWindow = loader.load(f);
 //      uiPanel.findChild("cmdStop").backgroundColor = new QColor(0xffff0000);
 
-        uiPanel.findChild("cmdStop").clicked.connect(onButtonClicked);
+//        uiPanel.findChild("cmdStop").clicked.connect(onButtonClicked);
+        uiWindow.findChild("cmdStop").clicked.connect(onButtonClicked);
     }
-    return uiPanel;
+    return uiWindow;
 }
 
 function createSettingsWidget()

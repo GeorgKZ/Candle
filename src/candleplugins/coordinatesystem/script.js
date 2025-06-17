@@ -12,7 +12,8 @@ var currentCS = "G54";
 var currentOffsets = "";
 
 // Ui
-var uiPanel;
+//var uiPanel;
+var uiWindow;
 var uiSettings;
 
 function init()
@@ -27,7 +28,8 @@ function init()
     app.settingsLoaded.connect(onAppSettingsLoaded);
 }
 
-function createPanelWidget()
+//function createPanelWidget()
+function createWindowWidget()
 {
     var f = new QFile(pluginPath + "/widget.ui");
 
@@ -42,18 +44,24 @@ function createPanelWidget()
     }
 
     if (f.open(QIODevice.ReadOnly)) {
-        uiPanel = loader.load(f);
+//        uiPanel = loader.load(f);
+        uiWindow = loader.load(f);
 
         for (var i = 54; i <= 57; i++) {
-            uiPanel.findChild("cmdG" + i).clicked.connect(onCsClicked("G" + i));
+//            uiPanel.findChild("cmdG" + i).clicked.connect(onCsClicked("G" + i));
+            uiWindow.findChild("cmdG" + i).clicked.connect(onCsClicked("G" + i));
         }
 
-        uiPanel.findChild("cmdX0").clicked.connect(onZeroClicked("X0"));
-        uiPanel.findChild("cmdY0").clicked.connect(onZeroClicked("Y0"));
-        uiPanel.findChild("cmdZ0").clicked.connect(onZeroClicked("Z0"));
-        uiPanel.findChild("cmdAll0").clicked.connect(onZeroClicked("X0 Y0 Z0"));
+//        uiPanel.findChild("cmdX0").clicked.connect(onZeroClicked("X0"));
+//        uiPanel.findChild("cmdY0").clicked.connect(onZeroClicked("Y0"));
+//        uiPanel.findChild("cmdZ0").clicked.connect(onZeroClicked("Z0"));
+//        uiPanel.findChild("cmdAll0").clicked.connect(onZeroClicked("X0 Y0 Z0"));
+        uiWindow.findChild("cmdX0").clicked.connect(onZeroClicked("X0"));
+        uiWindow.findChild("cmdY0").clicked.connect(onZeroClicked("Y0"));
+        uiWindow.findChild("cmdZ0").clicked.connect(onZeroClicked("Z0"));
+        uiWindow.findChild("cmdAll0").clicked.connect(onZeroClicked("X0 Y0 Z0"));
     }
-    return uiPanel;
+    return uiWindow;
 }
 
 function onAppSettingsLoaded()
@@ -61,28 +69,28 @@ function onAppSettingsLoaded()
     var u = app.settings.units;
     var b = u ? 999 : 9999;
 
-    uiPanel.findChild("txtOffsetX").decimals = u ? 4 : 3;
-    uiPanel.findChild("txtOffsetY").decimals = u ? 4 : 3;
-    uiPanel.findChild("txtOffsetZ").decimals = u ? 4 : 3;
+    uiWindow.findChild("txtOffsetX").decimals = u ? 4 : 3;
+    uiWindow.findChild("txtOffsetY").decimals = u ? 4 : 3;
+    uiWindow.findChild("txtOffsetZ").decimals = u ? 4 : 3;
 
-    uiPanel.findChild("txtOffsetX").mimimum = -b;
-    uiPanel.findChild("txtOffsetX").maximum = b;
-    uiPanel.findChild("txtOffsetY").mimimum = -b;
-    uiPanel.findChild("txtOffsetY").maximum = b;
-    uiPanel.findChild("txtOffsetZ").mimimum = -b;
-    uiPanel.findChild("txtOffsetZ").maximum = b;
+    uiWindow.findChild("txtOffsetX").mimimum = -b;
+    uiWindow.findChild("txtOffsetX").maximum = b;
+    uiWindow.findChild("txtOffsetY").mimimum = -b;
+    uiWindow.findChild("txtOffsetY").maximum = b;
+    uiWindow.findChild("txtOffsetZ").mimimum = -b;
+    uiWindow.findChild("txtOffsetZ").maximum = b;
 }
 
 function onAppDeviceStateChanged(status)
 {
-    uiPanel.setEnabled((status == 1) && (senderState == 4));
+    uiWindow.setEnabled((status == 1) && (senderState == 4));
     
     deviceState = status;
 }
 
 function onAppSenderStateChanged(status)
 {
-    uiPanel.setEnabled((status == 4) && (deviceState == 1));
+    uiWindow.setEnabled((status == 4) && (deviceState == 1));
 
     senderState = status;
 }
@@ -94,9 +102,9 @@ function onAppResponseReceived(command, index, response)
         var s = r.match(gx);
         if (s) {
             for (var i = 0; i < s.length; i++) {
-                uiPanel.findChild("txtOffsetX").value = parseFloat(s[1]);
-                uiPanel.findChild("txtOffsetY").value = parseFloat(s[2]);
-                uiPanel.findChild("txtOffsetZ").value = parseFloat(s[3]);
+                uiWindow.findChild("txtOffsetX").value = parseFloat(s[1]);
+                uiWindow.findChild("txtOffsetY").value = parseFloat(s[2]);
+                uiWindow.findChild("txtOffsetZ").value = parseFloat(s[3]);
             }
         }
     }
@@ -105,7 +113,7 @@ function onAppResponseReceived(command, index, response)
         var rx = new RegExp("G5[4-9]");
         var s = response.match(rx);
         if (s) {
-            uiPanel["cmd" + s[0]].checked = true;
+            uiWindow["cmd" + s[0]].checked = true;
             if (s[0] != currentCS) {
                 currentCS = s[0];
                 displayOffsets(currentOffsets);

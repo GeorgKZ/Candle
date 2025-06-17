@@ -46,22 +46,8 @@ function createWindowWidget()
 
     if (f.open(QIODevice.ReadOnly)) {        
         uiWindow = loader.load(f);
-        pluginName = uiWindow.windowTitle;
     }
     return uiWindow;
-}
-
-function getTitle()
-{
-    var f = new QFile(pluginPath + "/widget.ui");
-
-    if (f.open(QIODevice.ReadOnly)) {        
-        uiWindow = loader.load(f);
-    }
-
-    console.log("JAVA: getTitle: got " + uiWindow.windowTitle);
-
-    return uiWindow.windowTitle;
 }
 
 function createSettingsWidget()

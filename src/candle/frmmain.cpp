@@ -138,7 +138,9 @@ frmMain::frmMain(QWidget *parent) :
     // Drag&drop placeholders
     ui->fraDropDevice->setVisible(false);
     ui->fraDropModification->setVisible(false);
+#ifdef PANEL_WIDGET
     ui->fraDropUser->setVisible(false);
+#endif
 
 //    ui->scrollArea->updateMinimumWidth();
 
@@ -1639,7 +1641,9 @@ void frmMain::on_mnuViewPanels_aboutToShow()
     QStringList panels;
     if (ui->scrollContentsDevice->isVisible()) panels << ui->scrollContentsDevice->saveState();
     if (ui->scrollContentsModification->isVisible()) panels << "\n" << ui->scrollContentsModification->saveState();
+#ifdef PANEL_WIDGET
     if (ui->scrollContentsUser->isVisible()) panels << "\n" << ui->scrollContentsUser->saveState();
+#endif
 
     foreach (QString s, panels) {
         if (s == "\n") {
@@ -2892,8 +2896,10 @@ void frmMain::loadSettings()
     ui->dockDevice->setMaximumWidth(w + ui->scrollArea->verticalScrollBar()->width());
     ui->dockModification->setMinimumWidth(w);
     ui->dockModification->setMaximumWidth(w + ui->scrollArea->verticalScrollBar()->width());
+#ifdef PANEL_WIDGET
     ui->dockUser->setMinimumWidth(w);
     ui->dockUser->setMaximumWidth(w + ui->scrollArea->verticalScrollBar()->width());
+#endif
 
     // Buttons
     int margin_left, margin_top, margin_right, margin_bottom;
@@ -2917,7 +2923,9 @@ void frmMain::loadSettings()
         // Panels
     ui->scrollContentsDevice->restoreState(this, set.value("panelsDevice").toStringList());
     ui->scrollContentsModification->restoreState(this, set.value("panelsModification").toStringList());
+#ifdef PANEL_WIDGET
     ui->scrollContentsUser->restoreState(this, set.value("panelsUser").toStringList());
+#endif
 
     QStringList hiddenPanels = set.value("hiddenPanels").toStringList();
     foreach (QString s, hiddenPanels) {
@@ -3109,14 +3117,18 @@ void frmMain::saveSettings()
     // Panels
     set.setValue("panelsDevice", QVariant::fromValue(ui->scrollContentsDevice->saveState()));
     set.setValue("panelsModification", QVariant::fromValue(ui->scrollContentsModification->saveState()));
+#ifdef PANEL_WIDGET
     set.setValue("panelsUser", QVariant::fromValue(ui->scrollContentsUser->saveState()));
+#endif
 
     QStringList panels;
     QStringList hiddenPanels;
     QStringList collapsedPanels;
     if (ui->scrollContentsDevice->isVisible()) panels << ui->scrollContentsDevice->saveState();
     if (ui->scrollContentsModification->isVisible()) panels << ui->scrollContentsModification->saveState();
+#ifdef PANEL_WIDGET
     if (ui->scrollContentsUser->isVisible()) panels << ui->scrollContentsUser->saveState();
+#endif
     foreach (QString s, panels) {
         QGroupBox *b = findChild<QGroupBox*>(s);
         if (b && b->isHidden()) hiddenPanels << s;
@@ -3329,6 +3341,7 @@ void frmMain::loadPlugins()
                 qInfo() << "Plugin function init() OK";
             }
 
+#ifdef PANEL_WIDGET
             // Panel widget
             sv = se->evaluate("createPanelWidget()", p, 1, &exceptionStackTrace);
             if (sv.isError() || !exceptionStackTrace.isEmpty()) {
@@ -3363,6 +3376,7 @@ void frmMain::loadPlugins()
                     static_cast<QVBoxLayout*>(ui->scrollContentsUser->layout())->insertWidget(0, box);                
                 }
             }
+#endif
 
             // Window widget
             sv = se->evaluate("createWindowWidget()", p, 1, &exceptionStackTrace);
