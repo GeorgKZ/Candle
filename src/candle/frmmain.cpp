@@ -293,7 +293,9 @@ frmMain::frmMain(QWidget *parent) :
 
 //!!!
     // Настройка выбора режима лазер/шпиндель
+    ui->radUseCutter->setCheckable(true);
     ui->radUseCutter->setChecked(true);
+    ui->radUseLaser->setCheckable(true);
     ui->radUseLaser->setChecked(false);
     connect(ui->radUseLaser, SIGNAL(toggled(bool)), this, SLOT(onRadUseLaserToggled(bool)));
     connect(ui->radUseCutter, SIGNAL(toggled(bool)), this, SLOT(onRadUseCutterToggled(bool)));
@@ -1054,6 +1056,7 @@ void frmMain::on_grpOverriding_toggled(bool checked)
 
 void frmMain::on_grpSpindle_toggled(bool checked)
 {
+//!!! Лазер, если режим лазера
     if (checked) {
         ui->grpSpindle->setTitle(tr("Spindle"));
     } else if (ui->cmdSpindle->isChecked()) {
@@ -1062,6 +1065,7 @@ void frmMain::on_grpSpindle_toggled(bool checked)
     updateLayouts();
 
     ui->widgetSpindle->setVisible(checked);
+    ui->widgetCutterLaser->setVisible(checked);
 }
 
 void frmMain::on_grpJog_toggled(bool checked)
@@ -1670,7 +1674,7 @@ void frmMain::onSerialPortReadyRead()
     while (m_serialPort.canReadLine()) {
         QString data = m_serialPort.readLine().trimmed();
 
-//!!!! ����� �����???
+//!!!! Когда такое происходит? Ведь это случается!!!
         if (data.length() == 0) {
             return;
         }
@@ -1724,12 +1728,15 @@ void frmMain::onSerialPortReadyRead()
                 ui->cmdHold->setChecked(state == DeviceHold0 || state == DeviceHold1 || state == DeviceQueue);
                 ui->cmdSpindle->setEnabled(state == DeviceHold0 || ((m_senderState != SenderTransferring) &&
                     (m_senderState != SenderStopping)));
+                ui->radUseCutter->setEnabled(state == DeviceHold0 || ((m_senderState != SenderTransferring) &&
+                    (m_senderState != SenderStopping)));
+                ui->radUseLaser->setEnabled(state == DeviceHold0 || ((m_senderState != SenderTransferring) &&
+                    (m_senderState != SenderStopping)));
 
                 // Update "elapsed time" timer
                 if ((m_senderState == SenderTransferring) || (m_senderState == SenderStopping)) {
                     QTime time(0, 0, 0);
                     int elapsed = m_startTime.elapsed();
-//!!!!---                    int elapsed = m_startTime.msecsTo(QTime::currentTime());
                     ui->glwVisualizer->setSpendTime(time.addMSecs(elapsed));
                 }
 
@@ -2647,6 +2654,7 @@ void frmMain::onSlbSpindleValueUserChanged()
 
 void frmMain::onSlbSpindleValueChanged()
 {
+//!!! Если режим лазера, то лазер
     if (!ui->grpSpindle->isChecked() && ui->cmdSpindle->isChecked())
         ui->grpSpindle->setTitle(tr("Spindle") + QString(" (%1)").arg(ui->slbSpindle->value()));
 }
@@ -3271,6 +3279,7 @@ void frmMain::loadPlugins()
 
         qInfo() << "Loading plugin" << p;
 
+#if 0
         // Translation
         QString translationFileName = pluginsDir + p + "/" + p + "_" + m_settings->language() + ".qm";
         if(QFile::exists(translationFileName)) {
@@ -3281,6 +3290,7 @@ void frmMain::loadPlugins()
             }
             else delete translator;
         }        
+#endif
 
         // Script
         QFile f;
@@ -4113,13 +4123,17 @@ void frmMain::setupCoordsTextboxes()
 }
 
 void frmMain::updateControlsState() {
+    // True, если порт открыт
     bool portOpened = m_serialPort.isOpen();
+    // True, если выполняется или готовится к окончанию передача
     bool process = (m_senderState == SenderTransferring) || (m_senderState == SenderStopping);
+    // True, если готовится или наступило состояние паузы или происходит замена инструмента
     bool paused = (m_senderState == SenderPausing) || (m_senderState == SenderPaused) || (m_senderState == SenderChangingTool);
 
     ui->grpState->setEnabled(portOpened);
     ui->grpControl->setEnabled(portOpened);
     ui->widgetSpindle->setEnabled(portOpened);
+    ui->widgetCutterLaser->setEnabled(portOpened);
     ui->widgetJog->setEnabled(portOpened && ((m_senderState == SenderStopped) 
         || (m_senderState == SenderChangingTool)));
     ui->cboCommand->setEnabled(portOpened && (!ui->chkKeyboardControl->isChecked()));
@@ -4130,6 +4144,8 @@ void frmMain::updateControlsState() {
     ui->cmdCheck->setEnabled(!process);
     ui->cmdUnlock->setEnabled(!process);
     ui->cmdSpindle->setEnabled(!process);
+    ui->radUseCutter->setEnabled(!process);
+    ui->radUseLaser->setEnabled(!process);
     ui->cmdSleep->setEnabled(!process);
 
     ui->actFileNew->setEnabled(m_senderState == SenderStopped);
@@ -4824,6 +4840,9 @@ void frmMain::onRadUseCutterToggled(bool checked)
 {
     if (checked) {
         ui->cmdSpindle->setIcon(QIcon(":/images/cutter.png"));
+        ui->slbSpindle->setTitle(tr("Speed:"));
+        m_laserMode = false;
+        sendCommand("$32=0", -1, m_settings->showUICommands());
     }
 }
 
@@ -4831,6 +4850,9 @@ void frmMain::onRadUseLaserToggled(bool checked)
 {
     if (checked) {
         ui->cmdSpindle->setIcon(QIcon(":/images/laser1.svg"));
+        ui->slbSpindle->setTitle(tr("Power:"));
+        m_laserMode = true;
+        sendCommand("$32=1", -1, m_settings->showUICommands());
     }
 }
 

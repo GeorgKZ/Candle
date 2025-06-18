@@ -12,6 +12,9 @@
 #include <QtWidgets/QGroupBox>
 #include "colorpicker.h"
 
+#define DEFAULT_FONT_SIZE 8
+#define DEFAULT_FONT_TYPE DejaVuSans.ttf
+
 namespace Ui {
 class frmSettings;
 }

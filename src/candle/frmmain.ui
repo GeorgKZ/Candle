@@ -21,6 +21,139 @@
     <normaloff>:/images/candle_256.png</normaloff>:/images/candle_256.png</iconset>
   </property>
   <property name="styleSheet">
+   <string notr="true">
+QDockWidget::title {
+	background-color: lightgray;
+	padding: 5 0 5 11;
+	text-align: left center;
+}
+
+QDockWidget[floating=&quot;true&quot;]&gt;QWidget&gt;QWidget {
+	margin-left: 11;
+	margin-right: 11;
+}
+
+QDockWidget::close-button {
+	subcontrol-origin: padding;
+	subcontrol-position: right center;
+	position: absolute;
+	top: 2;
+	width: 24;
+}
+
+QDockWidget::float-button {
+	subcontrol-origin: padding;
+	subcontrol-position: right center;
+	position: absolute;
+	top: 2;
+	right: 20;
+	width: 24;
+}
+
+QToolBar#_spacerTop, QToolBar#_spacerLeft, QToolBar#_spacerRight {
+	border: none;
+	background-color: transparent;
+}
+
+QSpinBox, QDoubleSpinBox {
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+QGroupBox {
+}
+
+QGroupBox:disabled {
+	color: palette(shadow);
+}
+
+QGroupBox[overrided=&quot;true&quot;] {
+	color: red;
+}
+
+QGroupBox[overrided=&quot;false&quot;] {
+	color: palette(windowtext);
+}
+
+QGroupBox[checkable=&quot;true&quot;]::title {
+	margin-top: 1px;
+}
+
+QGroupBox[checkable=&quot;true&quot;]::indicator {
+	padding: 0 -2 -0 2;
+	width: 13;
+	height: 13;
+}
+
+QGroupBox[checkable=&quot;true&quot;]::indicator:checked {	
+	image: url(:/images/collapse.png);
+}
+
+QGroupBox[checkable=&quot;true&quot;]::indicator:unchecked {	
+	image: url(:/images/expand.png);
+}
+
+QFrame#frameManualControlXY,#frameManualControlZ {
+	border: 1px solid lightgray;
+	border-radius: 4px;
+}
+
+QSplitter::handle {
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+QSplitter::handle:vertical {
+	background-image: url(&quot;:/images/handle_horizontal.png&quot;);
+}
+
+QSplitter::handle:horizontal {
+	background-image: url(&quot;:/images/handle_vertical.png&quot;);
+}
+
+QTableView {
+	selection-background-color: #cdcdff;
+	selection-color: rgb(0, 0, 0);
+}
+
+QSlider::horizontal {
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+QSlider::groove:horizontal {
+    border: 1px solid #999999;
+    height: 2px; 
+    background: #8f8f91;
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {	
+	background-image: url(:/images/handle2s.png);
+    border: 0px;
+    width: 16px;
+    margin: -7px 0; 
+}
+
+QSlider::handle:horizontal:hover {
+	background-image: url(:/images/handle2sh.png);
+}
+
+QMainWindow::separator:vertical {
+	image: url(&quot;:/images/handle_vertical.png&quot;);
+}
+
+QMainWindow::separator:horizontal {
+	image: url(&quot;:/images/handle_horizontal.png&quot;);
+}
+
+   </string>
+  </property>
+
+
+<!--
+
+  <property name="styleSheet">
    <string notr="true">/*StyledToolButton[adjustSize=&quot;true&quot;] {
 	min-width: 60px;
 	min-height: 60px;
@@ -161,6 +294,9 @@ QMainWindow::separator:horizontal {
 	margin: 1px 0;
 }*/ </string>
   </property>
+
+-->
+
   <property name="dockNestingEnabled">
    <bool>true</bool>
   </property>
@@ -1288,7 +1424,7 @@ QLabel[overrided=&quot;false&quot;] {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>347</width>
+          <width>200</width>
           <height>801</height>
          </rect>
         </property>
@@ -1915,50 +2051,46 @@ QLabel[overrided=&quot;false&quot;] {
 
            <layout class="QVBoxLayout" name="verticalLayout_100">
 
+
             <item>
-
-             <!-- widget class="QWidget" name="widgetCutterLaser" native="true" -->
-
-
-             <layout class="QHBoxLayout" name="horizontalLayout_100">
-              <property name="spacing">
-               <number>10</number>
-              </property>
-              <item>
-               <widget class="QLabel" name="label_100">
-                <property name="text">
-                 <string>Mode:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radUseCutter">
-                <property name="text">
-                 <string>Cutter</string>
-                </property>
+             <widget class="QWidget" name="widgetCutterLaser">
+              <layout class="QHBoxLayout" name="horizontalLayout_100">
+               <property name="spacing">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_100">
+                 <property name="text">
+                  <string>Mode:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radUseCutter">
+                 <property name="text">
+                  <string>Cutter</string>
+                 </property>
                  <property name="checked">
                   <bool>true</bool>
                  </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radUseLaser">
-                <property name="text">
-                 <string>Laser</string>
-                </property>
-               </widget>
-              </item>
-
-             </layout>
-            
-             <!-- /widget -->
-
-
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radUseLaser">
+                 <property name="text">
+                  <string>Laser</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+              </widget>
             </item>
-
-             <!-- /widget>
-            </item -->
-
 
 
             <item>
@@ -2023,8 +2155,11 @@ QLabel[overrided=&quot;false&quot;] {
              </layout>
             </item>
 
-           </layout>
 
+
+
+
+           </layout>
           </widget>
          </item>
 

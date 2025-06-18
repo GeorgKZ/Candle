@@ -4,7 +4,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QLocale>
 #include <QtCore/QRegularExpression>
-#include <QtCore/QTranslator>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QColorDialog>
@@ -668,8 +667,11 @@ QString frmSettings::language()
     return ui->cboLanguage->currentData().toString();
 }
 
-extern QTranslator* candle_translator;
-extern QTranslator* qt_translator;
+#if 0
+extern QTranslator         *candle_translator;
+extern QTranslator         *qt_translator;
+extern pluginTranslatorMap plugin_translators;
+#endif
 
 void frmSettings::setLanguage(QString language)
 {
@@ -677,6 +679,8 @@ void frmSettings::setLanguage(QString language)
     if (i != -1) {
         ui->cboLanguage->setCurrentIndex(i);
 
+        setAllTranslators(language);
+#if 0
         QString translationsFolder = qApp->applicationDirPath() + "/translations/";
 
         QString translationFileName = translationsFolder + "candle_" + language + ".qm";
@@ -693,8 +697,21 @@ void frmSettings::setLanguage(QString language)
             qCritical() << "Error - no such Qt translation file";
         }
 
-        //!!! TODO загрузить переводы для плюгинов
-     }
+        QString pluginsDir = qApp->applicationDirPath() + "/plugins/";
+        QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        foreach (QString p, pl) {
+            translationFileName = pluginsDir + p + "/" + p + "_" + language + ".qm";
+            if(QFile::exists(translationFileName)) {
+                setTranslator(translationFileName, &plugin_translators[p]);
+
+            qDebug() << "Plugin translation 3:" << plugin_translators[p];
+
+            } else {
+                qCritical() << "Error - no such plugin translation file";
+            }
+        }
+#endif
+    }
 }
 
 void frmSettings::on_cboLanguageChanged(int language_index)
@@ -884,7 +901,7 @@ void frmSettings::set_defaults()
     ui->clpToolpathEnd->setColor(QColor(0, 255, 0));
 
     setFont("Ubuntu-Regular");
-    setFontSize(9);
+    setFontSize(DEFAULT_FONT_SIZE);
 
     // Shortcuts
     QMap<QString, QString> d;

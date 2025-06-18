@@ -54,6 +54,9 @@
     #include "shobjidl.h"
 #endif
 
+#define quoting(a) prequoting(a)
+#define prequoting(a) #a
+
 namespace Ui {
 class frmMain;
 class frmProgram;
@@ -96,6 +99,11 @@ struct CommandQueue {
  * \brief Установить перевод согласно языковому файлу
  */
 void setTranslator(const QString &translationFileName, QTranslator **translator);
+
+/**
+ * \brief Установить перевод интерфейса согласно указанному языку
+ */
+void setAllTranslators(const QString &language);
 
 /**
  * \brief Связный список путей к плюгинам и дескрипторов переводов 
@@ -343,15 +351,16 @@ private:
     GCodeTableModel *m_currentModel;
     HeightMapTableModel m_heightMapModel;
 
-    // Serial port
+    // Последовательный порт
     QSerialPort m_serialPort;
 
-    // Queues
+    // Очереди
     QList<CommandAttributes> m_commands;
     QList<CommandQueue> m_queue;    
 
-    // Forms
+    // Форма настроек
     frmSettings *m_settings;
+    // Форма "о программе"
     frmAbout m_frmAbout;
 
     // Filenames
@@ -362,7 +371,7 @@ private:
     QStringList m_recentFiles;
     QStringList m_recentHeightmaps;
 
-    // Timers
+    // Таймеры
     QTimer m_timerConnection;
     QTimer m_timerStateQuery;
     QBasicTimer m_timerToolAnimation;
@@ -400,8 +409,10 @@ private:
     bool m_absoluteCoordinates;
     bool m_storedKeyboardControl;
 
-    // Spindle
+    // Вращение шпинделя по часовой стрелке (true) или против (false)
     bool m_spindleCW;
+    // Режим лазера (true) или фрезы (false)
+    bool m_laserMode;
 
     // Jog
     QVector4D m_jogVector;
@@ -420,7 +431,7 @@ private:
     void saveSettings();
     void applySettings();
 
-    // Plugins
+    // Загрузка плюгинов
     void loadPlugins();
 
     // Communication
@@ -431,7 +442,7 @@ private:
     void sendNextFileCommands();
     QString evaluateCommand(QString command);
 
-    // Parser
+    // Парсер G-кода
     void updateParser();
     void storeParserState();
     void restoreParserState();
@@ -492,7 +503,5 @@ private:
 };
 
 typedef QMap<QString, QList<QKeySequence>> ShortcutsMap;
-
-extern frmMain *mainWindow;
 
 #endif // FRMMAIN_H

@@ -5,6 +5,7 @@
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
 #include <QtCore/QFile>
+#include <QtCore/QDir>
 #include <QtGui/QFontDatabase>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QStyleFactory>
@@ -17,10 +18,6 @@
 #include "parser/gcodeviewparse.h"
 
 #include "frmmain.h"
-
-QTranslator *candle_translator = nullptr;
-QTranslator *qt_translator = nullptr;
-frmMain *mainWindow = nullptr;
 
 static QtMessageHandler originalHandler = nullptr;
 static bool debugOutput = false;
@@ -48,8 +45,6 @@ static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, c
     fMessFile.close();
 }
 
-
-
 void setTranslator(const QString &translationFileName, QTranslator **translator) {
     QTranslator* new_translator = new QTranslator();
     if (new_translator->load(translationFileName)) {
@@ -64,10 +59,42 @@ void setTranslator(const QString &translationFileName, QTranslator **translator)
     }
 }
 
+void setAllTranslators(const QString &language) {
+
+    static QTranslator *candle_translator = nullptr;
+    static QTranslator *qt_translator = nullptr;
+    static pluginTranslatorMap plugin_translators;
+
+    QString translationsFolder = qApp->applicationDirPath() + "/translations/";
+
+    QString translationFileName = translationsFolder + "candle_" + language + ".qm";
+    if (QFile::exists(translationFileName)) {
+        setTranslator(translationFileName, &candle_translator);
+    }
+
+    translationFileName = translationsFolder + "qtbase_" + language + ".qm";
+    if (QFile::exists(translationFileName)) {
+        setTranslator(translationFileName, &qt_translator);
+    }
+
+    QString pluginsDir = qApp->applicationDirPath() + "/plugins/";
+    QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach (QString p, pl) {
+        translationFileName = pluginsDir + p + "/" + p + "_" + language + ".qm";
+        if(QFile::exists(translationFileName)) {
+            QTranslator* translator = plugin_translators[p];
+            setTranslator(translationFileName, &translator);
+            plugin_translators[p] = translator;
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
 
-  // Установить свой обработчик отладочных/информационных/предупреждающих/аварийных сообщений
-  // qDebug(), qInfo(), qWarning(), qCritical(), qFatal()
+   /**
+    * Установить свой обработчик отладочных/информационных/предупреждающих/аварийных сообщений
+    * qDebug(), qInfo(), qWarning(), qCritical(), qFatal()
+    */
     originalHandler = qInstallMessageHandler(myMessageOutput);
 
     /**
@@ -101,38 +128,15 @@ int main(int argc, char *argv[]) {
         qCritical() << "Adding font error";
     } else {
         qInfo() << "Installed fonts:" << QFontDatabase::applicationFontFamilies(fontID);
-        a.setFont(QFont(QFontDatabase::applicationFontFamilies(fontID).at(0), 9));
+        a.setFont(QFont(QFontDatabase::applicationFontFamilies(fontID).at(0), DEFAULT_FONT_SIZE));
     }
-
-    QSettings set(a.applicationDirPath() + "/settings.ini", QSettings::IniFormat);
-    QString loc = set.value("language", "en").toString();
 
     /**
      * Установить перевод согласно выбранному в настройках языку
      */
-    QString translationsFolder = qApp->applicationDirPath() + "/translations/";
-
-    QString translationFileName = translationsFolder + "candle_" + loc + ".qm";
-    if (QFile::exists(translationFileName)) {
-        setTranslator(translationFileName, &candle_translator);
-    }
-
-    translationFileName = translationsFolder + "qtbase_" + loc + ".qm";
-    if (QFile::exists(translationFileName)) {
-        setTranslator(translationFileName, &qt_translator);
-    }
-
-//TODO !!!
-#if 0
-    QString pluginsDir = qApp->applicationDirPath() + "/plugins/";
-    QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    foreach (QString p, pl) {
-        translationFileName = pluginsDir + p + "/" + p + "_" + loc + ".qm";
-        if(QFile::exists(translationFileName)) {
-            setTranslator(baseTranslationFileName, &plugin_translator[i++]);
-        }
-    }
-#endif
+    QSettings set(a.applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+    QString loc = set.value("language", "en").toString();
+    setAllTranslators(loc);
 
 #ifdef UNIX
 //    if (!styleOverrided) {
@@ -157,9 +161,7 @@ int main(int argc, char *argv[]) {
     a.setPalette(palette);
 
     a.setStyleSheet("QWidget {font-family: \"Ubuntu\";}\
-                    QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white;}\
-                    QDialog {border: 1px solid palette(mid);}");
-    a.setStyleSheet(a.styleSheet() + "QWidget {font-size: 8pt}");
+                    QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white;}");
 
 #if 0
                     QMenuBar {background-color: #303030; padding-top: 2px; padding-bottom: 2px;}
@@ -171,8 +173,16 @@ int main(int argc, char *argv[]) {
 #endif
 
 
+    a.setStyleSheet("QDialog {border: 1px solid palette(mid);}");
+
+    /**
+     * Дополнить стиль приложения указанием размера шрифта, чтобы можно было
+     * этот размер изменять путём изменения стиля
+     */
+    a.setStyleSheet(a.styleSheet() + "QWidget {font-family: \"" quoting(DEFAULT_FONT_TYPE) "\";}");
+    a.setStyleSheet(a.styleSheet() + "QWidget {font-size: " quoting(DEFAULT_FONT_SIZE) "pt}");
+
     frmMain w;
-    mainWindow = &w;
     w.show();
 
     return a.exec();
