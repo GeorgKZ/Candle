@@ -144,5 +144,7 @@ void GCodeTableModel::reTranslate()
         QCoreApplication::translate("frmMain", "Line", nullptr) <<
         QCoreApplication::translate("frmMain", "Args", nullptr);
    //!!! Обновить?
-    emit headerDataChanged(Qt::Horizontal, 0, 5);
+   // emit headerDataChanged(Qt::Horizontal, 0, 5);
+   int section = 0;
+   setHeaderData(section, Qt::Horizontal, m_headers.at(section), Qt::DisplayRole);
 }

@@ -441,10 +441,11 @@ void frmMain::changeEvent(QEvent *event)
 
 //       ui->grpJog->setTitle(...)
 
-        m_currentModel->reTranslate();
- 
        // Изменить язык для этого окна
         ui->retranslateUi(this);
+
+        m_currentModel->reTranslate();
+
     }
     else
     {
