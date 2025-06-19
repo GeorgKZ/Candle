@@ -19,6 +19,8 @@ function init()
     loader.setWorkingDirectory(new QDir(pluginPath));
     loader.addPluginPath(appPath);
     loader.addPluginPath(appPath + "/libs");
+    loader.setLanguageChangeEnabled(true);
+
     app.deviceStateChanged.connect(onAppDeviceStateChanged);
     app.senderStateChanged.connect(onAppSenderStateChanged);
     app.responseReceived.connect(onAppResponseReceived);

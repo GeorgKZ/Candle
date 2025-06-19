@@ -51,7 +51,7 @@
 
 #ifdef WINDOWS
 //!!!    #include <QtWinExtras/QtWinExtras>
-    #include "shobjidl.h"
+//!!!    #include "shobjidl.h"
 #endif
 
 #define quoting(a) prequoting(a)
@@ -104,13 +104,6 @@ void setTranslator(const QString &translationFileName, QTranslator **translator)
  * \brief Установить перевод интерфейса согласно указанному языку
  */
 void setAllTranslators(const QString &language);
-
-/**
- * \brief Связный список путей к плюгинам и дескрипторов переводов 
- */
-typedef QMap<QString, QTranslator*> pluginTranslatorMap;
-
-
 
 class CancelException : public std::exception {
 public:

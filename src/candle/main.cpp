@@ -61,9 +61,14 @@ void setTranslator(const QString &translationFileName, QTranslator **translator)
 
 void setAllTranslators(const QString &language) {
 
+    /**
+     * \brief Связный список путей к плюгинам и дескрипторов переводов 
+     */
+//  typedef QMap<QString, QTranslator*> pluginTranslatorMap;
+
     static QTranslator *candle_translator = nullptr;
     static QTranslator *qt_translator = nullptr;
-    static pluginTranslatorMap plugin_translators;
+    static QMap<QString, QTranslator*> plugin_translators;
 
     QString translationsFolder = qApp->applicationDirPath() + "/translations/";
 

@@ -1,6 +1,7 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
+#include <QtWidgets/QApplication>
 #include "gcodetablemodel.h"
 
 GCodeTableModel::GCodeTableModel(QObject *parent) :
@@ -132,4 +133,16 @@ Qt::ItemFlags GCodeTableModel::flags(const QModelIndex &index) const
 QList<GCodeItem> &GCodeTableModel::data()
 {
     return m_data;
+}
+
+void GCodeTableModel::reTranslate()
+{
+    m_headers << QCoreApplication::translate("frmMain", "#", nullptr) <<
+        QCoreApplication::translate("frmMain", "Command", nullptr) <<
+        QCoreApplication::translate("frmMain", "State", nullptr) <<
+        QCoreApplication::translate("frmMain", "Response", nullptr) <<
+        QCoreApplication::translate("frmMain", "Line", nullptr) <<
+        QCoreApplication::translate("frmMain", "Args", nullptr);
+   //!!! Обновить?
+    emit headerDataChanged(Qt::Horizontal, 0, 5);
 }

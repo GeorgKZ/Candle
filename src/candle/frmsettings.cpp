@@ -667,12 +667,6 @@ QString frmSettings::language()
     return ui->cboLanguage->currentData().toString();
 }
 
-#if 0
-extern QTranslator         *candle_translator;
-extern QTranslator         *qt_translator;
-extern pluginTranslatorMap plugin_translators;
-#endif
-
 void frmSettings::setLanguage(QString language)
 {
     int i = ui->cboLanguage->findData(language);
@@ -680,6 +674,7 @@ void frmSettings::setLanguage(QString language)
         ui->cboLanguage->setCurrentIndex(i);
 
         setAllTranslators(language);
+//!!!
 #if 0
         QString translationsFolder = qApp->applicationDirPath() + "/translations/";
 

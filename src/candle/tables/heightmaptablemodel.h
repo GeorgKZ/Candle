@@ -15,17 +15,17 @@ public:
 
     void resize(int cols, int rows);
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     bool insertRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     void clear();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 signals:
     void dataChangedByUserInput();

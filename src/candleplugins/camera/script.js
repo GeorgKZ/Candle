@@ -29,6 +29,7 @@ function init()
     loader.addPluginPath(appPath);
     loader.addPluginPath(appPath + "/libs");
     loader.addPluginPath(pluginPath + "/plugins")
+    loader.setLanguageChangeEnabled(true);
 
     app.settingsLoaded.connect(onAppSettingsLoaded);
     app.settingsSaved.connect(onAppSettingsSaved);

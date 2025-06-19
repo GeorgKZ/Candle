@@ -422,16 +422,26 @@ void frmMain::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange)
     {
-        // Set all text.
-//TODO изменить строки заданные не в ui
-//        setWindowTitle(qtTrId(ID_APP_TITLE));
-//        ui->menuFile->setTitle(qtTrId(ID_MENU_FILE));
-//        ui->menuSettings->setTitle(qtTrId(ID_MENU_SETTINGS));
-//        ui->actionOpen->setText(qtTrId(ID_MENU_FILE_OPEN));
-//        ui->actionSave->setText(qtTrId(ID_MENU_FILE_SAVE));
-//        ui->actionClose->setText(qtTrId(ID_MENU_FILE_CLOSE));
-//        ui->action_Exit->setText(qtTrId(ID_MENU_FILE_EXIT));
-//        ui->actionSelect_Language->setText(qtTrId(ID_MENU_SETTINGS_SELECT));
+        ui->slbFeedOverride->setTitle(QCoreApplication::translate("frmMain", "Feed rate:", nullptr));
+        ui->slbRapidOverride->setTitle(QCoreApplication::translate("frmMain", "Rapid speed:", nullptr));
+        ui->slbSpindleOverride->setTitle(QCoreApplication::translate("frmMain", "Spindle speed:", nullptr));
+        ui->slbSpindle->setTitle(QCoreApplication::translate("frmMain", "Speed:", nullptr));
+//onRadUseLaser checked   ui->slbSpindle->setTitle(QCoreApplication::translate("frmMain", "Power:", nullptr));
+
+//      m_settings->ui->tblShortcuts->setHorizontalHeaderLabels(QStringList() << tr("Command") << tr("Text") << tr("Shortcuts"));
+
+// cmdSpindle
+// checked     if (!ui->grpSpindle->isChecked()) ui->grpSpindle->setTitle(tr("Spindle") + QString(" (%1)").arg(ui->slbSpindle->value()));
+//        ui->grpSpindle->setTitle(tr("Spindle"));
+
+//        ui->grpOverriding->setTitle(tr("Overriding"));
+// checked...
+
+//в зависимости от...   ui->txtStatus->setText(...)
+
+//       ui->grpJog->setTitle(...)
+
+        m_currentModel->reTranslate();
  
        // Изменить язык для этого окна
         ui->retranslateUi(this);
@@ -3278,19 +3288,6 @@ void frmMain::loadPlugins()
     foreach (QString p, pl) {
 
         qInfo() << "Loading plugin" << p;
-
-#if 0
-        // Translation
-        QString translationFileName = pluginsDir + p + "/" + p + "_" + m_settings->language() + ".qm";
-        if(QFile::exists(translationFileName)) {
-            QTranslator *translator = new QTranslator();
-            if (translator->load(translationFileName)) {
-                qApp->installTranslator(translator);
-                qInfo() << "Plugin translation" << translationFileName << "loaded";
-            }
-            else delete translator;
-        }        
-#endif
 
         // Script
         QFile f;
