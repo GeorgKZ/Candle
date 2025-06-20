@@ -10,7 +10,6 @@
 #include <QtGui/QVector4D>
 #include "gcodepreprocessorutils.h"
 #include "limits"
-#include "../tables/gcodetablemodel.h"
 
 /**
 * Searches the command string for an 'f' and replaces the speed value

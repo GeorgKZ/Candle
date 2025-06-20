@@ -35,9 +35,10 @@ public:
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void reTranslate();
+    virtual bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role) override;
+
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     QList<GCodeItem> &data();
 
@@ -46,7 +47,15 @@ signals:
 public slots:
 
 private:
+
+    /**
+     * Список элементов типа GCodeItem, образующий строки таблицы
+     */
     QList<GCodeItem> m_data;
+
+    /**
+     * Список строк, образующих заголовок таблицы
+     */
     QStringList m_headers;
 };
 

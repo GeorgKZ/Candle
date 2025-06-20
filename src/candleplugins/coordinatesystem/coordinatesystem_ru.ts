@@ -6,7 +6,7 @@
     <message>
         <location filename="widget.ui" line="14"/>
         <source>Coordinate system</source>
-        <translation type="unfinished">Система координат</translation>
+        <translation>Система координат</translation>
     </message>
     <message>
         <location filename="widget.ui" line="39"/>

@@ -77,7 +77,8 @@ public:
 
     Ui::frmSettings *ui;
 
-    int exec();
+    virtual int exec() override;
+
     void undo();
 
     void addCustomSettings(QGroupBox *box);

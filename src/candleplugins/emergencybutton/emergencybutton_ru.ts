@@ -6,7 +6,7 @@
     <message>
         <location filename="widget.ui" line="14"/>
         <source>Emergency button</source>
-        <translation type="unfinished">Аварийная кнопка</translation>
+        <translation>Аварийная кнопка</translation>
     </message>
 </context>
 <context>
@@ -14,7 +14,7 @@
     <message>
         <location filename="settings.ui" line="12"/>
         <source>Emergency button</source>
-        <translation type="unfinished">Аварийная кнопка</translation>
+        <translation>Аварийная кнопка</translation>
     </message>
     <message>
         <location filename="settings.ui" line="30"/>

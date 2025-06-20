@@ -1,3 +1,6 @@
+#ifndef STYLEDTOOLBUTTONPLUGIN_H
+#define STYLEDTOOLBUTTONPLUGIN_H
+
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class StyledToolButtonPlugin: public QObject, public QDesignerCustomWidgetInterface
@@ -23,3 +26,5 @@ public:
 private:
     bool m_initialized;
 };
+
+#endif // STYLEDTOOLBUTTONPLUGIN_H

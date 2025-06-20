@@ -7,7 +7,6 @@
 GCodeTableModel::GCodeTableModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
-    m_headers << tr("#") << tr("Command") << tr("State") << tr("Response") << tr("Line") << tr("Args");
 }
 
 QVariant GCodeTableModel::data(const QModelIndex &index, int role) const
@@ -104,30 +103,44 @@ void GCodeTableModel::clear()
 
 int GCodeTableModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-
-    return m_data.size();
+    return parent.isValid() ? 0 : m_data.size();
 }
 
 int GCodeTableModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-
-    return 6;
+    return parent.isValid() ? 0 : m_headers.size();
 }
 
 QVariant GCodeTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role != Qt::DisplayRole) return QVariant();
-    if (orientation == Qt::Horizontal) return m_headers.at(section);
-    else return QString::number(section + 1);
+    if ((section < 0)
+        || ((orientation == Qt::Horizontal) && (section >= columnCount()))
+        || ((orientation == Qt::Vertical) && (section >= rowCount()))) {
+        return QVariant();
+    }
+
+    switch(role)
+    {
+        case Qt::DisplayRole:
+            if (orientation == Qt::Horizontal) {
+                return m_headers.at(section);
+            }
+            else if (orientation == Qt::Vertical) {
+                return QString::number(section + 1);
+            }
+            break;
+        default:
+            break;
+    }
+    return QVariant();
 }
 
 Qt::ItemFlags GCodeTableModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid()) return Qt::ItemIsEnabled; //!!!
-    if (index.column() == 1) return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
-    else return QAbstractTableModel::flags(index);
+    if (!index.isValid()) return Qt::NoItemFlags;
+
+    return QAbstractTableModel::flags(index) |
+        (index.column() == 1 ? Qt::ItemIsEditable : Qt::NoItemFlags);
 }
 
 QList<GCodeItem> &GCodeTableModel::data()
@@ -135,16 +148,24 @@ QList<GCodeItem> &GCodeTableModel::data()
     return m_data;
 }
 
-void GCodeTableModel::reTranslate()
+bool GCodeTableModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
 {
-    m_headers << QCoreApplication::translate("frmMain", "#", nullptr) <<
-        QCoreApplication::translate("frmMain", "Command", nullptr) <<
-        QCoreApplication::translate("frmMain", "State", nullptr) <<
-        QCoreApplication::translate("frmMain", "Response", nullptr) <<
-        QCoreApplication::translate("frmMain", "Line", nullptr) <<
-        QCoreApplication::translate("frmMain", "Args", nullptr);
-   //!!! Обновить?
-   // emit headerDataChanged(Qt::Horizontal, 0, 5);
-   int section = 0;
-   setHeaderData(section, Qt::Horizontal, m_headers.at(section), Qt::DisplayRole);
+  QAbstractTableModel::setHeaderData(section,orientation,value,role);
+
+  if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0) return false;
+
+  if (section == m_headers.size()) m_headers.push_back(value.toString());
+  else if (section > m_headers.size()) {
+      for (int i = m_headers.size(); i < section; ++i) {
+        m_headers.push_back("");
+      }
+      m_headers.push_back(value.toString());
+  }
+  else {
+      m_headers[section] = value.toString();
+  }
+
+  emit headerDataChanged(orientation, section, section);
+
+  return true;
 }

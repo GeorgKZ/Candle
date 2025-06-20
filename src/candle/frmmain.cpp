@@ -441,11 +441,36 @@ void frmMain::changeEvent(QEvent *event)
 
 //       ui->grpJog->setTitle(...)
 
-       // Изменить язык для этого окна
+        // Настроить в соответствии с текущм языком заголовки таблиц типа GCodeTableModel
+        const QStringList headers = { tr("#"), tr("Command"), tr("State"), tr("Response"), tr("Line"), tr("Args") };
+        const QList<GCodeTableModel*> models = { &m_programModel, &m_probeModel, &m_programHeightmapModel};
+        foreach(GCodeTableModel *m, models) {
+            int colNum = 0;
+            foreach(const QString &h, headers) {
+              m->setHeaderData(colNum++, Qt::Horizontal, h, Qt::DisplayRole);
+            }
+        }
+        // Установить в соответствии с текущим языком названия плюгинов
+
+//        qDebug() << "!!!" << m_pluginWidgets;
+//        qDebug() << "!!!" << m_pluginDocks;
+//        qDebug() << "!!!" << m_pluginBoxes;
+
+       //!!! TODO читает значение от прошлой локализации, не изменяет в окне frmSettings
+
+        int plugNum = 0;
+        foreach(QWidget *w, m_pluginWidgets) {
+
+//        qDebug() << "!!!" << w->windowTitle();
+
+            if (plugNum < m_pluginDocks.size()) m_pluginDocks[plugNum]->setWindowTitle(w->windowTitle());
+            if (plugNum < m_pluginBoxes.size()) m_pluginBoxes[plugNum]->setWindowTitle(w->windowTitle());
+            plugNum ++;
+        }
+
+
+        // Изменить язык для интерфейса этого окна
         ui->retranslateUi(this);
-
-        m_currentModel->reTranslate();
-
     }
     else
     {
@@ -3340,11 +3365,9 @@ void frmMain::loadPlugins()
             sv = se->evaluate("init()", p, 1, &exceptionStackTrace);
             if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
-                if (errLine != 1) {
-                    qCritical() << "ERROR: exception in" << p << "plugin's init() function at line"
-                             << errLine << ": "
-                             << sv.toString();
-                }
+                qCritical() << "ERROR: exception in" << p << "plugin's init() function at line"
+                            << errLine << ": "
+                            << sv.toString();
             } else {
                 qInfo() << "Plugin function init() OK";
             }
@@ -3390,18 +3413,18 @@ void frmMain::loadPlugins()
             sv = se->evaluate("createWindowWidget()", p, 1, &exceptionStackTrace);
             if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
-                if (errLine != 1) {
-                    qCritical() << "ERROR: exception in" << p << "plugin's createWindowWidget() function at line"
-                             << errLine << ": "
-                             << sv.toString();
-                }
+                qCritical() << "ERROR: exception in" << p << "plugin's createWindowWidget() function at line"
+                            << errLine << ": "
+                            << sv.toString();
             } else {
                 qInfo() << "Plugin function createWindowWidget() OK";
                 QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
                 if (w) {
+                    m_pluginWidgets.push_back(w);
                     qInfo() << "Creating Window Widget" << w->windowTitle();
                     // Create dock widget
                     QDockWidget *dock = new QDockWidget(this);
+                    m_pluginDocks.push_back(dock);
                     QWidget *contents = new QWidget(dock);
                     QFrame *frame = new QFrame(contents);
                     QVBoxLayout *layout1 = new QVBoxLayout(contents);
@@ -3428,11 +3451,9 @@ void frmMain::loadPlugins()
             sv = se->evaluate("createSettingsWidget()", p, 1, &exceptionStackTrace);
             if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();
-                if (errLine != 1) {
-                    qCritical() << "ERROR: exception in" << p << "plugin's createSettingsWidget() function at line"
-                             << errLine << ": "
-                             << sv.toString();
-                }
+                qCritical() << "ERROR: exception in" << p << "plugin's createSettingsWidget() function at line"
+                            << errLine << ": "
+                            << sv.toString();
             } else {
                 qInfo() << "Plugin function createSettingsWidget() OK";
                 QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
@@ -3440,6 +3461,7 @@ void frmMain::loadPlugins()
                     qInfo() << "Creating Settings Widget" << w->windowTitle();
                     // Create groupbox
                     QGroupBox *box = new QGroupBox(m_settings);
+                    m_pluginBoxes.push_back(box);
                     QVBoxLayout *layout1 = new QVBoxLayout(box);
                     box->setObjectName("grpSettings" + p + "Plugin");
                     box->setTitle(w->windowTitle());
