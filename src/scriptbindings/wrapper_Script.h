@@ -5,7 +5,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QString>
 
-class Script: public QObject {
+class WRAPPER_DLL_EXPORT Script: public QObject {
 
   Q_OBJECT
 

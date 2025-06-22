@@ -5,7 +5,7 @@
 #include <QtGui/QAction>
 #include "wrapper_QObject.h"
 
-class wrapper_QAction : public wrapper_QObject {
+class WRAPPER_DLL_EXPORT wrapper_QAction : public wrapper_QObject {
 
   Q_OBJECT
 

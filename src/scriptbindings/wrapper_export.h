@@ -1,0 +1,5 @@
+#if defined(WRAPPER_EXPORT_SYMBOLS)
+#  define WRAPPER_DLL_EXPORT Q_DECL_EXPORT
+#else
+#  define WRAPPER_DLL_EXPORT Q_DECL_IMPORT
+#endif

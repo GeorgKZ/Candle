@@ -5,7 +5,7 @@
 #include <QtWidgets/QWidget>
 #include "wrapper_QObject.h"
 
-class wrapper_QWidget : public wrapper_QObject { // , public wrapper_QPaintDevice
+class WRAPPER_DLL_EXPORT wrapper_QWidget : public wrapper_QObject { // , public wrapper_QPaintDevice
 
   Q_OBJECT
 

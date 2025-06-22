@@ -68,18 +68,42 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${TRANSLATE_PATH})
 # Пути к файлам lupdate, lrelease
 ##############################################################################
 
-# Исполняемый файл lupdate
-if(EXISTS "/usr/lib/qt6/bin/lupdate")
-  set(LUPDATE_CMD "/usr/lib/qt6/bin/lupdate")
-elseif(EXISTS "${QT_DIR}/../../../bin/lupdate")
-  set(LUPDATE_CMD "${QT_DIR}/../../../bin/lupdate")
-endif()
+if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux") OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
 
-# Исполняемый файл lrelease
-if(EXISTS "/usr/lib/qt6/bin/lrelease")
-  set(LRELEASE_CMD "/usr/lib/qt6/bin/lrelease")
-elseif(EXISTS "${QT_DIR}/../../../bin/lrelease")
-  set(LRELEASE_CMD "${QT_DIR}/../../../bin/lrelease")
+    # Исполняемый файл lupdate
+    if(EXISTS "/usr/lib/qt6/bin/lupdate")
+        set(LUPDATE_CMD "/usr/lib/qt6/bin/lupdate")
+    elseif(EXISTS "${QT_DIR}/../../../bin/lupdate")
+        set(LUPDATE_CMD "${QT_DIR}/../../../bin/lupdate")
+    else()
+        set(LUPDATE_CMD "lupdate")
+    endif()
+
+    # Исполняемый файл lrelease
+    if(EXISTS "/usr/lib/qt6/bin/lrelease")
+        set(LRELEASE_CMD "/usr/lib/qt6/bin/lrelease")
+    elseif(EXISTS "${QT_DIR}/../../../bin/lrelease")
+        set(LRELEASE_CMD "${QT_DIR}/../../../bin/lrelease")
+    else()
+        set(LUPDATE_CMD "lrelease")
+    endif()
+
+elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+
+    # Исполняемый файл lupdate
+    if(EXISTS "${QT_DIR}/../../../bin/lupdate.exe")
+        set(LUPDATE_CMD "${QT_DIR}/../../../bin/lupdate.exe")
+    else()
+        set(LUPDATE_CMD "lupdate.exe")
+    endif()
+
+    # Исполняемый файл lrelease
+    if(EXISTS "${QT_DIR}/../../../bin/lrelease.exe")
+        set(LRELEASE_CMD "${QT_DIR}/../../../bin/lrelease.exe")
+    else()
+        set(LRELEASE_CMD "lrelease.exe")
+    endif()
+
 endif()
 
 ##############################################################################
@@ -169,7 +193,6 @@ set(CPP_DISABLED_WARN
   -Wno-aggregate-return
 #   -Wno-return-type
 )
-
 
 ##############################################################################
 # Настройка в зависимости от используемого компилятора.
@@ -292,6 +315,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         /wd5045 # C5045 Компилятор вставит компонент устранения рисков Spectre для загрузки памяти, если указан параметр /Qspectre
         /wd5219 # C5219 неявное преобразование "..." в "...", возможна потеря данных
         /wd5267 # C5267 определение неявного конструктор копий для '...' устарело, так как оно имеет предоставленный пользователем деструктор
+        /EHsc   # Насчёт обработки исключений
     )
     # Настройка минимально требуемого размера стека
     set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} /STACK:4000000,10000")

@@ -15,6 +15,8 @@
   #include <cxxabi.h>
 #endif
 
+#include "wrapper_export.h"
+
 //extern QJSEngine *globalEngine;
 
 template<typename T>
@@ -32,13 +34,13 @@ QString getClassName() {
  * \brief Преобразование объекта из контейнера QVariant в контейнер JSValue
  *
  */
-QJSValue variantToJSValue(const QVariant& var, QJSEngine *engine);
+__declspec(dllexport) QJSValue variantToJSValue(const QVariant& var, QJSEngine *engine);
 
 /**
  * \brief Преобразование объекта из контейнера JSValue в контейнер QVariant с извлечением из прокси-класса
  *
  */
-QVariant jsvalueToVariant(const QJSValue& value);
+__declspec(dllexport) QVariant jsvalueToVariant(const QJSValue& value);
 
 /**
  * \brief Базовый класс для прокси-классов
@@ -47,7 +49,7 @@ QVariant jsvalueToVariant(const QJSValue& value);
  * прокси-класса, хранимый объект в нём не создаётся и не уничтожается, только хранится,
  * передаваемый из конструкторов классов-наследников.
  */
-class wrapper_common : public QObject {
+class WRAPPER_DLL_EXPORT wrapper_common : public QObject {
 
   Q_OBJECT
 

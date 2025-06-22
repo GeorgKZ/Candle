@@ -11,94 +11,6 @@ message(STATUS "Проект '${CMAKE_PROJECT_NAME}', компонент '${MAIN
 message(STATUS "##############################################################################")
 
 ##############################################################################
-# Настройка в зависимости от целевой среды выполнения.
-##############################################################################
-
-# При сборке для работы в среде Windows
-if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-
-    # Путь к файлу значка ICO для сборки исполняемого файла Windows
-    set(ICON_FILE "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
-    set(ICON_RESOURCE_STRING "IDI_ICON1 ICON DISCARDABLE \"${ICON_FILE}\"\n\n")
-
-    # Создать файл ресурса по шаблону
-    file(WRITE
-        ${MISC_PATH}/${MAIN_NAME}.rc
-
-        "${ICON_RESOURCE_STRING}"
-        "#include <windows.h>\n"
-        "\n"
-        "#define VER_FILEVERSION          ${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}\n"
-        "#define VER_FILEVERSION_STR      \"${PROJECT_VERSION}\"\n"
-        "#define VER_PRODUCTVERSION       VER_FILEVERSION\n"
-        "#define VER_PRODUCTVERSION_STR   VER_FILEVERSION_STR\n"
-        "#define VER_FILEDESCRIPTION_STR  \"${PROJECT_DESCRIPTION} ${BIT_WIDTH}-bit\"\n"
-        "#define VER_INTERNALNAME_STR     \"${MAIN_NAME}\"\n"
-        "#define VER_LEGALCOPYRIGHT_STR   \"\"\n"
-        "#define VER_ORIGINALFILENAME_STR \"${MAIN_NAME}.exe\"\n"
-        "#define VER_PRODUCTNAME_STR      \"${CMAKE_PROJECT_NAME} ${BIT_WIDTH}-bit for Win7, Win8, Win10, Win11\"\n"
-        "\n"
-        "VS_VERSION_INFO VERSIONINFO\n"
-        "FILEVERSION     VER_FILEVERSION,0\n"
-        "PRODUCTVERSION  VER_PRODUCTVERSION,0\n"
-        "BEGIN\n"
-        "    BLOCK \"StringFileInfo\"\n"
-        "    BEGIN\n"
-        "        BLOCK \"041904E3\"\n"
-        "        BEGIN\n"
-        "            VALUE \"FileDescription\",    VER_FILEDESCRIPTION_STR \"\\0\"\n"
-        "            VALUE \"FileVersion\",        VER_FILEVERSION_STR \"\\0\"\n"
-        "            VALUE \"InternalName\",       VER_INTERNALNAME_STR \"\\0\"\n"
-        "            VALUE \"LegalCopyright\",     VER_LEGALCOPYRIGHT_STR \"\\0\"\n"
-        "            VALUE \"OriginalFilename\",   VER_ORIGINALFILENAME_STR \"\\0\"\n"
-        "            VALUE \"ProductName\",        VER_PRODUCTNAME_STR \"\\0\"\n"
-        "            VALUE \"ProductVersion\",     VER_PRODUCTVERSION_STR \"\\0\"\n"
-        "        END\n"
-        "    END\n"
-        "\n"
-        "    BLOCK \"VarFileInfo\"\n"
-        "    BEGIN\n"
-        "        VALUE \"Translation\", 0x419, 1251\n"
-        "    END\n"
-        "END"
-    )
-
-    # Путь к файлу ресурсов для сборки исполняемого файла Windows
-    set(RESOURCES_DEP
-        "${MISC_PATH}/${MAIN_NAME}.rc"
-    )
-
-    # Добавить флаги для сборки консольного приложения Win32
-    add_definitions(
-        -DWIN32
-        -D_CONSOLE
-        -D_UNICODE
-        -DUNICODE
-    )
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
-
-# При сборке для работы в среде MacOS
-elif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-    )
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-        MACOSX_BUNDLE_ICON_FILE qdia.icns
-        MACOSX_BUNDLE TRUE
-    )
-
-
-endif()
-
-##############################################################################
 # Директории с файлами, необходимыми для сборки
 ##############################################################################
 
@@ -268,6 +180,95 @@ if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS")
 endif()
 
 ##############################################################################
+# Настройка в зависимости от целевой среды выполнения.
+##############################################################################
+
+# При сборке для работы в среде Windows
+if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+
+    # Путь к файлу значка ICO для сборки исполняемого файла Windows
+    set(ICON_FILE "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
+    set(ICON_RESOURCE_STRING "IDI_ICON1 ICON DISCARDABLE \"${ICON_FILE}\"\n\n")
+
+    # Создать файл ресурса по шаблону
+    file(WRITE
+        ${MISC_PATH}/${MAIN_NAME}.rc
+
+        "${ICON_RESOURCE_STRING}"
+        "#include <windows.h>\n"
+        "\n"
+        "#define VER_FILEVERSION          ${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}\n"
+        "#define VER_FILEVERSION_STR      \"${PROJECT_VERSION}\"\n"
+        "#define VER_PRODUCTVERSION       VER_FILEVERSION\n"
+        "#define VER_PRODUCTVERSION_STR   VER_FILEVERSION_STR\n"
+        "#define VER_FILEDESCRIPTION_STR  \"${PROJECT_DESCRIPTION} ${BIT_WIDTH}-bit\"\n"
+        "#define VER_INTERNALNAME_STR     \"${MAIN_NAME}\"\n"
+        "#define VER_LEGALCOPYRIGHT_STR   \"\"\n"
+        "#define VER_ORIGINALFILENAME_STR \"${MAIN_NAME}.exe\"\n"
+        "#define VER_PRODUCTNAME_STR      \"${CMAKE_PROJECT_NAME} ${BIT_WIDTH}-bit for Win7, Win8, Win10, Win11\"\n"
+        "\n"
+        "VS_VERSION_INFO VERSIONINFO\n"
+        "FILEVERSION     VER_FILEVERSION,0\n"
+        "PRODUCTVERSION  VER_PRODUCTVERSION,0\n"
+        "BEGIN\n"
+        "    BLOCK \"StringFileInfo\"\n"
+        "    BEGIN\n"
+        "        BLOCK \"041904E3\"\n"
+        "        BEGIN\n"
+        "            VALUE \"FileDescription\",    VER_FILEDESCRIPTION_STR \"\\0\"\n"
+        "            VALUE \"FileVersion\",        VER_FILEVERSION_STR \"\\0\"\n"
+        "            VALUE \"InternalName\",       VER_INTERNALNAME_STR \"\\0\"\n"
+        "            VALUE \"LegalCopyright\",     VER_LEGALCOPYRIGHT_STR \"\\0\"\n"
+        "            VALUE \"OriginalFilename\",   VER_ORIGINALFILENAME_STR \"\\0\"\n"
+        "            VALUE \"ProductName\",        VER_PRODUCTNAME_STR \"\\0\"\n"
+        "            VALUE \"ProductVersion\",     VER_PRODUCTVERSION_STR \"\\0\"\n"
+        "        END\n"
+        "    END\n"
+        "\n"
+        "    BLOCK \"VarFileInfo\"\n"
+        "    BEGIN\n"
+        "        VALUE \"Translation\", 0x419, 1251\n"
+        "    END\n"
+        "END"
+    )
+
+    # Путь к файлу ресурсов для сборки исполняемого файла Windows
+    set(RESOURCES_DEP
+        "${MISC_PATH}/${MAIN_NAME}.rc"
+    )
+
+    # Добавить флаги для сборки консольного приложения Win32
+    add_definitions(
+        -DWIN32
+        -D_CONSOLE
+        -D_UNICODE
+        -DUNICODE
+    )
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+
+# При сборке для работы в среде MacOS
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+    )
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE_ICON_FILE qdia.icns
+        MACOSX_BUNDLE TRUE
+    )
+
+
+endif()
+
+
+##############################################################################
 # Обработка файлов с переводом
 ##############################################################################
 
@@ -296,6 +297,7 @@ FOREACH(L ${QT_LANG})
     add_custom_command(
         OUTPUT ${TS_FILE}
         COMMAND ${LUPDATE_CMD} ${TS_SOURCES} -silent -source-language en_US -target-language ${L} -ts ${TS_FILE}
+        COMMENT run: ${LUPDATE_CMD} ${TS_SOURCES} -silent -source-language en_US -target-language ${L} -ts ${TS_FILE}
         DEPENDS ${TS_SOURCES}
     )
 
@@ -303,7 +305,8 @@ FOREACH(L ${QT_LANG})
     set(QM_FILE "${TRANSLATE_PATH}/${MAIN_NAME}_${LANG_F}.qm")
     add_custom_command(
         OUTPUT ${QM_FILE}
-        COMMAND ${LRELEASE_CMD} ${TS_FILE} -silent -qm ${QM_FILE} 
+        COMMAND ${LRELEASE_CMD} ${TS_FILE} -silent -qm ${QM_FILE}
+        COMMENT run: ${LRELEASE_CMD} ${TS_FILE} -silent -qm ${QM_FILE}
         DEPENDS ${TS_FILE}
     )
 

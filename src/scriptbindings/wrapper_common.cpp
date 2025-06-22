@@ -317,7 +317,7 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
 
 #define wregister(name) do { se->globalObject().setProperty( #name , se->newQMetaObject<wrapper_##name>() ); } while(0)
 
-void register_wrappers(QJSEngine *se) {
+__declspec(dllexport) void register_wrappers(QJSEngine *se) {
 
 //  globalEngine = se;
 

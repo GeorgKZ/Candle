@@ -53,6 +53,7 @@ foreach(I ${SUBDIRS})
             add_custom_command(
                 OUTPUT ${TS_FILE}
                 COMMAND ${LUPDATE_CMD} ${SRC_FILES} -silent -source-language en_US -target-language ${L} -ts ${TS_FILE}
+                COMMENT run: ${LUPDATE_CMD} ${SRC_FILES} -silent -source-language en_US -target-language ${L} -ts ${TS_FILE}
                 DEPENDS ${SRC_FILES}
             )
 
@@ -60,7 +61,8 @@ foreach(I ${SUBDIRS})
             set(QM_FILE "${TRANSLATE_PATH}/${I}_${LANG_F}.qm")
             add_custom_command(
                 OUTPUT ${QM_FILE}
-                COMMAND ${LRELEASE_CMD} ${TS_FILE} -silent -qm ${QM_FILE} 
+                COMMAND ${LRELEASE_CMD} ${TS_FILE} -silent -qm ${QM_FILE}
+                COMMENT run: ${LRELEASE_CMD} ${TS_FILE} -silent -qm ${QM_FILE}
                 DEPENDS ${TS_FILE}
             )
 
