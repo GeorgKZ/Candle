@@ -419,7 +419,7 @@ private:
     QPoint m_mousePressPos;
 
     QList<QWidget*>     m_pluginWidgets;
-//    QList<QDockWidget*> m_pluginDocks;
+    QList<QDockWidget*> m_pluginDocks;
     
     // Settings
     void preloadSettings();
