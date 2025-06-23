@@ -28,7 +28,6 @@
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QPushButton>
 
-
 #include "wrapper_common.h"
 #include "wrapper_Slider.h"
 #include "wrapper_SliderBox.h"
@@ -72,6 +71,8 @@
 #include "wrapper_QToolButton.h"
 #include "wrapper_QUiLoader.h"
 #include "wrapper_QWidget.h"
+
+#include "wrapper_Script.h"
 
 QJSValue variantToJSValue(const QVariant& variant, QJSEngine *engine) {
   QJSValue retval;
@@ -317,7 +318,7 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
 
 #define wregister(name) do { se->globalObject().setProperty( #name , se->newQMetaObject<wrapper_##name>() ); } while(0)
 
-__declspec(dllexport) void register_wrappers(QJSEngine *se) {
+WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 
 //  globalEngine = se;
 
@@ -500,4 +501,9 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
   void *ptr = (static_cast<wrapper_common*>(obj))->get_selfptr();
   qDebug() << "jsvalueToObject_ptr - returning pointer of" << pureType;
   return ptr;
+}
+
+QJSValue newScript(QJSEngine *se, QObject* parent)
+{
+    return se->newQObject(new Script(parent));
 }

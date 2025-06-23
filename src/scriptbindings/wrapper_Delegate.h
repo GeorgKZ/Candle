@@ -15,7 +15,7 @@
 #include "wrapper_QAbstractItemDelegate.h"
 #include "wrapper_QStyledItemDelegate.h"
 
-class IconDelegate : public QStyledItemDelegate {
+class WRAPPER_DLL_EXPORT IconDelegate : public QStyledItemDelegate {
 
   Q_OBJECT
 
@@ -300,10 +300,5 @@ public:
     qDebug() << "wrapper_CodeDelegate::destructor";
   }
 };
-
-
-
-
-
 
 #endif // WRAPPER_DELEGATE_H

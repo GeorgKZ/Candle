@@ -4,12 +4,12 @@
 #include <QtCore/QObject>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QToolButton>
-#include "../designerplugins/customwidgetsplugin/styledtoolbutton.h"
+#include "styledtoolbutton.h"
 #include "wrapper_QWidget.h"
 #include "wrapper_QToolButton.h"
 #include "wrapper_QColor.h"
 
-class  wrapper_StyledToolButton : public wrapper_QToolButton {
+class WRAPPER_DLL_EXPORT wrapper_StyledToolButton : public wrapper_QToolButton {
 
   Q_OBJECT
 

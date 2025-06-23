@@ -2,10 +2,10 @@
 #define WRAPPER_CAMERAWIDGET_H
 
 #include <QtCore/QObject>
-#include "../designerplugins/cameraplugin/camerawidget.h"
+#include "camerawidget.h"
 #include "wrapper_QWidget.h"
 
-class wrapper_CameraWidget : public wrapper_QWidget {
+class WRAPPER_DLL_EXPORT wrapper_CameraWidget : public wrapper_QWidget {
 
   Q_OBJECT
 

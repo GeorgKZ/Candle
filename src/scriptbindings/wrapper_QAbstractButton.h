@@ -8,7 +8,7 @@
 #include "wrapper_QIcon.h"
 #include "wrapper_QSize.h"
 
-class wrapper_QAbstractButton : public wrapper_QWidget {
+class WRAPPER_DLL_EXPORT wrapper_QAbstractButton : public wrapper_QWidget {
 
   Q_OBJECT
 
@@ -44,6 +44,7 @@ public:
 
   // void setIcon(const QIcon &icon)
   Q_INVOKABLE void setIcon(const QJSValue &value) {
+//!!! Если иконки нет, валится!
     QIcon icon(*(QIcon*)jsvalueToObject_ptr("QIcon", value));
     get_selfptr()->setIcon(icon);
   }

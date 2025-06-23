@@ -25,20 +25,13 @@
   #include <QPermission>
 #endif
 
-
-
 #include <algorithm>
 #include "frmmain.h"
 #include "ui_frmmain.h"
 #include "ui_frmsettings.h"
 #include "widgets/widgetmimedata.h"
 
-#include "../scriptbindings/wrapper_QWidget.h"
-#include "../scriptbindings/wrapper_Script.h"
-
-void register_wrappers(QJSEngine *se);
-
-QJSValue variantToJSValue(const QVariant& var, QJSEngine *engine);
+#include "wrapper_extern.h"
 
 frmMain::frmMain(QWidget *parent) :
     QMainWindow(parent),
@@ -422,10 +415,16 @@ void frmMain::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange)
     {
+        // Изменить язык для интерфейса этого окна
+        ui->retranslateUi(this);
+
+        // Изменить строки, определённые не в интерфейсе, а в программе
         ui->slbFeedOverride->setTitle(QCoreApplication::translate("frmMain", "Feed rate:", nullptr));
         ui->slbRapidOverride->setTitle(QCoreApplication::translate("frmMain", "Rapid speed:", nullptr));
         ui->slbSpindleOverride->setTitle(QCoreApplication::translate("frmMain", "Spindle speed:", nullptr));
         ui->slbSpindle->setTitle(QCoreApplication::translate("frmMain", "Speed:", nullptr));
+
+//!!!
 //onRadUseLaser checked   ui->slbSpindle->setTitle(QCoreApplication::translate("frmMain", "Power:", nullptr));
 
 //      m_settings->ui->tblShortcuts->setHorizontalHeaderLabels(QStringList() << tr("Command") << tr("Text") << tr("Shortcuts"));
@@ -450,27 +449,12 @@ void frmMain::changeEvent(QEvent *event)
               m->setHeaderData(colNum++, Qt::Horizontal, h, Qt::DisplayRole);
             }
         }
+
         // Установить в соответствии с текущим языком названия плюгинов
-
-//        qDebug() << "!!!" << m_pluginWidgets;
-//        qDebug() << "!!!" << m_pluginDocks;
-//        qDebug() << "!!!" << m_pluginBoxes;
-
-       //!!! TODO читает значение от прошлой локализации, не изменяет в окне frmSettings
-
         int plugNum = 0;
-        foreach(QWidget *w, m_pluginWidgets) {
-
-//        qDebug() << "!!!" << w->windowTitle();
-
-            if (plugNum < m_pluginDocks.size()) m_pluginDocks[plugNum]->setWindowTitle(w->windowTitle());
-            if (plugNum < m_pluginBoxes.size()) m_pluginBoxes[plugNum]->setWindowTitle(w->windowTitle());
-            plugNum ++;
+        foreach(QDockWidget *w, m_pluginDocks) {
+            w->setWindowTitle(m_pluginWidgets[plugNum++]->windowTitle());
         }
-
-
-        // Изменить язык для интерфейса этого окна
-        ui->retranslateUi(this);
     }
     else
     {
@@ -820,7 +804,6 @@ void frmMain::on_actViewLockWindows_toggled(bool checked)
     QList<QDockWidget*> dl = findChildren<QDockWidget*>();
 
     foreach (QDockWidget *d, dl) {
-//!!! AllDockWidgetFeatures
         d->setFeatures(checked ? QDockWidget::NoDockWidgetFeatures : (QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable));
     }
 }
@@ -864,7 +847,6 @@ void frmMain::on_cmdFileSend_clicked()
     on_cmdFileReset_clicked();
 
     m_startTime.start();
-//!!!---    m_startTime = QTime::currentTime();
 
     setSenderState(SenderTransferring);
 
@@ -2051,10 +2033,6 @@ qDebug() << "Common response: " << response;
                         static QRegularExpression gs("\\$(\\d+)\\=([^;]+)\\; ");
                         QMap<int, double> set;
                         int p = 0;
-//!!!                        while ((p = gs.indexIn(response, p)) != -1) {
-//!!!                            set[gs.cap(1).toInt()] = gs.cap(2).toDouble();
-//!!!                            p += gs.matchedLength();
-//!!!                        }
                         while (1) {
                             QRegularExpressionMatch match = gs.match(response, p);
                             if (!match.hasMatch()) break;
@@ -2656,7 +2634,6 @@ void frmMain::onActSendFromLineTriggered()
     ui->glwVisualizer->setSpendTime(QTime(0, 0, 0));
 
     m_startTime.start();
-//!!!---    m_startTime = QTime::currentTime();
 
     setSenderState(SenderTransferring);
 
@@ -2894,10 +2871,6 @@ void frmMain::loadSettings()
     ui->txtHeightMapInterpolationStepY->setValue(set.value("heightmapInterpolationStepY", 1).toDouble());
     ui->cboHeightMapInterpolationType->setCurrentIndex(set.value("heightmapInterpolationType", 0).toInt());
     ui->chkHeightMapInterpolationShow->setChecked(set.value("heightmapInterpolationShow", false).toBool());
-
-//    foreach (ColorPicker* pick, m_settings->colors()) {
-//        pick->setColor(QColor(set.value(pick->objectName().mid(3), "black").toString()));
-//    }
 
     // Tool=#ff9900
     m_toolDrawer.setColor(QColor(0xFF, 0x99, 0x00));
@@ -3186,13 +3159,11 @@ void frmMain::saveSettings()
     set.setValue("lockPanels", ui->actViewLockPanels->isChecked());
 
     // Save script variables
-//!!!    QJSEngine e;
-//!!!    QJSValue d = e.globalObject();
     QJSValue d = m_scriptEngine.globalObject();
     QJSValueIterator i(d);
     QStringList l;
 
-qDebug() << "Saving script variables!";
+    qDebug() << "Saving script variables!";
 
     while (i.hasNext()) {
         i.next();
@@ -3322,7 +3293,7 @@ void frmMain::loadPlugins()
 
             QJSEngine *se = new QJSEngine();
             register_wrappers(se);
-            QJSValue sv = se->newQObject(new Script(this));
+            QJSValue sv = newScript(se, this);
 
             sv.setProperty("path", pluginsDir + p);            
             se->globalObject().setProperty("script", sv);
@@ -3384,7 +3355,7 @@ void frmMain::loadPlugins()
                 }
             } else {
                 qDebug() << "Plugin function createPanelWidget() OK";
-                QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
+                QWidget *w = static_cast<QWidget*>(jsvalueToObject_ptr("QWidget", sv));
                 if (w) {
                     qInfo() << "Creating Panel Widget" << w->windowTitle();
                     // Create panel
@@ -3418,27 +3389,50 @@ void frmMain::loadPlugins()
                             << sv.toString();
             } else {
                 qInfo() << "Plugin function createWindowWidget() OK";
-                QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
+                QWidget *w = static_cast<QWidget*>(jsvalueToObject_ptr("QWidget", sv));
                 if (w) {
                     m_pluginWidgets.push_back(w);
                     qInfo() << "Creating Window Widget" << w->windowTitle();
-                    // Create dock widget
+
+                    /**
+                     * Создать QDockWidget, дочерний для главной формы
+                     */
                     QDockWidget *dock = new QDockWidget(this);
                     m_pluginDocks.push_back(dock);
+
                     QWidget *contents = new QWidget(dock);
                     QFrame *frame = new QFrame(contents);
                     QVBoxLayout *layout1 = new QVBoxLayout(contents);
                     QVBoxLayout *layout2 = new QVBoxLayout(frame);
+
                     dock->setObjectName("dock" + p + "Plugin");
                     dock->setWindowTitle(w->windowTitle());
                     dock->setWidget(contents);
+
+                    /**
+                     * Для QWidget установить формовщиком первый QVBoxLayout
+                     */
                     contents->setLayout(layout1);
+
+                    /**
+                     * В первый формовщик QVBoxLayout добавить QFrame,
+                     * установить нулевые отступы для содержания
+                     */
                     layout1->addWidget(frame);
                     QMargins m = layout1->contentsMargins();
                     m.setLeft(0);
                     m.setRight(0);
                     layout1->setContentsMargins(m);
+
+                    /**
+                     * Для QFrame установить формовщиком второй QVBoxLayout
+                     */
                     frame->setLayout(layout2);
+
+                    /**
+                     * Во второй формовщик QVBoxLayout добавить созданный скриптом виджет,
+                     * установить нулевые отступы для содержания
+                     */
                     layout2->addWidget(w);
                     layout2->setContentsMargins(0,0,0,0);
 
@@ -3456,21 +3450,37 @@ void frmMain::loadPlugins()
                             << sv.toString();
             } else {
                 qInfo() << "Plugin function createSettingsWidget() OK";
-                QWidget *w = (qobject_cast<wrapper_QWidget*>(sv.toQObject()))->get_selfptr();
-                if (w) {
+                QWidget *w = static_cast<QWidget*>(jsvalueToObject_ptr("QWidget", sv));
+                if (w != nullptr) {
                     qInfo() << "Creating Settings Widget" << w->windowTitle();
-                    // Create groupbox
-                    QGroupBox *box = new QGroupBox(m_settings);
-                    m_pluginBoxes.push_back(box);
-                    QVBoxLayout *layout1 = new QVBoxLayout(box);
-                    box->setObjectName("grpSettings" + p + "Plugin");
-                    box->setTitle(w->windowTitle());
-                    box->setLayout(layout1);
-                    layout1->addWidget(w);
 
-                    // Дополнить левый список окна настроек названием плюгина,
-                    // а правое окно виджетом настройки плюгина
-                    m_settings->addCustomSettings(box);
+                    /**
+                     * Создать QGroupBox, дочерний для формы настроек
+                     */
+                    QGroupBox *box = new QGroupBox(m_settings);
+
+                    /**
+                     * Создать QVBoxLayout, дочерний для QGroupBox
+                     */
+                    QVBoxLayout *layout = new QVBoxLayout(box);
+
+                    box->setObjectName("grpSettings" + p + "Plugin");
+
+                    /**
+                     * Для QGroupBox установить формовщиком QVBoxLayout
+                     */
+                    box->setLayout(layout);
+
+                    /**
+                     * В формовщик QVBoxLayout добавить созданный скриптом виджет
+                     */
+                    layout->addWidget(w);
+
+                    /**
+                     * Дополнить левый список окна настроек названием плюгина,
+                     * а правое окно виджетом настройки плюгина
+                     */
+                    m_settings->addCustomSettings(box, w);
                 }
             }
             f.close();
@@ -3743,14 +3753,6 @@ qDebug() << "OffsetVars response: " << response;
             match.captured(3).toDouble(),
             match.captured(4).toDouble(), 1.0
         ));
-//!!!    while ((p = gx.indexIn(response, p)) != -1) {
-//!!!        m_storedVars.setCoords(gx.cap(1), QVector3D(
-//!!!            gx.cap(2).toDouble(),
-//!!!            gx.cap(3).toDouble(),
-//!!!            gx.cap(4).toDouble()
-//!!!        ));
-            
-//!!!        p += gx.matchedLength();
     }
 
     QRegularExpressionMatch match = tx.match(response);
@@ -4454,7 +4456,7 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
                 ks = QKeySequence(ev->key() | ev->modifiers());
             }
         }
-  //!!! ui != nullptr
+
         if ((m_senderState != SenderTransferring) && (m_senderState != SenderStopping) 
             && ui != nullptr && ui->chkKeyboardControl->isChecked() && !ev->isAutoRepeat()) 
         {
@@ -4885,4 +4887,5 @@ bool frmMain::actionTextLessThan(const QAction *a1, const QAction *a2)
 {
     return a1->text() < a2->text();
 }
+
 

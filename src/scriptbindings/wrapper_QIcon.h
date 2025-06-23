@@ -5,7 +5,7 @@
 #include <QtGui/QIcon>
 #include "wrapper_common.h"
 
-class wrapper_QIcon : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QIcon : public wrapper_common {
 
   Q_OBJECT
 

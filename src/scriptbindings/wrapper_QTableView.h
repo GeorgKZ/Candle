@@ -8,7 +8,7 @@
 #include "wrapper_QAbstractItemView.h"
 #include "wrapper_QHeaderView.h"
 
-class wrapper_QTableView : public wrapper_QAbstractItemView {
+class WRAPPER_DLL_EXPORT wrapper_QTableView : public wrapper_QAbstractItemView {
 
   Q_OBJECT
 

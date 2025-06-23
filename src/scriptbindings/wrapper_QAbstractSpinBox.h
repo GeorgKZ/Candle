@@ -5,7 +5,7 @@
 #include <QtWidgets/QAbstractSpinBox>
 #include "wrapper_QWidget.h"
 
-class wrapper_QAbstractSpinBox : public wrapper_QWidget {
+class WRAPPER_DLL_EXPORT wrapper_QAbstractSpinBox : public wrapper_QWidget {
 
   Q_OBJECT
 

@@ -7,7 +7,7 @@
 #include "wrapper_common.h"
 #include "wrapper_QObject.h"
 
-class wrapper_QIODeviceBase : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QIODeviceBase : public wrapper_common {
 
   Q_OBJECT
 

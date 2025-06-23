@@ -9,7 +9,7 @@
 #include "wrapper_QSize.h"
 #include "wrapper_QAbstractItemDelegate.h"
 
-class wrapper_QAbstractItemView : public wrapper_QWidget { // wrapper_QAbstractScrollArea -> wrapper_QFrame -> wrapper_QWidget
+class WRAPPER_DLL_EXPORT wrapper_QAbstractItemView : public wrapper_QWidget { // wrapper_QAbstractScrollArea -> wrapper_QFrame -> wrapper_QWidget
 
   Q_OBJECT
 

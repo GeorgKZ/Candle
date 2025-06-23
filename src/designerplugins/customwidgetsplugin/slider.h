@@ -6,7 +6,7 @@
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPainter>
 #include <QtCore/QDebug>
-#include "../customwidgetsshared.h"
+#include "customwidgetsshared.h"
 
 class CUSTOMWIDGETS_DLLSPEC Slider : public QSlider
 {

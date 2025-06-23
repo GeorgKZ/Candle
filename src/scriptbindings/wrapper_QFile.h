@@ -5,7 +5,7 @@
 #include <QtCore/QFile>
 #include "wrapper_QIODevice.h"
 
-class wrapper_QFile : public wrapper_QFileDevice {
+class WRAPPER_DLL_EXPORT wrapper_QFile : public wrapper_QFileDevice {
 
   Q_OBJECT
 

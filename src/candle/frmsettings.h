@@ -81,7 +81,7 @@ public:
 
     void undo();
 
-    void addCustomSettings(QGroupBox *box);
+    void addCustomSettings(QGroupBox *box, QWidget *widget);
 
     QString port();
     void setPort(QString port);
@@ -224,7 +224,16 @@ private:
 
     QIntValidator m_intValidator;
 
+    /**
+     * Набор указателей на QGroupBox плюгинов
+     */
     QList<QWidget*> m_customSettings;
+
+    /**
+     * Набор указателей на QWidget плюгинов
+     */
+    QList<QWidget*> m_customWidgets;
+
 
     int m_units;
     int m_acceleration;

@@ -2,10 +2,10 @@
 #define WRAPPER_SLIDER_H
 
 #include <QtCore/QObject>
-#include "../designerplugins/customwidgetsplugin/slider.h"
+#include "slider.h"
 #include "wrapper_QSlider.h"
 
-class wrapper_Slider : public wrapper_QSlider {
+class WRAPPER_DLL_EXPORT wrapper_Slider : public wrapper_QSlider {
 
     Q_OBJECT
 

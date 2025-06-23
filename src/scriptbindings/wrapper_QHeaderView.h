@@ -6,7 +6,7 @@
 #include "wrapper_QAbstractItemView.h"
 #include "wrapper_QSize.h"
 
-class wrapper_QHeaderView : public wrapper_QAbstractItemView {
+class WRAPPER_DLL_EXPORT wrapper_QHeaderView : public wrapper_QAbstractItemView {
 
   Q_OBJECT
 

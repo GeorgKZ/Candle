@@ -11,7 +11,7 @@
 
 class wrapper_QIODevice;
 
-class wrapper_QUiLoader : public wrapper_QObject {
+class WRAPPER_DLL_EXPORT wrapper_QUiLoader : public wrapper_QObject {
 
   Q_OBJECT
   // Из файла quiloader.h

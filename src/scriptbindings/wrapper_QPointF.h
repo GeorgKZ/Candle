@@ -5,7 +5,7 @@
 #include <QtCore/QPoint>
 #include "wrapper_common.h"
 
-class wrapper_QPointF : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QPointF : public wrapper_common {
 
   Q_OBJECT
 

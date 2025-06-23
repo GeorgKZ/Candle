@@ -40,16 +40,22 @@ endif()
 # Директория для результирующих бинарных файлов
 set(BIN_PATH "${BUILD_PATH}/bin")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_PATH})
+
 # Директория для промежуточных файлов
 set(MISC_PATH "${BUILD_PATH}/misc")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MISC_PATH})
-include_directories(${MISC_PATH})
+
+#!!!
+#include_directories(${MISC_PATH})
+
 # Директория для файлов с изображениями значка
 set(ICONS_PATH "${BUILD_PATH}/icons")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONS_PATH})
+
 # Директория для документации приложения
 set(DOC_PATH "${BUILD_PATH}/docs")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
+
 # Директория для сборки установочного набора
 set(DEST_PATH "${BUILD_PATH}/install")
 if(APPLE)
@@ -58,6 +64,7 @@ endif()
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/translations)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/plugins)
+
 # Путь к директории с изображениями для Doxygen
 set(DOXY_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/images;${CMAKE_SOURCE_DIR}/wiki/images")
 # Путь к директории с переводами
@@ -295,8 +302,10 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         "-D__STDC_WANT_SECURE_LIB__=1"
         "-D_CRT_SECURE_NO_WARNINGS"
     )
-    include_directories($ENV{INCLUDE})
-    link_directories($ENV{LIB})
+#!!!
+#   include_directories($ENV{INCLUDE})
+#!!!
+#   link_directories($ENV{LIB})
     add_compile_options(
         /vd2
 #       Разрешить все предупреждения

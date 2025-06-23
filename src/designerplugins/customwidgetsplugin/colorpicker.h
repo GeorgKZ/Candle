@@ -6,7 +6,7 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QColorDialog>
-#include "../customwidgetsshared.h"
+#include <customwidgetsshared.h>
 
 class CUSTOMWIDGETS_DLLSPEC ColorPicker : public QWidget
 {

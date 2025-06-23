@@ -5,7 +5,7 @@
 #include <QtCore/QDir>
 #include "wrapper_common.h"
 
-class wrapper_QDir : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QDir : public wrapper_common {
 
   Q_OBJECT
 

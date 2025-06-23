@@ -5,7 +5,7 @@
 #include <QtCore/QSize>
 #include "wrapper_common.h"
 
-class wrapper_QSize : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QSize : public wrapper_common {
 
   Q_OBJECT
 

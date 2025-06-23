@@ -3,7 +3,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtCore/QTimer>
-#include "../customwidgetsshared.h"
+#include "customwidgetsshared.h"
 
 namespace Ui {
 class SliderBox;

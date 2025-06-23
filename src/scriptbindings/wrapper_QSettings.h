@@ -9,7 +9,7 @@
 #include "wrapper_QObject.h"
 #include "wrapper_QWidget.h"
 
-class wrapper_QSettings : public wrapper_QObject {
+class WRAPPER_DLL_EXPORT wrapper_QSettings : public wrapper_QObject {
 
   Q_OBJECT
   // Из файла qsettings.h

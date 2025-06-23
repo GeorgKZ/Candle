@@ -12,7 +12,7 @@ class wrapper_QLayout;
 class wrapper_QRect;
 
 // QLayoutItem - абстрактный класс
-class wrapper_QLayoutItem : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QLayoutItem : public wrapper_common {
 
   Q_OBJECT
     // Из файла qlayoutitem.h

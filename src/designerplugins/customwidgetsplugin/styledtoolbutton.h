@@ -10,7 +10,7 @@
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QStyleOptionFrame>
 #include <QtWidgets/QToolButton>
-#include "../customwidgetsshared.h"
+#include "customwidgetsshared.h"
 
 class CUSTOMWIDGETS_DLLSPEC StyledToolButton : public QToolButton
 {

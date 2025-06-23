@@ -5,7 +5,7 @@
 #include <QtCore/QRectF>
 #include "wrapper_common.h"
 
-class wrapper_QRectF : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QRectF : public wrapper_common {
 
     Q_OBJECT
 

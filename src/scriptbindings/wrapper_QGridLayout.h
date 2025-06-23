@@ -6,7 +6,7 @@
 #include "wrapper_QLayout.h"
 #include "wrapper_QWidget.h"
 
-class wrapper_QGridLayout : public wrapper_QLayout {
+class WRAPPER_DLL_EXPORT wrapper_QGridLayout : public wrapper_QLayout {
 
   Q_OBJECT
   // Из файла QGridLayout.h

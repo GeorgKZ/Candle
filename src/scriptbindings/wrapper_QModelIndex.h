@@ -5,7 +5,7 @@
 #include <QtCore/QModelIndex>
 #include "wrapper_common.h"
 
-class wrapper_QModelIndex : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QModelIndex : public wrapper_common {
 
   // Из файла qabstractitemmodel.h
 

@@ -14,17 +14,21 @@ message(STATUS "################################################################
 # Директории с файлами, необходимыми для сборки
 ##############################################################################
 
-# Путь к директории с исходными текстами
-set(SOURCES_PATH "${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin")
-
 # Список заголовков исходных текстов приложения
-file(GLOB SOURCE_HEADERS_LIST ${SOURCES_PATH}/*.h)
-
-# Добавить директории с заголовочными файлами приложения
-include_directories(${SOURCES_PATH})
+file(GLOB SOURCE_HEADERS_LIST
+    ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin/*.h
+    ${CMAKE_SOURCE_DIR}/src/*.h
+)
 
 # Список файлов c++ исходных текстов приложения
-file(GLOB SOURCE_FILE_LIST ${SOURCES_PATH}/*.cpp)
+file(GLOB SOURCE_FILE_LIST
+    ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin/*.cpp
+)
+
+# Список файлов, описывающих интерфейс
+set(UI
+    ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin/sliderbox.ui
+)
 
 # Определение для сборки библиотеки
 add_definitions("-DCUSTOMWIDGETS_EXPORT")
@@ -39,15 +43,17 @@ find_package(Qt6 COMPONENTS UiPlugin REQUIRED)
 find_package(Qt6 COMPONENTS Multimedia REQUIRED)
 find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
 
-set(UI
-    ${SOURCES_PATH}/sliderbox.ui
-)
-
-# Зависимости исполняемого файла приложения
+# Определение собираемой библиотеки, её зависимости
 add_library(${MAIN_NAME} SHARED
         ${SOURCE_FILE_LIST}
         ${SOURCE_HEADERS_LIST}
         ${UI}
+)
+
+# Директории с включаемыми файлами
+target_include_directories(${MAIN_NAME}
+    PRIVATE ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin
+    PRIVATE ${CMAKE_SOURCE_DIR}/src
 )
 
 # Добавить библиотеки Qt
@@ -59,9 +65,9 @@ target_link_libraries(${MAIN_NAME} PRIVATE
     Qt6::MultimediaWidgets
     )
 
-if(WIN32)
-    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
-endif()
+#if(WIN32)
+#    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
+#endif()
 
 #set_target_properties(${MAIN_NAME} PROPERTIES OUTPUT_NAME "${MAIN_NAME}${SUFFIX}")
 
@@ -75,5 +81,5 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 # Библиотека
 install(FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${MAIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
     DESTINATION ${DEST_PATH}
-    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )

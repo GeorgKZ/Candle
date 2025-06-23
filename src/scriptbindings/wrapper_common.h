@@ -15,7 +15,7 @@
   #include <cxxabi.h>
 #endif
 
-#include "wrapper_export.h"
+#include "wrapper_extern.h"
 
 //extern QJSEngine *globalEngine;
 
@@ -30,17 +30,24 @@ QString getClassName() {
   return QString(type_name);
 }
 
+#if 0
 /**
  * \brief Преобразование объекта из контейнера QVariant в контейнер JSValue
  *
  */
-__declspec(dllexport) QJSValue variantToJSValue(const QVariant& var, QJSEngine *engine);
+WRAPPER_DLL_EXPORT QJSValue variantToJSValue(const QVariant& var, QJSEngine *engine);
 
 /**
  * \brief Преобразование объекта из контейнера JSValue в контейнер QVariant с извлечением из прокси-класса
  *
  */
-__declspec(dllexport) QVariant jsvalueToVariant(const QJSValue& value);
+WRAPPER_DLL_EXPORT QVariant jsvalueToVariant(const QJSValue& value);
+
+WRAPPER_DLL_EXPORT QJSValue newScript(QJSEngine *se, QObject* parent);
+
+void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType = nullptr);
+#endif
+
 
 /**
  * \brief Базовый класс для прокси-классов
@@ -105,7 +112,5 @@ public:
     // Указатель на хранимый объект
     void* selfptr_;
 };
-
-void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType = nullptr);
 
 #endif // WRAPPER_COMMON_H

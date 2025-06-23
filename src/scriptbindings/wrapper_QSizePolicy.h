@@ -6,7 +6,7 @@
 #include "wrapper_common.h"
 
 
-class wrapper_QSizePolicy : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QSizePolicy : public wrapper_common {
 
   Q_OBJECT
 

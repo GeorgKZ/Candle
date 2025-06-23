@@ -5,9 +5,9 @@
 #include <QtCore/QString>
 #include <QtCore/QDebug>
 #include <QtGui/QAction>
-#include "../scriptbindings/wrapper_QAction.h"
 
 class frmMain;
+//class wrapper_QAction;
 
 class ScriptFunctions: public QObject
 {
@@ -33,8 +33,8 @@ public slots:
     int queueLength();
 
     int buttonSize();
-    void addAction(wrapper_QAction *action);
-    void removeAction(wrapper_QAction *action);    
+//    void addAction(wrapper_QAction *action);
+//    void removeAction(wrapper_QAction *action);    
 
 signals:
     void responseReceived(QString command, int tableIndex, QString response);

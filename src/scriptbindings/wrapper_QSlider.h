@@ -5,7 +5,7 @@
 #include <QtWidgets/QSlider>
 #include "wrapper_QWidget.h"
 
-class wrapper_QSlider : public wrapper_QWidget { // wraper_QAbstractSlider
+class WRAPPER_DLL_EXPORT wrapper_QSlider : public wrapper_QWidget { // wraper_QAbstractSlider
 
   Q_OBJECT
 

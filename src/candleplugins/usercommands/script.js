@@ -12,7 +12,6 @@ var storedButtons = new Array();
 var storedActions = new Array();
 
 // Ui
-//var uiPanel;
 var uiWindow;
 var uiSettings;
 
@@ -208,7 +207,6 @@ function onAppDeviceStateChanged(status)
 console.log("JAVA: usercommands::onAppDeviceStateChanged()");
 
     var t = uiSettings.findChild("tblButtons");
-//    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
     var lay = uiWindow.layout().itemAt(0).layout(); // Widget -> layout -> first layout
 
     for (var i = 0; i < t.rowCount; i++) {
@@ -280,7 +278,6 @@ function updateButtons()
 console.log("JAVA: usercommands::updateButtons()");
 
     var t = uiSettings.findChild("tblButtons");
-//    var lay = uiPanel.layout().itemAt(0).layout(); // Widget -> layout -> first layout
     var lay = uiWindow.layout().itemAt(0).layout(); // Widget -> layout -> first layout
     var k = lay.count();
     var c = t.rowCount;
@@ -351,7 +348,6 @@ function updateActions()
         a.deleteLater();
     }
     for (var i = l; i < n; i++) {
-//        var a = new QAction(qsTr("User button") + " " + (i + 1), uiPanel);
         var a = new QAction(qsTr("User button") + " " + (i + 1), uiWindow);
         a.objectName = "actUserCommandsButton" + (i + 1);
         a.triggered.connect(onTriggered(i));

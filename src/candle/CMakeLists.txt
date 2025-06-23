@@ -26,17 +26,6 @@ file(GLOB SOURCE_HEADERS_LIST
     ${SOURCES_PATH}/tables/*.h
 )
 
-# Добавить директории с заголовочными файлами приложения
-include_directories(
-    ${SOURCES_PATH}
-    ${SOURCES_PATH}/drawers
-    ${SOURCES_PATH}/parser
-    ${SOURCES_PATH}/widgets
-    ${SOURCES_PATH}/tables
-    ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin
-    ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin
-)
-
 # Список файлов c++ исходных текстов приложения
 file(GLOB SOURCE_FILE_LIST
     ${SOURCES_PATH}/*.cpp
@@ -88,6 +77,19 @@ qt_add_executable(${MAIN_NAME}
     ${SOURCE_HEADERS_LIST}
     ${UI}
     ${RESOURCES_DEP}
+)
+
+# Директории с включаемыми файлами
+target_include_directories(${MAIN_NAME}
+    PRIVATE ${SOURCES_PATH}
+    PRIVATE ${SOURCES_PATH}/drawers
+    PRIVATE ${SOURCES_PATH}/parser
+    PRIVATE ${SOURCES_PATH}/widgets
+    PRIVATE ${SOURCES_PATH}/tables
+    PRIVATE ${CMAKE_SOURCE_DIR}/src
+    PRIVATE ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin
+    PRIVATE ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin
+    PRIVATE ${CMAKE_SOURCE_DIR}/src/scriptbindings
 )
 
 # !!!! win32!!
@@ -175,9 +177,9 @@ target_link_libraries(${MAIN_NAME} PUBLIC
 )
 
 # !!! При сборке для Windows
-if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
-endif()
+#if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+#    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
+#endif()
 
 ##############################################################################
 # Настройка в зависимости от целевой среды выполнения.
@@ -355,11 +357,10 @@ if(APPLE AND NOT IOS)
     install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MAIN_NAME}.app
         DESTINATION ${BUILD_PATH}/install
         USE_SOURCE_PERMISSIONS
-#        FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
     )
 else()
     install(FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}
         DESTINATION ${DEST_PATH}
-        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
     )
 endif()

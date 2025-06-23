@@ -65,6 +65,12 @@ function createWindowWidget()
     return uiWindow;
 }
 
+function createSettingsWidget()
+{
+    return null;
+}
+
+
 function onAppSettingsLoaded()
 {
     var u = app.settings.units;

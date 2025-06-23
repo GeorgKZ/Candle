@@ -2,11 +2,11 @@
 #define WRAPPER_COLORPICKER_H
 
 #include <QtCore/QObject>
-#include "../designerplugins/customwidgetsplugin/colorpicker.h"
+#include "colorpicker.h"
 #include "wrapper_QWidget.h"
 #include "wrapper_QColor.h"
 
-class wrapper_ColorPicker : public wrapper_QWidget {
+class WRAPPER_DLL_EXPORT wrapper_ColorPicker : public wrapper_QWidget {
 
     Q_OBJECT
 

@@ -9,7 +9,7 @@
 #include "wrapper_QPainter.h"
 
 // Виртуальный класс
-class wrapper_QAbstractItemDelegate : public wrapper_QObject {
+class WRAPPER_DLL_EXPORT wrapper_QAbstractItemDelegate : public wrapper_QObject {
 
   Q_OBJECT
 

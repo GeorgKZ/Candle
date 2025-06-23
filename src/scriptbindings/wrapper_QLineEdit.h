@@ -5,7 +5,7 @@
 #include <QtWidgets/QLineEdit>
 #include "wrapper_QWidget.h"
 
-class wrapper_QLineEdit : public wrapper_QWidget {
+class WRAPPER_DLL_EXPORT wrapper_QLineEdit : public wrapper_QWidget {
 
   Q_OBJECT
 

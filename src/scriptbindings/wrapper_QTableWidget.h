@@ -6,7 +6,7 @@
 #include "wrapper_QTableView.h"
 #include "wrapper_QTableWidgetItem.h"
 
-class wrapper_QTableWidget : public wrapper_QTableView {
+class WRAPPER_DLL_EXPORT wrapper_QTableWidget : public wrapper_QTableView {
 
   Q_OBJECT
 

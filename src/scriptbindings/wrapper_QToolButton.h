@@ -7,7 +7,7 @@
 #include <QtWidgets/QToolButton>
 #include "wrapper_QAbstractButton.h"
 
-class  wrapper_QToolButton : public wrapper_QAbstractButton {
+class WRAPPER_DLL_EXPORT wrapper_QToolButton : public wrapper_QAbstractButton {
 
   Q_OBJECT
 

@@ -2,7 +2,7 @@
 #define CAMERAWIDGET_H
 
 #include <QtWidgets/QGraphicsView>
-#include "../customwidgetsshared.h"
+#include "customwidgetsshared.h"
 
 class QScrollArea;
 class QCamera;

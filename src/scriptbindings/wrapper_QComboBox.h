@@ -5,7 +5,7 @@
 #include <QtWidgets/QComboBox>
 #include "wrapper_QWidget.h"
 
-class wrapper_QComboBox : public wrapper_QWidget {
+class WRAPPER_DLL_EXPORT wrapper_QComboBox : public wrapper_QWidget {
 
   Q_OBJECT
 

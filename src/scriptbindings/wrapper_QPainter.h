@@ -5,7 +5,7 @@
 #include <QtGui/QPainter>
 #include "wrapper_common.h"
 
-class wrapper_QPaintDevice : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QPaintDevice : public wrapper_common {
 
 public:
 

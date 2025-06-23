@@ -177,14 +177,17 @@ void frmSettings::undo()
         o->setPlainText(m_storedPlainTexts.takeFirst());
 }
 
-void frmSettings::addCustomSettings(QGroupBox *box)
+void frmSettings::addCustomSettings(QGroupBox *box, QWidget *widget)
 {
+    box->setTitle(widget->windowTitle());
+
     static_cast<QVBoxLayout*>(ui->scrollAreaWidgetContents->layout())->addWidget(box);
     
-    ui->listCategories->addItem(box->title());
+    ui->listCategories->addItem(widget->windowTitle()); //box->title());
     ui->listCategories->item(ui->listCategories->count() - 1)->setData(Qt::UserRole, box->objectName());
 
     m_customSettings.append(box);
+    m_customWidgets.append(widget);
 }
 
 void frmSettings::on_listCategories_currentRowChanged(int currentRow)
@@ -672,40 +675,7 @@ void frmSettings::setLanguage(QString language)
     int i = ui->cboLanguage->findData(language);
     if (i != -1) {
         ui->cboLanguage->setCurrentIndex(i);
-
         setAllTranslators(language);
-//!!!
-#if 0
-        QString translationsFolder = qApp->applicationDirPath() + "/translations/";
-
-        QString translationFileName = translationsFolder + "candle_" + language + ".qm";
-        if (QFile::exists(translationFileName)) {
-            setTranslator(translationFileName, &candle_translator);
-        } else {
-            qCritical() << "Error - no such Candle translation file";
-        }
-
-        translationFileName = translationsFolder + "qt_" + language + ".qm";
-        if (QFile::exists(translationFileName)) {
-            setTranslator(translationFileName, &qt_translator);
-        } else {
-            qCritical() << "Error - no such Qt translation file";
-        }
-
-        QString pluginsDir = qApp->applicationDirPath() + "/plugins/";
-        QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        foreach (QString p, pl) {
-            translationFileName = pluginsDir + p + "/" + p + "_" + language + ".qm";
-            if(QFile::exists(translationFileName)) {
-                setTranslator(translationFileName, &plugin_translators[p]);
-
-            qDebug() << "Plugin translation 3:" << plugin_translators[p];
-
-            } else {
-                qCritical() << "Error - no such plugin translation file";
-            }
-        }
-#endif
     }
 }
 
@@ -779,19 +749,20 @@ void frmSettings::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange)
     {
-//TODO изменить строки заданные не в ui
-//        setWindowTitle(qtTrId(ID_APP_TITLE));
-//        ui->menuFile->setTitle(qtTrId(ID_MENU_FILE));
-//        ui->menuSettings->setTitle(qtTrId(ID_MENU_SETTINGS));
-//        ui->actionOpen->setText(qtTrId(ID_MENU_FILE_OPEN));
-//        ui->actionSave->setText(qtTrId(ID_MENU_FILE_SAVE));
-//        ui->actionClose->setText(qtTrId(ID_MENU_FILE_CLOSE));
-//        ui->action_Exit->setText(qtTrId(ID_MENU_FILE_EXIT));
-//        ui->actionSelect_Language->setText(qtTrId(ID_MENU_SETTINGS_SELECT));
-//        okPushButton->setText(tr("&OK"));
- 
        // Изменить язык для этого окна
         ui->retranslateUi(this);
+
+        int plugNum = 0;
+        foreach(QWidget *w, m_customSettings) {
+            w->setWindowTitle("XXXXX"); //m_customWidgets[plugNum++]->windowTitle());
+            qDebug() << "???" << m_customWidgets[plugNum++]->windowTitle();
+        }
+
+        for (int i = 0; i < ui->listCategories->count(); ++i) {
+            qDebug() << "!!!" << ui->listCategories->item(i)->text();
+        }
+
+ 
     }
     else
     {

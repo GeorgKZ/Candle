@@ -12,7 +12,7 @@ class wrapper_QWidget;
 class wrapper_QLayoutItem;
 
 // QLayout - абстрактный класс
-class wrapper_QLayout : public wrapper_QObject {
+class WRAPPER_DLL_EXPORT wrapper_QLayout : public wrapper_QObject {
 
   Q_OBJECT
 

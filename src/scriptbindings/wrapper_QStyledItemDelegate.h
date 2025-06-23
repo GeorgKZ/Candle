@@ -7,7 +7,7 @@
 
 //!!! Использовать врапперы! QPainter, QStyleOptionViewItem, QModelIndex
 
-class wrapper_QStyledItemDelegate : public wrapper_QAbstractItemDelegate {
+class WRAPPER_DLL_EXPORT wrapper_QStyledItemDelegate : public wrapper_QAbstractItemDelegate {
 
   Q_OBJECT
 

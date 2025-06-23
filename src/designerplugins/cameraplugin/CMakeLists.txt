@@ -14,20 +14,15 @@ message(STATUS "################################################################
 # Директории с файлами, необходимыми для сборки
 ##############################################################################
 
-# Путь к директории с исходными текстами
-set(SOURCES_PATH "${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin")
-
 # Список заголовков исходных текстов приложения
 file(GLOB SOURCE_HEADERS_LIST
-    ${SOURCES_PATH}/*.h
+    ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin/*.h
+    ${CMAKE_SOURCE_DIR}/src/*.h
 )
-
-# Добавить директории с заголовочными файлами приложения
-include_directories(${SOURCES_PATH})
 
 # Список файлов c++ исходных текстов приложения
 file(GLOB SOURCE_FILE_LIST
-    ${SOURCES_PATH}/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin/*.cpp
 )
 
 # Определение для сборки библиотеки
@@ -45,10 +40,16 @@ find_package(Qt6 COMPONENTS Multimedia REQUIRED)
 find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
 find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
 
-# Зависимости исполняемого файла приложения
+# Определение собираемой библиотеки, её зависимости
 add_library(${MAIN_NAME} SHARED
     ${SOURCE_FILE_LIST}
     ${SOURCE_HEADERS_LIST}
+)
+
+# Директории с включаемыми файлами
+target_include_directories(${MAIN_NAME}
+    PRIVATE ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin
+    PRIVATE ${CMAKE_SOURCE_DIR}/src
 )
 
 # Добавить библиотеки Qt
@@ -61,9 +62,9 @@ target_link_libraries(${MAIN_NAME} PRIVATE
     Qt6::OpenGLWidgets
     )
 
-if(WIN32)
-    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
-endif()
+#if(WIN32)
+#    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
+#endif()
 
 #set_target_properties(${MAIN_NAME} PROPERTIES OUTPUT_NAME "${MAIN_NAME}${SUFFIX}")
 
@@ -77,5 +78,5 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 # Библиотека
 install(FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${MAIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
     DESTINATION ${DEST_PATH}
-    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )

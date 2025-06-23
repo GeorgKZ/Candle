@@ -7,7 +7,7 @@
 #include "wrapper_QIcon.h"
 #include "wrapper_QSize.h"
 
-class wrapper_QTableWidgetItem : public wrapper_common {
+class WRAPPER_DLL_EXPORT wrapper_QTableWidgetItem : public wrapper_common {
 
   Q_OBJECT
 
