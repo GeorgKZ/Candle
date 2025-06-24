@@ -125,10 +125,12 @@ class frmMain : public QMainWindow
     friend class ScriptFunctions;
 
 public:
+
     explicit frmMain(QWidget *parent = nullptr);
     ~frmMain();
 
 signals:
+
     void responseReceived(QString command, int tableIndex, QString response);
     void statusReceived(QString status);
     void senderStateChanged(int state);
@@ -144,6 +146,7 @@ signals:
     void pluginsLoaded();
 
 private slots:
+
     void on_actFileNew_triggered();
     void on_actFileOpen_triggered();
     void on_actFileSave_triggered();
@@ -256,6 +259,7 @@ private slots:
     void permissionChecking();
 
 protected:
+
     virtual void changeEvent(QEvent *event) override;
     virtual void showEvent(QShowEvent *se) override;
     virtual void hideEvent(QHideEvent *he) override;

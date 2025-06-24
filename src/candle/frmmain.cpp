@@ -245,6 +245,7 @@ frmMain::frmMain(QWidget *parent) :
     connect(&m_heightMapModel, SIGNAL(dataChangedByUserInput()), this, SLOT(updateHeightMapInterpolationDrawer()));
 
     ui->tblProgram->setModel(&m_programModel);
+//!!! проверить границы индекса
     ui->tblProgram->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Stretch);
     connect(ui->tblProgram->verticalScrollBar(), SIGNAL(actionTriggered(int)), this, SLOT(onScroolBarAction(int)));
     connect(ui->tblProgram->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(onTableCurrentChanged(QModelIndex,QModelIndex)));    
@@ -413,16 +414,25 @@ void frmMain::permissionChecking()
 
 void frmMain::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::LanguageChange)
+    /** 
+     * Вызвать обработчик событий по умолчанию для всех событий, кроме смены языка
+     */
+    if (event->type() != QEvent::LanguageChange)
     {
-        // Изменить язык для интерфейса этого окна
-        ui->retranslateUi(this);
+        QMainWindow::changeEvent(event);
+        return;
+    }
 
-        // Изменить строки, определённые не в интерфейсе, а в программе
-        ui->slbFeedOverride->setTitle(QCoreApplication::translate("frmMain", "Feed rate:", nullptr));
-        ui->slbRapidOverride->setTitle(QCoreApplication::translate("frmMain", "Rapid speed:", nullptr));
-        ui->slbSpindleOverride->setTitle(QCoreApplication::translate("frmMain", "Spindle speed:", nullptr));
-        ui->slbSpindle->setTitle(QCoreApplication::translate("frmMain", "Speed:", nullptr));
+    /** 
+     * Изменить язык строк из файла .ui
+     */
+    ui->retranslateUi(this);
+
+    // Изменить строки, определённые не в интерфейсе, а в программе
+    ui->slbFeedOverride->setTitle(QCoreApplication::translate("frmMain", "Feed rate:", nullptr));
+    ui->slbRapidOverride->setTitle(QCoreApplication::translate("frmMain", "Rapid speed:", nullptr));
+    ui->slbSpindleOverride->setTitle(QCoreApplication::translate("frmMain", "Spindle speed:", nullptr));
+    ui->slbSpindle->setTitle(QCoreApplication::translate("frmMain", "Speed:", nullptr));
 
 //!!!
 //onRadUseLaser checked   ui->slbSpindle->setTitle(QCoreApplication::translate("frmMain", "Power:", nullptr));
@@ -440,25 +450,32 @@ void frmMain::changeEvent(QEvent *event)
 
 //       ui->grpJog->setTitle(...)
 
-        // Настроить в соответствии с текущм языком заголовки таблиц типа GCodeTableModel
-        const QStringList headers = { tr("#"), tr("Command"), tr("State"), tr("Response"), tr("Line"), tr("Args") };
-        const QList<GCodeTableModel*> models = { &m_programModel, &m_probeModel, &m_programHeightmapModel};
-        foreach(GCodeTableModel *m, models) {
-            int colNum = 0;
-            foreach(const QString &h, headers) {
-              m->setHeaderData(colNum++, Qt::Horizontal, h, Qt::DisplayRole);
-            }
-        }
-
-        // Установить в соответствии с текущим языком названия плюгинов
-        int plugNum = 0;
-        foreach(QDockWidget *w, m_pluginDocks) {
-            w->setWindowTitle(m_pluginWidgets[plugNum++]->windowTitle());
+    // Настроить в соответствии с текущм языком заголовки таблиц типа GCodeTableModel
+    const QStringList headers = { tr("#"), tr("Command"), tr("State"), tr("Response"), tr("Line"), tr("Args") };
+    const QList<GCodeTableModel*> models = { &m_programModel, &m_probeModel, &m_programHeightmapModel};
+    foreach(GCodeTableModel *m, models) {
+        int colNum = 0;
+        foreach(const QString &h, headers) {
+          m->setHeaderData(colNum++, Qt::Horizontal, h, Qt::DisplayRole);
         }
     }
-    else
-    {
-        QMainWindow::changeEvent(event);
+
+    /** 
+     * Выполнить для каждого плюгина:
+     */
+    int plugNum = 0;
+    foreach(QDockWidget *w, m_pluginDocks) {
+        /** 
+         * Дополнительно создать событие, чтобы инициировать смену языка виджета,
+         *  из которого берётся заголовок
+         */
+        QEvent e(QEvent::LanguageChange);
+        QCoreApplication::sendEvent(w, &e);
+
+        /** 
+         * Изменить текст заголовков виджетов плюгинов
+         */
+        w->setWindowTitle(m_pluginWidgets[plugNum++]->windowTitle());
     }
 }
 
@@ -2768,6 +2785,7 @@ void frmMain::loadSettings()
 
 
     m_settings->setFont(set.value("Ubuntu-Regular", 9).toString());
+
     m_settings->setFontSize(set.value("fontSize", 9).toInt());
     m_settings->setPort(set.value("port").toString());
     m_settings->setBaud(set.value("baud").toInt());
@@ -3406,7 +3424,7 @@ void frmMain::loadPlugins()
                     QVBoxLayout *layout2 = new QVBoxLayout(frame);
 
                     dock->setObjectName("dock" + p + "Plugin");
-                    dock->setWindowTitle(w->windowTitle());
+
                     dock->setWidget(contents);
 
                     /**

@@ -227,13 +227,12 @@ private:
     /**
      * Набор указателей на QGroupBox плюгинов
      */
-    QList<QWidget*> m_customSettings;
+    QList<QGroupBox*> m_customSettings;
 
     /**
      * Набор указателей на QWidget плюгинов
      */
     QList<QWidget*> m_customWidgets;
-
 
     int m_units;
     int m_acceleration;

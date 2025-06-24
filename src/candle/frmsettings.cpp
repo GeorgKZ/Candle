@@ -78,6 +78,15 @@ frmSettings::frmSettings(QWidget *parent) :
     ui->cboFps->setValidator(&m_intValidator);
     ui->cboFontSize->setValidator(&m_intValidator);
 
+    /**
+     * Заполнить выпадающий список щрифтов шрифтами из ресурса программы.
+     */
+    foreach(const QString &fontName, QDir(":/fonts").entryList()) {  
+//        qDebug() << "Found resource font" << fontName;
+        ui->cboFont->addItem(fontName);
+    }  
+
+
     foreach (QGroupBox *box, this->findChildren<QGroupBox*>()) {
         ui->listCategories->addItem(box->title());
         ui->listCategories->item(ui->listCategories->count() - 1)->setData(Qt::UserRole, box->objectName());
@@ -183,7 +192,7 @@ void frmSettings::addCustomSettings(QGroupBox *box, QWidget *widget)
 
     static_cast<QVBoxLayout*>(ui->scrollAreaWidgetContents->layout())->addWidget(box);
     
-    ui->listCategories->addItem(widget->windowTitle()); //box->title());
+    ui->listCategories->addItem(widget->windowTitle());
     ui->listCategories->item(ui->listCategories->count() - 1)->setData(Qt::UserRole, box->objectName());
 
     m_customSettings.append(box);
@@ -524,7 +533,6 @@ QString frmSettings::font()
 
 void frmSettings::setFont(const QString& fontName)
 {
-//TODO !!!
     ui->cboFont->setCurrentText(fontName);
 }
 
@@ -747,26 +755,43 @@ void frmSettings::setReferenceZPlus(bool value)
 
 void frmSettings::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::LanguageChange)
-    {
-       // Изменить язык для этого окна
-        ui->retranslateUi(this);
-
-        int plugNum = 0;
-        foreach(QWidget *w, m_customSettings) {
-            w->setWindowTitle("XXXXX"); //m_customWidgets[plugNum++]->windowTitle());
-            qDebug() << "???" << m_customWidgets[plugNum++]->windowTitle();
-        }
-
-        for (int i = 0; i < ui->listCategories->count(); ++i) {
-            qDebug() << "!!!" << ui->listCategories->item(i)->text();
-        }
-
- 
-    }
-    else
+    /** 
+     * Вызвать обработчик событий по умолчанию для всех событий, кроме смены языка
+     */
+    if (event->type() != QEvent::LanguageChange)
     {
         QDialog::changeEvent(event);
+        return;
+    }
+
+    /** 
+     * Изменить язык строк из файла .ui
+     */
+    ui->retranslateUi(this);
+
+    /** 
+     * Дополнительно создать события, чтобы инициировать смену языка виджетов
+     * плюгинов, из которых берётся заголовок
+     */
+    foreach(QWidget *w, m_customWidgets) {
+        QEvent e(QEvent::LanguageChange);
+        QCoreApplication::sendEvent(w, &e);
+    }
+
+    /** 
+     * Изменить текст заголовков виджетов в левой панели окна настроек
+     */
+    int itemNum = 0;
+    foreach (QGroupBox *box, this->findChildren<QGroupBox*>()) {
+        ui->listCategories->item(itemNum++)->setText(box->title());
+    }
+
+    /** 
+     * Изменить текст заголовков виджетов в правой панели окна настроек
+     */
+    for(qsizetype i = 0; i < m_customSettings.size(); ++i)
+    {
+        m_customSettings[i]->setTitle(m_customWidgets[i]->windowTitle());
     }
 }
 
@@ -911,9 +936,10 @@ void frmSettings::on_cboFontSize_currentTextChanged(const QString &arg1)
     qApp->setStyleSheet(QString(qApp->styleSheet()).replace(QRegularExpression("font-size:\\s*\\d+"), "font-size: " + arg1));
 }
 
-void frmSettings::on_cboFont_currentTextChanged(const QString &arg1)
+void frmSettings::on_cboFont_currentTextChanged(const QString &newFont)
 {
-    qDebug() << "Need to change font to" << arg1 << "in" << QString(qApp->styleSheet());
+//!!! TODO Изменить шрифт интерфейса
+    qDebug() << "Need to change font to" << newFont << "in" << QString(qApp->styleSheet());
 }
 
 void frmSettings::on_radDrawModeVectors_toggled(bool checked)

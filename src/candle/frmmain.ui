@@ -104,11 +104,11 @@ QSplitter::handle {
 }
 
 QSplitter::handle:vertical {
-	background-image: url(&quot;:/images/handle_horizontal.png&quot;);
+	background-image: url(:/images/handle_horizontal.png);
 }
 
 QSplitter::handle:horizontal {
-	background-image: url(&quot;:/images/handle_vertical.png&quot;);
+	background-image: url(:/images/handle_vertical.png);
 }
 
 QTableView {
@@ -122,29 +122,34 @@ QSlider::horizontal {
 }
 
 QSlider::groove:horizontal {
-    border: 1px solid #999999;
-    height: 2px; 
-    background: #8f8f91;
-    margin: 2px 0;
+	border: 1px solid #999999;
+	height: 2px; 
+	background: #8f8f91;
+	margin: 2px 0;
 }
 
 QSlider::handle:horizontal {	
 	background-image: url(:/images/handle2s.png);
-    border: 0px;
-    width: 16px;
-    margin: -7px 0; 
+	border: 0px;
+	width: 16px;
+	margin: -7px 0; 
 }
 
 QSlider::handle:horizontal:hover {
 	background-image: url(:/images/handle2sh.png);
 }
 
+QMainWindow::separator {
+	width: 25;
+	height: 25;
+}
+
 QMainWindow::separator:vertical {
-	image: url(&quot;:/images/handle_vertical.png&quot;);
+	image: url(:/images/handle_vertical.png);
 }
 
 QMainWindow::separator:horizontal {
-	image: url(&quot;:/images/handle_horizontal.png&quot;);
+	image: url(:/images/handle_horizontal.png);
 }
 
    </string>

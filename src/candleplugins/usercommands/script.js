@@ -30,16 +30,6 @@ function init()
     app.deviceStateChanged.connect(onAppDeviceStateChanged);
 }
 
-//function createPanelWidget()
-//{
-//    var f = new QFile(pluginPath + "/widget.ui");
-//
-//    if (f.open(QIODevice.ReadOnly)) {        
-//        uiPanel = loader.load(f);
-//    }
-//    return uiPanel;
-//}
-
 function createWindowWidget()
 {
     var f = new QFile(pluginPath + "/widget.ui");

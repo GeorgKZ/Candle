@@ -37,10 +37,10 @@ static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, c
     QTextStream tsTextStream(&fMessFile);
 
     /**
-     * Вывести информацию о сообщении без перевода строки - его необходимо добавить в шаблоне,
-     * указанном в переменной окружения QT_MESSAGE_PATTERN.
+     * Вывести информацию о сообщении. Она может быть дополнительно оформлена
+     * шаблоном, указанном в переменной окружения QT_MESSAGE_PATTERN.
      */
-    tsTextStream << qFormatLogMessage(type, context, msg);
+    tsTextStream << qFormatLogMessage(type, context, msg) << "\n";
     fMessFile.flush();
     fMessFile.close();
 }
@@ -61,26 +61,13 @@ void setTranslator(const QString &translationFileName, QTranslator **translator)
 
 void setAllTranslators(const QString &language) {
 
-    /**
-     * \brief Связный список путей к плюгинам и дескрипторов переводов 
-     */
-//  typedef QMap<QString, QTranslator*> pluginTranslatorMap;
-
-    static QTranslator *candle_translator = nullptr;
-    static QTranslator *qt_translator = nullptr;
-    static QMap<QString, QTranslator*> plugin_translators;
-
+    QString translationFileName;
     QString translationsFolder = qApp->applicationDirPath() + "/translations/";
 
-    QString translationFileName = translationsFolder + "candle_" + language + ".qm";
-    if (QFile::exists(translationFileName)) {
-        setTranslator(translationFileName, &candle_translator);
-    }
-
-    translationFileName = translationsFolder + "qtbase_" + language + ".qm";
-    if (QFile::exists(translationFileName)) {
-        setTranslator(translationFileName, &qt_translator);
-    }
+    /**
+     * Связный список путей к плюгинам и дескрипторов переводов 
+     */
+    static QMap<QString, QTranslator*> plugin_translators;
 
     QString pluginsDir = qApp->applicationDirPath() + "/plugins/";
     QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -92,9 +79,43 @@ void setAllTranslators(const QString &language) {
             plugin_translators[p] = translator;
         }
     }
+
+    /**
+     * Дескриптор перевода приложения
+     */
+    static QTranslator *candle_translator = nullptr;
+
+    translationFileName = translationsFolder + "candle_" + language + ".qm";
+    if (QFile::exists(translationFileName)) {
+        setTranslator(translationFileName, &candle_translator);
+    }
+
+    /**
+     * Дескриптор системного перевода
+     */
+    static QTranslator *qt_translator = nullptr;
+
+    translationFileName = translationsFolder + "qtbase_" + language + ".qm";
+    if (QFile::exists(translationFileName)) {
+        setTranslator(translationFileName, &qt_translator);
+    }
+
 }
 
 int main(int argc, char *argv[]) {
+
+#ifdef _WIN32
+    /**
+     * Если программа запущена в консоли, разрешить консольный вывод.
+     */
+    auto stdout_type = GetFileType(GetStdHandle(STD_OUTPUT_HANDLE));
+    if (stdout_type == FILE_TYPE_UNKNOWN) {
+        if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+    }
+#endif
 
    /**
     * Установить свой обработчик отладочных/информационных/предупреждающих/аварийных сообщений
@@ -112,14 +133,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
-//#ifdef UNIX
-//    bool styleOverrided = false;
-//    for (int i = 0; i < argc; i++) if (QString(argv[i]).toUpper() == "-STYLE") {
-//        styleOverrided = true;
-//        break;
-//    }
-//#endif
 
     QApplication a(argc, argv);
 
@@ -142,19 +155,6 @@ int main(int argc, char *argv[]) {
     QSettings set(a.applicationDirPath() + "/settings.ini", QSettings::IniFormat);
     QString loc = set.value("language", "en").toString();
     setAllTranslators(loc);
-
-#ifdef UNIX
-//    if (!styleOverrided) {
-//            foreach (QString str, QStyleFactory::keys()) {
-//            qInfo() << "found style" << str;
-//            if (str.contains("GTK+")) {
-//                qInfo() << "setting style:" << str;
-//                a.setStyle(QStyleFactory::create(str));
-//                break;
-//            }
-//        }
-//    }
-#endif
 
 #if 0 
 
