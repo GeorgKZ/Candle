@@ -44,8 +44,8 @@ public:
 
   // void setIcon(const QIcon &icon)
   Q_INVOKABLE void setIcon(const QJSValue &value) {
-//!!! Если иконки нет, валится!
-    QIcon icon(*(QIcon*)jsvalueToObject_ptr("QIcon", value));
+//!!!TODO!!! Если иконки нет, валится!
+    QIcon icon(*jsvalueToPointer(QIcon, value));
     get_selfptr()->setIcon(icon);
   }
 
@@ -97,7 +97,7 @@ public Q_SLOTS:
 
   // void setIconSize(const QSize &size)
   Q_INVOKABLE void setIconSize(const QJSValue &value_size) {
-    QSize *size = (QSize*)jsvalueToObject_ptr("QSize", value_size);
+    QSize *size = jsvalueToPointer(QSize, value_size);
     qDebug() << "QAbstractButton::setIconSize(): size =" << *size;
     get_selfptr()->setIconSize(*size);
   }
@@ -143,7 +143,7 @@ public:
   wrapper_QAbstractButton(QAbstractButton *self) :
     wrapper_QWidget(self) {
     setConnections();
-    qDebug() << "wrapper_QAbstractButton::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QAbstractButton::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

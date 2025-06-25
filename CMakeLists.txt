@@ -165,43 +165,6 @@ else()
 endif()
 
 ##############################################################################
-# Настройки компиляторов
-##############################################################################
-
-# Отключённые предупреждения C++ в GCC
-set(CPP_DISABLED_WARN
-#    -Wno-system-headers
-    #-Wno-aggregate-return
-    #-Wno-undef
-#   -Wno-zero-as-null-pointer-constant
-    -Wno-padded
-    -Wno-long-long
-    #-Wno-inline
-
-    -Wno-shadow
-   #-Wno-suggest-final-types
-   #-Wno-suggest-final-methods
-   #-Wno-suggest-attribute=cold
-   #-Wno-suggest-attribute=const
-   #-Wno-suggest-attribute=pure
-   #-Wno-suggest-attribute=noreturn
-   #-Wno-suggest-attribute=format
-   #-Wno-unused-function
-#  У GCC 10 это предупреждение не отключается
-   -Wno-unused-macros
-   -Wno-switch-default
-   -Wno-conversion
-   -Wno-sign-conversion
-   #-Wno-suggest-attribute=malloc
-# Для нового sdai
-  # -Wno-ignored-qualifiers
-# Временно!
-  -Wno-unused-parameter
-  -Wno-aggregate-return
-#   -Wno-return-type
-)
-
-##############################################################################
 # Настройка в зависимости от используемого компилятора.
 ##############################################################################
 
@@ -211,15 +174,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # clang
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+
+    message(DEBUG "Определён компилятор Clang")
+
     add_compile_options(
-        "-Wall"
-        "-Wpedantic"
-        "-Wextra"
-        "-Wunused-but-set-variable"
+#        "-Wall"
+#        "-Wpedantic"
+#        "-Wextra"
+#        "-Wunused-but-set-variable"
+        "-Weverything"
     )
     add_definitions(
         "-D__CLANG__"
-        "-D__MYFUNCNAME__=__PRETTY_FUNCTION__"  #linux-win!!!
+        "-D__MYFUNCNAME__=__PRETTY_FUNCTION__"  #!!! Проверить на linux, windows!!!
     )
     # Обрезать таблицы символов для Release
     add_link_options(
@@ -231,15 +198,20 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     )
 # clang из MacOX/OS X
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+
+    message(DEBUG "Определён компилятор AppleClang")
+
+
     add_compile_options(
-        "-Wall"
-        "-Wpedantic"
-        "-Wextra"
-        "-Wunused-but-set-variable"
+#        "-Wall"
+#        "-Wpedantic"
+#        "-Wextra"
+#        "-Wunused-but-set-variable"
+        "-Weverything"
     )
     add_definitions(
         "-D__CLANG__"
-        "-D__MYFUNCNAME__=__PRETTY_FUNCTION__"
+        "-D__MYFUNCNAME__=__PRETTY_FUNCTION__"  #!!! Проверить на MacOS!!!
     )
     # Обрезать таблицы символов для Release
     add_link_options(
@@ -252,12 +224,73 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
 
 # gcc
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+
+    message(DEBUG "Определён компилятор GNU gcc")
+
+    # Подготовить командный файл для получения списка всех предупреждений компилятора
+    set(CMD_GEN_WARN "${MISC_PATH}/gen_gcc_warn.sh")
+    file(WRITE ${CMD_GEN_WARN} "#!/bin/bash\n\n${CMAKE_CXX_COMPILER} -Q --help=warning | sed -e \'s/^\\s*\\\(\\-\\S*\\\)\\s*\\[\\w*\\]/\\1 /gp;d\' | tr -d '\\n'")
+    execute_process(COMMAND chmod +x ${CMD_GEN_WARN})
+    # Получить список всех предупреждений компилятора
+    execute_process(COMMAND ${CMD_GEN_WARN} OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE CXX_WARNINGS)
+    # Обработать список всех предупреждений компилятора для избежания заключения его в кавычки
+    separate_arguments(CXX_WARNINGS UNIX_COMMAND "${CXX_WARNINGS}")
+ 
     add_compile_options(
-        "-Wall"
-        "-Wpedantic"
-        "-Wextra"
-        "-Wunused-but-set-variable"
-#        ${CPP_DISABLED_WARN}
+ #      ${CXX_WARNINGS}
+        -Wall
+        -Wpedantic
+        -Wextra
+        -Waddress
+        -Wbool-compare
+        -Wbool-operation
+        -Wcast-align
+        -Wcast-qual
+        -Wcatch-value
+        -Wchar-subscripts
+        -Wcomment
+        -Wctor-dtor-privacy
+        -Wdisabled-optimization
+        -Wformat=2
+        -Wint-in-bool-context
+        -Winit-self
+        -Wlogical-not-parentheses
+        -Wlogical-op
+        -Wmaybe-uninitialized
+        -Wmemset-elt-size
+        -Wmemset-transposed-args
+        -Wmisleading-indentation
+        -Wmissing-attributes
+        -Wmissing-include-dirs
+        -Wmultistatement-macros
+        -Wnoexcept
+        -Wnonnull
+        -Wnonnull-compare
+        -Wold-style-cast
+        -Woverloaded-virtual
+        -Wparentheses
+        -Wpessimizing-move
+        -Wredundant-decls
+        -Wreorder
+        -Wreturn-type
+        -Wshadow
+        -Wsequence-point
+        -Wsign-compare
+        -Wsign-promo
+        -Wsizeof-pointer-div
+        -Wsizeof-pointer-memaccess
+        -Wstrict-aliasing
+        -Wstrict-null-sentinel
+        -Wstrict-overflow=5
+        -Wswitch
+        -Wtautological-compare
+        -Wtrigraphs
+        -Wundef
+        -Wuninitialized
+        -Wunused-but-set-variable
+        -Wunused-function
+        -Wunused-variable
+        -fdiagnostics-show-option
     )
     add_definitions(
         "-D__MYFUNCNAME__=__PRETTY_FUNCTION__"
@@ -295,8 +328,13 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 # Intel compiler
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
 
+    message(DEBUG "Определён компилятор Intel")
+
 # Microsoft Visual Studio
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+
+    message(DEBUG "Определён компилятор Microsoft Visual Studio")
+
     add_definitions(
         "-D__MYFUNCNAME__=__FUNCSIG__"
         "-D__STDC_WANT_SECURE_LIB__=1"
@@ -358,7 +396,7 @@ get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if (isMultiConfig)
     # Типы сборки для генераторов с мульти-конфигом
     set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo;MinSizeRel")
-#   message(STATUS "Будет собрана конфигурация, указанная при сборке")
+    message(DEBUG "Будет собрана конфигурация, указанная при сборке")
     # Имя директории, где будут расположены директории с исполняемыми файлами
     # приложения для разных вариантов конфигурации
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BIN_PATH}")
@@ -366,9 +404,9 @@ if (isMultiConfig)
 else()
     if(NOT CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE "Release")
-#       message(STATUS "Будет собрана конфигурация по умолчанию " ${CMAKE_BUILD_TYPE})
+        message(DEBUG "Будет собрана конфигурация по умолчанию " ${CMAKE_BUILD_TYPE})
     else()
-#       message(STATUS "Будет собрана выбранная конфигурация " ${CMAKE_BUILD_TYPE})
+        message(DEBUG "Будет собрана выбранная конфигурация " ${CMAKE_BUILD_TYPE})
     endif()
     # Имя директории, где будет расположен исполняемый файл приложения
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BIN_PATH}/${CMAKE_BUILD_TYPE}")
@@ -386,9 +424,26 @@ set(QT_LANG "en_US;es_ES;fr_FR;pt_BR;ru_RU")
 # Вывод информации о проекте, инструментах, среде сборки и среде исполнения
 ##############################################################################
 
+# Получить уровень выводимых сообщений
+cmake_language(GET_MESSAGE_LOG_LEVEL CMAKE_LOGGING_LEVEL)
+# Существуют следующие уровни выводимых сообщений:
+# FATAL_ERROR - серьёзная ошибка, вызывающая полную остановку сборки;
+# SEND_ERROR - серьёзная ошибка, вызывающая остановку сборки без остановки выполнения скрипта Cmake;
+# WARNING - предупреждение;
+# AUTHOR_WARNING - предупреждение разработчика;
+# DEPRECATION - ошибка или предупреждение об использовании устаревшей функции Cmake;
+# NOTICE - важное сообщение, выводимое на устройство stderr;
+# STATUS - краткое важное сообщение;
+# VERBOSE - подробная информация об особенностях сборки;
+# DEBUG - подробная информация, необходимая только разработчику;
+# TRACE - сообщение о ходе сборки для точного отслеживания процесса.
+# Выводятся сообщения от указанного уровня (включая) и выше.
+# Устанавливается заданием параметра cmake, например cmake --log-level=DEBUG
+
 message(STATUS "##############################################################################")
 message(STATUS "Проект '${CMAKE_PROJECT_NAME}' версии ${PROJECT_VERSION}")
 message(STATUS "CMake версии ${CMAKE_VERSION}")
+message(STATUS "Уровень журналирования CMake ${CMAKE_LOGGING_LEVEL} и выше")
 message(STATUS "Компилятор ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "Генератор ${CMAKE_GENERATOR}")
 message(STATUS "Платформа ${CMAKE_CXX_PLATFORM_ID}")
@@ -425,7 +480,7 @@ add_subdirectory(src/candle)
 add_subdirectory(src/candleplugins)
 
 ##############################################################################
-# Архивирование всего проекта в директорию cmake
+# Архивирование всего проекта в директорию сборки
 ##############################################################################
 
 set(ARCHIVE_NAME "${CMAKE_PROJECT_NAME}.tar.gz") 
@@ -434,7 +489,7 @@ add_custom_target(backup
     COMMENT "Создание архива исходных текстов"
     COMMAND touch ${ARCHIVE_NAME}
     COMMAND tar --exclude=build --exclude=TEST* --exclude=${ARCHIVE_NAME} --create --gzip --file=${ARCHIVE_NAME} .
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    WORKING_DIRECTORY ${BUILD_PATH}
     VERBATIM
 )
 
@@ -581,7 +636,7 @@ if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
     )
 
 else()
-    message(STATUS "Программа PVS Studio не найдена: будет отсутствовать возможность статического анализа")
+    message(WARNING "Программа PVS Studio не найдена: будет отсутствовать возможность статического анализа")
 endif()
 
 ##############################################################################

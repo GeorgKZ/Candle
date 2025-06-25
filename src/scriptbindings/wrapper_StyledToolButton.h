@@ -36,7 +36,7 @@ public:
   }
 
   Q_INVOKABLE void setBackColor(const QJSValue &backColor) {
-    QColor *color = (QColor*)jsvalueToObject_ptr("QColor", backColor);
+    QColor *color = jsvalueToPointer(QColor, backColor);
     get_selfptr()->setBackColor(*color);
   }
 
@@ -46,7 +46,7 @@ public:
   }
 
   Q_INVOKABLE void setForeColor(const QJSValue &foreColor) {
-    QColor *color = (QColor*)jsvalueToObject_ptr("QColor", foreColor);
+    QColor *color = jsvalueToPointer(QColor, foreColor);
     get_selfptr()->setForeColor(*color);
   }
 
@@ -56,7 +56,7 @@ public:
   }
 
   Q_INVOKABLE void setHighlightColor(const QJSValue &highlightColor) {
-    QColor *color = (QColor*)jsvalueToObject_ptr("QColor", highlightColor);
+    QColor *color = jsvalueToPointer(QColor, highlightColor);
     get_selfptr()->setForeColor(*color);
   }
 
@@ -65,7 +65,7 @@ public:
   // Конструктор из объекта
   wrapper_StyledToolButton(StyledToolButton *self) :
     wrapper_QToolButton(self) {
-    qDebug() << "wrapper_StyledToolButton::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_StyledToolButton::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

@@ -93,7 +93,7 @@ public:
   // Конструктор из объекта
   wrapper_QSizePolicy(QSizePolicy *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QSizePolicy::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QSizePolicy::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

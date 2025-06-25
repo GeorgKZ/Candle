@@ -82,8 +82,7 @@ public:
 
   // explicit QAction(const QString &text, QObject *parent = nullptr);
   Q_INVOKABLE explicit wrapper_QAction(const QString &text, const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
-    wrapper_QObject(new QAction(text,
-    (QObject*)jsvalueToObject_ptr("QObject", parent)))  {
+    wrapper_QObject(new QAction(text, jsvalueToPointer(QObject, parent)))  {
     qDebug() << "wrapper_QAction::constructor(" << text << ", obj. " << (unsigned long long)get_selfptr()->parent() << ")";
   }
 
@@ -269,7 +268,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QAction(QAction* self) :
     wrapper_QObject(self) {
-    qDebug() << "wrapper_QAction::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QAction::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

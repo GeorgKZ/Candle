@@ -35,7 +35,7 @@ public:
   // explicit QToolButton(QWidget *parent = nullptr);
   Q_INVOKABLE explicit wrapper_QToolButton(wrapper_QWidget *parent = nullptr) :
     wrapper_QAbstractButton(new QToolButton(parent == nullptr ? nullptr : parent->get_selfptr())) {
-    qDebug() << "wrapper_QToolButton::constructor(parent=" << (unsigned long long)(parent == nullptr ? nullptr : parent->get_selfptr()) << ")";
+    qDebug() << "wrapper_QToolButton::constructor(parent=" << (parent == nullptr ? 0 : reinterpret_cast<unsigned long long>(parent->get_selfptr())) << ")";
   }
 
   // QSize sizeHint() const
@@ -71,12 +71,12 @@ public:
 
   // void setPopupMode(ToolButtonPopupMode mode);
   Q_INVOKABLE void setPopupMode(ToolButtonPopupMode mode) {
-    get_selfptr()->setPopupMode((QToolButton::ToolButtonPopupMode)(int)mode);
+    get_selfptr()->setPopupMode(static_cast<QToolButton::ToolButtonPopupMode>(static_cast<int>(mode)));
   }
 
   // ToolButtonPopupMode popupMode() const;
   Q_INVOKABLE ToolButtonPopupMode popupMode() const {
-    return (ToolButtonPopupMode)(int)get_selfptr()->popupMode();
+    return static_cast<ToolButtonPopupMode>(static_cast<int>(get_selfptr()->popupMode()));
   }
 #endif
 
@@ -117,7 +117,7 @@ public:
   // Конструктор из объекта
   wrapper_QToolButton(QToolButton *self) :
     wrapper_QAbstractButton(self) {
-    qDebug() << "wrapper_QToolButton::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QToolButton::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

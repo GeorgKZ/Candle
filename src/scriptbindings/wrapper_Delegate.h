@@ -127,7 +127,7 @@ class wrapper_IconDelegate : public wrapper_QStyledItemDelegate {
 public:
 
   Q_INVOKABLE explicit wrapper_IconDelegate(const QString pluginPath, const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
-    wrapper_QStyledItemDelegate(new IconDelegate(pluginPath, (QObject*)jsvalueToObject_ptr("QObject", parent))) {
+    wrapper_QStyledItemDelegate(new IconDelegate(pluginPath, jsvalueToPointer(QObject, parent))) {
   }
 
 public:
@@ -135,7 +135,7 @@ public:
   // Конструктор из объекта
   wrapper_IconDelegate(IconDelegate *self) :
     wrapper_QStyledItemDelegate(self) {
-    qDebug() << "wrapper_IconDelegate::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_IconDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект
@@ -268,7 +268,7 @@ class wrapper_CodeDelegate : public wrapper_QStyledItemDelegate {
 public:
 
   Q_INVOKABLE explicit wrapper_CodeDelegate(const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
-    wrapper_QStyledItemDelegate(new CodeDelegate((QObject*)jsvalueToObject_ptr("QObject", parent))) {
+    wrapper_QStyledItemDelegate(new CodeDelegate(jsvalueToPointer(QObject, parent))) {
   }
 
 public:
@@ -276,7 +276,7 @@ public:
   // Конструктор из объекта
   wrapper_CodeDelegate(CodeDelegate *self) :
     wrapper_QStyledItemDelegate(self) {
-    qDebug() << "wrapper_CodeDelegate::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_CodeDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

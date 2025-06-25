@@ -192,7 +192,7 @@ public:
   // Конструктор из объекта
   wrapper_QComboBox(QComboBox *self) :
     wrapper_QWidget(self) {
-    qDebug() << "wrapper_QComboBox::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QComboBox::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

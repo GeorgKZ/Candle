@@ -55,13 +55,13 @@ public:
   // void setHorizontalHeader(QHeaderView *header)
   Q_INVOKABLE void setHorizontalHeader(const QJSValue &header)
   {
-      get_selfptr()->setHorizontalHeader((QHeaderView*)jsvalueToObject_ptr("QHeaderView", header));
+      get_selfptr()->setHorizontalHeader(jsvalueToPointer(QHeaderView, header));
   }
 
   // void setVerticalHeader(QHeaderView *header)
   Q_INVOKABLE void setVerticalHeader(const QJSValue &header)
   {
-      get_selfptr()->setVerticalHeader((QHeaderView*)jsvalueToObject_ptr("QHeaderView", header));
+      get_selfptr()->setVerticalHeader(jsvalueToPointer(QHeaderView, header));
   }
 
   Q_INVOKABLE int rowViewportPosition(int row) { return get_selfptr()->rowViewportPosition(row); }
@@ -122,7 +122,7 @@ public:
   // Конструктор из объекта
   wrapper_QTableView(QTableView *self) :
     wrapper_QAbstractItemView(self) {
-    qDebug() << "wrapper_QTableView::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QTableView::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

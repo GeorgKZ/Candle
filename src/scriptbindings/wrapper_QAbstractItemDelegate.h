@@ -28,10 +28,10 @@ public:
 Q_UNUSED(option)
     qDebug() << "QAbsractItemDelegate::paint(...)";
 
-    QPainter *p = (QPainter*)jsvalueToObject_ptr("QPainter", painter);
-//    QStyleOptionViewItem *o = jsvalueToObject_ptr("QStyleOptionViewItem", option);
+    QPainter *p = jsvalueToPointer(QPainter, painter);
+//!!!TODO!!!    QStyleOptionViewItem *o = jsvalueToPointer(QStyleOptionViewItem, option);
 QStyleOptionViewItem o;
-    QModelIndex *i = (QModelIndex*)jsvalueToObject_ptr("QModelIndex", index);
+    QModelIndex *i = jsvalueToPointer(QModelIndex, index);
 
     get_selfptr()->paint(p, o, *i);
   }
@@ -47,11 +47,11 @@ QStyleOptionViewItem o;
 Q_UNUSED(option)
     qDebug() << "QAbsractItemDelegate::createEditor(...)";
 
-    QWidget *p = (QWidget*)jsvalueToObject_ptr("QWidget", parent);
-//    QStyleOptionViewItem *o = jsvalueToObject_ptr("", option);
+    QWidget *p = jsvalueToPointer(QWidget, parent);
+//!!!TODO!!!    QStyleOptionViewItem *o = jsvalueToPointer(QStyleOptionViewItem, option);
 QStyleOptionViewItem o;
 
-    QModelIndex *i = (QModelIndex*)jsvalueToObject_ptr("QModelIndex", index);
+    QModelIndex *i = jsvalueToPointer(QModelIndex, index);
     return wrapperFactory("QWidget", get_selfptr()->createEditor(p, o, *i));
   }
 
@@ -63,8 +63,8 @@ QStyleOptionViewItem o;
 
     qDebug() << "QAbsractItemDelegate::setEditorData(...)";
 
-    QWidget *e = (QWidget*)jsvalueToObject_ptr("QWidget", editor);
-    QModelIndex *i = (QModelIndex*)jsvalueToObject_ptr("QModelIndex", index);
+    QWidget *e = jsvalueToPointer(QWidget, editor);
+    QModelIndex *i = jsvalueToPointer(QModelIndex, index);
     get_selfptr()->setEditorData(e, *i);
   }
 
@@ -73,9 +73,10 @@ QStyleOptionViewItem o;
 Q_UNUSED(model)
     qDebug() << "QAbsractItemDelegate::setModelData(...)";
 
-    QWidget *e = (QWidget*)jsvalueToObject_ptr("QWidget", editor);
+    QWidget *e = jsvalueToPointer(QWidget, editor);
+    //!!!TODO!!! использовать аргумент
     QAbstractItemModel *m = nullptr;
-    QModelIndex *i = (QModelIndex*)jsvalueToObject_ptr("QModelIndex", index);
+    QModelIndex *i = jsvalueToPointer(QModelIndex, index);
     get_selfptr()->setModelData(e, m, *i);
   }
 
@@ -84,9 +85,10 @@ Q_UNUSED(model)
 Q_UNUSED(option)
     qDebug() << "QAbsractItemDelegate::updateEditorGeometry(...)";
 
-    QWidget *e = (QWidget*)jsvalueToObject_ptr("QWidget", editor);
+    QWidget *e = jsvalueToPointer(QWidget, editor);
+//!!!TODO!!! Использовать аргумент
 QStyleOptionViewItem o;
-    QModelIndex *i = (QModelIndex*)jsvalueToObject_ptr("QModelIndex", index);
+    QModelIndex *i = jsvalueToPointer(QModelIndex, index);
 
     get_selfptr()->updateEditorGeometry(e, o, *i);
   }
@@ -107,7 +109,7 @@ public:
   // Конструктор из объекта
   wrapper_QAbstractItemDelegate(QAbstractItemDelegate* self) :
     wrapper_QObject(self) {
-    qDebug() << "wrapper_QAbstractItemDelegate::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QAbstractItemDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

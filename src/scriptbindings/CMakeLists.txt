@@ -74,8 +74,16 @@ target_link_libraries(${MAIN_NAME} PRIVATE
 # Вывод сообщений об установке только если было изменение
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
+# Для мультиконфигурации учесть директорию, в которой будет расположен результат сборки,
+# значение которой будет определено в параметре cmake --config только на этапе сборки
+if (isMultiConfig)
+    set(BINPATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>")
+else()
+    set(BINPATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+endif()
+
 # Библиотека
-install(FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${MAIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+install(FILES ${BINPATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${MAIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
     DESTINATION ${DEST_PATH}
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )

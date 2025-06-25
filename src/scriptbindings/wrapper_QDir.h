@@ -82,7 +82,7 @@ public:
 //!!! Оператор присваивания не требуется!
 //  Q_INVOKABLE QJSValue operator=(const QJSValue &other) {
 //    qDebug() << "wrapper_QDir::operator=";
-//    get_selfptr()->operator=(*(QDir*)jsvalueToObject_ptr("QDir", other));
+//    get_selfptr()->operator=(*jsvalueToPointer(QDir, other));
 //    return wrapperFactory("QDir", get_selfptr());
 //  }
 
@@ -214,7 +214,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QDir(QDir* self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QDir::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QDir::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

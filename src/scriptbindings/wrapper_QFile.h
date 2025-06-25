@@ -227,7 +227,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QFile(QFile* self) :
     wrapper_QFileDevice(static_cast<QFileDevice*>(self)) {
-    qDebug() << "wrapper_QFile::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QFile::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

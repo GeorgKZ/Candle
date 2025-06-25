@@ -28,5 +28,5 @@ QJSValue wrapper_QWidget::sizePolicy() const
 }
 
 void wrapper_QWidget::setSizePolicy(const QJSValue &sizepolicy) {
-    get_selfptr()->setSizePolicy(*(QSizePolicy*)jsvalueToObject_ptr("QSizePolicy", sizepolicy));
+    get_selfptr()->setSizePolicy(*jsvalueToPointer(QSizePolicy, sizepolicy));
 }

@@ -166,7 +166,7 @@ public:
   // Конструктор из объекта
   wrapper_QHeaderView(QHeaderView *self) :
     wrapper_QAbstractItemView(self) {
-    qDebug() << "wrapper_QHeaderView::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QHeaderView::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

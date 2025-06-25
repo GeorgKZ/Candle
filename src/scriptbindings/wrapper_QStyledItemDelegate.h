@@ -17,10 +17,9 @@ public:
 
   // explicit QStyledItemDelegate(QObject *parent = nullptr);
   Q_INVOKABLE wrapper_QStyledItemDelegate(const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
-    wrapper_QAbstractItemDelegate(new QStyledItemDelegate(
-      (QObject*)jsvalueToObject_ptr("QObject", parent))) {
+    wrapper_QAbstractItemDelegate(new QStyledItemDelegate(jsvalueToPointer(QObject, parent))) {
      qDebug() << "wrapper_QStyledItemDelegate::constructor(parent=" <<
-       (unsigned long long)jsvalueToObject_ptr("QObject", parent) << ")";
+       reinterpret_cast<unsigned long long>(jsvalueToPointer(QObject, parent)) << ")";
   }
 
   // painting
@@ -62,7 +61,7 @@ public:
   // Конструктор из объекта
   wrapper_QStyledItemDelegate(QStyledItemDelegate *self) :
     wrapper_QAbstractItemDelegate(self) {
-    qDebug() << "wrapper_QStyledItemDelegate::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QStyledItemDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

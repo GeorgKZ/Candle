@@ -37,7 +37,7 @@ public:
 
   // void addWidget(QWidget *, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
   Q_INVOKABLE void addWidget(const QJSValue &widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment()) {
-    QWidget *w = (QWidget*)jsvalueToObject_ptr("QWidget", widget);
+    QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w, stretch, alignment);
   }
 
@@ -87,7 +87,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QBoxLayout(QBoxLayout* self) :
     wrapper_QLayout(self) {
-    qDebug() << "wrapper_QBoxLayout::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QBoxLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор
@@ -130,7 +130,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QHBoxLayout(QHBoxLayout* self) :
     wrapper_QBoxLayout(self) {
-    qDebug() << "wrapper_QHBoxLayout::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QHBoxLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор
@@ -173,7 +173,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QVBoxLayout(QVBoxLayout* self) :
     wrapper_QBoxLayout(self) {
-    qDebug() << "wrapper_QVBoxLayout::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QVBoxLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

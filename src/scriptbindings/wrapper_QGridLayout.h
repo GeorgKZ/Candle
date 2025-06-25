@@ -70,31 +70,31 @@ public:
 
   // void addWidget(QWidget *w)
   Q_INVOKABLE void addWidget(const QJSValue &widget) {
-    QWidget *w = (QWidget*)jsvalueToObject_ptr("QWidget", widget);
+    QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w);
   }
 
   // void addWidget(QWidget *, int row, int column, Qt::Alignment = Qt::Alignment());
   Q_INVOKABLE void addWidget(const QJSValue &widget, int row, int column, Qt::Alignment alignment = Qt::Alignment()) {
-    QWidget *w = (QWidget*)jsvalueToObject_ptr("QWidget", widget);
+    QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w, row, column, alignment);
   }
 
   // void addWidget(QWidget *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = Qt::Alignment());
   Q_INVOKABLE void addWidget(const QJSValue &widget, int row, int column, int rowSpan, Qt::Alignment alignment = Qt::Alignment()) {
-    QWidget *w = (QWidget*)jsvalueToObject_ptr("QWidget", widget);
+    QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w, row, column, rowSpan, alignment);
   }
 
   // void addLayout(QLayout *, int row, int column, Qt::Alignment = Qt::Alignment());
   Q_INVOKABLE void addLayout(const QJSValue &layout, int row, int column, Qt::Alignment alignment = Qt::Alignment()) {
-    QLayout *l = (QLayout*)jsvalueToObject_ptr("QLayout", layout);
+    QLayout *l = jsvalueToPointer(QLayout, layout);
     get_selfptr()->addLayout(l, row, column, alignment);
   }
 
   // void addLayout(QLayout *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = Qt::Alignment());
   Q_INVOKABLE void addLayout(const QJSValue &layout, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment = Qt::Alignment()) {
-    QLayout *l = (QLayout*)jsvalueToObject_ptr("QLayout", layout);
+    QLayout *l = jsvalueToPointer(QLayout, layout);
     get_selfptr()->addLayout(l, row, column, rowSpan, columnSpan, alignment);
   }
 
@@ -123,7 +123,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QGridLayout(QGridLayout* self) :
     wrapper_QLayout(self) {
-    qDebug() << "wrapper_QGridLayout::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QGridLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

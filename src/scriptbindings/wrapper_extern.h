@@ -25,4 +25,6 @@ WRAPPER_DLL_EXPORT QJSValue newScript(QJSEngine *se, QObject* parent);
  */
 WRAPPER_DLL_EXPORT void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType = nullptr);
 
+#define jsvalueToPointer(classname, value) static_cast< classname *>( jsvalueToObject_ptr("##classname##", value) )
+
 #endif // WRAPPER_EXTERN_H

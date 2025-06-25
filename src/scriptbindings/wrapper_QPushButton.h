@@ -41,7 +41,7 @@ public:
 
   // QPushButton(const QIcon& icon, const QString &text, QWidget *parent = nullptr);
   Q_INVOKABLE wrapper_QPushButton(const QJSValue& icon, const QString &text, wrapper_QWidget *parent = nullptr) :
-    wrapper_QAbstractButton(new QPushButton(*(QIcon*)jsvalueToObject_ptr("QIcon", icon), text, parent == nullptr ? nullptr : parent->get_selfptr())) {
+    wrapper_QAbstractButton(new QPushButton(*jsvalueToPointer(QIcon, icon), text, parent == nullptr ? nullptr : parent->get_selfptr())) {
     set_connections();
     qDebug() << "wrapper_QPushButton::constructor(icon, text, parent)";
   }
@@ -104,7 +104,7 @@ public:
   wrapper_QPushButton(QPushButton *self) :
     wrapper_QAbstractButton(self) {
     set_connections();
-    qDebug() << "wrapper_QPushButton::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QPushButton::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

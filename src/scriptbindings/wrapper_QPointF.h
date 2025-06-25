@@ -54,8 +54,8 @@ public:
 
   // static qreal dotProduct(const QPointF &p1, const QPointF &p2);
   static qreal dotProduct(const QJSValue &p1, const QJSValue &p2) {
-    QPointF P1 = *(QPointF*)jsvalueToObject_ptr("QPointF", p1);
-    QPointF P2 = *(QPointF*)jsvalueToObject_ptr("QPointF", p2);
+    QPointF P1 = *jsvalueToPointer(QPointF, p1);
+    QPointF P2 = *jsvalueToPointer(QPointF, p2);
     return QPointF::dotProduct(P1, P2);
   }
 
@@ -71,7 +71,7 @@ public:
   // Конструктор из объекта
   wrapper_QPointF(QPointF *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QPointF::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QPointF::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

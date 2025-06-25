@@ -165,7 +165,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QSettings(QSettings* self) :
     wrapper_QObject(self) {
-    qDebug() << "wrapper_QSettings::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QSettings::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

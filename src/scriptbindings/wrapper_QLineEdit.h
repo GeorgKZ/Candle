@@ -202,7 +202,7 @@ public:
   // Конструктор из объекта
   wrapper_QLineEdit(QLineEdit *self) :
     wrapper_QWidget(self) {
-    qDebug() << "wrapper_QLineEdit::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QLineEdit::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
     
   // Деструктор

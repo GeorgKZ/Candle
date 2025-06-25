@@ -241,8 +241,8 @@ qreal CameraWidget::videoScale() const
 
 void CameraWidget::updateSize()
 {
-    qreal widthRatio = ((qreal)m_scrollArea->contentsRect().size().width()) / m_resolution.width();
-    qreal heightRatio = ((qreal)m_scrollArea->contentsRect().size().height()) / m_resolution.height();
+    qreal widthRatio = static_cast<qreal>(m_scrollArea->contentsRect().size().width()) / m_resolution.width();
+    qreal heightRatio = static_cast<qreal>(m_scrollArea->contentsRect().size().height()) / m_resolution.height();
 
     m_videoScale = qMax(qMax(heightRatio, widthRatio), m_zoom);
 

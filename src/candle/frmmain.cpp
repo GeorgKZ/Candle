@@ -3373,8 +3373,9 @@ void frmMain::loadPlugins()
                 }
             } else {
                 qDebug() << "Plugin function createPanelWidget() OK";
-                QWidget *w = static_cast<QWidget*>(jsvalueToObject_ptr("QWidget", sv));
-                if (w) {
+                QWidget *w = jsvalueToPointer(QWidget, sv);
+
+                if (w != nullptr) {
                     qInfo() << "Creating Panel Widget" << w->windowTitle();
                     // Create panel
                     QGroupBox *box = new QGroupBox(this);
@@ -3407,8 +3408,9 @@ void frmMain::loadPlugins()
                             << sv.toString();
             } else {
                 qInfo() << "Plugin function createWindowWidget() OK";
-                QWidget *w = static_cast<QWidget*>(jsvalueToObject_ptr("QWidget", sv));
-                if (w) {
+                QWidget *w = jsvalueToPointer(QWidget, sv);
+
+                if (w != nullptr) {
                     m_pluginWidgets.push_back(w);
                     qInfo() << "Creating Window Widget" << w->windowTitle();
 
@@ -3468,7 +3470,8 @@ void frmMain::loadPlugins()
                             << sv.toString();
             } else {
                 qInfo() << "Plugin function createSettingsWidget() OK";
-                QWidget *w = static_cast<QWidget*>(jsvalueToObject_ptr("QWidget", sv));
+                QWidget *w = jsvalueToPointer(QWidget, sv);
+
                 if (w != nullptr) {
                     qInfo() << "Creating Settings Widget" << w->windowTitle();
 

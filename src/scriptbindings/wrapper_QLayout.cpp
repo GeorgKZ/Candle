@@ -138,7 +138,7 @@ void wrapper_QLayout::update() {
 }
 
 void wrapper_QLayout::addWidget(const QJSValue &widget) {
-  QWidget *w = (QWidget*)jsvalueToObject_ptr("QWidget", widget);
+  QWidget *w = jsvalueToPointer(QWidget, widget);
   get_selfptr()->addWidget(w);
 }
 

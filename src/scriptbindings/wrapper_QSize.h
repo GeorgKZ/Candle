@@ -73,7 +73,7 @@ public:
   // Конструктор из объекта
   wrapper_QSize(QSize *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QSize::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QSize::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

@@ -146,7 +146,7 @@ public:
   // Конструктор из объекта
   wrapper_QRectF(QRectF *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QRectF::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QRectF::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

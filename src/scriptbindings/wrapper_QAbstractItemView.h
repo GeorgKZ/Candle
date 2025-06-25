@@ -153,7 +153,7 @@ public:
 
   // void setIconSize(const QSize &size)
   Q_INVOKABLE void setIconSize(const QJSValue &size) {
-    QSize *s = (QSize*)jsvalueToObject_ptr("QSize", size);
+    QSize *s = jsvalueToPointer(QSize, size);
     get_selfptr()->setIconSize(*s);
   }
 
@@ -189,7 +189,7 @@ public:
   // void setItemDelegateForColumn(int column, QAbstractItemDelegate *delegate);
   Q_INVOKABLE void setItemDelegateForColumn(int column, const QJSValue &delegate) {
 
-    QAbstractItemDelegate* val = (QAbstractItemDelegate*)jsvalueToObject_ptr("QAbstractItemDelegate", delegate);
+    QAbstractItemDelegate* val = jsvalueToPointer(QAbstractItemDelegate, delegate);
     if (val != nullptr) {
       qDebug() << "wrapper_QAbstractItemView::setItemDelegateForColumn(" << column << ", ...)";
       get_selfptr()->setItemDelegateForColumn(column, val);
@@ -260,7 +260,7 @@ public:
   // Конструктор из объекта
   wrapper_QAbstractItemView(QAbstractItemView *self) :
     wrapper_QWidget(static_cast<QWidget*>(self)) {
-    qDebug() << "wrapper_QAbstractItemView::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QAbstractItemView::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

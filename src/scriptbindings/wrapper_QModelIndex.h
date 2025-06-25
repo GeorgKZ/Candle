@@ -67,7 +67,7 @@ public:
   // Конструктор из объекта
   wrapper_QModelIndex(QModelIndex *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QModelIndex::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QModelIndex::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

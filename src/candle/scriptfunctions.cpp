@@ -85,12 +85,12 @@ int ScriptFunctions::buttonSize()
 void ScriptFunctions::addAction(wrapper_QAction *action)
 {
 //!!!    m_frmMain->addAction(action->get_selfptr());
-    m_frmMain->addAction(jsvalueToObject_ptr("QAction", *action));
+    m_frmMain->addAction(jsvalueToPointer(QAction, *action));
 }
 
 void ScriptFunctions::removeAction(wrapper_QAction *action)
 {
 //!!!    m_frmMain->removeAction(action->get_selfptr());
-    m_frmMain->removeAction(jsvalueToObject_ptr("QAction", *action));
+    m_frmMain->removeAction(jsvalueToPointer(QAction, *action));
 }
 #endif

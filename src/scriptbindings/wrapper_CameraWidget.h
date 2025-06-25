@@ -52,7 +52,7 @@ public:
 
   // CameraWidget(QWidget *parent = nullptr);
   Q_INVOKABLE wrapper_CameraWidget(const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
-    wrapper_QWidget(new CameraWidget((QWidget*)jsvalueToObject_ptr("QWidget", parent))) {
+    wrapper_QWidget(new CameraWidget(jsvalueToPointer(QWidget, parent))) {
     qDebug() << "wrapper_CameraWidget::constructor(parent=" << (unsigned long long)(get_selfptr())->parent() << ")";
     set_connections();
   }
@@ -72,7 +72,7 @@ public:
 
   Q_INVOKABLE void setResolution(const QJSValue &resolution) {
     qDebug() << "wrapper_CameraWidget::setResolution()";
-    QSize* p = (QSize*)jsvalueToObject_ptr("QSize", resolution);
+    QSize* p = jsvalueToPointer(QSize, resolution);
     get_selfptr()->setResolution(*p);
     emit resolutionChanged(resolution);
   }
@@ -96,7 +96,7 @@ public:
 
     Q_INVOKABLE void setPos(const QJSValue &pos) {
     qDebug() << "wrapper_CameraWidget::resolution()";
-    QPoint* p = (QPoint*)jsvalueToObject_ptr("QPoint", pos);
+    QPoint* p = jsvalueToPointer(QPoint, pos);
     get_selfptr()->setPos(*p);
     emit posChanged(pos);
   }
@@ -108,7 +108,7 @@ public:
 
   Q_INVOKABLE void setAimPos(const QJSValue &aimPos) {
     qDebug() << "wrapper_CameraWidget::setAimPos(QJSValue)";
-    QPoint* p = (QPoint*)jsvalueToObject_ptr("QPoint", aimPos);
+    QPoint* p = jsvalueToPointer(QPoint, aimPos);
     get_selfptr()->setAimPos(*p);
     emit aimPosChanged(aimPos);
   }
@@ -202,7 +202,7 @@ public:
 
   // Конструктор из объекта
   wrapper_CameraWidget(CameraWidget *self) : wrapper_QWidget(self) {
-    qDebug() << "wrapper_CameraWidget::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_CameraWidget::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
     set_connections();
   }
 

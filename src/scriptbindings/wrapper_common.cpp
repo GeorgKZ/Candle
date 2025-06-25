@@ -150,20 +150,23 @@ bool 	isUrl() const
 
   if (typeString == "QIcon") {
       qDebug() << "jsvalueToVariant - returning QIcon";
-      return QVariant(*(QIcon*)ptr);
+      return QVariant(*static_cast<QIcon*>(ptr));
   }
   if (typeString == "qint32") {
       qDebug() << "jsvalueToVariant - returning qint32";
-      return QVariant(*(qint32*)ptr);
+      return QVariant(*static_cast<qint32*>(ptr));
   }
   if (typeString == "QString") {
       qDebug() << "jsvalueToVariant - returning QString";
-      return QVariant(*(QString*)ptr);
+      return QVariant(*static_cast<QString*>(ptr));
   }
   if (typeString == "QVariantList") {
       qDebug() << "jsvalueToVariant - returning QVariantList";
-      return QVariant(*(QVariantList*)ptr);
+      return QVariant(*static_cast<QVariantList*>(ptr));
   }
+
+//!!!TODO!!! А также прочие типы, которые могут храниться в QJSValue
+
 #if 0
   if (typeString == "QVariantList") {
     QVariantList oldvarlist = variant.toList();
@@ -259,7 +262,7 @@ QJSValue wrapper_common::variantToJSValue(const QVariant& variant) const {
 }
 
 #define wfactory(class, name, obj) do { if (strcmp(class, #name ) == 0) { \
-  return qjsEngine(this)->toScriptValue< wrapper_##name *>(new wrapper_##name (( name *) object)); } } while(0)
+  return qjsEngine(this)->toScriptValue< wrapper_##name *>( new wrapper_##name ( static_cast<name *>(object) ) ); } } while(0)
 
 QJSValue wrapper_common::wrapperFactory(const char *className, void *object) const {
 
@@ -411,6 +414,8 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
       if (returnType != nullptr) *returnType = "qint32";
       return new qint32(variant.toInt());
     }
+
+    //!!!TODO!!! И другие типы данных, которые могут храниться в QVariant...
 
     if (strcmp(typeName, "QVariantList") == 0) {
       QVariantList oldvarlist = variant.toList();

@@ -80,7 +80,7 @@ public:
   // Конструктор из объекта
   wrapper_QPaintDevice(QPaintDevice *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QPaintDevice::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QPaintDevice::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор
@@ -511,7 +511,7 @@ public:
   // Конструктор из объекта
   wrapper_QPainter(QPainter *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QPainter::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QPainter::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

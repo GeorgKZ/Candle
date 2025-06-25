@@ -32,7 +32,7 @@ public:
   // Конструктор из объекта
   wrapper_Slider(Slider *self) :
     wrapper_QSlider(self) {
-    qDebug() << "wrapper_Slider::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_Slider::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Получение константного указателя на объект

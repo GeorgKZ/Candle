@@ -22,9 +22,8 @@ class WRAPPER_DLL_EXPORT wrapper_QTableWidget : public wrapper_QTableView {
 public:
 
   Q_INVOKABLE explicit wrapper_QTableWidget(const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
-    wrapper_QTableView(new QTableWidget(
-    (QWidget*)jsvalueToObject_ptr("QWidget", parent)))  {
-      qDebug() << "wrapper_QTableWidget::constructor(parent=" << (unsigned long long)jsvalueToObject_ptr("QWidget", parent) << ")";
+    wrapper_QTableView(new QTableWidget(jsvalueToPointer(QWidget, parent)))  {
+      qDebug() << "wrapper_QTableWidget::constructor(parent=" << reinterpret_cast<unsigned long long>(jsvalueToPointer(QWidget, parent)) << ")";
   }
 
   Q_INVOKABLE explicit wrapper_QTableWidget(int rows, int columns, wrapper_QWidget *parent = nullptr) :
@@ -137,7 +136,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QTableWidget(QTableWidget *self) :
     wrapper_QTableView(self) {
-    qDebug() << "QTableWidget::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "QTableWidget::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

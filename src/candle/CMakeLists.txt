@@ -331,18 +331,18 @@ ENDFOREACH(L)
 ##############################################################################
 
 if (CMAKE_CROSSCOMPILING)
-#   message(STATUS "Кросскомпиляция -- установка не будет производиться")
+    message(DEBUG "Кросскомпиляция -- установка не будет производиться")
 else()
     # Если исполняемый файл собран под Linux для выполнения под Linux
     if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux") AND (CMAKE_SYSTEM_NAME STREQUAL "Linux"))
         # Установка исполняемого файла в ~/.local/bin
-#       message(STATUS "Предусмотрена установка для выполнения под Linux")
+        message(DEBUG "Предусмотрена установка для выполнения под Linux")
 #       install(TARGETS ${MAIN_NAME} RUNTIME DESTINATION "~/.local/bin")
     endif()
     # Если исполняемый файл собран под Windows для выполнения под Windows
     if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows") AND (CMAKE_SYSTEM_NAME STREQUAL "Windows"))
         # Установка исполняемого файла в C:/Program Files/AltLibGenUtils
-#       message(STATUS "Предусмотрена установка для выполнения под Windows")
+        message(DEBUG "Предусмотрена установка для выполнения под Windows")
 #       install(TARGETS ${MAIN_NAME} RUNTIME) # DESTINATION "C:/Program Files/AltLibGenUtils")
     endif()
 endif()
@@ -358,14 +358,23 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 install(FILES ${QM_FILES}
     DESTINATION ${DEST_PATH}/translations)
 
+
+# Для мультиконфигурации учесть директорию, в которой будет расположен результат сборки,
+# значение которой будет определено в параметре cmake --config только на этапе сборки
+if (isMultiConfig)
+    set(BINPATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>")
+else()
+    set(BINPATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+endif()
+
 # Исполняемый файл
 if(APPLE AND NOT IOS)
-    install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MAIN_NAME}.app
+    install(DIRECTORY ${BINPATH}/${MAIN_NAME}.app
         DESTINATION ${BUILD_PATH}/install
         USE_SOURCE_PERMISSIONS
     )
 else()
-    install(FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}
+    install(FILES ${BINPATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}
         DESTINATION ${DEST_PATH}
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
     )

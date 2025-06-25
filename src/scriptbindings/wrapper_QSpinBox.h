@@ -82,7 +82,7 @@ Q_SIGNALS:
     // Конструктор из объекта
     wrapper_QSpinBox(QSpinBox *self) :
         wrapper_QAbstractSpinBox(self) {
-        qDebug() << "wrapper_QSpinBox::constructor(self=" << (unsigned long long)self << ")";
+        qDebug() << "wrapper_QSpinBox::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
     }
 
     // Получение константного указателя на объект
@@ -189,7 +189,7 @@ Q_SIGNALS:
     // Конструктор из объекта
     wrapper_QDoubleSpinBox(QDoubleSpinBox *self) :
         wrapper_QAbstractSpinBox(self) {
-        qDebug() << "wrapper_QDoubleSpinBox::constructor(self=" << (unsigned long long)self << ")";
+        qDebug() << "wrapper_QDoubleSpinBox::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
     }
 
     // Получение константного указателя на объект

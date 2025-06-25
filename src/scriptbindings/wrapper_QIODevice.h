@@ -35,7 +35,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QIODeviceBase(QIODeviceBase* self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QIODeviceBase::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QIODeviceBase::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор (объект QIODeviceBase не удаляется)
@@ -153,7 +153,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QIODevice(QIODevice* self) :
     wrapper_QIODeviceBase(self) {
-    qDebug() << "wrapper_QIODevice::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QIODevice::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор
@@ -267,7 +267,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QFileDevice(QFileDevice* self) :
     wrapper_QIODevice(self) {
-    qDebug() << "wrapper_QFileDevice::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QFileDevice::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

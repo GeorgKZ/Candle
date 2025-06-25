@@ -19,7 +19,7 @@ public:
 
   // explicit QUiLoader(QObject *parent = nullptr);
   Q_INVOKABLE explicit wrapper_QUiLoader(const QJSValue &parent = QJSValue(QJSValue::UndefinedValue)) :
-    wrapper_QObject(new QUiLoader((QObject*)jsvalueToObject_ptr("QObject", parent))) {}
+    wrapper_QObject(new QUiLoader(jsvalueToPointer(QObject, parent))) {}
 
 
 //  QStringList pluginPaths() const;
@@ -33,8 +33,8 @@ public:
 
   // QWidget *load(QIODevice *device, QWidget *parentWidget = nullptr);
   Q_INVOKABLE QJSValue load(const QJSValue &device, const QJSValue &parentWidget = QJSValue(QJSValue::UndefinedValue)) {
-    QIODevice *_device = (QIODevice*)jsvalueToObject_ptr("QIODevice", device);
-    QWidget *_parentWidget = (QWidget*)jsvalueToObject_ptr("QWidget", parentWidget);
+    QIODevice *_device = jsvalueToPointer(QIODevice, device);
+    QWidget *_parentWidget = jsvalueToPointer(QWidget, parentWidget);
     QWidget *new_widget = get_selfptr()->load(_device, _parentWidget);
     return wrapperFactory(new_widget->metaObject()->className(), new_widget);
   }
@@ -53,7 +53,7 @@ public:
 
   // void setWorkingDirectory(const QDir &dir);
   Q_INVOKABLE void setWorkingDirectory(const QJSValue& value) {
-    QDir *dir = (QDir*)jsvalueToObject_ptr("QDir", value);
+    QDir *dir = jsvalueToPointer(QDir, value);
     get_selfptr()->setWorkingDirectory(*dir);
   }
 
@@ -89,7 +89,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QUiLoader(QUiLoader* self) :
     wrapper_QObject(self) {
-    qDebug() << "wrapper_QUiLoader::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QUiLoader::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

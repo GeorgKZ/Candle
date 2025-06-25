@@ -30,25 +30,6 @@ QString getClassName() {
   return QString(type_name);
 }
 
-#if 0
-/**
- * \brief Преобразование объекта из контейнера QVariant в контейнер JSValue
- *
- */
-WRAPPER_DLL_EXPORT QJSValue variantToJSValue(const QVariant& var, QJSEngine *engine);
-
-/**
- * \brief Преобразование объекта из контейнера JSValue в контейнер QVariant с извлечением из прокси-класса
- *
- */
-WRAPPER_DLL_EXPORT QVariant jsvalueToVariant(const QJSValue& value);
-
-WRAPPER_DLL_EXPORT QJSValue newScript(QJSEngine *se, QObject* parent);
-
-void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType = nullptr);
-#endif
-
-
 /**
  * \brief Базовый класс для прокси-классов
  *
@@ -67,7 +48,7 @@ protected:
 
   // Конструктор из объекта
   wrapper_common(void *self) : selfptr_(self) {
-    qDebug() << "wrapper_common::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_common::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

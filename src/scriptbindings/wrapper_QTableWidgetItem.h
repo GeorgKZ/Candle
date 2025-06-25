@@ -119,7 +119,7 @@ public:
   // Конструктор из объекта
   wrapper_QTableWidgetItem(QTableWidgetItem *self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QTableWidgetItem::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QTableWidgetItem::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор

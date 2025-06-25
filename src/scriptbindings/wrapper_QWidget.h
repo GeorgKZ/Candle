@@ -600,7 +600,7 @@ public:
   // Конструктор из объекта
   explicit wrapper_QWidget(QWidget* self) :
     wrapper_QObject(self) {
-    qDebug() << "wrapper_QWidget::constructor(self=" << (unsigned long long)self << ")";
+    qDebug() << "wrapper_QWidget::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
   }
 
   // Деструктор
