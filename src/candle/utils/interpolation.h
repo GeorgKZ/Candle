@@ -58,17 +58,17 @@ public:
         p[1][0] = basePoints->data(basePoints->index(iy, ix > 0 ? ix - 1 : ix), Qt::UserRole).toDouble();
         p[1][1] = basePoints->data(basePoints->index(iy, ix), Qt::UserRole).toDouble();
         p[1][2] = basePoints->data(basePoints->index(iy, ix + 1), Qt::UserRole).toDouble();
-        p[1][3] = basePoints->data(basePoints->index(iy, ix < basePoints->columnCount() - 2 ? ix + 2: ix + 1), Qt::UserRole).toDouble();
+        p[1][3] = basePoints->data(basePoints->index(iy, ix + 2 < basePoints->columnCount() ? ix + 2: ix + 1), Qt::UserRole).toDouble();
 
         p[2][0] = basePoints->data(basePoints->index(iy + 1, ix > 0 ? ix - 1 : ix), Qt::UserRole).toDouble();
         p[2][1] = basePoints->data(basePoints->index(iy + 1, ix), Qt::UserRole).toDouble();
         p[2][2] = basePoints->data(basePoints->index(iy + 1, ix + 1), Qt::UserRole).toDouble();
-        p[2][3] = basePoints->data(basePoints->index(iy + 1, ix < basePoints->columnCount() - 2 ? ix + 2 : ix + 1), Qt::UserRole).toDouble();
+        p[2][3] = basePoints->data(basePoints->index(iy + 1, ix + 2 < basePoints->columnCount() ? ix + 2 : ix + 1), Qt::UserRole).toDouble();
 
         p[3][0] = basePoints->data(basePoints->index(iy < basePoints->rowCount() - 2 ? iy + 2 : iy + 1, ix > 0 ? ix - 1 : ix), Qt::UserRole).toDouble();
         p[3][1] = basePoints->data(basePoints->index(iy < basePoints->rowCount() - 2 ? iy + 2 : iy + 1, ix), Qt::UserRole).toDouble();
         p[3][2] = basePoints->data(basePoints->index(iy < basePoints->rowCount() - 2 ? iy + 2 : iy + 1, ix + 1), Qt::UserRole).toDouble();
-        p[3][3] = basePoints->data(basePoints->index(iy < basePoints->rowCount() - 2 ? iy + 2 : iy + 1, ix < basePoints->columnCount() - 2 ? ix + 2 : ix + 1), Qt::UserRole).toDouble();
+        p[3][3] = basePoints->data(basePoints->index(iy < basePoints->rowCount() - 2 ? iy + 2 : iy + 1, ix + 2 < basePoints->columnCount() ? ix + 2 : ix + 1), Qt::UserRole).toDouble();
 
         // Interpolate
         return Interpolation::bicubicInterpolate(p, x / gridStepX - ix, y / gridStepY - iy);

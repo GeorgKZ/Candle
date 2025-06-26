@@ -266,22 +266,22 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         -Wnoexcept
         -Wnonnull
         -Wnonnull-compare
-        -Wold-style-cast
+ #      -Wold-style-cast
         -Woverloaded-virtual
         -Wparentheses
         -Wpessimizing-move
         -Wredundant-decls
         -Wreorder
         -Wreturn-type
-        -Wshadow
+#       -Wshadow
         -Wsequence-point
-        -Wsign-compare
-        -Wsign-promo
+#       -Wsign-compare
+#       -Wsign-promo
         -Wsizeof-pointer-div
         -Wsizeof-pointer-memaccess
         -Wstrict-aliasing
         -Wstrict-null-sentinel
-        -Wstrict-overflow=5
+#       -Wstrict-overflow=5
         -Wswitch
         -Wtautological-compare
         -Wtrigraphs
@@ -511,7 +511,7 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_PROJECT_NUMBER          "${PROJECT_VERSION}")
     set(DOXYGEN_OUTPUT_DIRECTORY        "${DOC_PATH}")
     set(DOXYGEN_OUTPUT_LANGUAGE         "Russian")
-    set(DOXYGEN_STRIP_FROM_PATH         "../src/")
+    set(DOXYGEN_STRIP_FROM_PATH         "src/")
     set(DOXYGEN_TAB_SIZE                "2")
     set(DOXYGEN_OPTIMIZE_OUTPUT_FOR_C   YES)
     set(DOXYGEN_LOOKUP_CACHE_SIZE       2)
@@ -530,9 +530,9 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_FILE_PATTERNS           *.h *.hxx *.cpp *.md)
     set(DOXYGEN_EXAMPLE_PATH            "${SOURCES_PATH}")
     set(DOXYGEN_IMAGE_PATH              ${DOXY_IMAGES})
-    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE  README.md)
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE  readme.md)
     set(DOXYGEN_ALPHABETICAL_INDEX      NO)
-    set(DOXYGEN_HTML_STYLESHEET         "${CMAKE_SOURCE_DIR}/stylesheet.css")
+    set(DOXYGEN_HTML_STYLESHEET         "${CMAKE_SOURCE_DIR}/doc/stylesheet.css")
     set(DOXYGEN_GENERATE_TREEVIEW       YES)
     set(DOXYGEN_ENUM_VALUES_PER_LINE    1)
     set(DOXYGEN_HTML_FORMULA_FORMAT     svg)
@@ -546,8 +546,8 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_USE_PDFLATEX            YES)
     set(DOXYGEN_LATEX_CMD_NAME          ${CMD_RUN_LATEX})
     set(DOXYGEN_EXTRA_PACKAGES          "{amsmath, verbatimbox, svg}")
-    set(DOXYGEN_LATEX_HEADER            "${CMAKE_SOURCE_DIR}/header.tex")
-    set(DOXYGEN_LATEX_EXTRA_STYLESHEET  "${CMAKE_SOURCE_DIR}/doxygen.sty")
+    set(DOXYGEN_LATEX_HEADER            "${CMAKE_SOURCE_DIR}/doc/header.tex")
+    set(DOXYGEN_LATEX_EXTRA_STYLESHEET  "${CMAKE_SOURCE_DIR}/doc/doxygen.sty")
     set(DOXYGEN_LATEX_BATCHMODE         YES)
     set(DOXYGEN_MACRO_EXPANSION         YES)
     set(DOXYGEN_PREDEFINED              "__DOXYGEN__")

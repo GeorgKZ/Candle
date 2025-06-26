@@ -15,17 +15,25 @@
 #include <QtWidgets/QGraphicsScene>
 
 #ifdef QT_FEATURE_permissions
-//#if QT_CONFIG(permissions)
   #include <QtCore/QPermission>
 #endif
 
+/**
+ * \file
+ *
+ * \brief Файл с определениями функций-членов класса \ref CameraWidget "CameraWidget"
+ *
+ * <BR>
+ * Функции, являющиеся методами класса \ref CameraWidget "CameraWidget":
+ * <BR>
+ * * \copybrief CameraWidget::CameraWidget(QWidget *)
+ */
 CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(new QMediaCaptureSession)
 {
 
 //    qDebug() << "CameraWidget::constructor(parent=" << (unsigned long long)(parent) << ")";
 
 #ifdef QT_FEATURE_permissions
-//#if QT_CONFIG(permissions)
     qDebug() << "Using premissions feature";
 #endif
 
@@ -90,10 +98,15 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(
     setCamera(dev);
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::permissionChecking()
+ */
 void CameraWidget::permissionChecking()
 {
-#ifdef QT_FEATURE_permissions
+#if defined(QT_FEATURE_permissions) || defined(__DOXYGEN__)
     QCameraPermission cameraPermission;
+
     /**
      * Алгоритм:
      *

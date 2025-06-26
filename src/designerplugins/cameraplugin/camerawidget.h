@@ -11,6 +11,9 @@ class QGraphicsVideoItem;
 class QMediaCaptureSession;
 class CameraWidget;
 
+/**
+ * \brief Объявление класса \ref myGraphicsView "myGraphicsView"
+ */
 class myGraphicsView: public QGraphicsView
 {
 
@@ -18,6 +21,7 @@ public:
  
     /**
      * \brief Конструктор
+     * \param [in] parent Родительский объект
      */
     myGraphicsView(CameraWidget *parent);
 
@@ -54,6 +58,9 @@ private:
     virtual void wheelEvent(QWheelEvent *e) override;
 };
 
+/**
+ * \brief Объявление класса \ref CameraWidget "CameraWidget"
+ */
 class CUSTOMWIDGETS_DLLSPEC CameraWidget: public QWidget
 {
     Q_OBJECT
@@ -99,6 +106,7 @@ public:
 
     /**
      * \brief Конструктор
+     * \param [in] parent Родительский объект
      */
     CameraWidget(QWidget *parent = nullptr);
 

@@ -31,7 +31,7 @@ public:
   Q_INVOKABLE explicit wrapper_QHeaderView(Qt::Orientation orientation, wrapper_QWidget *parent = nullptr) :
     wrapper_QAbstractItemView(static_cast<QAbstractItemView*>
       (new QHeaderView(orientation, parent == nullptr ? nullptr : parent->get_selfptr()))) {
-     qDebug() << "wrapper_QHeaderView::constructor(parent=" << (unsigned long long)(parent == nullptr ? nullptr : parent->get_selfptr()) << ")";
+     qDebug() << "wrapper_QHeaderView::constructor(parent=" << (parent == nullptr ? 0 : reinterpret_cast<unsigned long long>(parent->get_selfptr())) << ")";
  }
 
 //  Q_INVOKABLE void setModel(QAbstractItemModel *model) { get_selfptr()->setModel(model); }

@@ -123,8 +123,6 @@ frmMain::frmMain(QWidget *parent) :
 
     // Loading settings
     m_settingsFileName = qApp->applicationDirPath() + "/settings.ini";
-    preloadSettings();
-
     m_settings = new frmSettings(this);
     ui->setupUi(this);
 
@@ -245,8 +243,7 @@ frmMain::frmMain(QWidget *parent) :
     connect(&m_heightMapModel, SIGNAL(dataChangedByUserInput()), this, SLOT(updateHeightMapInterpolationDrawer()));
 
     ui->tblProgram->setModel(&m_programModel);
-//!!! проверить границы индекса
-    ui->tblProgram->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Stretch);
+
     connect(ui->tblProgram->verticalScrollBar(), SIGNAL(actionTriggered(int)), this, SLOT(onScroolBarAction(int)));
     connect(ui->tblProgram->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(onTableCurrentChanged(QModelIndex,QModelIndex)));    
     clearTable();
@@ -273,8 +270,6 @@ frmMain::frmMain(QWidget *parent) :
 
     // Loading settings
     loadSettings();
-    ui->tblProgram->hideColumn(4);
-    ui->tblProgram->hideColumn(5);
 
     setSenderState(SenderStopped);
     updateControlsState();
@@ -459,6 +454,11 @@ void frmMain::changeEvent(QEvent *event)
           m->setHeaderData(colNum++, Qt::Horizontal, h, Qt::DisplayRole);
         }
     }
+    // Спрятать две последние колонки
+    ui->tblProgram->hideColumn(4);
+    ui->tblProgram->hideColumn(5);
+    // Растянуть третий солбец таблицы до упора вправо
+    ui->tblProgram->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Stretch);
 
     /** 
      * Выполнить для каждого плюгина:
@@ -2763,18 +2763,6 @@ void frmMain::placeVisualizerButtons()
     ui->cmdFit->move(ui->glwVisualizer->width() - ui->cmdFit->width() - 8, ui->cmdLeft->geometry().bottom() + 8);
 }
 
-void frmMain::preloadSettings()
-{
-    QSettings set(m_settingsFileName, QSettings::IniFormat);
-
-    qApp->setStyleSheet(QString(qApp->styleSheet()).replace(QRegularExpression("font-size:\\s*\\d+"), "font-size: " + set.value("fontSize", "9").toString()));
-
-    // Update v-sync in glformat
-//!!!    QGLFormat fmt = QGLFormat::defaultFormat();
-//!!!    fmt.setSwapInterval(set.value("vsync", false).toBool() ? 1 : 0);
-//!!!    QGLFormat::setDefaultFormat(fmt);
-}
-
 void frmMain::loadSettings()
 {
     QSettings set(m_settingsFileName, QSettings::IniFormat);
@@ -2783,10 +2771,15 @@ void frmMain::loadSettings()
 
     emit settingsAboutToLoad();
 
+    //!!!TODO!!!
+    // Логика загрузки значений, выбираемых из списка:
+    // 1. Найти прочитанное значение в списке
+    // 2. Если такое значение найдено, установить его.
+    // 3. Если такого значения не найдено, взять первое из списка.
 
-    m_settings->setFont(set.value("Ubuntu-Regular", 9).toString());
-
-    m_settings->setFontSize(set.value("fontSize", 9).toInt());
+    m_settings->setStyle(set.value("style", quoting(DEFAULT_STYLE)).toString());
+    m_settings->setFont(set.value("font", quoting(DEFAULT_FONT_TYPE)).toString());
+    m_settings->setFontSize(set.value("fontSize", DEFAULT_FONT_SIZE).toInt());
     m_settings->setPort(set.value("port").toString());
     m_settings->setBaud(set.value("baud").toInt());
     m_settings->setIgnoreErrors(set.value("ignoreErrors", false).toBool());
@@ -3081,6 +3074,8 @@ void frmMain::saveSettings()
     set.setValue("recentFiles", m_recentFiles);
     set.setValue("recentHeightmaps", m_recentHeightmaps);
     set.setValue("lastFolder", m_lastFolder);
+
+    set.setValue("style", m_settings->style());
     set.setValue("font", m_settings->font());
     set.setValue("fontSize", m_settings->fontSize());
 
@@ -3642,7 +3637,7 @@ void frmMain::sendNextFileCommands() {
     static QRegularExpression M230("(M0*2|M30|M0*6)(?!\\d)");
 
     while ((bufferLength() + command.length() + 1) <= BUFFERLENGTH
-        && m_fileCommandIndex < m_currentModel->rowCount() - 1
+        && m_fileCommandIndex + 1 < m_currentModel->rowCount()
         && !(!m_commands.isEmpty() && GcodePreprocessorUtils::removeComment(m_commands.last().command).contains(M230))
         ) 
     {

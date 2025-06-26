@@ -12,8 +12,9 @@
 #include <QtWidgets/QGroupBox>
 #include "colorpicker.h"
 
+#define DEFAULT_STYLE Fusion
 #define DEFAULT_FONT_SIZE 8
-#define DEFAULT_FONT_TYPE DejaVuSans.ttf
+#define DEFAULT_FONT_TYPE DejaVuSans
 
 namespace Ui {
 class frmSettings;
@@ -48,6 +49,7 @@ class frmSettings : public QDialog
     Q_PROPERTY(bool autoCompletion READ autoCompletion WRITE setAutoCompletion)
     Q_PROPERTY(bool simplify READ simplify WRITE setSimplify)
     Q_PROPERTY(double simplifyPrecision READ simplifyPrecision WRITE setSimplifyPrecision)
+    Q_PROPERTY(QString style READ style WRITE setStyle)
     Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize)
     Q_PROPERTY(QString font READ font WRITE setFont)
     Q_PROPERTY(bool grayscaleSegments READ grayscaleSegments WRITE setGrayscaleSegments)
@@ -142,8 +144,10 @@ public:
     void setSimplifyPrecision(double simplifyPrecision);
     QList<ColorPicker*> colors();
     QColor colors(QString name);
+    QString style();
     QString font();
     int fontSize();
+    void setStyle(const QString& styleName);
     void setFont(const QString& fontName);
     void setFontSize(int fontSize);
     bool grayscaleSegments();
@@ -202,8 +206,9 @@ private slots:
     void on_cboToolType_currentIndexChanged(int index);
     void on_listCategories_currentRowChanged(int currentRow);
     void on_cmdDefaults_clicked();
-    void on_cboFont_currentTextChanged(const QString &arg1);
-    void on_cboFontSize_currentTextChanged(const QString &arg1);
+    void on_cboStyle_currentTextChanged(const QString &newStyle);
+    void on_cboFont_currentTextChanged(const QString &newFont);
+    void on_cboFontSize_currentTextChanged(const QString &newSize);
     void on_radDrawModeVectors_toggled(bool checked);
     void on_radDrawModeRaster_toggled(bool checked);
     void on_radGrayscaleS_toggled(bool checked);

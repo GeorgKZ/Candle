@@ -426,7 +426,6 @@ private:
     QList<QDockWidget*> m_pluginDocks;
     
     // Settings
-    void preloadSettings();
     void loadSettings();
     void saveSettings();
     void applySettings();

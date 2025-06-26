@@ -2,11 +2,19 @@
 
 class CameraPlugin: public QObject, QDesignerCustomWidgetInterface
 {
+
+#if !defined(__DOXYGEN__)
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
+#endif
 
 public:
+
+    /**
+     * \brief Конструктор
+     * \param [in] parent Родительский объект
+     */
     explicit CameraPlugin(QObject *parent = nullptr);
 
     bool isContainer() const override;

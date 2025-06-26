@@ -1,6 +1,24 @@
 #include "cameraplugin.h"
 #include "camerawidget.h"
 
+/**
+ * \file
+ *
+ * \brief Файл с определениями функций-членов класса \ref CameraPlugin "CameraPlugin"
+ *
+ * <BR>
+ */
+
+/**
+ * \file
+ * Функции, являющиеся методами класса \ref CameraPlugin "CameraPlugin":
+ * <BR>
+ */
+
+/**
+ * \file
+ * * \copybrief CameraPlugin::CameraPlugin(QObject *)
+ */
 CameraPlugin::CameraPlugin(QObject *parent): QObject(parent), m_initialized(false)
 {
 

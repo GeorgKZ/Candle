@@ -315,7 +315,7 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
   wfactory(className, StyledToolButton, object);
 
   qCritical() << "wrapperFactory("  << className << ") - unknown class name";
-  return qjsEngine(this)->toScriptValue<wrapper_QObject*>(new wrapper_QObject((QObject*)object));
+  return qjsEngine(this)->toScriptValue<wrapper_QObject*>(new wrapper_QObject(static_cast<QObject*>(object)));
 
 }
 

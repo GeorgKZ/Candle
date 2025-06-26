@@ -138,16 +138,11 @@ int main(int argc, char *argv[]) {
 
     a.setAttribute(Qt::AA_ForceRasterWidgets, false);
 
-    a.setApplicationDisplayName(PROJECT_NAME);
+    a.setApplicationDisplayName(quoting(PROJECT_NAME));
+//    a.setApplicationVersion(quoting(VERSION_STR));
     a.setApplicationVersion(VERSION_STR);
 
-    int fontID = QFontDatabase::addApplicationFont(":/fonts/DejaVuSans.ttf");
-    if (fontID == -1) {
-        qCritical() << "Adding font error";
-    } else {
-        qInfo() << "Installed fonts:" << QFontDatabase::applicationFontFamilies(fontID);
-        a.setFont(QFont(QFontDatabase::applicationFontFamilies(fontID).at(0), DEFAULT_FONT_SIZE));
-    }
+    qDebug() << "Version:" << a.applicationVersion();
 
     /**
      * Установить перевод согласно выбранному в настройках языку
@@ -156,9 +151,13 @@ int main(int argc, char *argv[]) {
     QString loc = set.value("language", "en").toString();
     setAllTranslators(loc);
 
+    qDebug() << "Found system styles:" << QStyleFactory::keys();
+
+
 #if 0 
 
 //    a.setStyle(QStyleFactory::create("Fusion"));
+
 
     QPalette palette;
     palette.setColor(QPalette::Highlight, QColor(204, 204, 254));
@@ -178,14 +177,15 @@ int main(int argc, char *argv[]) {
 #endif
 
 
-    a.setStyleSheet("QDialog {border: 1px solid palette(mid);}");
-
+#if 0
     /**
-     * Дополнить стиль приложения указанием размера шрифта, чтобы можно было
-     * этот размер изменять путём изменения стиля
+     * Дополнить стиль приложения указанием размера размера бордюра, размера шрифта,
+     * шрифта шрифта
      */
-    a.setStyleSheet(a.styleSheet() + "QWidget {font-family: \"" quoting(DEFAULT_FONT_TYPE) "\";}");
-    a.setStyleSheet(a.styleSheet() + "QWidget {font-size: " quoting(DEFAULT_FONT_SIZE) "pt}");
+    a.setStyleSheet(QString("QDialog {border: 1px solid palette(mid);}") +
+        QString(" QWidget {font-family: \"" quoting(DEFAULT_FONT_TYPE) "\";}") +
+        QString(" QWidget {font-size: " quoting(DEFAULT_FONT_SIZE) "pt}"));
+#endif
 
     frmMain w;
     w.show();

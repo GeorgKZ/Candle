@@ -197,7 +197,7 @@ public:
   }
   // bool open(int fd, OpenMode ioFlags, FileHandleFlags handleFlags=DontCloseHandle);
   Q_INVOKABLE bool open(int fd, wrapper_QIODeviceBase::OpenMode mode, wrapper_QFileDevice::FileHandleFlags handleFlags = wrapper_QFileDevice::DontCloseHandle) {
-    return get_selfptr()->open(fd, (QIODeviceBase::OpenMode)(int)mode, (QFileDevice::FileHandleFlags)(int)handleFlags);
+    return get_selfptr()->open(fd, static_cast<QIODeviceBase::OpenMode>(static_cast<int>(mode)), static_cast<QFileDevice::FileHandleFlags>(static_cast<int>(handleFlags)));
   }
 
   // qint64 size() const override;

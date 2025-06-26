@@ -12,7 +12,7 @@ class Script: public QObject {
 public:
 //!!! без враппера?
   Q_INVOKABLE Script(QObject* parent = nullptr) : QObject(parent) {
-    qDebug() << "Script::constructor(parent =" << (unsigned long long)parent << ")";
+    qDebug() << "Script::constructor(parent =" << reinterpret_cast<unsigned long long>(parent) << ")";
   }
 
 // path()

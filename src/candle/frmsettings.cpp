@@ -8,6 +8,7 @@
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QStyledItemDelegate>
+#include <QtWidgets/QStyleFactory>
 #include <QtWidgets/QKeySequenceEdit>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPlainTextEdit>
@@ -79,12 +80,22 @@ frmSettings::frmSettings(QWidget *parent) :
     ui->cboFontSize->setValidator(&m_intValidator);
 
     /**
+     * Заполнить выпадающий список стилей доступными стилями.
+     */
+    QStringList allStyles = QStyleFactory::keys();
+    foreach(const QString &styleName, allStyles) {  
+        ui->cboStyle->addItem(styleName);
+    }  
+
+    /**
      * Заполнить выпадающий список щрифтов шрифтами из ресурса программы.
      */
     foreach(const QString &fontName, QDir(":/fonts").entryList()) {  
-//        qDebug() << "Found resource font" << fontName;
-        ui->cboFont->addItem(fontName);
+        QFileInfo fontFile(fontName);
+        ui->cboFont->addItem(fontFile.baseName());
     }  
+
+
 
 
     foreach (QGroupBox *box, this->findChildren<QGroupBox*>()) {
@@ -521,14 +532,24 @@ QColor frmSettings::colors(QString name)
     if (pick) return pick->color(); else return QColor();
 }
 
-int frmSettings::fontSize()
+QString frmSettings::style()
 {
-    return ui->cboFontSize->currentText().toInt();
+    return ui->cboStyle->currentText();
 }
 
 QString frmSettings::font()
 {
     return ui->cboFont->currentText();
+}
+
+int frmSettings::fontSize()
+{
+    return ui->cboFontSize->currentText().toInt();
+}
+
+void frmSettings::setStyle(const QString& styleName)
+{
+    ui->cboStyle->setCurrentText(styleName);
 }
 
 void frmSettings::setFont(const QString& fontName)
@@ -842,6 +863,13 @@ void frmSettings::on_cmdDefaults_clicked()
 
 void frmSettings::set_defaults()
 {
+
+    //!!!TODO!!!
+    // Логика установки значений, выбираемых из списка:
+    // 1. Заполнить список значениями
+    // 2. Взять первое из списка.
+
+
     setPort("");
     setBaud(115200);
 
@@ -891,7 +919,8 @@ void frmSettings::set_defaults()
     ui->clpToolpathStart->setColor(QColor(255, 0, 0));
     ui->clpToolpathEnd->setColor(QColor(0, 255, 0));
 
-    setFont("Ubuntu-Regular");
+    setStyle(" quoting(DEFAULT_STYLE) ");
+    setFont(" quoting(DEFAULT_FONT_TYPE) ");
     setFontSize(DEFAULT_FONT_SIZE);
 
     // Shortcuts
@@ -931,15 +960,23 @@ void frmSettings::set_defaults()
     ui->chkToolChangeUseCommandsConfirm->setChecked(false);
 }
 
-void frmSettings::on_cboFontSize_currentTextChanged(const QString &arg1)
+void frmSettings::on_cboStyle_currentTextChanged(const QString &newStyle)
 {
-    qApp->setStyleSheet(QString(qApp->styleSheet()).replace(QRegularExpression("font-size:\\s*\\d+"), "font-size: " + arg1));
+    qApp->setStyle(QStyleFactory::create(newStyle));
+}
+
+void frmSettings::on_cboFontSize_currentTextChanged(const QString &newSize)
+{
+    qApp->setStyleSheet(QString("QDialog {border: 1px solid palette(mid);}") +
+        QString(" QWidget {font-family: \"") + font() + QString("\";}") +
+        QString(" QWidget {font-size: ") + QString("%1").arg(newSize) + QString("pt}"));
 }
 
 void frmSettings::on_cboFont_currentTextChanged(const QString &newFont)
 {
-//!!! TODO Изменить шрифт интерфейса
-    qDebug() << "Need to change font to" << newFont << "in" << QString(qApp->styleSheet());
+    qApp->setStyleSheet(QString("QDialog {border: 1px solid palette(mid);}") +
+        QString(" QWidget {font-family: \"") + newFont + QString("\";}") +
+        QString(" QWidget {font-size: ") + QString("%1").arg(fontSize()) + QString("pt}"));
 }
 
 void frmSettings::on_radDrawModeVectors_toggled(bool checked)

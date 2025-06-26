@@ -154,7 +154,7 @@ bool GcodeDrawer::updateVectors()
     int vertexIndex;
     foreach (int i, m_indexes) {
         // Update vertex pair
-        if (i < 0 || i > list->count() - 1) continue;
+        if (i < 0 || i + 1 > list->count()) continue;
         vertexIndex = list->at(i)->vertexIndex();
         if (vertexIndex >= 0) {
             // Update vertex array            
