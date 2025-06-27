@@ -249,35 +249,7 @@ target_link_libraries(${MAIN_NAME} PUBLIC
 #endif()
 
 ##############################################################################
-# Настройка свойств в зависимости от целевой среды выполнения.
-##############################################################################
-
-# При сборке для работы в среде Windows
-if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
-
-# При сборке для работы в среде MacOS
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-    )
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-        MACOSX_BUNDLE_ICON_FILE qdia.icns
-        MACOSX_BUNDLE TRUE
-    )
-endif()
-
-
-##############################################################################
-# Обработка файлов с переводом
+# Настройка ресурса с файлами переводов
 ##############################################################################
 
 # Подключить подсистему лингвистики Qt
@@ -294,7 +266,8 @@ find_package(Qt6 COMPONENTS LinguistTools REQUIRED)
 #    LRELEASE_OPTIONS -silent
 #)
 
-# Обработать файлы перевода без интеграции в исполняемый файл, перебрать все поддерживаемые языки
+# Обработать файлы перевода приложения для интеграции в исполняемый файл,
+# перебрать все поддерживаемые языки
 set(QM_FILES "")
 FOREACH(L ${QT_LANG})
     string(SUBSTRING ${L} 0 2 LANG_F)
@@ -321,10 +294,74 @@ FOREACH(L ${QT_LANG})
     add_custom_target("translation_${MAIN_NAME}__${LANG_F}" ALL
         DEPENDS ${QM_FILE}
     )
-
     list(APPEND QM_FILES ${QM_FILE})
-
 ENDFOREACH(L)
+
+# Добавить переводы-ресурсы к ресурсам исполняемого файла
+qt6_add_resources(${MAIN_NAME} "translations"
+    PREFIX "/translations"
+    BIG_RESOURCES
+    BASE ${TRANSLATE_PATH}
+    FILES ${QM_FILES}
+)
+
+# Файлы подсистем Qt, для которых требуются переводы
+set(QT_SYSTEMS "qt;qtbase;qtmultimedia;qtserialport")
+
+# Определить расположение файлов перевода
+if(DEFINED ENV{QT_ROOT})
+    set(QT_TBASE "${QT_DIR}/../../../translations")
+else()
+    set(QT_TBASE "/usr/share/qt6/translations")
+endif()
+
+# Перебрать поддерживаемые языки
+foreach(L ${QT_LANG})
+    string(SUBSTRING ${L} 0 2 LANG_F)
+    # Перебрать необходимые файлы перевода
+    foreach(I ${QT_SYSTEMS})
+        # Добавить файл перевода к списку, установить ему алиас
+        if(EXISTS "${QT_TBASE}/${I}_${LANG_F}.qm")
+            list(APPEND QM_SYSTEM_FILES "${QT_TBASE}/${I}_${LANG_F}.qm")
+        endif()
+    endforeach(I)
+endforeach(L)
+
+# Добавить системные переводы-ресурсы к ресурсам исполняемого файла
+qt6_add_resources(${MAIN_NAME} "system_translations"
+    PREFIX "/system_translations"
+    BIG_RESOURCES
+    BASE ${QT_TBASE}
+    FILES ${QM_SYSTEM_FILES}
+)
+
+##############################################################################
+# Настройка свойств в зависимости от целевой среды выполнения.
+##############################################################################
+
+# При сборке для работы в среде Windows
+if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+
+# При сборке для работы в среде MacOS
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+    )
+
+    set_target_properties(${MAIN_NAME} PROPERTIES
+        MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE_ICON_FILE qdia.icns
+        MACOSX_BUNDLE TRUE
+    )
+endif()
+
 
 ##############################################################################
 # Установка
@@ -354,11 +391,6 @@ endif()
 # Вывод сообщений об установке только если было изменение
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-# Файлы переводов
-install(FILES ${QM_FILES}
-    DESTINATION ${DEST_PATH}/translations)
-
-
 # Для мультиконфигурации учесть директорию, в которой будет расположен результат сборки,
 # значение которой будет определено в параметре cmake --config только на этапе сборки
 if (isMultiConfig)
@@ -368,7 +400,8 @@ else()
 endif()
 
 # Исполняемый файл
-if(APPLE AND NOT IOS)
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # При сборке для работы в среде MacOS
     install(DIRECTORY ${BINPATH}/${MAIN_NAME}.app
         DESTINATION ${BUILD_PATH}/install
         USE_SOURCE_PERMISSIONS
@@ -379,3 +412,11 @@ else()
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
     )
 endif()
+
+#message(DEBUG ">>>> ${BINPATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
+#
+#file(GET_RUNTIME_DEPENDENCIES RESOLVED_DEPENDENCIES_VAR r
+#    UNRESOLVED_DEPENDENCIES_VAR ur
+#    EXECUTABLES "${DEST_PATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}"
+#)
+#message(DEBUG "Resolved: ${r} Unresolved: ${ur}")

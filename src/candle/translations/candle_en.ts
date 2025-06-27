@@ -1306,7 +1306,7 @@ Time elapsed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmsettings.cpp" line="856"/>
+        <location filename="../frmsettings.cpp" line="853"/>
         <source>Reset settings to default values?</source>
         <translation type="unfinished"></translation>
     </message>

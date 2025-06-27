@@ -57,12 +57,13 @@ set(DOC_PATH "${BUILD_PATH}/docs")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
 
 # Директория для сборки установочного набора
-set(DEST_PATH "${BUILD_PATH}/install")
-if(APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # При сборке для работы в среде MacOS
     set(DEST_PATH "${BUILD_PATH}/install/candle.app/Contents/MacOS")
+else()
+    set(DEST_PATH "${BUILD_PATH}/install")
 endif()
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/translations)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/plugins)
 
 # Путь к директории с изображениями для Doxygen
@@ -651,28 +652,6 @@ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
     DESTINATION "${DEST_PATH}"
 )
 
-
-# Файлы переводов Qt
-set(QT_LIBS "qt;qtbase;qtmultimedia;qtserialport")
-
-# Перебрать поддерживаемые языки
-foreach(L ${QT_LANG})
-    string(SUBSTRING ${L} 0 2 LANG_F)
-    # Перебрать необходимые файлы перевода
-    foreach(I ${QT_LIBS})
-
-        if(EXISTS "/usr/share/qt6/translations/${I}_${LANG_F}.qm")
-            set(QT_TRANSLATION "/usr/share/qt6/translations/${I}_${LANG_F}.qm")
-        elseif(EXISTS "${QT_DIR}/../../../translations/${I}_${LANG_F}.qm")
-            set(QT_TRANSLATION "${QT_DIR}/../../../translations/${I}_${LANG_F}.qm")
-        endif()
-
-        install(FILES "${QT_TRANSLATION}"
-            DESTINATION "${DEST_PATH}/translations"
-        )
-    endforeach(I)
-endforeach(L)
-
 # Файлы библиотек Qt
 set(QT_LIBS "Core;Gui;Qml;Multimedia;MultimediaWidgets;OpenGL;OpenGLWidgets;SerialPort;Widgets")
 foreach(I ${QT_LIBS})
@@ -687,11 +666,4 @@ foreach(I ${QT_LIBS})
         DESTINATION ${DEST_PATH}
         FOLLOW_SYMLINK_CHAIN
     )
-
-#    install(FILES "${QTLIB}"
-#        DESTINATION "${DEST_PATH}"
-#    )
 endforeach(I)
-
-#file(GET_RUNTIME_DEPENDENCIES RESOLVED_DEPENDENCIES_VAR r UNRESOLVED_DEPENDENCIES_VAR ur EXECUTABLES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/candle")
-#message(STATUS "Resolved ${r} Unresolved ${ur}")

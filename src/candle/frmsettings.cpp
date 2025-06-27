@@ -95,9 +95,6 @@ frmSettings::frmSettings(QWidget *parent) :
         ui->cboFont->addItem(fontFile.baseName());
     }  
 
-
-
-
     foreach (QGroupBox *box, this->findChildren<QGroupBox*>()) {
         ui->listCategories->addItem(box->title());
         ui->listCategories->item(ui->listCategories->count() - 1)->setData(Qt::UserRole, box->objectName());
@@ -116,9 +113,9 @@ frmSettings::frmSettings(QWidget *parent) :
 
     /**
      * Заполнить выпадающий список языков локализации cboLanguage языками, соответствующими
-     * файлам qm в директории translations.
+     * файлам qm в ресурсе :/translations.
      */
-    QDir d(qApp->applicationDirPath() + "/translations");
+    QDir d(":/translations");
     QStringList fl = QStringList() << "candle_*.qm";
     QStringList tl = d.entryList(fl, QDir::Files);
     QRegularExpression fx("_([^\\.]+)");
@@ -130,12 +127,12 @@ frmSettings::frmSettings(QWidget *parent) :
             ui->cboLanguage->addItem(l.nativeLanguageName(), l.name().left(2));
         }
     }
+
     /**
      * Связать изменение выбранного текста в выпадающем списке языков локализации cboLanguage
      * с функцией обработки этого события.
      */
     connect(ui->cboLanguage, SIGNAL(currentIndexChanged(int)), this, SLOT(on_cboLanguageChanged(int)));
-
 
     set_defaults();
 }

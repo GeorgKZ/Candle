@@ -158,7 +158,7 @@ public:
 
   // Деструктор
   virtual ~wrapper_QIODevice() {
-    delete static_cast<QIODevice*>(wrapper_QIODeviceBase::get_selfptr());
+//!!!    delete static_cast<QIODevice*>(wrapper_QIODeviceBase::get_selfptr());
   }
 
   // Получение константного указателя на объект

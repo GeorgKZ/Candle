@@ -60,9 +60,7 @@ void setTranslator(const QString &translationFileName, QTranslator **translator)
 }
 
 void setAllTranslators(const QString &language) {
-
     QString translationFileName;
-    QString translationsFolder = qApp->applicationDirPath() + "/translations/";
 
     /**
      * Связный список путей к плюгинам и дескрипторов переводов 
@@ -85,9 +83,11 @@ void setAllTranslators(const QString &language) {
      */
     static QTranslator *candle_translator = nullptr;
 
-    translationFileName = translationsFolder + "candle_" + language + ".qm";
+    translationFileName = ":/translations/candle_" + language + ".qm";
     if (QFile::exists(translationFileName)) {
         setTranslator(translationFileName, &candle_translator);
+    } else {
+        qCritical() << "Error loading translation file" << translationFileName;
     }
 
     /**
@@ -95,7 +95,7 @@ void setAllTranslators(const QString &language) {
      */
     static QTranslator *qt_translator = nullptr;
 
-    translationFileName = translationsFolder + "qtbase_" + language + ".qm";
+    translationFileName = ":/system_translations/qtbase_" + language + ".qm";
     if (QFile::exists(translationFileName)) {
         setTranslator(translationFileName, &qt_translator);
     }
@@ -148,7 +148,12 @@ int main(int argc, char *argv[]) {
      * Установить перевод согласно выбранному в настройках языку
      */
     QSettings set(a.applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+//!!! По умолчанию нет???
     QString loc = set.value("language", "en").toString();
+    if (loc.isEmpty()) {
+        qDebug() << "Set defaule language 'en'";
+        loc = "en";
+    }
     setAllTranslators(loc);
 
     qDebug() << "Found system styles:" << QStyleFactory::keys();

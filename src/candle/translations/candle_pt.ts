@@ -1708,7 +1708,7 @@ Tempo transcorrido: %1</translation>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../frmsettings.cpp" line="856"/>
+        <location filename="../frmsettings.cpp" line="853"/>
         <source>Reset settings to default values?</source>
         <translation>Redefinir as configurações para os valores padrão?</translation>
     </message>

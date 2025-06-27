@@ -1696,7 +1696,7 @@ Temps écoulé: %1</translation>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../frmsettings.cpp" line="856"/>
+        <location filename="../frmsettings.cpp" line="853"/>
         <source>Reset settings to default values?</source>
         <translation>Réinitialiser les réglages par défaut?</translation>
     </message>

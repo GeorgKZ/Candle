@@ -228,6 +228,9 @@ console.log("JAVA: storeButtonsTable() begin with b=" + b);
         var q = new Array();
         for (var j = 0; j < 3; j++) {
             var data = t.item(i, j).data(Qt.DisplayRole);
+
+console.log("JAVA: storeButtonsTable() saving data" + data);
+
             q.push(data);
         }
         b.push(q);
