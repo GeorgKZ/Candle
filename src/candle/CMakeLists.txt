@@ -65,7 +65,7 @@ if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"
     file(WRITE
         ${MISC_PATH}/${MAIN_NAME}.rc
 
-        "${ICON_RESOURCE_STRING}"
+       "${ICON_RESOURCE_STRING}"
         "#include <windows.h>\n"
         "\n"
         "#define VER_FILEVERSION          ${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}\n"
@@ -104,9 +104,8 @@ if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"
     )
 
     # Путь к файлу ресурсов для сборки исполняемого файла Windows
-    set(RESOURCES_DEP
-        "${MISC_PATH}/${MAIN_NAME}.rc"
-    )
+    set(RESOURCES_DEP "${MISC_PATH}/${MAIN_NAME}.rc")
+#    cmake_path(NATIVE_PATH LOCAL_RESOURCES_DEP NORMALIZE RESOURCES_DEP)
 
     # Добавить флаги для сборки консольного приложения Win32
     add_definitions(

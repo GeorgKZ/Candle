@@ -15,6 +15,7 @@ class HeightMapInterpolationDrawer : public ShaderDrawable
 {
 public:
     explicit HeightMapInterpolationDrawer();
+    virtual ~HeightMapInterpolationDrawer();
 
     QVector<QVector<double> > *data() const;
     void setData(QVector<QVector<double> > *data);

@@ -14,6 +14,7 @@ class ToolDrawer : public ShaderDrawable
 {
 public:
     explicit ToolDrawer();
+    virtual ~ToolDrawer();
 
     double toolDiameter() const;
     void setToolDiameter(double toolDiameter);

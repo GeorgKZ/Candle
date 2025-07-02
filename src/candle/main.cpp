@@ -1,6 +1,10 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
+#ifdef _WIN32
+  #include <windows.h> 
+#endif
+
 #include <QtCore/QDebug>
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
@@ -139,7 +143,6 @@ int main(int argc, char *argv[]) {
     a.setAttribute(Qt::AA_ForceRasterWidgets, false);
 
     a.setApplicationDisplayName(quoting(PROJECT_NAME));
-//    a.setApplicationVersion(quoting(VERSION_STR));
     a.setApplicationVersion(VERSION_STR);
 
     qDebug() << "Version:" << a.applicationVersion();

@@ -9,6 +9,10 @@ HeightMapGridDrawer::HeightMapGridDrawer()
     m_pointSize = 4;
 }
 
+HeightMapGridDrawer::~HeightMapGridDrawer()
+{
+}
+
 bool HeightMapGridDrawer::updateData()
 {
     // Clear data

@@ -12,6 +12,7 @@ class HeightMapGridDrawer : public ShaderDrawable
 {
 public:
     HeightMapGridDrawer();
+    virtual ~HeightMapGridDrawer();
 
     QPointF gridSize() const;
     void setGridSize(const QPointF &gridSize);

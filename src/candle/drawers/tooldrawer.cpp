@@ -14,6 +14,10 @@ ToolDrawer::ToolDrawer()
     if (m_toolLength < m_endLength) m_toolLength = m_endLength;
 }
 
+ToolDrawer::~ToolDrawer()
+{
+}
+
 bool ToolDrawer::updateData()
 {
     const int arcs = 4;

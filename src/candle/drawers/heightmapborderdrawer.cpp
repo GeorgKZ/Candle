@@ -7,6 +7,10 @@ HeightMapBorderDrawer::HeightMapBorderDrawer()
 {
 }
 
+HeightMapBorderDrawer::~HeightMapBorderDrawer()
+{
+}
+
 QRectF HeightMapBorderDrawer::borderRect() const
 {
     return m_borderRect;

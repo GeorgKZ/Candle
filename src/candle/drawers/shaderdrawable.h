@@ -27,7 +27,7 @@ class ShaderDrawable : protected QOpenGLFunctions
 {
 public:
     explicit ShaderDrawable();
-    ~ShaderDrawable();
+    virtual ~ShaderDrawable();
     void update();
     void draw(QOpenGLShaderProgram *shaderProgram);
 

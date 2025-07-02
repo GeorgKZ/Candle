@@ -7,6 +7,7 @@ class OriginDrawer : public ShaderDrawable
 {
 public:
     OriginDrawer();
+    virtual  ~OriginDrawer();
 
 protected:
     bool updateData();

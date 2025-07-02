@@ -8,6 +8,10 @@ HeightMapInterpolationDrawer::HeightMapInterpolationDrawer()
     m_data = NULL;
 }
 
+HeightMapInterpolationDrawer::~HeightMapInterpolationDrawer()
+{
+}
+
 bool HeightMapInterpolationDrawer::updateData()
 {
     // Check if data is present

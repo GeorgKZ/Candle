@@ -12,6 +12,7 @@ class MachineBoundsDrawer : public ShaderDrawable
 {
 public:
     MachineBoundsDrawer();
+    virtual ~MachineBoundsDrawer();
 
     QSizeF gridSize() const;
     void setGridSize(const QSizeF &gridSize);

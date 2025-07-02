@@ -10,6 +10,10 @@ MachineBoundsDrawer::MachineBoundsDrawer()
     m_borderRect = QRectF(0, 0, 1, 1);
 }
 
+MachineBoundsDrawer::~MachineBoundsDrawer()
+{
+}
+
 bool MachineBoundsDrawer::updateData()
 {
     // Clear data
