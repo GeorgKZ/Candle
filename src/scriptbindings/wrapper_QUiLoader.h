@@ -35,7 +35,14 @@ public:
   Q_INVOKABLE QJSValue load(const QJSValue &device, const QJSValue &parentWidget = QJSValue(QJSValue::UndefinedValue)) {
     QIODevice *_device = jsvalueToPointer(QIODevice, device);
     QWidget *_parentWidget = jsvalueToPointer(QWidget, parentWidget);
+
+
+    qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ")...";
+
     QWidget *new_widget = get_selfptr()->load(_device, _parentWidget);
+
+    qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ") -> " << (unsigned long long)new_widget;
+
     return wrapperFactory(new_widget->metaObject()->className(), new_widget);
   }
 

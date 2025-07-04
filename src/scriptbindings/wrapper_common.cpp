@@ -386,12 +386,12 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType) {
 
   if (value.isNull()) {
-    qDebug() << "ERROR: jsvalueToObject_ptr - value is Null. Returning nullptr";
+    qDebug() << "ERROR: jsvalueToObject_ptr(" <<  waiting_className << ") - value is Null. Returning nullptr";
     return nullptr;
   }
 
   if (value.isUndefined()) {
-    qDebug() << "jsvalueToObject_ptr - value is Undefined. Returning nullptr";
+    qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - value is Undefined. Returning nullptr";
     return nullptr;
   }
 
@@ -400,17 +400,17 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
   if (variant.isValid() && !variant.isNull() && value.toQObject() == nullptr) {
     const char* typeName = variant.typeName();
     if (typeName == nullptr) {
-      qCritical() << "jsvalueToObject_ptr - Variant without type. Returning nullptr";
+      qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - Variant without type. Returning nullptr";
       return nullptr;
     }
 
     if (strcmp(typeName, "QString") == 0) {
-      qDebug() << "jsvalueToObject_ptr - returning QString pointer";
+      qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - returning QString pointer";
       if (returnType != nullptr) *returnType = "QString";
       return new QString(variant.toString());
     }
     if (strcmp(typeName, "int") == 0) {
-      qDebug() << "jsvalueToObject_ptr - returning qint32 pointer";
+      qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - returning qint32 pointer";
       if (returnType != nullptr) *returnType = "qint32";
       return new qint32(variant.toInt());
     }
@@ -425,7 +425,7 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
         QVariant newvar = oldvar;
         *newvarlist += newvar;
       }
-      qDebug() << "jsvalueToObject_ptr - returning QVariantList pointer";
+      qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - returning QVariantList pointer";
       if (returnType != nullptr) *returnType = "QVariantList";
       return newvarlist;
     }
@@ -443,22 +443,22 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
     }
 
     if (isWrapper) {
-        qDebug() << "jsvalueToObject_ptr - returning unwrapped from Variant" << typeName << "pointer of" << wrappedName;
+        qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - returning unwrapped from Variant" << typeName << "pointer of" << wrappedName;
         return (qvariant_cast<wrapper_common*>(variant))->get_selfptr();
     }
 
     if (waiting_className != nullptr && std::strcmp(waiting_className, typeName) == 0) {
-      qCritical() << "jsvalueToObject_ptr - unwrapped pointer in Variant" << waiting_className << ", returning nullptr";
+      qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - unwrapped pointer in Variant" << waiting_className << ", returning nullptr";
       return nullptr;
     } else if (std::strcmp("QVariantList", typeName) == 0) {
       QVariantList varlist = variant.toList();
-      qCritical() << "jsvalueToObject_ptr - VariantList type, not '" << waiting_className << "'. Returning nullptr";
+      qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - VariantList type, not '" << waiting_className << "'. Returning nullptr";
       return nullptr;
     } else {
       if (waiting_className != nullptr) {
-          qCritical() << "jsvalueToObject_ptr - different Variant type '" << typeName << "', not '" << waiting_className << "'. Returning nullptr";
+          qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - different Variant type '" << typeName << "', not '" << waiting_className << "'. Returning nullptr";
       } else {
-          qCritical() << "jsvalueToObject_ptr - different Variant type '" << typeName << "'. Returning nullptr";
+          qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - different Variant type '" << typeName << "'. Returning nullptr";
       }
       return nullptr;
     }
@@ -467,17 +467,17 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
   // Проверить, вдруг в JSValue находится QMetaObject, являющийся прокси-классом
   QObject* obj = value.toQObject();
   if (obj == nullptr) {
-    qCritical() << "jsvalueToObject_ptr - value is not QObject. Returning nullptr";
+    qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - value is not QObject. Returning nullptr";
     return nullptr;
   }
   const QMetaObject* mobj = obj->metaObject();
   if (mobj == nullptr) {
-    qCritical() << "jsvalueToObject_ptr - value is QObject but not QMetaObject. Returning nullptr";
+    qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - value is QObject but not QMetaObject. Returning nullptr";
     return nullptr;
   }
   const char* objName = mobj->className();
   if (objName == nullptr) {
-    qCritical() << "jsvalueToObject_ptr - value is QMetaObject but has no name. Returning nullptr";
+    qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - value is QMetaObject but has no name. Returning nullptr";
     return nullptr;
   }
 
@@ -492,19 +492,19 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
       }
   }
   if (!isWrapper) {
-      qCritical() << "jsvalueToObject_ptr - value is QMetaObject"<< pureType << "but not wrapper. Returning nullptr";
+      qCritical() << "jsvalueToObject_ptr(" <<  waiting_className << ") - value is QMetaObject"<< pureType << "but not wrapper. Returning nullptr";
       return nullptr;
   }
 
   if (returnType != nullptr) *returnType = pureType;
 
   if (waiting_className != nullptr && *waiting_className != '\0' && QString(objName) != QString("wrapper_") + QString(waiting_className)) {
-    qDebug() << "attention: jsvalueToObject_ptr - waiting" << waiting_className << "wrapper, but got" << pureType << "wrapper";
+    qDebug() << "attention: jsvalueToObject_ptr(" <<  waiting_className << ") - waiting" << waiting_className << "wrapper, but got" << pureType << "wrapper";
   }
 
-  qDebug() << "jsvalueToObject_ptr - trying to unwrap" << objName;
+  qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - trying to unwrap" << objName;
   void *ptr = (static_cast<wrapper_common*>(obj))->get_selfptr();
-  qDebug() << "jsvalueToObject_ptr - returning pointer of" << pureType;
+  qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - returning pointer of" << pureType;
   return ptr;
 }
 

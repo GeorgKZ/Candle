@@ -3,6 +3,10 @@
 
 #include "wrapper_export.h"
 
+#define quoting(a) prequoting(a)
+#define prequoting(a) #a
+
+
 WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se);
 
 /**
@@ -25,6 +29,6 @@ WRAPPER_DLL_EXPORT QJSValue newScript(QJSEngine *se, QObject* parent);
  */
 WRAPPER_DLL_EXPORT void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType = nullptr);
 
-#define jsvalueToPointer(classname, value) static_cast< classname *>( jsvalueToObject_ptr("##classname##", value) )
+#define jsvalueToPointer(classname, value) static_cast< classname *>( jsvalueToObject_ptr(quoting(classname), value) )
 
 #endif // WRAPPER_EXTERN_H

@@ -1,6 +1,6 @@
 #include "scriptfunctions.h"
 #include "frmmain.h"
-#include "wrapper_extern.h"
+//#include "wrapper_extern.h"
 
 ScriptFunctions::ScriptFunctions(QObject *parent): QObject(parent), m_frmMain(0)
 {

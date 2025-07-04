@@ -46,7 +46,13 @@ function createWindowWidget()
     var f = new QFile(pluginPath + "/widget.ui");
 
     if (f.open(QIODevice.ReadOnly)) {        
+
+        console.log("JAVA: camera: function createWindowWidget() trying to load...");
+
         uiWindow = loader.load(f);
+        console.log("JAVA: camera: function createWindowWidget() got uiWindow=" + uiWindow);
+    } else {
+        console.log("JAVA: camera: function createWindowWidget(): error opening widget ui");
     }
     return uiWindow;
 }

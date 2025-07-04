@@ -49,11 +49,6 @@
 #include "scriptvars.h"
 #include "scriptfunctions.h"
 
-#ifdef WINDOWS
-//!!!    #include <QtWinExtras/QtWinExtras>
-//!!!    #include "shobjidl.h"
-#endif
-
 #define quoting(a) prequoting(a)
 #define prequoting(a) #a
 
@@ -104,6 +99,12 @@ void setTranslator(const QString &translationFileName, QTranslator **translator)
  * \brief Установить перевод интерфейса согласно указанному языку
  */
 void setAllTranslators(const QString &language);
+
+/**
+ * \brief Своя функция для вывода информационных и отладочных сообщений
+ */
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
 
 class CancelException : public std::exception {
 public:
@@ -424,7 +425,7 @@ private:
 
     QList<QWidget*>     m_pluginWidgets;
     QList<QDockWidget*> m_pluginDocks;
-    
+
     // Settings
     void loadSettings();
     void saveSettings();

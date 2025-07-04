@@ -24,29 +24,25 @@
 #include "frmmain.h"
 
 static QtMessageHandler originalHandler = nullptr;
+
+/**
+ * Выводить информационные и отладочные сообщение в консоль
+ */
 static bool debugOutput = false;
 
-static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
 
     if (!debugOutput) {
         return;
     }
 
-    QFile fMessFile(qApp->applicationDirPath() + "/Candle.log");
-
-    if (!fMessFile.open(QIODevice::Append | QIODevice::Text)) {
-        return;
-    }
-
-    QTextStream tsTextStream(&fMessFile);
+    QTextStream tsTextStream(stdout);
 
     /**
      * Вывести информацию о сообщении. Она может быть дополнительно оформлена
      * шаблоном, указанном в переменной окружения QT_MESSAGE_PATTERN.
      */
     tsTextStream << qFormatLogMessage(type, context, msg) << "\n";
-    fMessFile.flush();
-    fMessFile.close();
 }
 
 void setTranslator(const QString &translationFileName, QTranslator **translator) {
@@ -137,11 +133,16 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
+    /**
+     * Создать экземпляр типа QApplication
+     */
     QApplication a(argc, argv);
 
     a.setAttribute(Qt::AA_ForceRasterWidgets, false);
 
+    /**
+     * Установить для экземпляра QApplication версию и название программы
+     */
     a.setApplicationDisplayName(quoting(PROJECT_NAME));
     a.setApplicationVersion(VERSION_STR);
 
@@ -196,6 +197,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     frmMain w;
+
     w.show();
 
     return a.exec();
