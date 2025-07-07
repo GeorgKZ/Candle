@@ -206,6 +206,23 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
 #        "-Wextra"
 #        "-Wunused-but-set-variable"
         "-Weverything"
+        "-Wno-padded"
+        "-Wno-c++98-compat"
+        "-Wno-c++98-compat-pedantic"
+        "-Wno-documentation-unknown-command"
+        "-Wno-poison-system-directories"
+        "-Wno-global-constructors"
+
+        # Временно
+        "-Wno-implicit-float-conversion"
+        "-Wno-implicit-int-conversion"
+        "-Wno-float-conversion"
+        "-Wno-double-promotion"
+        "-Wno-float-equal"
+        "-Wno-shorten-64-to-32"
+        "-Wno-old-style-cast"
+        "-Wno-sign-conversion"
+        "-Wno-exit-time-destructors"
     )
     add_definitions(
         "-D__CLANG__"
@@ -644,7 +661,7 @@ if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
     )
 
 else()
-    message(WARNING "Программа PVS Studio не найдена: будет отсутствовать возможность статического анализа")
+    message(NOTICE "Программа PVS Studio не найдена: будет отсутствовать возможность статического анализа")
 endif()
 
 ##############################################################################

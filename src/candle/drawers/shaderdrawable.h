@@ -32,7 +32,7 @@ public:
     void draw(QOpenGLShaderProgram *shaderProgram);
 
     bool needsUpdateGeometry() const;
-    void updateGeometry(QOpenGLShaderProgram *shaderProgram = 0);
+    void updateGeometry(QOpenGLShaderProgram *shaderProgram = nullptr);
 
     virtual QVector4D getSizes();
     virtual QVector4D getMinimumExtremes();
@@ -53,6 +53,7 @@ signals:
 public slots:
 
 protected:
+
     double m_lineWidth;
     double m_pointSize;
     bool m_visible;
@@ -64,9 +65,11 @@ protected:
     QOpenGLBuffer m_vbo; // Protected for direct vbo access
 
     virtual bool updateData();
+
     void init();
 
 private:
+
     QOpenGLVertexArrayObject m_vao;
 
     bool m_needsUpdateGeometry;

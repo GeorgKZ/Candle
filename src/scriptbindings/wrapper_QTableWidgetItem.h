@@ -123,7 +123,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QTableWidgetItem() {
+  virtual ~wrapper_QTableWidgetItem() override {
     qDebug() << "wrapper_QTableWidgetItem::destructor";
   }
 
@@ -144,6 +144,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QTableWidgetItem);
+Q_DECLARE_METATYPE(wrapper_QTableWidgetItem)
 
 #endif // WRAPPER_QTABLEWIDGETITEM_H

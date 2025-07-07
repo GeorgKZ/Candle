@@ -9,6 +9,7 @@
 class ComboBoxKey : public QComboBox
 {
 public:
+
     explicit ComboBoxKey(QWidget *parent = nullptr);
 
     void setEditable(bool editable);
@@ -20,10 +21,12 @@ public:
     QStringList items();
 
 protected:
-    void keyPressEvent(QKeyEvent *e);
-    void keyReleaseEvent(QKeyEvent *e);
+
+    virtual void keyPressEvent(QKeyEvent *e) override;
+    virtual void keyReleaseEvent(QKeyEvent *e) override;
 
 private:
+
     bool isBlockedKey(int key);
 };
 

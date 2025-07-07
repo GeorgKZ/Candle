@@ -6,6 +6,7 @@
 class SelectionDrawer : public ShaderDrawable
 {        
 public:
+
     SelectionDrawer();
 
     QVector4D startPosition() const;
@@ -18,9 +19,11 @@ public:
     void setEndPosition(const QVector4D &endPosition);
 
 protected:
-    bool  updateData();
+
+    virtual bool updateData() override;
 
 private:
+
     QVector4D m_startPosition;
     QVector4D m_endPosition;
 

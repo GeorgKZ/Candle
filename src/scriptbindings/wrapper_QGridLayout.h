@@ -127,7 +127,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QGridLayout() {
+  virtual ~wrapper_QGridLayout() override {
     delete static_cast<QGridLayout*>(wrapper_QLayout::get_selfptr());
   }
 
@@ -148,6 +148,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QGridLayout);
+Q_DECLARE_METATYPE(wrapper_QGridLayout)
 
 #endif // WRAPPER_QGRIDLAYOUT_H

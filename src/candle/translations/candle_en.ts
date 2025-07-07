@@ -94,7 +94,7 @@
     <message>
         <location filename="../frmmain.ui" line="475"/>
         <location filename="../frmmain.ui" line="3231"/>
-        <location filename="../frmmain.cpp" line="4262"/>
+        <location filename="../frmmain.cpp" line="4265"/>
         <source>Send</source>
         <translation type="unfinished"></translation>
     </message>
@@ -108,8 +108,8 @@
         <location filename="../frmmain.ui" line="492"/>
         <location filename="../frmmain.ui" line="3241"/>
         <location filename="../frmmain.cpp" line="1166"/>
-        <location filename="../frmmain.cpp" line="3680"/>
-        <location filename="../frmmain.cpp" line="3853"/>
+        <location filename="../frmmain.cpp" line="3683"/>
+        <location filename="../frmmain.cpp" line="3856"/>
         <source>Abort</source>
         <translation type="unfinished"></translation>
     </message>
@@ -162,7 +162,7 @@
     </message>
     <message>
         <location filename="../frmmain.ui" line="693"/>
-        <location filename="../frmmain.cpp" line="4243"/>
+        <location filename="../frmmain.cpp" line="4246"/>
         <source>Heightmap</source>
         <translation type="unfinished"></translation>
     </message>
@@ -383,8 +383,8 @@
     <message>
         <location filename="../frmmain.ui" line="2175"/>
         <location filename="../frmmain.cpp" line="70"/>
-        <location filename="../frmmain.cpp" line="4314"/>
-        <location filename="../frmmain.cpp" line="4316"/>
+        <location filename="../frmmain.cpp" line="4317"/>
+        <location filename="../frmmain.cpp" line="4319"/>
         <source>Jog</source>
         <translation type="unfinished"></translation>
     </message>
@@ -663,7 +663,7 @@
     <message>
         <location filename="../frmmain.cpp" line="293"/>
         <location filename="../frmmain.cpp" line="430"/>
-        <location filename="../frmmain.cpp" line="4881"/>
+        <location filename="../frmmain.cpp" line="4884"/>
         <source>Speed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -842,85 +842,85 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3296"/>
+        <location filename="../frmmain.cpp" line="3299"/>
         <source>Loading plugins:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3510"/>
+        <location filename="../frmmain.cpp" line="3513"/>
         <source>Port opened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3680"/>
+        <location filename="../frmmain.cpp" line="3683"/>
         <source>Updating...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3789"/>
-        <location filename="../frmmain.cpp" line="3964"/>
+        <location filename="../frmmain.cpp" line="3792"/>
+        <location filename="../frmmain.cpp" line="3967"/>
         <source>Can&apos;t open file:
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3853"/>
+        <location filename="../frmmain.cpp" line="3856"/>
         <source>Opening file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3916"/>
+        <location filename="../frmmain.cpp" line="3919"/>
         <source>G-code program file was changed. Save?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3924"/>
+        <location filename="../frmmain.cpp" line="3927"/>
         <source>Heightmap file was changed. Save?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4126"/>
+        <location filename="../frmmain.cpp" line="4129"/>
         <source>Untitled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4207"/>
+        <location filename="../frmmain.cpp" line="4210"/>
         <source>Not connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4243"/>
+        <location filename="../frmmain.cpp" line="4246"/>
         <source>G-code program</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4262"/>
+        <location filename="../frmmain.cpp" line="4265"/>
         <source>Probe</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4316"/>
+        <location filename="../frmmain.cpp" line="4319"/>
         <source> (%1/%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4317"/>
+        <location filename="../frmmain.cpp" line="4320"/>
         <source>C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4379"/>
+        <location filename="../frmmain.cpp" line="4382"/>
         <source>Changing grid settings will reset probe data. Continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4823"/>
+        <location filename="../frmmain.cpp" line="4826"/>
         <source>Job done.
 Time elapsed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="4891"/>
+        <location filename="../frmmain.cpp" line="4894"/>
         <source>Power:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1306,7 +1306,7 @@ Time elapsed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmsettings.cpp" line="853"/>
+        <location filename="../frmsettings.cpp" line="856"/>
         <source>Reset settings to default values?</source>
         <translation type="unfinished"></translation>
     </message>

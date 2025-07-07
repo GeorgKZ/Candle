@@ -81,10 +81,10 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QStyledItemDelegate() { }
+  virtual ~wrapper_QStyledItemDelegate() override { }
 };
 
-Q_DECLARE_METATYPE(wrapper_QStyledItemDelegate);
+Q_DECLARE_METATYPE(wrapper_QStyledItemDelegate)
 
 
 #endif // WRAPPER_QSTYLEDITEMDELEGATE_H

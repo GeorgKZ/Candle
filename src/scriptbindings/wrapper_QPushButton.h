@@ -48,13 +48,13 @@ public:
 
 
   // QSize sizeHint() const
-  Q_INVOKABLE QJSValue sizeHint() const {
+  Q_INVOKABLE virtual QJSValue sizeHint() const override {
     QSize *size = new QSize(get_selfptr()->sizeHint());
     return wrapperFactory("QSize", size);
   }
 
   // QSize minimumSizeHint()
-  Q_INVOKABLE QJSValue minimumSizeHint() const {
+  Q_INVOKABLE virtual QJSValue minimumSizeHint() const override {
     QSize *size = new QSize(get_selfptr()->minimumSizeHint());
     return wrapperFactory("QSize", size);
   }
@@ -124,11 +124,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QPushButton() {
-    qDebug() << "wrapper_QPushButton::descructor";
+  virtual ~wrapper_QPushButton() override {
+    qDebug() << "wrapper_QPushButton::destructor";
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QPushButton);
+Q_DECLARE_METATYPE(wrapper_QPushButton)
 
 #endif // WRAPPER_QPUSHBUTTON_H

@@ -21,11 +21,14 @@
 class CustomKeySequenceEdit : public QKeySequenceEdit
 {
 public:
+
     explicit CustomKeySequenceEdit(QWidget *parent = nullptr): QKeySequenceEdit(parent) {}
-    ~CustomKeySequenceEdit() {}
+
+    virtual ~CustomKeySequenceEdit() override {}
 
 protected:
-    void keyPressEvent(QKeyEvent *pEvent) {
+
+    virtual void keyPressEvent(QKeyEvent *pEvent) override {
         QKeySequenceEdit::keyPressEvent(pEvent);
         QString s = keySequence().toString().split(", ").first();
 

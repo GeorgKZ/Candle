@@ -604,7 +604,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QWidget() {
+  virtual ~wrapper_QWidget() override {
     qDebug() << "wrapper_QWidget::desctructor";
     /* delete static_cast<QWidget*>(wrapper_QObject::get_selfptr()); */
   }
@@ -626,7 +626,7 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QWidget);
-Q_DECLARE_METATYPE(wrapper_QWidget*);
+Q_DECLARE_METATYPE(wrapper_QWidget)
+Q_DECLARE_METATYPE(wrapper_QWidget*)
 
 #endif // WRAPPER_QWIDGET_H

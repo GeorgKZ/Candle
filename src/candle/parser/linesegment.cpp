@@ -241,8 +241,3 @@ void LineSegment::setPlane(const PointSegment::planes &plane)
 {
     m_plane = plane;
 }
-
-
-
-
-

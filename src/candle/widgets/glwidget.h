@@ -13,12 +13,16 @@
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
+
 public:
+
     explicit GLWidget(QWidget *parent = nullptr);
-    ~GLWidget();
+
+    virtual ~GLWidget() override;
+
     void addDrawable(ShaderDrawable *drawable);
     void updateExtremes(ShaderDrawable *drawable);
-    void fitDrawable(ShaderDrawable *drawable = NULL);
+    void fitDrawable(ShaderDrawable *drawable = nullptr);
     bool antialiasing() const;
     void setAntialiasing(bool antialiasing);
 
@@ -73,16 +77,19 @@ public:
     void setPinState(const QString &pinState);
 
 signals:
+
     void rotationChanged();
     void resized();
 
 public slots:
 
 private slots:
+
     void onFramesTimer();
     void viewAnimation();
 
 private:
+
     double m_xRot, m_yRot, m_xLastRot, m_yLastRot;
     double m_xPan, m_yPan, m_xLastPan, m_yLastPan;
     double m_xLookAt, m_yLookAt, m_zLookAt;
@@ -126,6 +133,7 @@ private:
     QColor m_colorText;
 
 protected:
+
     virtual void initializeGL() override;
     virtual void resizeGL(int width, int height) override;
     void updateProjection();

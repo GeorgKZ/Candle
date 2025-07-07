@@ -223,11 +223,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_CameraWidget() {
+  virtual ~wrapper_CameraWidget() override {
     qDebug() << "wrapper_CameraWidget::destructor";
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_CameraWidget);
+Q_DECLARE_METATYPE(wrapper_CameraWidget)
 
 #endif // WRAPPER_CAMERAWIDGET_H

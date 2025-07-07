@@ -1,3 +1,6 @@
+#ifndef CAMERAPLUGIN_H
+#define CAMERAPLUGIN_H
+
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class CameraPlugin: public QObject, QDesignerCustomWidgetInterface
@@ -30,5 +33,8 @@ public:
     void initialize(QDesignerFormEditorInterface *core) override;
 
 private:
+
     bool m_initialized;
 };
+
+#endif // CAMERAPLUGIN_H

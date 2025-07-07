@@ -179,7 +179,7 @@ public:
 //    wrapper_common(static_cast<QColor*>((void*)obj.get_selfptr())) { }
     
   // Деструктор
-  virtual ~wrapper_QColor() {
+  virtual ~wrapper_QColor() override {
     qDebug() << "wrapper_QColor::desctructor";
     delete static_cast<QColor*>(wrapper_common::get_selfptr());
   }
@@ -201,6 +201,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QColor);
+Q_DECLARE_METATYPE(wrapper_QColor)
 
 #endif // WRAPPER_QCOLOR_H

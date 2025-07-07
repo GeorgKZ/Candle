@@ -5,7 +5,7 @@
 
 HeightMapInterpolationDrawer::HeightMapInterpolationDrawer()
 {
-    m_data = NULL;
+    m_data = nullptr;
 }
 
 HeightMapInterpolationDrawer::~HeightMapInterpolationDrawer()
@@ -105,7 +105,3 @@ void HeightMapInterpolationDrawer::setBorderRect(const QRectF &borderRect)
 {
     m_borderRect = borderRect;
 }
-
-
-
-

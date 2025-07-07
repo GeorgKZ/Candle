@@ -13,7 +13,9 @@
 class GcodeDrawer : public QObject, public ShaderDrawable
 {
     Q_OBJECT
+
 public:
+
     enum GrayscaleCode { S, Z };
     enum DrawMode { Vectors, Raster };
 
@@ -21,11 +23,11 @@ public:
 
     void update();
     void update(QList<int> indexes);
-    bool updateData();
+    virtual bool updateData() override;
 
-    QVector4D getSizes();
-    QVector4D getMinimumExtremes();
-    QVector4D getMaximumExtremes();
+    virtual QVector4D getSizes() override;
+    virtual QVector4D getMinimumExtremes() override;
+    virtual QVector4D getMaximumExtremes() override;
 
     void setViewParser(GcodeViewParse* viewParser);
     GcodeViewParse* viewParser();        

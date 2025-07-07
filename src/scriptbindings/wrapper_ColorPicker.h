@@ -66,12 +66,12 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_ColorPicker() {
+  virtual ~wrapper_ColorPicker() override {
     qDebug() << "wrapper_ColorPicker::destructor";
 /*  delete get_selfptr(); */
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_ColorPicker);
+Q_DECLARE_METATYPE(wrapper_ColorPicker)
 
 #endif // WRAPPER_COLORPICKER_H

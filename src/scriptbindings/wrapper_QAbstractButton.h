@@ -163,11 +163,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QAbstractButton() {
+  virtual ~wrapper_QAbstractButton() override {
     qDebug() << "wrapper_QAbstractButton::destructor";
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QAbstractButton);
+Q_DECLARE_METATYPE(wrapper_QAbstractButton)
 
 #endif // WRAPPER_QABSTRACTBUTTON_H

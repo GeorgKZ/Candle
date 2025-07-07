@@ -10,22 +10,27 @@
 class ComboBox : public QComboBox
 {
     Q_OBJECT
+
 public:
+
     explicit ComboBox(QWidget *parent = nullptr);
-    ~ComboBox();
+    virtual ~ComboBox() override;
 
     void storeText();
 
 public slots:
+
     void addItems(const QStringList &texts) {QComboBox::addItems(texts);}
     void setItems(const QStringList &texts) {QComboBox::clear(); addItems(texts);}
-    QStringList items() {QStringList l; for (int i = 0; i < count(); i++) l << itemText(i); return l;};
+    QStringList items() {QStringList l; for (int i = 0; i < count(); i++) l << itemText(i); return l;}
 
 signals:
+
     void returnPressed();
 
 protected:
-    void keyPressEvent(QKeyEvent *e);
+
+    virtual void keyPressEvent(QKeyEvent *e) override;
 };
 
 #endif // COMBOBOX_H

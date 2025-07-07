@@ -6,7 +6,9 @@
 
 class WidgetMimeData: public QMimeData
 {
+
 public:
+
     WidgetMimeData(): QMimeData()
     {
         m_widget = nullptr;
@@ -29,7 +31,8 @@ public:
     }
 
 private:
+
     QWidget* m_widget;
 };
 
-#endif
+#endif // WIDGETMIMEDATA_H

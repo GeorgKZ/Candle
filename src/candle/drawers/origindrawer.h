@@ -6,11 +6,14 @@
 class OriginDrawer : public ShaderDrawable
 {
 public:
+
     OriginDrawer();
-    virtual  ~OriginDrawer();
+
+    virtual ~OriginDrawer() override;
 
 protected:
-    bool updateData();
+
+    virtual bool updateData() override;
 };
 
 #endif // ORIGINDRAWER_H

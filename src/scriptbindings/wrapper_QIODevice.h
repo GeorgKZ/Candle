@@ -39,7 +39,7 @@ public:
   }
 
   // Деструктор (объект QIODeviceBase не удаляется)
-  virtual ~wrapper_QIODeviceBase() {
+  virtual ~wrapper_QIODeviceBase() override {
   }
 
   // Получение константного указателя на объект
@@ -157,7 +157,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QIODevice() {
+  virtual ~wrapper_QIODevice() override {
 //!!!    delete static_cast<QIODevice*>(wrapper_QIODeviceBase::get_selfptr());
   }
 
@@ -271,7 +271,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QFileDevice() {
+  virtual ~wrapper_QFileDevice() override {
     qDebug() << "wrapper_QFileDevice::destructor";
     //!!! не должен удаляться! delete static_cast<QFileDevice*>(wrapper_QIODevice::get_selfptr());
   }
@@ -293,8 +293,8 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QIODeviceBase);
-Q_DECLARE_METATYPE(wrapper_QIODevice);
-Q_DECLARE_METATYPE(wrapper_QFileDevice);
+Q_DECLARE_METATYPE(wrapper_QIODeviceBase)
+Q_DECLARE_METATYPE(wrapper_QIODevice)
+Q_DECLARE_METATYPE(wrapper_QFileDevice)
 
 #endif // WRAPPER_QIODEVICE_H

@@ -14,8 +14,9 @@
 class HeightMapInterpolationDrawer : public ShaderDrawable
 {
 public:
+
     explicit HeightMapInterpolationDrawer();
-    virtual ~HeightMapInterpolationDrawer();
+    virtual ~HeightMapInterpolationDrawer() override;
 
     QVector<QVector<double> > *data() const;
     void setData(QVector<QVector<double> > *data);
@@ -24,9 +25,11 @@ public:
     void setBorderRect(const QRectF &borderRect);
 
 protected:
-    bool updateData();
+
+    virtual bool updateData() override;
 
 private:
+
     QRectF m_borderRect;
     double m_gridSize;
     QVector<QVector<double>> *m_data;

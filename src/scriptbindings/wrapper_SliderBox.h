@@ -154,12 +154,12 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_SliderBox() {
+  virtual ~wrapper_SliderBox() override {
     qDebug() << "wrapper_SliderBox::destructor";
 /*  delete get_selfptr(); */
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_SliderBox);
+Q_DECLARE_METATYPE(wrapper_SliderBox)
 
 #endif // WRAPPER_SLIDERBOX_H

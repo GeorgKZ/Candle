@@ -10,16 +10,19 @@
 class HeightMapBorderDrawer : public ShaderDrawable
 {
 public:
+
     HeightMapBorderDrawer();
-    virtual ~HeightMapBorderDrawer();
+    virtual ~HeightMapBorderDrawer() override;
 
     QRectF borderRect() const;
     void setBorderRect(const QRectF &borderRect);
 
 protected:
-    bool updateData();
+
+    virtual bool updateData() override;
 
 private:
+
     QRectF m_borderRect;
 };
 

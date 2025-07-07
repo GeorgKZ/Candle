@@ -8,7 +8,7 @@ ShaderDrawable::ShaderDrawable()
     m_visible = true;
     m_lineWidth = 1.0;
     m_pointSize = 1.0;
-    m_texture = NULL;
+    m_texture = nullptr;
 }
 
 ShaderDrawable::~ShaderDrawable()
@@ -222,5 +222,3 @@ void ShaderDrawable::setPointSize(double pointSize)
 {
     m_pointSize = pointSize;
 }
-
-

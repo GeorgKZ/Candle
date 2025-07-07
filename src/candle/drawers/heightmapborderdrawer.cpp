@@ -45,5 +45,3 @@ bool HeightMapBorderDrawer::updateData()
         << VertexData(QVector4D(m_borderRect.x(),                        m_borderRect.y(),                         0, 1.0), QVector3D(1.0, 0.0, 0.0), QVector4D(sNan, sNan, sNan, 1.0));
     return true;
 }
-
-

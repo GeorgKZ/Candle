@@ -42,7 +42,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
      * Вывести информацию о сообщении. Она может быть дополнительно оформлена
      * шаблоном, указанном в переменной окружения QT_MESSAGE_PATTERN.
      */
-    tsTextStream << qFormatLogMessage(type, context, msg) << "\n";
+    tsTextStream << qFormatLogMessage(type, context, msg) << Qt::endl;
 }
 
 void setTranslator(const QString &translationFileName, QTranslator **translator) {

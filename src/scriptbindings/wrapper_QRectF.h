@@ -166,12 +166,12 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QRectF() {
+  virtual ~wrapper_QRectF() override {
     qDebug() << "wrapper_QRectF::destructor";
 //    delete static_cast<QRectF*>(wrapper_common::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QRectF);
+Q_DECLARE_METATYPE(wrapper_QRectF)
 
 #endif // WRAPPER_QRectF_H

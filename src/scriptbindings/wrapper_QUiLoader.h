@@ -100,7 +100,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QUiLoader() {
+  virtual ~wrapper_QUiLoader() override {
     qDebug() << "wrapper_QUiLoader::destructor(self=" << (unsigned long long)wrapper_QObject::get_selfptr() << ")";
     delete static_cast<QUiLoader*>(wrapper_QObject::get_selfptr());
   }
@@ -122,6 +122,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QUiLoader);
+Q_DECLARE_METATYPE(wrapper_QUiLoader)
 
 #endif // WRAPPER_QUILOADER_H

@@ -231,7 +231,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QFile() {
+  virtual ~wrapper_QFile() override {
     delete static_cast<QFile*>(wrapper_QFileDevice::get_selfptr());
   }
 
@@ -246,6 +246,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QFile);
+Q_DECLARE_METATYPE(wrapper_QFile)
 
 #endif // WRAPPER_QFILE_H

@@ -97,7 +97,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QSizePolicy() {
+  virtual ~wrapper_QSizePolicy() override {
     qDebug() << "wrapper_QSizePolicy::destructor";
   }
 

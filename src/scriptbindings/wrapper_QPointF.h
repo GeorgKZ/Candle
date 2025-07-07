@@ -91,12 +91,12 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QPointF() {
+  virtual ~wrapper_QPointF() override {
     qDebug() << "wrapper_QPointF::destructor";
 //    delete static_cast<QPoint*>(wrapper_common::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QPointF);
+Q_DECLARE_METATYPE(wrapper_QPointF)
 
 #endif // WRAPPER_QPOINTF_H

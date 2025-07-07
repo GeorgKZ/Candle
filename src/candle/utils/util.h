@@ -1,8 +1,8 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#ifndef UTIL
-#define UTIL
+#ifndef UTIL_H
+#define UTIL_H
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
@@ -58,5 +58,4 @@ public:
     }
 };
 
-#endif // UTIL
-
+#endif // UTIL_H

@@ -234,11 +234,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QDir() {
+  virtual ~wrapper_QDir() override {
     delete static_cast<QDir*>(wrapper_common::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QDir);
+Q_DECLARE_METATYPE(wrapper_QDir)
 
 #endif // WRAPPER_QDIR_H

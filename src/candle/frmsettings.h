@@ -75,7 +75,7 @@ class frmSettings : public QDialog
 
 public:
     explicit frmSettings(QWidget *parent = nullptr);
-    ~frmSettings();
+    virtual ~frmSettings() override;
 
     Ui::frmSettings *ui;
 

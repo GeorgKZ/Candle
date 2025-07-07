@@ -212,10 +212,10 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QComboBox() {
+  virtual ~wrapper_QComboBox() override {
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QComboBox);
+Q_DECLARE_METATYPE(wrapper_QComboBox)
 
 #endif // WRAPPER_QCOMBOBOX_H

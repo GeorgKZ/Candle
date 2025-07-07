@@ -102,7 +102,7 @@ Q_SIGNALS:
     }
 
     // Деструктор
-    virtual ~wrapper_QSpinBox() {
+    virtual ~wrapper_QSpinBox() override {
         qDebug() << "wrapper_QSpinBox::destructor";
     }
 };
@@ -209,7 +209,7 @@ Q_SIGNALS:
     }
 
     // Деструктор
-    virtual ~wrapper_QDoubleSpinBox() {
+    virtual ~wrapper_QDoubleSpinBox() override {
         qDebug() << "wrapper_QDoubleSpinBox::destructor";
     }
 };

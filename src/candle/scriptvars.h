@@ -148,4 +148,4 @@ private:
     int m_tool;
 };
 
-#endif  
+#endif // SCRIPTVARS_H

@@ -91,7 +91,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QSlider() {
+  virtual ~wrapper_QSlider() override {
     qDebug() << "wrapper_QSlider::destructor";
 /*  delete get_selfptr(); */
   }

@@ -5,7 +5,7 @@
 
 HeightMapGridDrawer::HeightMapGridDrawer()
 {
-    m_model = NULL;
+    m_model = nullptr;
     m_pointSize = 4;
 }
 
@@ -36,7 +36,7 @@ bool HeightMapGridDrawer::updateData()
     // Probe path / dots
     for (int i = 0; i < gridPointsY; i++) {
         for (int j = 0; j < gridPointsX; j++) {
-            if (/* m_model == NULL || */ qIsNaN(m_model->data(m_model->index(i, j), Qt::UserRole).toDouble())) {
+            if (/* m_model == nullptr || */ qIsNaN(m_model->data(m_model->index(i, j), Qt::UserRole).toDouble())) {
                 vertex.color = QVector3D(1.0f, 0.6f, 0.0f);
                 vertex.position = QVector4D(m_borderRect.x() + gridStepX * j, m_borderRect.y() + gridStepY * i, m_zTop, 1.0);
                 m_lines.append(vertex);

@@ -128,7 +128,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QLayout() {
+  virtual ~wrapper_QLayout() override {
     qDebug() << "wrapper_QLayout destructor";
 //    delete static_cast<QLayout*>(wrapper_QObject::get_selfptr());
   }
@@ -150,7 +150,7 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QLayout);
-Q_DECLARE_METATYPE(wrapper_QLayout*);
+Q_DECLARE_METATYPE(wrapper_QLayout)
+Q_DECLARE_METATYPE(wrapper_QLayout*)
 
 #endif // WRAPPER_QLAYOUT_H

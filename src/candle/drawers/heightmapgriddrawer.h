@@ -11,8 +11,9 @@
 class HeightMapGridDrawer : public ShaderDrawable
 {
 public:
+
     HeightMapGridDrawer();
-    virtual ~HeightMapGridDrawer();
+    virtual ~HeightMapGridDrawer() override;
 
     QPointF gridSize() const;
     void setGridSize(const QPointF &gridSize);
@@ -30,9 +31,11 @@ public:
     void setModel(QAbstractTableModel *model);
 
 protected:
-    bool updateData();
+
+    virtual bool updateData() override;
 
 private:
+
     QPointF m_gridSize;
     QRectF m_borderRect;
     double m_zTop;

@@ -143,5 +143,3 @@ void StyledToolButton::setBackColor(const QColor &backColor)
 {
     m_backColor = backColor;
 }
-
-

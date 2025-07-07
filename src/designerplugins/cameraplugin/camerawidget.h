@@ -113,7 +113,7 @@ public:
     /**
      * \brief Деструктор
      */
-    ~CameraWidget();
+    virtual ~CameraWidget() override;
 
     /**
      * \brief Проверить, работает ли текущая камера

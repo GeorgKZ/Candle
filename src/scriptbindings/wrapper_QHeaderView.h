@@ -41,7 +41,7 @@ public:
   Q_INVOKABLE int length() const { return get_selfptr()->length(); }
 
   // QSize sizeHint() const
-  Q_INVOKABLE QJSValue sizeHint() const {
+  Q_INVOKABLE virtual QJSValue sizeHint() const override {
     return wrapperFactory("QSize", new QSize(get_selfptr()->sizeHint()));
   }
 
@@ -180,9 +180,9 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QHeaderView() { }
+  virtual ~wrapper_QHeaderView() override { }
 };
 
-Q_DECLARE_METATYPE(wrapper_QHeaderView);
+Q_DECLARE_METATYPE(wrapper_QHeaderView)
 
 #endif // WRAPPER_QHEADERVIEW_H

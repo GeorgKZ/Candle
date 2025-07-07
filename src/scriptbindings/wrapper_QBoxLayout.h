@@ -91,7 +91,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QBoxLayout() {
+  virtual ~wrapper_QBoxLayout() override {
     delete static_cast<QBoxLayout*>(wrapper_QLayout::get_selfptr());
   }
 
@@ -134,7 +134,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QHBoxLayout() {
+  virtual ~wrapper_QHBoxLayout() override {
     delete static_cast<QHBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
   }
 
@@ -177,7 +177,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QVBoxLayout() {
+  virtual ~wrapper_QVBoxLayout() override {
     delete static_cast<QVBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
   }
 
@@ -198,6 +198,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QBoxLayout);
+Q_DECLARE_METATYPE(wrapper_QBoxLayout)
 
 #endif // WRAPPER_QBOXLAYOUT_H

@@ -92,7 +92,7 @@ public:
   }
     
   // Деструктор
-  virtual ~wrapper_QIcon() {
+  virtual ~wrapper_QIcon() override {
  //!!!   delete static_cast<QIcon*>(wrapper_common::get_selfptr());
   }
 
@@ -113,6 +113,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QIcon);
+Q_DECLARE_METATYPE(wrapper_QIcon)
 
 #endif // WRAPPER_QICON_H

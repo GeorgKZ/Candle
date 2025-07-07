@@ -35,9 +35,9 @@ bool GcodeDrawer::updateData()
 {
     switch (m_drawMode) {
     case GcodeDrawer::Vectors:
-        if (m_indexes.isEmpty()) return prepareVectors(); else return updateVectors();
+        return m_indexes.isEmpty() ? prepareVectors() : updateVectors();
     case GcodeDrawer::Raster:
-        if (m_indexes.isEmpty()) return prepareRaster(); else return updateRaster();
+        return m_indexes.isEmpty() ? prepareRaster() : updateRaster();
     default:
         return true;
     }
@@ -61,7 +61,7 @@ bool GcodeDrawer::prepareVectors()
     if (m_texture) {
         m_texture->destroy();
         delete m_texture;
-        m_texture = NULL;
+        m_texture = nullptr;
     }
 
     bool drawFirstPoint = true;
@@ -211,7 +211,7 @@ bool GcodeDrawer::prepareRaster()
     if (m_texture) {
         m_texture->destroy();
         delete m_texture;
-        m_texture = NULL;
+        m_texture = nullptr;
     }
 
     QVector<VertexData> vertices;
@@ -495,12 +495,3 @@ void GcodeDrawer::setGrayscaleSegments(bool grayscaleSegments)
 {
     m_grayscaleSegments = grayscaleSegments;
 }
-
-
-
-
-
-
-
-
-

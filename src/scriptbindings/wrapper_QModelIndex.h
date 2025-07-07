@@ -71,7 +71,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QModelIndex() {
+  virtual ~wrapper_QModelIndex() override {
     qDebug() << "wrapper_QModelIndex::destructor";
   }
 

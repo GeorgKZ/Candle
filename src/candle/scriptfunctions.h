@@ -55,4 +55,4 @@ private:
     frmMain *m_frmMain;
 };
 
-#endif
+#endif // SCRIPTFUNCTIONS_H

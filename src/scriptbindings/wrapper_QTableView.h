@@ -142,11 +142,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QTableView() {
+  virtual ~wrapper_QTableView() override {
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QTableView);
+Q_DECLARE_METATYPE(wrapper_QTableView)
 
 
 #endif // WRAPPER_QTABLEVIEW_H

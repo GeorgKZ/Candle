@@ -487,7 +487,7 @@ void frmMain::showEvent(QShowEvent *se)
 
 #ifdef WINDOWS
 //    if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
-//        if (m_taskBarButton == NULL) {
+//        if (m_taskBarButton == nullptr) {
 //            m_taskBarButton = new QWinTaskbarButton(this);
 //            m_taskBarButton->setWindow(this->windowHandle());
 //            m_taskBarProgress = m_taskBarButton->progress();
@@ -956,7 +956,7 @@ void frmMain::on_cmdFileReset_clicked()
         ui->txtHeightMapGridZTop->setEnabled(true);
 
         delete m_heightMapInterpolationDrawer.data();
-        m_heightMapInterpolationDrawer.setData(NULL);
+        m_heightMapInterpolationDrawer.setData(nullptr);
 
         m_heightMapModel.clear();
         updateHeightMapGrid();
@@ -1156,7 +1156,7 @@ void frmMain::on_chkHeightMapUse_clicked(bool checked)
 
     // Reset table view
     QByteArray headerState = ui->tblProgram->horizontalHeader()->saveState();
-    ui->tblProgram->setModel(NULL);
+    ui->tblProgram->setModel(nullptr);
 
     CancelException cancel;
 
@@ -1928,7 +1928,7 @@ void frmMain::onSerialPortReadyRead()
                 // Update pins state
                 QString pinState;
                 static QRegularExpression pn("Pn:([^|^>]*)");
-                QRegularExpressionMatch match = pn.match(data);
+                match = pn.match(data);
                 if (match.hasMatch()) {
                     pinState.append(QString(tr("PS: %1")).arg(match.captured(1)));
                 }
@@ -2329,8 +2329,8 @@ qDebug() << "Common response: " << response;
                                 m_toolDrawer.setToolPosition(vec);
                             }
 
-                            foreach (int i, drawnLines) {
-                                list.at(i)->setDrawn(true);
+                            foreach (int il, drawnLines) {
+                                list.at(il)->setDrawn(true);
                             }
                             if (!drawnLines.isEmpty()) m_currentDrawer->update(drawnLines);
                         } else {
@@ -2592,7 +2592,7 @@ void frmMain::onActRecentFileTriggered()
 {
     QAction *action = static_cast<QAction*>(sender());
 
-    if (action != NULL) {
+    if (action != nullptr) {
         QString fileName = action->text();
         if (!saveChanges(m_heightMapMode)) return;
         if (!m_heightMapMode) loadFile(fileName); else loadHeightMap(fileName);
@@ -2739,7 +2739,7 @@ void frmMain::updateHeightMapInterpolationDrawer(bool reset)
         interpolationData->append(row);
     }
 
-    if (m_heightMapInterpolationDrawer.data() != NULL) {
+    if (m_heightMapInterpolationDrawer.data() != nullptr) {
         delete m_heightMapInterpolationDrawer.data();
     }
     m_heightMapInterpolationDrawer.setData(interpolationData);
@@ -2941,12 +2941,15 @@ void frmMain::loadSettings()
         }").arg(b).arg(c));
     ensurePolished();
 
-    foreach (QDockWidget *w, findChildren<QDockWidget*>()) w->setStyleSheet("");
+    foreach (QDockWidget *dw, findChildren<QDockWidget*>()) {
+        dw->setStyleSheet("");
+    }
 
     // Restore docks
         // Signals/slots
-    foreach (QDockWidget *w, findChildren<QDockWidget*>())
-        connect(w, &QDockWidget::topLevelChanged, this, &frmMain::onDockTopLevelChanged);
+    foreach (QDockWidget *dw, findChildren<QDockWidget*>()) {
+        connect(dw, &QDockWidget::topLevelChanged, this, &frmMain::onDockTopLevelChanged);
+   }
 
         // Panels
     ui->scrollContentsDevice->restoreState(this, set.value("panelsDevice").toStringList());
@@ -2957,14 +2960,14 @@ void frmMain::loadSettings()
 
     QStringList hiddenPanels = set.value("hiddenPanels").toStringList();
     foreach (QString s, hiddenPanels) {
-        QGroupBox *b = findChild<QGroupBox*>(s);
-        if (b) b->setHidden(true);
+        QGroupBox *gb = findChild<QGroupBox*>(s);
+        if (gb) gb->setHidden(true);
     }    
 
     QStringList collapsedPanels = set.value("collapsedPanels").toStringList();
     foreach (QString s, collapsedPanels) {
-        QGroupBox *b = findChild<QGroupBox*>(s);
-        if (b) b->setChecked(false);
+        QGroupBox *gb = findChild<QGroupBox*>(s);
+        if (gb) gb->setChecked(false);
     }
 
         // Normal window state
@@ -3159,10 +3162,10 @@ void frmMain::saveSettings()
 #ifdef PANEL_WIDGET
     if (ui->scrollContentsUser->isVisible()) panels << ui->scrollContentsUser->saveState();
 #endif
-    foreach (QString s, panels) {
-        QGroupBox *b = findChild<QGroupBox*>(s);
-        if (b && b->isHidden()) hiddenPanels << s;
-        if (b && b->isCheckable() && !b->isChecked()) collapsedPanels << s;
+    foreach (QString sp, panels) {
+        QGroupBox *b = findChild<QGroupBox*>(sp);
+        if (b && b->isHidden()) hiddenPanels << sp;
+        if (b && b->isCheckable() && !b->isChecked()) collapsedPanels << sp;
     }    
     set.setValue("hiddenPanels", hiddenPanels);
     set.setValue("collapsedPanels", collapsedPanels);
@@ -3830,7 +3833,7 @@ void frmMain::loadFile(QList<QString> data)
 
     // Reset tableview
     QByteArray headerState = ui->tblProgram->horizontalHeader()->saveState();
-    ui->tblProgram->setModel(NULL);
+    ui->tblProgram->setModel(nullptr);
 
     // Prepare parser
     GcodeParser gp;
@@ -4064,9 +4067,9 @@ void frmMain::clearTable()
 void frmMain::resetHeightmap()
 {
     delete m_heightMapInterpolationDrawer.data();
-    m_heightMapInterpolationDrawer.setData(NULL);
+    m_heightMapInterpolationDrawer.setData(nullptr);
 
-    ui->tblHeightMap->setModel(NULL);
+    ui->tblHeightMap->setModel(nullptr);
     m_heightMapModel.resize(1, 1);
 
     ui->txtHeightMap->clear();
@@ -4100,7 +4103,7 @@ void frmMain::newFile()
 
     // Reset tableview
     QByteArray headerState = ui->tblProgram->horizontalHeader()->saveState();
-    ui->tblProgram->setModel(NULL);
+    ui->tblProgram->setModel(nullptr);
 
     // Set table model
     ui->tblProgram->setModel(&m_programModel);
@@ -4391,7 +4394,7 @@ bool frmMain::updateHeightMapGrid()
     int gridPointsY = ui->txtHeightMapGridY->value();
 
     m_heightMapModel.resize(gridPointsX, gridPointsY);
-    ui->tblHeightMap->setModel(NULL);
+    ui->tblHeightMap->setModel(nullptr);
     ui->tblHeightMap->setModel(&m_heightMapModel);
     resizeTableHeightMapSections();
 
@@ -4903,5 +4906,3 @@ bool frmMain::actionTextLessThan(const QAction *a1, const QAction *a2)
 {
     return a1->text() < a2->text();
 }
-
-

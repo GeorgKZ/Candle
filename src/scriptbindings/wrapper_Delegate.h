@@ -26,7 +26,7 @@ public:
     m_pluginPath = pluginPath;
   }
 
-  ~IconDelegate() {}
+  virtual ~IconDelegate() override {}
 
   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override {
 
@@ -155,7 +155,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_IconDelegate() {
+  virtual ~wrapper_IconDelegate() override {
     qDebug() << "wrapper_IconDelegate::destructor";
   }
 };
@@ -173,7 +173,7 @@ public:
     m_alignment = Qt::AlignCenter;
   }
 
-  ~CodeDelegate() { }
+  virtual ~CodeDelegate() override { }
 
   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override {
 
@@ -296,7 +296,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_CodeDelegate() {
+  virtual ~wrapper_CodeDelegate() override {
     qDebug() << "wrapper_CodeDelegate::destructor";
   }
 };

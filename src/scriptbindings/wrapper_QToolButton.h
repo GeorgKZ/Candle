@@ -39,13 +39,13 @@ public:
   }
 
   // QSize sizeHint() const
-  Q_INVOKABLE QJSValue sizeHint() const {
+  Q_INVOKABLE virtual QJSValue sizeHint() const override {
     QSize *size = new QSize(get_selfptr()->sizeHint());
     return wrapperFactory("QSize", size);
   }
 
   // QSize minimumSizeHint()
-  Q_INVOKABLE QJSValue minimumSizeHint() const {
+  Q_INVOKABLE virtual QJSValue minimumSizeHint() const override {
     QSize *size = new QSize(get_selfptr()->minimumSizeHint());
     return wrapperFactory("QSize", size);
   }
@@ -137,11 +137,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QToolButton() {
-    qDebug() << "wrapper_QToolButton::descructor";
+  virtual ~wrapper_QToolButton() override {
+    qDebug() << "wrapper_QToolButton::destructor";
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QToolButton);
+Q_DECLARE_METATYPE(wrapper_QToolButton)
 
 #endif // WRAPPER_QTOOLBUTTON_H

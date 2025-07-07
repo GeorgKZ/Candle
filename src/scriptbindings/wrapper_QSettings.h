@@ -169,7 +169,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QSettings() {
+  virtual ~wrapper_QSettings() override {
     qDebug() << "wrapper_QSettings::destructor";
     /* delete static_cast<QSettings*>(wrapper_QObject::get_selfptr()); */
   }
@@ -191,6 +191,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QSettings);
+Q_DECLARE_METATYPE(wrapper_QSettings)
 
 #endif // WRAPPER_QSETTINGS_H

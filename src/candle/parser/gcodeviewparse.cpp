@@ -105,8 +105,8 @@ QList<LineSegment*> GcodeViewParse::getLinesFromParser(GcodeParser *gp, double a
     double minArcLength = 0.1;
 
     QVector4D *start, *end;
-    start = NULL;
-    end = NULL;
+    start = nullptr;
+    end = nullptr;
     LineSegment *ls;
 
     // Prepare segments indexes
@@ -121,7 +121,7 @@ QList<LineSegment*> GcodeViewParse::getLinesFromParser(GcodeParser *gp, double a
         end = ps->point();
 
         // start is null for the first iteration.
-        if (start != NULL) {           
+        if (start != nullptr) {           
             // Expand arc for graphics.            
             if (ps->isArc()) {
                 QList<QVector4D> points =

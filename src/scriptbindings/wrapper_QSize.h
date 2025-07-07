@@ -93,11 +93,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QSize() {
+  virtual ~wrapper_QSize() override {
 //    delete static_cast<QSize*>(wrapper_common::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QSize);
+Q_DECLARE_METATYPE(wrapper_QSize)
 
 #endif // WRAPPER_QSIZE_H

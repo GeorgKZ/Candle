@@ -14,7 +14,7 @@ class ToolDrawer : public ShaderDrawable
 {
 public:
     explicit ToolDrawer();
-    virtual ~ToolDrawer();
+    virtual ~ToolDrawer() override;
 
     double toolDiameter() const;
     void setToolDiameter(double toolDiameter);
@@ -40,7 +40,8 @@ signals:
 public slots:
 
 protected:
-    bool updateData();
+
+    virtual bool updateData() override;
 
 private:
     double m_toolDiameter;

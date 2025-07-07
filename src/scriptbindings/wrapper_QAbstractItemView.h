@@ -194,7 +194,7 @@ public:
       qDebug() << "wrapper_QAbstractItemView::setItemDelegateForColumn(" << column << ", ...)";
       get_selfptr()->setItemDelegateForColumn(column, val);
     } else {
-      qCritical() << "wrapper_QAbstractItemView::setItemDelegateForColumn(" << column << ", NULL)";
+      qCritical() << "wrapper_QAbstractItemView::setItemDelegateForColumn(" << column << ", nullptr)";
     }
 
 //    if (strcmp(delegate.toQObject()->metaObject()->className(), "wrapper_QStyledItemDelegate") == 0) {
@@ -280,9 +280,9 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QAbstractItemView() { }
+  virtual ~wrapper_QAbstractItemView() override { }
 };
 
-Q_DECLARE_METATYPE(wrapper_QAbstractItemView);
+Q_DECLARE_METATYPE(wrapper_QAbstractItemView)
 
 #endif // WRAPPER_QABSTRACTITEMVIEW_H

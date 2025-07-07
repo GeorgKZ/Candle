@@ -247,21 +247,21 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QAbstractSpinBox() {
+  virtual ~wrapper_QAbstractSpinBox() override {
     qDebug() << "QAbstractSpinBox::destructor";
   }
 
   // Получение константного указателя на объект
-  virtual const QAbstractSpinBox* get_selfptr() const {
+  const QAbstractSpinBox* get_selfptr() const {
     return static_cast<const QAbstractSpinBox*>(wrapper_QWidget::get_selfptr());
    }
 
   // Получение указателя на объект
-  virtual QAbstractSpinBox* get_selfptr() {
+  QAbstractSpinBox* get_selfptr() {
     return static_cast<QAbstractSpinBox*>(wrapper_QWidget::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QAbstractSpinBox);
+Q_DECLARE_METATYPE(wrapper_QAbstractSpinBox)
 
 #endif // WRAPPER_QABSTRACTSPOINBOX_H

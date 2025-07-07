@@ -30,7 +30,7 @@ public:
     /**
      * \brief Деструктор
      */
-    virtual ~frmAbout();
+    virtual ~frmAbout() override;
 
 private slots:
 

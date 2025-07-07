@@ -11,8 +11,9 @@
 class MachineBoundsDrawer : public ShaderDrawable
 {
 public:
+
     MachineBoundsDrawer();
-    virtual ~MachineBoundsDrawer();
+    virtual ~MachineBoundsDrawer() override;
 
     QSizeF gridSize() const;
     void setGridSize(const QSizeF &gridSize);
@@ -23,13 +24,15 @@ public:
     QPointF offset() const;
     void setOffset(const QPointF &offset);
 
-    QVector4D getMaximumExtremes();
-    QVector4D getMinimumExtremes();
+    virtual QVector4D getMaximumExtremes() override;
+    virtual QVector4D getMinimumExtremes() override;
 
 protected:
-    bool updateData();
+
+    virtual bool updateData() override;
 
 private:
+
     QSizeF m_gridSize;
     QRectF m_borderRect;
     QPointF m_offset;

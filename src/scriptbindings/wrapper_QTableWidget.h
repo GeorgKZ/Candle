@@ -140,12 +140,12 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QTableWidget() {
+  virtual ~wrapper_QTableWidget() override {
     qDebug() << "QTableWidget::destructor";
   }
 
   // Получение константного указателя на объект
-  virtual const QTableWidget* get_selfptr() const {
+  const QTableWidget* get_selfptr() const {
     if (wrapper_QTableView::get_selfptr() == nullptr) {
       qCritical() << "const wrapper_QTableWidget::get_selfptr - got nullptr";
     }
@@ -153,7 +153,7 @@ public:
   }
 
   // Получение указателя на объект
-  virtual QTableWidget* get_selfptr() {
+  QTableWidget* get_selfptr() {
     if (wrapper_QTableView::get_selfptr() == nullptr) {
       qCritical() << "wrapper_QTableWidget::get_selfptr - got nullptr";
     }
@@ -161,7 +161,7 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QTableWidget);
+Q_DECLARE_METATYPE(wrapper_QTableWidget)
 
 
 #endif // WRAPPER_QTABLEWIDGET_H

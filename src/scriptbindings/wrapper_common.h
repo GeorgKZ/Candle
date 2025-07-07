@@ -25,7 +25,7 @@ QString getClassName() {
 #if defined(__GNUC__) || defined(__DOXYGEN__)
   // Для GCC выполнить преобразование имени класса Demangle
   int status;
-  type_name = abi::__cxa_demangle(type_name, 0, 0, &status);
+  type_name = abi::__cxa_demangle(type_name, nullptr, nullptr, &status);
 #endif
   return QString(type_name);
 }
@@ -52,7 +52,7 @@ protected:
   }
 
   // Деструктор
-  virtual ~wrapper_common() {
+  virtual ~wrapper_common() override {
     qDebug() << "wrapper_common::destructor";
   }
 

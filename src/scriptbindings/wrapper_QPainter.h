@@ -84,7 +84,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QPaintDevice() {
+  virtual ~wrapper_QPaintDevice() override {
     qDebug() << "wrapper_QPaintDevice::destructor";
   }
 
@@ -515,7 +515,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QPainter() {
+  virtual ~wrapper_QPainter() override {
     qDebug() << "wrapper_QPainter::destructor";
   }
 

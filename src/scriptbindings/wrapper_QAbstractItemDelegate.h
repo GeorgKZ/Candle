@@ -113,7 +113,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QAbstractItemDelegate() {
+  virtual ~wrapper_QAbstractItemDelegate() override {
     delete static_cast<QAbstractItemDelegate*>(wrapper_QObject::get_selfptr());
   }
 
@@ -134,6 +134,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QAbstractItemDelegate);
+Q_DECLARE_METATYPE(wrapper_QAbstractItemDelegate)
 
 #endif // WRAPPER_QABSTRACTITEMDELEGATE_H

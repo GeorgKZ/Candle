@@ -10,6 +10,6 @@
 ArcProperties::ArcProperties()
 {
     radius = 0;
-    center = NULL;
+    center = nullptr;
     isClockwise = false;
 }

@@ -31,7 +31,7 @@ public:
   explicit wrapper_QLayoutItem(QLayoutItem* self);
 
   // Деструктор
-  virtual ~wrapper_QLayoutItem();
+  virtual ~wrapper_QLayoutItem() override;
 
   // Получение константного указателя на объект
   const QLayoutItem* get_selfptr() const;
@@ -40,7 +40,7 @@ public:
   QLayoutItem* get_selfptr();
 };
 
-Q_DECLARE_METATYPE(wrapper_QLayoutItem);
-Q_DECLARE_METATYPE(wrapper_QLayoutItem*);
+Q_DECLARE_METATYPE(wrapper_QLayoutItem)
+Q_DECLARE_METATYPE(wrapper_QLayoutItem*)
 
 #endif // WRAPPER_QLAYOUTITEM_H

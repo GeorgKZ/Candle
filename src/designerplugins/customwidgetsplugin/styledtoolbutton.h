@@ -20,6 +20,7 @@ class CUSTOMWIDGETS_DLLSPEC StyledToolButton : public QToolButton
     Q_PROPERTY(QColor highlightColor READ highlightColor WRITE setHighlightColor)
     
 public:
+
     explicit StyledToolButton(QWidget *parent = nullptr);
 
     bool isHover();
@@ -34,13 +35,15 @@ public:
     void setHighlightColor(const QColor &highlightColor);
 
 protected:
-    void enterEvent(QEnterEvent *);
-    void leaveEvent(QEvent *);
+
+    virtual void enterEvent(QEnterEvent *e) override;
+    virtual void leaveEvent(QEvent *e) override;
 
 private:
+
     Q_DISABLE_COPY(StyledToolButton)
 
-    void paintEvent(QPaintEvent *e);
+    virtual void paintEvent(QPaintEvent *e) override;
 
     bool m_hovered;
     QColor m_backColor;

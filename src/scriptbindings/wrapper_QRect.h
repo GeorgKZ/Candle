@@ -159,12 +159,12 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QRect() {
+  virtual ~wrapper_QRect() override {
     qDebug() << "wrapper_QRect::destructor";
 //    delete static_cast<QRect*>(wrapper_common::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QRect);
+Q_DECLARE_METATYPE(wrapper_QRect)
 
 #endif // WRAPPER_QRECT_H

@@ -50,4 +50,3 @@ void ColorPicker::onButtonClicked()
         emit colorSelected(color);
     }
 }
-

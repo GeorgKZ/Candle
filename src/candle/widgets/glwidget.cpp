@@ -10,7 +10,7 @@
 
 #define ZOOMSTEP 1.1
 
-GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_shaderProgram(0)
+GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_shaderProgram(nullptr)
 {
     m_frames = 0;
     m_fps = 0;
@@ -76,7 +76,7 @@ void GLWidget::fitDrawable(ShaderDrawable *drawable)
 {
     stopViewAnimation();
 
-    if (drawable != NULL) {
+    if (drawable != nullptr) {
         updateExtremes(drawable);
 
         double a = m_ySize / 2 / 0.25 * 1.3

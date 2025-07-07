@@ -85,11 +85,11 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_StyledToolButton() {
-    qDebug() << "wrapper_StyledToolButton::descructor";
+  virtual ~wrapper_StyledToolButton() override {
+    qDebug() << "wrapper_StyledToolButton::destructor";
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_StyledToolButton);
+Q_DECLARE_METATYPE(wrapper_StyledToolButton)
 
 #endif // WRAPPER_STYLEDTOOLBUTTON_H

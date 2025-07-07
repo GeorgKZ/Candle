@@ -25,7 +25,7 @@ class CUSTOMWIDGETS_DLLSPEC SliderBox : public QWidget
     
 public:
     explicit SliderBox(QWidget *parent = nullptr);
-    ~SliderBox();
+    virtual ~SliderBox() override;
 
     int value() const;
     void setValue(int value);

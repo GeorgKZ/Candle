@@ -206,7 +206,7 @@ public:
   }
     
   // Деструктор
-  virtual ~wrapper_QLineEdit() {
+  virtual ~wrapper_QLineEdit() override {
     qDebug() << "wrapper_QLineEdit::desctructor";
     delete static_cast<QLineEdit*>(wrapper_QWidget::get_selfptr());
   }
@@ -228,6 +228,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QLineEdit);
+Q_DECLARE_METATYPE(wrapper_QLineEdit)
 
 #endif // WRAPPER_QLINEEDIT_H

@@ -114,7 +114,7 @@ PointSegment* GcodeParser::addCommand(QString command)
 PointSegment* GcodeParser::addCommand(const QStringList &args)
 {
     if (args.isEmpty()) {
-        return NULL;
+        return nullptr;
     }
     return processCommand(args);
 }
@@ -221,7 +221,7 @@ int GcodeParser::getCommandNumber() const
 PointSegment *GcodeParser::processCommand(const QStringList &args)
 {
     QList<float> gCodes;
-    PointSegment *ps = NULL;
+    PointSegment *ps = nullptr;
 
     // Handle F code
     double speed = GcodePreprocessorUtils::parseCoord(args, 'F');
@@ -331,7 +331,7 @@ void GcodeParser::handleMCode(float code, const QStringList &args)
 
 PointSegment * GcodeParser::handleGCode(float code, const QStringList &args)
 {
-    PointSegment *ps = NULL;
+    PointSegment *ps = nullptr;
 
     QVector4D nextPoint = GcodePreprocessorUtils::updatePointWithCommand(args, this->m_currentPoint, this->m_inAbsoluteMode);
 
@@ -421,7 +421,7 @@ QStringList GcodeParser::convertArcsToLines(QString command) {
 
     PointSegment *ps = addCommand(command);
 
-    if (ps == NULL || !ps->isArc()) {
+    if (ps == nullptr || !ps->isArc()) {
         return result;
     }
 

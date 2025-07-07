@@ -272,7 +272,7 @@ public:
   }
 
   // Деструктор
-  virtual ~wrapper_QAction() {
+  virtual ~wrapper_QAction() override {
     qDebug() << "wrapper_QAction::desctructor";
     /* delete static_cast<QAction*>(wrapper_QObject::get_selfptr()); */
   }
@@ -294,6 +294,6 @@ public:
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QAction);
+Q_DECLARE_METATYPE(wrapper_QAction)
 
 #endif // WRAPPER_QACTION_H

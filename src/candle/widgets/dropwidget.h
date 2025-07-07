@@ -9,17 +9,20 @@
 class DropWidget : public QWidget
 {
     Q_OBJECT
+
 public:
+
     explicit DropWidget(QWidget *parent = nullptr);
     
     void restoreState(QObject* parent, QStringList panels);
     QStringList saveState();
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *dee);
-    void dragLeaveEvent(QDragLeaveEvent *dle);
-    void dragMoveEvent(QDragMoveEvent *dme);
-    void dropEvent(QDropEvent *de);
+
+    virtual void dragEnterEvent(QDragEnterEvent *dee) override;
+    virtual void dragLeaveEvent(QDragLeaveEvent *dle) override;
+    virtual void dragMoveEvent(QDragMoveEvent *dme) override;
+    virtual void dropEvent(QDropEvent *de) override;
 
 private:
     int m_layoutIndex;
