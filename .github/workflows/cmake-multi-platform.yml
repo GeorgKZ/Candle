@@ -56,6 +56,12 @@ jobs:
         arch: 'linux_gcc_64'
         modules: 'qt3d.debug_information qt3d qt5compat.debug_information qt5compat qtcharts.debug_information qtcharts qtconnectivity.debug_information qtconnectivity qtdatavis3d.debug_information qtdatavis3d qtgraphs.debug_information qtgraphs qtgrpc.debug_information qtgrpc qthttpserver.debug_information qthttpserver qtimageformats.debug_information qtimageformats qtlanguageserver qtlocation.debug_information qtlocation qtlottie.debug_information qtlottie qtmultimedia.debug_information qtmultimedia qtnetworkauth.debug_information qtnetworkauth qtpositioning.debug_information qtpositioning qtquick3d.debug_information qtquick3d qtquick3dphysics.debug_information qtquick3dphysics qtquickeffectmaker.debug_information qtquickeffectmaker qtquicktimeline.debug_information qtquicktimeline qtremoteobjects.debug_information qtremoteobjects qtscxml.debug_information qtscxml qtsensors.debug_information qtsensors qtserialbus.debug_information qtserialbus qtserialport.debug_information qtserialport qtshadertools.debug_information qtshadertools qtspeech.debug_information qtspeech qtvirtualkeyboard.debug_information qtvirtualkeyboard qtwaylandcompositor qtwebchannel.debug_information qtwebchannel qtwebsockets.debug_information qtwebsockets qtwebview.debug_information qtwebview debug_info'
         tools: 'tools_ninja'
+    # Использование XKB / Vulkan - необходимо для Qt
+    - uses: humbletim/setup-vulkan-sdk@v1.2.1
+      with:
+        vulkan-query-version: 1.4.304.1
+        vulkan-components: Vulkan-Headers, Vulkan-Loader
+        vulkan-use-cache: true
     - name: Установка строк для повторного использования
       # Преобразование повторяющихся входных строк (например, каталога выходных данных сборки) в пошаговые выходные данные. Эти пошаговые выходные данные можно использовать во всем файле рабочего процесса.
       id: strings
