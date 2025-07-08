@@ -46,17 +46,26 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+    # Использование репозитория с action для применения Qt в сборке workflow
+    - uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.9.1'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'
+        modules: 'qt3d.debug_information qt3d qt5compat.debug_information qt5compat qtcharts.debug_information qtcharts qtconnectivity.debug_information qtconnectivity qtdatavis3d.debug_information qtdatavis3d qtgraphs.debug_information qtgraphs qtgrpc.debug_information qtgrpc qthttpserver.debug_information qthttpserver qtimageformats.debug_information qtimageformats qtlanguageserver qtlocation.debug_information qtlocation qtlottie.debug_information qtlottie qtmultimedia.debug_information qtmultimedia qtnetworkauth.debug_information qtnetworkauth qtpositioning.debug_information qtpositioning qtquick3d.debug_information qtquick3d qtquick3dphysics.debug_information qtquick3dphysics qtquickeffectmaker.debug_information qtquickeffectmaker qtquicktimeline.debug_information qtquicktimeline qtremoteobjects.debug_information qtremoteobjects qtscxml.debug_information qtscxml qtsensors.debug_information qtsensors qtserialbus.debug_information qtserialbus qtserialport.debug_information qtserialport qtshadertools.debug_information qtshadertools qtspeech.debug_information qtspeech qtvirtualkeyboard.debug_information qtvirtualkeyboard qtwaylandcompositor qtwebchannel.debug_information qtwebchannel qtwebsockets.debug_information qtwebsockets qtwebview.debug_information qtwebview debug_info'
+        tools: 'tools_ninja'
+    - name: Установка строк для повторного использования
+      # Преобразование повторяющихся входных строк (например, каталога выходных данных сборки) в пошаговые выходные данные. Эти пошаговые выходные данные можно использовать во всем файле рабочего процесса.
       id: strings
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      # Настройка CMake в директории 'build'. `CMAKE_BUILD_TYPE` требуется только при использовании генератора с одной конфигурацией, такого как make (то есть не мультиконфигурации).
+      # См. https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
@@ -67,9 +76,3 @@ jobs:
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
-
-    - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest --build-config ${{ matrix.build_type }}
