@@ -200,31 +200,23 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QLineEdit(QLineEdit *self) :
-    wrapper_QWidget(self) {
-    qDebug() << "wrapper_QLineEdit::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QLineEdit(void *self) :  wrapper_QWidget(self) {
+    qDebug() << "wrapper_QLineEdit::constructor(self=" << get_selfvalue() << ")";
   }
     
   // Деструктор
   virtual ~wrapper_QLineEdit() override {
-    qDebug() << "wrapper_QLineEdit::desctructor";
-    delete static_cast<QLineEdit*>(wrapper_QWidget::get_selfptr());
+    qDebug() << "wrapper_QLineEdit::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QLineEdit* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QLineEdit::get_selfptr - got nullptr";
-    }
-    return static_cast<const QLineEdit*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const QLineEdit*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QLineEdit* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QLineEdit::get_selfptr - got nullptr";
-    }
-    return static_cast<QLineEdit*>(wrapper_QWidget::get_selfptr());
+    return static_cast<QLineEdit*>(wrapper_common::get_selfptr());
   }
 };
 

@@ -59,29 +59,24 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QStyledItemDelegate(QStyledItemDelegate *self) :
-    wrapper_QAbstractItemDelegate(self) {
-    qDebug() << "wrapper_QStyledItemDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QStyledItemDelegate(void *self) : wrapper_QAbstractItemDelegate(self) {
+    qDebug() << "wrapper_QStyledItemDelegate::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QStyledItemDelegate* get_selfptr() const {
-    if (wrapper_QAbstractItemDelegate::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QStyledItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<const QStyledItemDelegate*>(wrapper_QAbstractItemDelegate::get_selfptr());
+    return static_cast<const QStyledItemDelegate*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QStyledItemDelegate* get_selfptr() {
-    if (wrapper_QAbstractItemDelegate::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QStyledItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<QStyledItemDelegate*>(wrapper_QAbstractItemDelegate::get_selfptr());
+    return static_cast<QStyledItemDelegate*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
-  virtual ~wrapper_QStyledItemDelegate() override { }
+  virtual ~wrapper_QStyledItemDelegate() override {
+    qDebug() << "wrapper_QStyledItemDelegate::destructor(self=" << get_selfvalue() << ")";
+  }
 };
 
 Q_DECLARE_METATYPE(wrapper_QStyledItemDelegate)

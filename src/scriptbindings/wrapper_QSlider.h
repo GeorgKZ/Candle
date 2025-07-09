@@ -69,31 +69,23 @@ public:
   public:
 
   // Конструктор из объекта
-  wrapper_QSlider(QSlider *self) :
-    wrapper_QWidget(self) {
-    qDebug() << "wrapper_QSlider::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QSlider(void *self) : wrapper_QWidget(self) {
+    qDebug() << "wrapper_QSlider::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QSlider* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QSlider::get_selfptr - got nullptr";
-    }
-    return static_cast<const QSlider*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const QSlider*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QSlider* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QSlider::get_selfptr - got nullptr";
-    }
-    return static_cast<QSlider*>(wrapper_QWidget::get_selfptr());
+    return static_cast<QSlider*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_QSlider() override {
     qDebug() << "wrapper_QSlider::destructor";
-/*  delete get_selfptr(); */
   }
 };
 

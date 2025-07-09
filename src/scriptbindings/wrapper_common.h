@@ -15,10 +15,22 @@
   #include <cxxabi.h>
 #endif
 
+/**
+ * В этом файле определены экспортируемые функции:
+ * * register_wrappers
+ * * variantToJSValue
+ * * jsvalueToVariant
+ * * newScript
+ * * jsvalueToPointer
+ */
 #include "wrapper_extern.h"
 
 //extern QJSEngine *globalEngine;
 
+/**
+ * \brief Получить строковое представление имени класса
+ * \retval строковое представление имени класса
+ */
 template<typename T>
 QString getClassName() {
   const char* type_name = typeid(T).name();
@@ -39,45 +51,59 @@ QString getClassName() {
  */
 class WRAPPER_DLL_EXPORT wrapper_common : public QObject {
 
-  Q_OBJECT
+    Q_OBJECT
 
 protected:
 
   // Конструктор по умолчанию отсутствует
   // wrapper_common() = 0; //: QObject(), selfptr_(nullptr) {}
 
-  // Конструктор из объекта
-  wrapper_common(void *self) : selfptr_(self) {
-    qDebug() << "wrapper_common::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
-  }
+    /**
+     * \brief Конструктор из объекта, который будет храниться в экземпляре прокси-класса
+     * \param [in] self указатель на объект, который будет храниться в экземпляре прокси-класса
+     */
+    explicit wrapper_common(void *self);
 
-  // Деструктор
-  virtual ~wrapper_common() override {
-    qDebug() << "wrapper_common::destructor";
-  }
+    /**
+     * \brief Деструктор
+     */
+    virtual ~wrapper_common() override;
 
 public:
 
-  // Получение константного указателя на объект
-  const void* get_selfptr() const {
-    if (selfptr_ == nullptr) {
-      qCritical() << "const wrapper_common::get_selfptr - got nullptr";
-    }
-    return selfptr_;
-  }
+    /**
+     * \brief Получение константного указателя на объект, который хранится в экземпляре прокси-класса
+     * \retval константный указатель на объект, который хранится в экземпляре прокси-класса
+     */
+    const void* get_selfptr() const;
 
-  // Получение указателя на объект
-  void* get_selfptr() {
-    if (selfptr_ == nullptr) {
-      qCritical() << "wrapper_common::get_selfptr - got nullptr";
-    }
-    return selfptr_;
-  }
+    /**
+     * \brief Получение указателя на объект, который хранится в экземпляре прокси-класса
+     * \retval указатель на объект, который хранится в экземпляре прокси-класса
+     */
+    void* get_selfptr();
+
+//    /**
+//     * \brief Установка указателя на объект, который будет храниться в экземпляре прокси-класса
+//     * \param [in] self объект, который будет храниться в экземпляре прокси-класса
+//     */
+//    void set_selfptr(void *self);
+
 
     /**
      * \brief Создание экземпляра прокси-класса указанного по имени типа, содержащего указатель
      * на объект, и помещённого в контейнер JSValue
-     *
+     * \param [in] class имя класса, которому принадлежит объект
+     * \param [in] object указатель на объект, который будет храниться в контейнере JSValue
+     */
+    #define PointerToJsvalue(class, object) \
+        qjsEngine(this)->toScriptValue< wrapper_##class *>( new wrapper_##class ( object ) )
+
+    /**
+     * \brief Создание экземпляра прокси-класса указанного по имени типа, содержащего указатель
+     * на объект, и помещённого в контейнер JSValue
+     * \param [in] className имя класса, которому принадлежит объект
+     * \param [in] object указатель на объект, который будет храниться в контейнере JSValue
      */
     QJSValue wrapperFactory(const char *className, void *object) const;
 
@@ -87,10 +113,18 @@ public:
      */
     QJSValue variantToJSValue(const QVariant& var) const;
 
-    private:
+    /**
+     * \brief Получение указателя на объект, который хранится в экземпляре прокси-класса,
+     * в числовом выражении (для отладки)
+     * \retval указатель на объект, который хранится в экземпляре прокси-класса, в числовом выражении
+     */
+    unsigned long long get_selfvalue() const;
 
-    //!!! Использовать QSharedPointer
-    // Указатель на хранимый объект
+private:
+
+    /**
+     * Указатель на хранимый объект
+     */
     void* selfptr_;
 };
 

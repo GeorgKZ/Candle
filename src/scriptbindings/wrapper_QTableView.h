@@ -44,12 +44,14 @@ public:
 
   // QHeaderView *horizontalHeader() const
   Q_INVOKABLE QJSValue horizontalHeader() const {
-      return wrapperFactory("QHeaderView", get_selfptr()->horizontalHeader());
+//    return wrapperFactory("QHeaderView", get_selfptr()->horizontalHeader());
+      return PointerToJsvalue(QHeaderView, get_selfptr()->horizontalHeader());
   }
 
   // QHeaderView *verticalHeader() const
   Q_INVOKABLE QJSValue verticalHeader() const {
-      return wrapperFactory("QHeaderView", get_selfptr()->verticalHeader());
+//    return wrapperFactory("QHeaderView", get_selfptr()->verticalHeader());
+      return PointerToJsvalue(QHeaderView, get_selfptr()->verticalHeader());
   }
 
   // void setHorizontalHeader(QHeaderView *header)
@@ -120,29 +122,23 @@ public Q_SLOTS:
 public:
 
   // Конструктор из объекта
-  wrapper_QTableView(QTableView *self) :
-    wrapper_QAbstractItemView(self) {
-    qDebug() << "wrapper_QTableView::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QTableView(void *self) : wrapper_QAbstractItemView(self) {
+    qDebug() << "wrapper_QTableView::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QTableView* get_selfptr() const {
-    if (wrapper_QAbstractItemView::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QTableView::get_selfptr - got nullptr";
-    }
-    return static_cast<const QTableView*>(wrapper_QAbstractItemView::get_selfptr());
+    return static_cast<const QTableView*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QTableView* get_selfptr() {
-    if (wrapper_QAbstractItemView::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QTableView::get_selfptr - got nullptr";
-    }
-    return static_cast<QTableView*>(wrapper_QAbstractItemView::get_selfptr());
+    return static_cast<QTableView*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_QTableView() override {
+    qDebug() << "wrapper_QTableView::destructor(self=" << get_selfvalue() << ")";
   }
 };
 

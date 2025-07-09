@@ -85,30 +85,23 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QBoxLayout(QBoxLayout* self) :
-    wrapper_QLayout(self) {
-    qDebug() << "wrapper_QBoxLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QBoxLayout(void *self) : wrapper_QLayout(self) {
+    qDebug() << "wrapper_QBoxLayout::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QBoxLayout() override {
-    delete static_cast<QBoxLayout*>(wrapper_QLayout::get_selfptr());
+    qDebug() << "wrapper_QBoxLayout::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QBoxLayout* get_selfptr() const {
-    if (wrapper_QLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QBoxLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<const QBoxLayout*>(wrapper_QLayout::get_selfptr());
+    return static_cast<const QBoxLayout*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QBoxLayout* get_selfptr() {
-    if (wrapper_QLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QBoxLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<QBoxLayout*>(wrapper_QLayout::get_selfptr());
+    return static_cast<QBoxLayout*>(wrapper_common::get_selfptr());
   }
 };
 
@@ -128,30 +121,23 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QHBoxLayout(QHBoxLayout* self) :
-    wrapper_QBoxLayout(self) {
-    qDebug() << "wrapper_QHBoxLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QHBoxLayout(void *self) : wrapper_QBoxLayout(self) {
+    qDebug() << "wrapper_QHBoxLayout::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QHBoxLayout() override {
-    delete static_cast<QHBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
+    qDebug() << "wrapper_QHBoxLayout::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QHBoxLayout* get_selfptr() const {
-    if (wrapper_QBoxLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QHBoxLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<const QHBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
+    return static_cast<const QHBoxLayout*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QHBoxLayout* get_selfptr() {
-    if (wrapper_QBoxLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QHBoxLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<QHBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
+    return static_cast<QHBoxLayout*>(wrapper_common::get_selfptr());
   }
 };
 
@@ -171,33 +157,24 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QVBoxLayout(QVBoxLayout* self) :
-    wrapper_QBoxLayout(self) {
-    qDebug() << "wrapper_QVBoxLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QVBoxLayout(void *self) : wrapper_QBoxLayout(self) {
+    qDebug() << "wrapper_QVBoxLayout::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QVBoxLayout() override {
-    delete static_cast<QVBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
+    qDebug() << "wrapper_QVBoxLayout::desttructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QVBoxLayout* get_selfptr() const {
-    if (wrapper_QBoxLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QVBoxLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<const QVBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
+    return static_cast<const QVBoxLayout*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QVBoxLayout* get_selfptr() {
-    if (wrapper_QBoxLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QVBoxLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<QVBoxLayout*>(wrapper_QBoxLayout::get_selfptr());
+    return static_cast<QVBoxLayout*>(wrapper_common::get_selfptr());
   }
 };
-
-Q_DECLARE_METATYPE(wrapper_QBoxLayout)
 
 #endif // WRAPPER_QBOXLAYOUT_H

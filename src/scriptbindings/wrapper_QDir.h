@@ -83,7 +83,7 @@ public:
 //  Q_INVOKABLE QJSValue operator=(const QJSValue &other) {
 //    qDebug() << "wrapper_QDir::operator=";
 //    get_selfptr()->operator=(*jsvalueToPointer(QDir, other));
-//    return wrapperFactory("QDir", get_selfptr());
+//    return PointerToJsvalue(QDir, get_selfptr());
 //  }
 
   Q_INVOKABLE void swap(wrapper_QDir &other) { get_selfptr()->swap(*other.get_selfptr()); }
@@ -175,28 +175,32 @@ public:
 
     Q_INVOKABLE QJSValue current()
     {
-        return wrapperFactory("QDir", new QDir(QDir::current()));
+//      return wrapperFactory("QDir", new QDir(QDir::current()));
+        return PointerToJsvalue(QDir, new QDir(QDir::current()));
     }
 
     Q_INVOKABLE static QString currentPath()  { return QDir::currentPath(); }
 
     Q_INVOKABLE QJSValue home()
     {
-        return wrapperFactory("QDir", new QDir(QDir::home()));
+//      return wrapperFactory("QDir", new QDir(QDir::home()));
+        return PointerToJsvalue(QDir, new QDir(QDir::home()));
     }
 
     Q_INVOKABLE static QString homePath()     { return QDir::homePath(); }
 
     Q_INVOKABLE QJSValue root()
     {
-        return wrapperFactory("QDir", new QDir(QDir::root()));
+//      return wrapperFactory("QDir", new QDir(QDir::root()));
+        return PointerToJsvalue(QDir, new QDir(QDir::root()));
     }
 
     Q_INVOKABLE static QString rootPath()     { return QDir::rootPath(); }
 
     Q_INVOKABLE QJSValue temp()
     {
-        return wrapperFactory("QDir", new QDir(QDir::temp()));
+//      return wrapperFactory("QDir", new QDir(QDir::temp()));
+        return PointerToJsvalue(QDir, new QDir(QDir::temp()));
     }
 
     Q_INVOKABLE static QString tempPath()     { return QDir::tempPath(); }
@@ -212,33 +216,26 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QDir(QDir* self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QDir::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QDir(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QDir::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QDir* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QDir::get_selfptr - got nullptr";
-    }
     return static_cast<const QDir*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QDir* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QDir::get_selfptr - got nullptr";
-    }
     return static_cast<QDir*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_QDir() override {
-    delete static_cast<QDir*>(wrapper_common::get_selfptr());
+    qDebug() << "wrapper_QDir::destructor(self=" << get_selfvalue() << ")";
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QDir)
+//Q_DECLARE_METATYPE(wrapper_QDir)
 
 #endif // WRAPPER_QDIR_H

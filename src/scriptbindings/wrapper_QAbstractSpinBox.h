@@ -183,13 +183,15 @@ public:
     // virtual QSize sizeHint() const override;
     Q_INVOKABLE QJSValue sizeHint() const override
     {
-        return wrapperFactory("QSize", new QSize(get_selfptr()->sizeHint()));
+//      return wrapperFactory("QSize", new QSize(get_selfptr()->sizeHint()));
+        return PointerToJsvalue(QSize, new QSize(get_selfptr()->sizeHint()));
     }
 
     // virtual QSize minimumSizeHint() const override;
     Q_INVOKABLE QJSValue minimumSizeHint() const override
     {
-        return wrapperFactory("QSize", new QSize(get_selfptr()->minimumSizeHint()));
+//      return wrapperFactory("QSize", new QSize(get_selfptr()->minimumSizeHint()));
+        return PointerToJsvalue(QSize, new QSize(get_selfptr()->minimumSizeHint()));
     }
 
 #if 0
@@ -242,7 +244,7 @@ private:
 public:
 
   // Конструктор из объекта
-  wrapper_QAbstractSpinBox(QAbstractSpinBox *self) : wrapper_QWidget(self) {
+  wrapper_QAbstractSpinBox(void *self) : wrapper_QWidget(self) {
     qDebug() << "QAbstractSpinBox::copy_constructor";
   }
 
@@ -253,12 +255,12 @@ public:
 
   // Получение константного указателя на объект
   const QAbstractSpinBox* get_selfptr() const {
-    return static_cast<const QAbstractSpinBox*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const QAbstractSpinBox*>(wrapper_common::get_selfptr());
    }
 
   // Получение указателя на объект
   QAbstractSpinBox* get_selfptr() {
-    return static_cast<QAbstractSpinBox*>(wrapper_QWidget::get_selfptr());
+    return static_cast<QAbstractSpinBox*>(wrapper_common::get_selfptr());
   }
 };
 

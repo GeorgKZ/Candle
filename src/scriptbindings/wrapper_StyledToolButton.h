@@ -32,7 +32,8 @@ public:
 
   Q_INVOKABLE QJSValue backColor() const {
     QColor *color = new QColor(get_selfptr()->backColor());
-    return wrapperFactory("QColor", color);
+//  return wrapperFactory("QColor", color);
+    return PointerToJsvalue(QColor, color);
   }
 
   Q_INVOKABLE void setBackColor(const QJSValue &backColor) {
@@ -42,7 +43,8 @@ public:
 
   Q_INVOKABLE QJSValue foreColor() const {
     QColor *color = new QColor(get_selfptr()->foreColor());
-    return wrapperFactory("QColor", color);
+//    return wrapperFactory("QColor", color);
+    return PointerToJsvalue(QColor, color);
   }
 
   Q_INVOKABLE void setForeColor(const QJSValue &foreColor) {
@@ -52,7 +54,8 @@ public:
 
   Q_INVOKABLE QJSValue highlightColor() const {
     QColor *color = new QColor(get_selfptr()->highlightColor());
-    return wrapperFactory("QColor", color);
+//    return wrapperFactory("QColor", color);
+    return PointerToJsvalue(QColor, color);
   }
 
   Q_INVOKABLE void setHighlightColor(const QJSValue &highlightColor) {
@@ -63,25 +66,18 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_StyledToolButton(StyledToolButton *self) :
-    wrapper_QToolButton(self) {
-    qDebug() << "wrapper_StyledToolButton::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_StyledToolButton(void *self) : wrapper_QToolButton(self) {
+    qDebug() << "wrapper_StyledToolButton::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const StyledToolButton* get_selfptr() const {
-    if (wrapper_QToolButton::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_StyledToolButton::get_selfptr - got nullptr";
-    }
-    return static_cast<const StyledToolButton*>(wrapper_QToolButton::get_selfptr());
+    return static_cast<const StyledToolButton*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   StyledToolButton* get_selfptr() {
-    if (wrapper_QToolButton::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_StyledToolButton::get_selfptr - got nullptr";
-    }
-    return static_cast<StyledToolButton*>(wrapper_QToolButton::get_selfptr());
+    return static_cast<StyledToolButton*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор

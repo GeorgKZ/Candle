@@ -163,31 +163,23 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QSettings(QSettings* self) :
-    wrapper_QObject(self) {
-    qDebug() << "wrapper_QSettings::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QSettings(void *self) : wrapper_QObject(self) {
+    qDebug() << "wrapper_QSettings::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QSettings() override {
-    qDebug() << "wrapper_QSettings::destructor";
-    /* delete static_cast<QSettings*>(wrapper_QObject::get_selfptr()); */
+    qDebug() << "wrapper_QSettings::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QSettings* get_selfptr() const {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QSettings::get_selfptr - got nullptr";
-    }
-    return static_cast<const QSettings*>(wrapper_QObject::get_selfptr());
+    return static_cast<const QSettings*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QSettings* get_selfptr() {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QSettings::get_selfptr - got nullptr";
-    }
-    return static_cast<QSettings*>(wrapper_QObject::get_selfptr());
+    return static_cast<QSettings*>(wrapper_common::get_selfptr());
   }
 };
 

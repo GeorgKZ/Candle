@@ -69,31 +69,23 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QPointF(QPointF *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QPointF::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QPointF(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QPointF::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QPointF* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QPointF::get_selfptr - got nullptr";
-    }
     return static_cast<const QPointF*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QPointF* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QPointF::get_selfptr - got nullptr";
-    }
     return static_cast<QPointF*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_QPointF() override {
-    qDebug() << "wrapper_QPointF::destructor";
-//    delete static_cast<QPoint*>(wrapper_common::get_selfptr());
+    qDebug() << "wrapper_QPointF::destructor(self=" << get_selfvalue() << ")";
   }
 };
 

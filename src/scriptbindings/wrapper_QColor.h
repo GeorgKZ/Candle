@@ -169,9 +169,8 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QColor(QColor *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QColor::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QColor(void *self) :  wrapper_common(self) {
+    qDebug() << "wrapper_QColor::constructor(self=" << get_selfvalue() << ")";
   }
 
 //  // Копирующий конструктор
@@ -181,22 +180,15 @@ public:
   // Деструктор
   virtual ~wrapper_QColor() override {
     qDebug() << "wrapper_QColor::desctructor";
-    delete static_cast<QColor*>(wrapper_common::get_selfptr());
   }
 
   // Получение константного указателя на объект
   const QColor* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QColor::get_selfptr - got nullptr";
-    }
     return static_cast<const QColor*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QColor* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QColor::get_selfptr - got nullptr";
-    }
     return static_cast<QColor*>(wrapper_common::get_selfptr());
   }
 };

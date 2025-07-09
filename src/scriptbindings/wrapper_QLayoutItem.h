@@ -28,7 +28,7 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QLayoutItem(QLayoutItem* self);
+  explicit wrapper_QLayoutItem(void * self); // QLayoutItem* self);
 
   // Деструктор
   virtual ~wrapper_QLayoutItem() override;
@@ -40,7 +40,7 @@ public:
   QLayoutItem* get_selfptr();
 };
 
-Q_DECLARE_METATYPE(wrapper_QLayoutItem)
-Q_DECLARE_METATYPE(wrapper_QLayoutItem*)
+//Q_DECLARE_METATYPE(wrapper_QLayoutItem)
+//Q_DECLARE_METATYPE(wrapper_QLayoutItem*)
 
 #endif // WRAPPER_QLAYOUTITEM_H

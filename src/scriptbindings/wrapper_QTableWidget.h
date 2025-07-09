@@ -134,30 +134,23 @@ Q_SIGNALS:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QTableWidget(QTableWidget *self) :
-    wrapper_QTableView(self) {
-    qDebug() << "QTableWidget::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QTableWidget(void *self) : wrapper_QTableView(self) {
+    qDebug() << "QTableWidget::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QTableWidget() override {
-    qDebug() << "QTableWidget::destructor";
+    qDebug() << "QTableWidget::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QTableWidget* get_selfptr() const {
-    if (wrapper_QTableView::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QTableWidget::get_selfptr - got nullptr";
-    }
-    return static_cast<const QTableWidget*>(wrapper_QTableView::get_selfptr());
+    return static_cast<const QTableWidget*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QTableWidget* get_selfptr() {
-    if (wrapper_QTableView::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QTableWidget::get_selfptr - got nullptr";
-    }
-    return static_cast<QTableWidget*>(wrapper_QTableView::get_selfptr());
+    return static_cast<QTableWidget*>(wrapper_common::get_selfptr());
   }
 };
 

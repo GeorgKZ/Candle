@@ -79,7 +79,7 @@ public:
 signals:
 
     void rotationChanged();
-    void resized();
+    void sizeChanged();
 
 public slots:
 

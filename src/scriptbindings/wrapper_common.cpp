@@ -74,7 +74,11 @@
 
 #include "wrapper_Script.h"
 
-QJSValue variantToJSValue(const QVariant& variant, QJSEngine *engine) {
+/**
+ * \file
+ * * \copybrief variantToJSValue(const QVariant&, QJSEngine*)
+ */
+QJSValue variantToJSValue(const QVariant &variant, QJSEngine *engine) {
   QJSValue retval;
 
   if (variant.isNull()) {
@@ -120,7 +124,11 @@ QJSValue variantToJSValue(const QVariant& variant, QJSEngine *engine) {
   return engine->toScriptValue<QVariant>(variant);
 }
 
-QVariant jsvalueToVariant(const QJSValue& value)
+/**
+ * \file
+ * * \copybrief jsvalueToVariant(const QJSValue&)
+ */
+QVariant jsvalueToVariant(const QJSValue &value)
 {
 
 #if 0
@@ -255,14 +263,62 @@ bool 	isUrl() const
 // #define wfactory(class, name, obj, par) do { if (strcmp(class, #name ) == 0) { 
 //  return qjsEngine(par)->toScriptValue< wrapper_##name *>(new wrapper_##name (( name *) object)); } } while(0)
 
+/**
+ * \file
+ * * \copybrief wrapper_common::wrapper_common(void*)
+ */
+wrapper_common::wrapper_common(void *self) : selfptr_(self) {
+//  qDebug() << "wrapper_common::constructor(self=" << get_selfvalue() << ")";
+}
 
-QJSValue wrapper_common::variantToJSValue(const QVariant& variant) const {
+/**
+ * \file
+ * * \copybrief wrapper_common::~wrapper_common()
+ */
+wrapper_common::~wrapper_common() {
+    qDebug() << "wrapper_common::destructor";
+}
+
+/**
+ * \file
+ * * \copybrief wrapper_common::get_selfptr() const
+ */
+const void* wrapper_common::get_selfptr() const {
+    if (selfptr_ == nullptr) {
+        qCritical() << "const wrapper_common::get_selfptr - got nullptr";
+    }
+    return selfptr_;
+}
+
+/**
+ * \file
+ * * \copybrief wrapper_common::get_selfptr()
+ */
+void* wrapper_common::get_selfptr() {
+    if (selfptr_ == nullptr) {
+        qCritical() << "wrapper_common::get_selfptr - got nullptr";
+    }
+//  qDebug() << "wrapper_common::get_selfptr() ->" << get_selfvalue();
+    return selfptr_;
+}
+
+//void wrapper_common::set_selfptr(void *self) {
+//    selfptr_ = self;
+//  qDebug() << "wrapper_common::set_selfptr(" << get_selfvalue() << ")";
+//}
+
+
+/**
+ * \file
+ * * \copybrief wrapper_common::variantToJSValue(const QVariant&) const
+ */
+QJSValue wrapper_common::variantToJSValue(const QVariant &variant) const {
     qDebug() << "wrapper_common::variantToJSValue...";
     return ::variantToJSValue(variant, qjsEngine(this));
 }
 
 #define wfactory(class, name, obj) do { if (strcmp(class, #name ) == 0) { \
-  return qjsEngine(this)->toScriptValue< wrapper_##name *>( new wrapper_##name ( static_cast<name *>(object) ) ); } } while(0)
+  return qjsEngine(this)->toScriptValue< wrapper_##name *>( new wrapper_##name ( /* static_cast<name *>( */ object /* ) */ ) ); } } while(0)
 
 QJSValue wrapper_common::wrapperFactory(const char *className, void *object) const {
 
@@ -319,8 +375,18 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
 
 }
 
+
+unsigned long long wrapper_common::get_selfvalue() const {
+    return reinterpret_cast<unsigned long long>(selfptr_);
+}
+
+
 #define wregister(name) do { se->globalObject().setProperty( #name , se->newQMetaObject<wrapper_##name>() ); } while(0)
 
+/**
+ * \file
+ * * \copybrief register_wrappers(QJSEngine*)
+ */
 WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 
 //  globalEngine = se;
@@ -383,7 +449,11 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 }
 
 
-void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType) {
+/**
+ * \file
+ * * \copybrief jsvalueToObject_ptr(const char*, const QJSValue&, QString*)
+ */
+void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue &value, QString *returnType) {
 
   if (value.isNull()) {
     qDebug() << "ERROR: jsvalueToObject_ptr(" <<  waiting_className << ") - value is Null. Returning nullptr";
@@ -503,7 +573,7 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, Q
   }
 
   qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - trying to unwrap" << objName;
-  void *ptr = (static_cast<wrapper_common*>(obj))->get_selfptr();
+  void *ptr = (reinterpret_cast<wrapper_common*>(obj))->get_selfptr();
   qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - returning pointer of" << pureType;
   return ptr;
 }

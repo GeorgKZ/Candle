@@ -160,7 +160,8 @@ public:
   // QSize iconSize() const;
   Q_INVOKABLE QJSValue iconSize() const {
     QSize* size = new QSize(get_selfptr()->iconSize());
-    return wrapperFactory("QSize", size);
+//  return wrapperFactory("QSize", size);
+    return PointerToJsvalue(QSize, size);
   }
 
   Q_INVOKABLE void setTextElideMode(Qt::TextElideMode mode) { get_selfptr()->setTextElideMode(mode); }
@@ -206,7 +207,8 @@ public:
   Q_INVOKABLE QJSValue itemDelegateForColumn(int column) const {
     qDebug() << "wrapper_QAbstractItemDelegate::itemDelegateForColumn(" << column << ")";
     QAbstractItemDelegate* val = get_selfptr()->itemDelegateForColumn(column);
-    return wrapperFactory(val->metaObject()->className(), val);
+//  return wrapperFactory(val->metaObject()->className(), val);
+    return PointerToJsvalue(QAbstractItemDelegate, val);
   }
 
 #if QT_DEPRECATED_SINCE(6, 0)
@@ -258,25 +260,18 @@ public:
 //!!! wrapper_QWidget // wrapper_QAbstractScrollArea -> QFrame -> QWidget
 
   // Конструктор из объекта
-  wrapper_QAbstractItemView(QAbstractItemView *self) :
-    wrapper_QWidget(static_cast<QWidget*>(self)) {
-    qDebug() << "wrapper_QAbstractItemView::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QAbstractItemView(void *self) : wrapper_QWidget(self) {
+    qDebug() << "wrapper_QAbstractItemView::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QAbstractItemView* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAbsractItemView::get_selfptr - got nullptr";
-    }
-    return static_cast<const QAbstractItemView*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const QAbstractItemView*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QAbstractItemView* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAbsractItemView::get_selfptr - got nullptr";
-    }
-    return static_cast<QAbstractItemView*>(wrapper_QWidget::get_selfptr());
+    return static_cast<QAbstractItemView*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор

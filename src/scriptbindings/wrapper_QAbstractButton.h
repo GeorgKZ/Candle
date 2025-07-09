@@ -52,13 +52,15 @@ public:
   // QIcon icon()
   Q_INVOKABLE QJSValue icon() const {
     QIcon *icon = new QIcon(get_selfptr()->icon());
-    return wrapperFactory("QIcon", icon);
+//  return wrapperFactory("QIcon", icon);
+    return PointerToJsvalue(QIcon, icon);
   }
 
   // QSize iconSize()
   Q_INVOKABLE QJSValue iconSize() const {
     QSize *size = new QSize(get_selfptr()->iconSize());
-    return wrapperFactory("QSize", size);
+//  return wrapperFactory("QSize", size);
+    return PointerToJsvalue(QSize, size);
   }
 
 #ifndef QT_NO_SHORTCUT
@@ -140,26 +142,19 @@ private:
 public:
 
   // Конструктор из объекта
-  wrapper_QAbstractButton(QAbstractButton *self) :
-    wrapper_QWidget(self) {
+  wrapper_QAbstractButton(void *self) : wrapper_QWidget(self) {
     setConnections();
-    qDebug() << "wrapper_QAbstractButton::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+    qDebug() << "wrapper_QAbstractButton::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QAbstractButton* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAbsractButton::get_selfptr - got nullptr";
-    }
-    return static_cast<const QAbstractButton*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const QAbstractButton*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QAbstractButton* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAbsractButton::get_selfptr - got nullptr";
-    }
-    return static_cast<QAbstractButton*>(wrapper_QWidget::get_selfptr());
+    return static_cast<QAbstractButton*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор

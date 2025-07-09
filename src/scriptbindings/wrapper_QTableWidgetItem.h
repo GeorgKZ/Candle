@@ -117,9 +117,8 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QTableWidgetItem(QTableWidgetItem *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QTableWidgetItem::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QTableWidgetItem(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QTableWidgetItem::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
@@ -129,17 +128,11 @@ public:
 
   // Получение константного указателя на объект
   const QTableWidgetItem* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QTableWidgetItem::get_selfptr - got nullptr";
-    }
     return static_cast<const QTableWidgetItem*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QTableWidgetItem* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QTableWidgetItem::get_selfptr - got nullptr";
-    }
     return static_cast<QTableWidgetItem*>(wrapper_common::get_selfptr());
   }
 };

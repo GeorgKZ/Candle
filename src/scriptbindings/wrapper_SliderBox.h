@@ -132,31 +132,23 @@ signals:
 public:
 
   // Конструктор из объекта
-  wrapper_SliderBox(SliderBox *self) :
-    wrapper_QWidget(self) {
-    qDebug() << "wrapper_SliderBox::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_SliderBox(void *self) : wrapper_QWidget(self) {
+    qDebug() << "wrapper_SliderBox::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const SliderBox* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_SliderBox::get_selfptr - got nullptr";
-    }
-    return static_cast<const SliderBox*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const SliderBox*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   SliderBox* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_SliderBox::get_selfptr - got nullptr";
-    }
-    return static_cast<SliderBox*>(wrapper_QWidget::get_selfptr());
+    return static_cast<SliderBox*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_SliderBox() override {
     qDebug() << "wrapper_SliderBox::destructor";
-/*  delete get_selfptr(); */
   }
 };
 

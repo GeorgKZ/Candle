@@ -52,7 +52,8 @@ Q_UNUSED(option)
 QStyleOptionViewItem o;
 
     QModelIndex *i = jsvalueToPointer(QModelIndex, index);
-    return wrapperFactory("QWidget", get_selfptr()->createEditor(p, o, *i));
+//  return wrapperFactory("QWidget", get_selfptr()->createEditor(p, o, *i));
+    return PointerToJsvalue(QWidget, get_selfptr()->createEditor(p, o, *i));
   }
 
   //!!! void destroyEditor(QWidget *editor, const QModelIndex &index) const
@@ -107,30 +108,23 @@ Q_SIGNALS:
 public:
 
   // Конструктор из объекта
-  wrapper_QAbstractItemDelegate(QAbstractItemDelegate* self) :
-    wrapper_QObject(self) {
-    qDebug() << "wrapper_QAbstractItemDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QAbstractItemDelegate(void *self) : wrapper_QObject(self) {
+    qDebug() << "wrapper_QAbstractItemDelegate::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QAbstractItemDelegate() override {
-    delete static_cast<QAbstractItemDelegate*>(wrapper_QObject::get_selfptr());
+    qDebug() << "wrapper_QAbstractItemDelegate::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QAbstractItemDelegate* get_selfptr() const {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAbsractItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<const QAbstractItemDelegate*>(wrapper_QObject::get_selfptr());
+    return static_cast<const QAbstractItemDelegate*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QAbstractItemDelegate* get_selfptr() {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAbsractItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<QAbstractItemDelegate*>(wrapper_QObject::get_selfptr());
+    return static_cast<QAbstractItemDelegate*>(wrapper_common::get_selfptr());
   }
 };
 

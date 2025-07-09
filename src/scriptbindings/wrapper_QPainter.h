@@ -78,29 +78,22 @@ protected:
 public:
 
   // Конструктор из объекта
-  wrapper_QPaintDevice(QPaintDevice *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QPaintDevice::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QPaintDevice(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QPaintDevice::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QPaintDevice() override {
-    qDebug() << "wrapper_QPaintDevice::destructor";
+    qDebug() << "wrapper_QPaintDevice::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QPaintDevice* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QPaintDevice::get_selfptr - got nullptr";
-    }
     return static_cast<const QPaintDevice*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QPaintDevice* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QPaintDevice::get_selfptr - got nullptr";
-    }
     return static_cast<QPaintDevice*>(wrapper_common::get_selfptr());
   }
 };
@@ -509,29 +502,22 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QPainter(QPainter *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QPainter::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QPainter(void *self) :  wrapper_common(self) {
+    qDebug() << "wrapper_QPainter::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QPainter() override {
-    qDebug() << "wrapper_QPainter::destructor";
+    qDebug() << "wrapper_QPainter::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QPainter* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QPainter::get_selfptr - got nullptr";
-    }
     return static_cast<const QPainter*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QPainter* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QPainter::get_selfptr - got nullptr";
-    }
     return static_cast<QPainter*>(wrapper_common::get_selfptr());
   }
 };

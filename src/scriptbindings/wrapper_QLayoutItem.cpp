@@ -61,6 +61,7 @@ void wrapper_QLayoutItem::invalidate() {
 QJSValue wrapper_QLayoutItem::widget() const {
   QWidget *widget = get_selfptr()->widget();
   return wrapperFactory(widget->metaObject()->className(), widget);
+//  return PointerToJsvalue(QWidget, get_selfptr()->widget());
 }
 
 // virtual QLayout *layout();
@@ -68,6 +69,7 @@ QJSValue wrapper_QLayoutItem::layout() {
   QLayout* layout = get_selfptr()->layout();
   qDebug() << "wrapper_QLayoutItem::layout() ->" << layout->metaObject()->className();
   return wrapperFactory(layout->metaObject()->className(), layout);
+//  return PointerToJsvalue(QLayout, get_selfptr()->layout());
 }
 
 // virtual QSpacerItem *spacerItem();
@@ -87,30 +89,22 @@ void wrapper_QLayoutItem::setAlignment(Qt::Alignment a) {
 // wrapper_QSizePolicy::ControlTypes wrapper_QLayoutItem::controlTypes() const;
 
 // Конструктор из объекта
-wrapper_QLayoutItem::wrapper_QLayoutItem(QLayoutItem* self) :
-  wrapper_common(self) {
-  qDebug() << "wrapper_QLayoutItem::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+wrapper_QLayoutItem::wrapper_QLayoutItem(void* self) : wrapper_common(self) {
+  qDebug() << "wrapper_QLayoutItem::constructor(self=" << get_selfvalue() << ")";
 }
 
 // Деструктор
 wrapper_QLayoutItem::~wrapper_QLayoutItem() {
   qDebug() << "wrapper_QLayoutItem destructor";
-//    delete static_cast<QLayoutItem*>(wrapper_common::get_selfptr());
 }
 
 // Получение константного указателя на объект
 const QLayoutItem* wrapper_QLayoutItem::get_selfptr() const {
-  if (wrapper_common::get_selfptr() == nullptr) {
-    qCritical() << "wrapper_QLayoutItem::get_selfptr - got nullptr";
-  }
   return static_cast<const QLayoutItem*>(wrapper_common::get_selfptr());
 }
 
 // Получение указателя на объект
 QLayoutItem* wrapper_QLayoutItem::get_selfptr() {
-  if (wrapper_common::get_selfptr() == nullptr) {
-    qCritical() << "wrapper_QLayoutItem::get_selfptr - got nullptr";
-  }
   return static_cast<QLayoutItem*>(wrapper_common::get_selfptr());
 }
 

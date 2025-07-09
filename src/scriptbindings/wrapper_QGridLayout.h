@@ -121,30 +121,23 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QGridLayout(QGridLayout* self) :
-    wrapper_QLayout(self) {
-    qDebug() << "wrapper_QGridLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QGridLayout(void *self) : wrapper_QLayout(self) {
+    qDebug() << "wrapper_QGridLayout::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QGridLayout() override {
-    delete static_cast<QGridLayout*>(wrapper_QLayout::get_selfptr());
+    qDebug() << "wrapper_QGridLayout::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QGridLayout* get_selfptr() const {
-    if (wrapper_QLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QGridLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<const QGridLayout*>(wrapper_QLayout::get_selfptr());
+    return static_cast<const QGridLayout*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QGridLayout* get_selfptr() {
-    if (wrapper_QLayout::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QGridLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<QGridLayout*>(wrapper_QLayout::get_selfptr());
+    return static_cast<QGridLayout*>(wrapper_common::get_selfptr());
   }
 };
 

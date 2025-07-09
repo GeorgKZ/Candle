@@ -65,29 +65,22 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QModelIndex(QModelIndex *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QModelIndex::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QModelIndex(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QModelIndex::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QModelIndex() override {
-    qDebug() << "wrapper_QModelIndex::destructor";
+    qDebug() << "wrapper_QModelIndex::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QModelIndex* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QModelIndex::get_selfptr - got nullptr";
-    }
     return static_cast<const QModelIndex*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QModelIndex* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QModelIndex::get_selfptr - got nullptr";
-    }
     return static_cast<QModelIndex*>(wrapper_common::get_selfptr());
   }
 };

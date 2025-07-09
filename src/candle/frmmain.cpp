@@ -236,7 +236,7 @@ frmMain::frmMain(QWidget *parent) :
     ui->glwVisualizer->addDrawable(&m_machineBoundsDrawer);
     ui->glwVisualizer->fitDrawable();
 
-    connect(ui->glwVisualizer, SIGNAL(resized()), this, SLOT(placeVisualizerButtons()));
+    connect(ui->glwVisualizer, SIGNAL(sizeChanged()), this, SLOT(placeVisualizerButtons()));
     connect(&m_programModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onTableCellChanged(QModelIndex,QModelIndex)));
     connect(&m_programHeightmapModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onTableCellChanged(QModelIndex,QModelIndex)));
     connect(&m_probeModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onTableCellChanged(QModelIndex,QModelIndex)));
@@ -485,7 +485,7 @@ void frmMain::showEvent(QShowEvent *se)
 
     placeVisualizerButtons();
 
-#ifdef WINDOWS
+#ifdef Q_OS_WINDOWS
 //    if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
 //        if (m_taskBarButton == nullptr) {
 //            m_taskBarButton = new QWinTaskbarButton(this);
@@ -872,7 +872,7 @@ void frmMain::on_cmdFileSend_clicked()
 
     storeParserState();
 
-#ifdef WINDOWS
+#ifdef Q_OS_WINDOWS
 //    if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
 //        if (m_taskBarProgress) {
 //            m_taskBarProgress->setMaximum(m_currentModel->rowCount() - 2);
@@ -2207,7 +2207,7 @@ qDebug() << "Common response: " << response;
                         }
 
                         // Update taskbar progress
-#ifdef WINDOWS
+#ifdef Q_OS_WINDOWS
 //                        if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
 //                            if (m_taskBarProgress) m_taskBarProgress->setValue(m_fileProcessedCommandIndex);
 //                        }
@@ -2659,7 +2659,7 @@ void frmMain::onActSendFromLineTriggered()
 
     storeParserState();
 
-#ifdef WINDOWS
+#ifdef Q_OS_WINDOWS
 //    if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
 //        if (m_taskBarProgress) {
 //            m_taskBarProgress->setMaximum(m_currentModel->rowCount() - 2);
@@ -4217,7 +4217,7 @@ void frmMain::updateControlsState() {
 
     if (!process) ui->chkKeyboardControl->setChecked(m_storedKeyboardControl);
 
-#ifdef WINDOWS
+#ifdef Q_OS_WINDOWS
 //    if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
 //        if (m_taskBarProgress) m_taskBarProgress->setPaused(paused);
 //    }

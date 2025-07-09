@@ -71,30 +71,23 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QSize(QSize *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QSize::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QSize(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QSize::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QSize* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QSize::get_selfptr - got nullptr";
-    }
     return static_cast<const QSize*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QSize* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QSize::get_selfptr - got nullptr";
-    }
     return static_cast<QSize*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_QSize() override {
-//    delete static_cast<QSize*>(wrapper_common::get_selfptr());
+    qDebug() << "wrapper_QSize::destructor(self=" << get_selfvalue() << ")";
   }
 };
 

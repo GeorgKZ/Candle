@@ -91,9 +91,8 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QSizePolicy(QSizePolicy *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QSizePolicy::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QSizePolicy(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QSizePolicy::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
@@ -103,17 +102,11 @@ public:
 
   // Получение константного указателя на объект
   const QSizePolicy* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QSizePolicy::get_selfptr - got nullptr";
-    }
     return static_cast<const QSizePolicy*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QSizePolicy* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QSizePolicy::get_selfptr - got nullptr";
-    }
     return static_cast<QSizePolicy*>(wrapper_common::get_selfptr());
   }
 };

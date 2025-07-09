@@ -86,29 +86,22 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QIcon(QIcon *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QIcon::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QIcon(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QIcon::constructor(self=" << get_selfvalue() << ")";
   }
     
   // Деструктор
   virtual ~wrapper_QIcon() override {
- //!!!   delete static_cast<QIcon*>(wrapper_common::get_selfptr());
+    qDebug() << "wrapper_QIcon::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QIcon* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QIcon::get_selfptr - got nullptr";
-    }
     return static_cast<const QIcon*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QIcon* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QIcon::get_selfptr - got nullptr";
-    }
     return static_cast<QIcon*>(wrapper_common::get_selfptr());
   }
 };

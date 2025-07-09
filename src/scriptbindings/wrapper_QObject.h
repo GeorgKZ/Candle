@@ -194,9 +194,9 @@ public Q_SLOTS:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QObject(QObject* self) :
+  explicit wrapper_QObject(void* self) :
     wrapper_common(self) {
-    qDebug() << "wrapper_QObject::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+    qDebug() << "wrapper_QObject::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор

@@ -266,31 +266,23 @@ Q_SIGNALS:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QAction(QAction* self) :
-    wrapper_QObject(self) {
-    qDebug() << "wrapper_QAction::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QAction(void *self) : wrapper_QObject(self) {
+    qDebug() << "wrapper_QAction::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QAction() override {
     qDebug() << "wrapper_QAction::desctructor";
-    /* delete static_cast<QAction*>(wrapper_QObject::get_selfptr()); */
   }
 
   // Получение константного указателя на объект
   const QAction* get_selfptr() const {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAction::get_selfptr - got nullptr";
-    }
-    return static_cast<const QAction*>(wrapper_QObject::get_selfptr());
+    return static_cast<const QAction*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QAction* get_selfptr() {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QAction::get_selfptr - got nullptr";
-    }
-    return static_cast<QAction*>(wrapper_QObject::get_selfptr());
+    return static_cast<QAction*>(wrapper_common::get_selfptr());
   }
 };
 

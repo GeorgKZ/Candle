@@ -33,17 +33,21 @@ public:
 
   // QWidget *load(QIODevice *device, QWidget *parentWidget = nullptr);
   Q_INVOKABLE QJSValue load(const QJSValue &device, const QJSValue &parentWidget = QJSValue(QJSValue::UndefinedValue)) {
-    QIODevice *_device = jsvalueToPointer(QIODevice, device);
+//    QIODevice *_device = jsvalueToPointer(QIODevice, device);
+    QFile *_device = jsvalueToPointer(QFile, device);
     QWidget *_parentWidget = jsvalueToPointer(QWidget, parentWidget);
 
 
     qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ")...";
 
-    QWidget *new_widget = get_selfptr()->load(_device, _parentWidget);
+    QUiLoader* self = get_selfptr();
+
+    QWidget *new_widget = self->load(_device, _parentWidget);
 
     qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ") -> " << (unsigned long long)new_widget;
 
-    return wrapperFactory(new_widget->metaObject()->className(), new_widget);
+//  return wrapperFactory(new_widget->metaObject()->className(), new_widget);
+    return PointerToJsvalue(QWidget, new_widget);
   }
 
 //  QStringList availableWidgets() const;
@@ -94,31 +98,23 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QUiLoader(QUiLoader* self) :
-    wrapper_QObject(self) {
-    qDebug() << "wrapper_QUiLoader::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QUiLoader(void *self) : wrapper_QObject(self) {
+    qDebug() << "wrapper_QUiLoader::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QUiLoader() override {
-    qDebug() << "wrapper_QUiLoader::destructor(self=" << (unsigned long long)wrapper_QObject::get_selfptr() << ")";
-    delete static_cast<QUiLoader*>(wrapper_QObject::get_selfptr());
+    qDebug() << "wrapper_QUiLoader::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QUiLoader* get_selfptr() const {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QUiLoader::get_selfptr - got nullptr";
-    }
-    return static_cast<const QUiLoader*>(wrapper_QObject::get_selfptr());
+    return static_cast<const QUiLoader*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QUiLoader* get_selfptr() {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QUiLoader::get_selfptr - got nullptr";
-    }
-    return static_cast<QUiLoader*>(wrapper_QObject::get_selfptr());
+    return static_cast<QUiLoader*>(wrapper_common::get_selfptr());
   }
 };
 

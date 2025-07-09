@@ -32,40 +32,30 @@ public:
 
 public:
 
-  // Конструктор из объекта
-  explicit wrapper_QIODeviceBase(QIODeviceBase* self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QIODeviceBase::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
-  }
-
-  // Деструктор (объект QIODeviceBase не удаляется)
-  virtual ~wrapper_QIODeviceBase() override {
-  }
-
-  // Получение константного указателя на объект
-  const QIODeviceBase* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QIODeviceBase::get_selfptr - got nullptr";
+    // Конструктор из объекта
+    explicit wrapper_QIODeviceBase(void *self) : wrapper_common(self) {
+        qDebug() << "wrapper_QIODeviceBase::constructor(self=" << get_selfvalue() << ")";
     }
-    return static_cast<const QIODeviceBase*>(wrapper_common::get_selfptr());
-  }
 
-  // Получение указателя на объект
-  QIODeviceBase* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QIODeviceBase::get_selfptr - got nullptr";
+    // Деструктор (объект QIODeviceBase не удаляется)
+    virtual ~wrapper_QIODeviceBase() override {
+        qDebug() << "wrapper_QIODeviceBase::destructor(self=" << get_selfvalue() << ")";
     }
-    return static_cast<QIODeviceBase*>(wrapper_common::get_selfptr());
-  }
+
+private:
+
+    // Получение константного указателя на объект
+    const QIODeviceBase* get_selfptr() const {
+        return static_cast<const QIODeviceBase*>(wrapper_common::get_selfptr());
+    }
+
+    // Получение указателя на объект
+    QIODeviceBase* get_selfptr() {
+        return static_cast<QIODevice*>(wrapper_common::get_selfptr());
+    }
 };
 
-class wrapper_QIODevice
-#ifndef QT_NO_QOBJECT
-    : // virtual public wrapper_QObject,
-#else
-    :
-#endif
-      public wrapper_QIODeviceBase {
+class WRAPPER_DLL_EXPORT wrapper_QIODevice : public wrapper_QIODeviceBase {
 
   Q_OBJECT
 
@@ -150,37 +140,30 @@ Q_SIGNALS:
 
 public:
 
-  // Конструктор из объекта
-  explicit wrapper_QIODevice(QIODevice* self) :
-    wrapper_QIODeviceBase(self) {
-    qDebug() << "wrapper_QIODevice::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
-  }
-
-  // Деструктор
-  virtual ~wrapper_QIODevice() override {
-//!!!    delete static_cast<QIODevice*>(wrapper_QIODeviceBase::get_selfptr());
-  }
-
-  // Получение константного указателя на объект
-  const QIODevice* get_selfptr() const {
-    if (wrapper_QIODeviceBase::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QIODevice::get_selfptr - got nullptr";
+    // Конструктор из объекта
+    explicit wrapper_QIODevice(void *self) : wrapper_QIODeviceBase(self) {
+        qDebug() << "wrapper_QIODevice::constructor(self=" << get_selfvalue() << ")";
     }
-    return static_cast<const QIODevice*>(wrapper_QIODeviceBase::get_selfptr());
-  }
 
-  // Получение указателя на объект
-  QIODevice* get_selfptr() {
-    if (wrapper_QIODeviceBase::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QIODevice::get_selfptr - got nullptr";
+    // Деструктор
+    virtual ~wrapper_QIODevice() override {
+        qDebug() << "wrapper_QIODevice::destructor(self=" << get_selfvalue() << ")";
     }
-    return static_cast<QIODevice*>(wrapper_QIODeviceBase::get_selfptr());
-  }
 
+private:
 
+    // Получение константного указателя на объект
+    const QIODevice* get_selfptr() const {
+        return static_cast<const QIODevice*>(wrapper_common::get_selfptr());
+    }
+
+    // Получение указателя на объект
+    QIODevice* get_selfptr() {
+        return static_cast<QIODevice*>(wrapper_common::get_selfptr());
+    }
 };
 
-class wrapper_QFileDevice : public wrapper_QIODevice {
+class WRAPPER_DLL_EXPORT wrapper_QFileDevice : public wrapper_QIODevice {
 
   Q_OBJECT
 
@@ -262,39 +245,44 @@ public:
     bool setFileTime(const QDateTime &newDate, QFileDevice::FileTime fileTime);
 #endif
 
-public:
+    public:
 
-  // Конструктор из объекта
-  explicit wrapper_QFileDevice(QFileDevice* self) :
-    wrapper_QIODevice(self) {
-    qDebug() << "wrapper_QFileDevice::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
-  }
-
-  // Деструктор
-  virtual ~wrapper_QFileDevice() override {
-    qDebug() << "wrapper_QFileDevice::destructor";
-    //!!! не должен удаляться! delete static_cast<QFileDevice*>(wrapper_QIODevice::get_selfptr());
-  }
-
-  // Получение константного указателя на объект
-  const QFileDevice* get_selfptr() const {
-    if (wrapper_QIODevice::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QFileDevice::get_selfptr - got nullptr";
+    /**
+     * \brief Конструктор из объекта, который будет храниться в экземпляре прокси-класса
+     * \param [in] self указатель на объект, который будет храниться в экземпляре прокси-класса
+     */
+    explicit wrapper_QFileDevice(void *self) : wrapper_QIODevice(self) {
+        qDebug() << "wrapper_QFileDevice::constructor(self=" << get_selfvalue() << ")";
     }
-    return static_cast<const QFileDevice*>(wrapper_QIODevice::get_selfptr());
-  }
 
-  // Получение указателя на объект
-  QFileDevice* get_selfptr() {
-    if (wrapper_QIODevice::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QFileDevice::get_selfptr - got nullptr";
+    /**
+     * \brief Деструктор
+     */
+    virtual ~wrapper_QFileDevice() override {
+        qDebug() << "wrapper_QFileDevice::destructor(self=" << get_selfvalue() << ")";
     }
-    return static_cast<QFileDevice*>(wrapper_QIODevice::get_selfptr());
-  }
+
+    private:
+
+    /**
+     * \brief Получение константного указателя на объект, который хранится в экземпляре прокси-класса
+     * \retval константный указатель на объект, который хранится в экземпляре прокси-класса
+     */
+    const QFileDevice* get_selfptr() const {
+        return static_cast<const QFileDevice*>(wrapper_common::get_selfptr());
+    }
+
+    /**
+     * \brief Получение указателя на объект, который хранится в экземпляре прокси-класса
+     * \retval указатель на объект, который хранится в экземпляре прокси-класса
+     */
+    QFileDevice* get_selfptr() {
+        return static_cast<QFileDevice*>(wrapper_common::get_selfptr());
+    }
 };
 
-Q_DECLARE_METATYPE(wrapper_QIODeviceBase)
-Q_DECLARE_METATYPE(wrapper_QIODevice)
-Q_DECLARE_METATYPE(wrapper_QFileDevice)
+//Q_DECLARE_METATYPE(wrapper_QIODeviceBase)
+//Q_DECLARE_METATYPE(wrapper_QIODevice)
+//Q_DECLARE_METATYPE(wrapper_QFileDevice)
 
 #endif // WRAPPER_QIODEVICE_H

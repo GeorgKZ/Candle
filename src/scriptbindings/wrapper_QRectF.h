@@ -144,31 +144,23 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QRectF(QRectF *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QRectF::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QRectF(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QRectF::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QRectF* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QRectF::get_selfptr - got nullptr";
-    }
     return static_cast<const QRectF*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QRectF* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QRectF::get_selfptr - got nullptr";
-    }
     return static_cast<QRectF*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_QRectF() override {
     qDebug() << "wrapper_QRectF::destructor";
-//    delete static_cast<QRectF*>(wrapper_common::get_selfptr());
   }
 };
 

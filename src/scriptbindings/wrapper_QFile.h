@@ -12,23 +12,39 @@ class WRAPPER_DLL_EXPORT wrapper_QFile : public wrapper_QFileDevice {
 public:
 
   Q_INVOKABLE wrapper_QFile() :
-    wrapper_QFileDevice(new QFile()) { }
+    wrapper_QFileDevice(new QFile()) {
+    qDebug() << "wrapper_QFile::constructor([self=" << get_selfvalue() << "])";
+ }
   Q_INVOKABLE wrapper_QFile(const QString &path) :
-    wrapper_QFileDevice(new QFile(path)) { }
+    wrapper_QFileDevice(new QFile(path)) {
+//    QFile *self = new QFile(path);
+//    qDebug() << "wrapper_QFile::constructor(path=" << path << "[creating self=" << get_selfvalue() << "])";
+//    set_selfptr(self);
+    qDebug() << "wrapper_QFile::constructor(path=" << path << "[self=" << get_selfvalue() << "])";
+ }
+
 #ifdef Q_CLANG_QDOC
   Q_INVOKABLE wrapper_QFile(const std::filesystem::path &name) :
-    wrapper_QFileDevice(new QFile(name)) { }
+    wrapper_QFileDevice(new QFile(name)) {
+    qDebug() << "wrapper_QFile::constructor(filesystem::path=" << name << "[self=" << get_selfvalue() << "])";
+ }
 #endif
 
 #ifndef QT_NO_QOBJECT
   Q_INVOKABLE explicit wrapper_QFile(QObject *parent) :
-    wrapper_QFileDevice(new QFile(parent)) { }
+    wrapper_QFileDevice(new QFile(parent)) {
+    qDebug() << "wrapper_QFile::constructor(parent)";
+ }
   Q_INVOKABLE wrapper_QFile(const QString &name, QObject *parent) :
-    wrapper_QFileDevice(new QFile(name, parent)) { }
+    wrapper_QFileDevice(new QFile(name, parent)) {
+    qDebug() << "wrapper_QFile::constructor(name, parent)";
+ }
 
 #ifdef Q_CLANG_QDOC
   Q_INVOKABLE wrapper_QFile(const std::filesystem::path &path, QObject *parent) :
-    wrapper_QFileDevice(new QFile(path, parent)) { }
+    wrapper_QFileDevice(new QFile(path, parent)) {
+    qDebug() << "wrapper_QFile::constructor(systempath, parent)";
+ }
 #endif // Q_CLANG_QDOC
 #endif // !QT_NO_QOBJECT
 
@@ -224,28 +240,40 @@ public:
 
 public:
 
-  // Конструктор из объекта
-  explicit wrapper_QFile(QFile* self) :
-    wrapper_QFileDevice(static_cast<QFileDevice*>(self)) {
-    qDebug() << "wrapper_QFile::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
-  }
+    /**
+     * \brief Конструктор из объекта, который будет храниться в экземпляре прокси-класса
+     * \param [in] self указатель на объект, который будет храниться в экземпляре прокси-класса
+     */
+    explicit wrapper_QFile(void* self) : wrapper_QFileDevice(self) {
+        qDebug() << "wrapper_QFile::constructor(self=" << get_selfvalue() << ")";
+    }
 
-  // Деструктор
-  virtual ~wrapper_QFile() override {
-    delete static_cast<QFile*>(wrapper_QFileDevice::get_selfptr());
-  }
+    /**
+     * \brief Деструктор
+     */
+    virtual ~wrapper_QFile() override {
+        qDebug() << "wrapper_QFile::destructor";
+    }
 
-  // Получение константного указателя на объект
-  const QFile* get_selfptr() const {
-    return static_cast<const QFile*>(wrapper_QFileDevice::get_selfptr());
-  }
+    private:
 
-  // Получение указателя на объект
-  QFile* get_selfptr() {
-    return static_cast<QFile*>(wrapper_QFileDevice::get_selfptr());
+    /**
+     * \brief Получение константного указателя на объект, который хранится в экземпляре прокси-класса
+     * \retval константный указатель на объект, который хранится в экземпляре прокси-класса
+     */
+    const QFile* get_selfptr() const {
+        return static_cast<const QFile*>(wrapper_common::get_selfptr());
+    }
+
+    /**
+     * \brief Получение указателя на объект, который хранится в экземпляре прокси-класса
+     * \retval указатель на объект, который хранится в экземпляре прокси-класса
+     */
+    QFile* get_selfptr() {
+        return static_cast<QFile*>(wrapper_common::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QFile)
+//Q_DECLARE_METATYPE(wrapper_QFile)
 
 #endif // WRAPPER_QFILE_H

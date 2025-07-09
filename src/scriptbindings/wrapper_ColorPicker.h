@@ -21,7 +21,8 @@ public:
 
   // QColor color() const
   Q_INVOKABLE QJSValue color() const {
-    return wrapperFactory("QColor", new QColor(get_selfptr()->color()));
+//  return wrapperFactory("QColor", new QColor(get_selfptr()->color()));
+    return PointerToJsvalue(QColor, new QColor(get_selfptr()->color()));
   }
 
   Q_INVOKABLE void setColor(const QJSValue value_color) {
@@ -44,31 +45,23 @@ Q_SIGNALS:
 public:
 
   // Конструктор из объекта
-  wrapper_ColorPicker(ColorPicker *self) :
-    wrapper_QWidget(self) {
-    qDebug() << "wrapper_ColorPicker::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_ColorPicker(void *self) : wrapper_QWidget(self) {
+    qDebug() << "wrapper_ColorPicker::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const ColorPicker* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_ColorPicker::get_selfptr - got nullptr";
-    }
-    return static_cast<const ColorPicker*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const ColorPicker*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   ColorPicker* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_ColorPicker::get_selfptr - got nullptr";
-    }
-    return static_cast<ColorPicker*>(wrapper_QWidget::get_selfptr());
+    return static_cast<ColorPicker*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_ColorPicker() override {
     qDebug() << "wrapper_ColorPicker::destructor";
-/*  delete get_selfptr(); */
   }
 };
 

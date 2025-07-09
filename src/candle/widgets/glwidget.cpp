@@ -377,7 +377,7 @@ void GLWidget::resizeGL(int width, int height)
 {
     glViewport(0, 0, width, height);
     updateProjection();
-    emit resized();
+    emit sizeChanged();
 }
 
 void GLWidget::updateProjection()

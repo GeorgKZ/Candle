@@ -1,10 +1,6 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#ifdef _WIN32
-  #include <windows.h> 
-#endif
-
 #include <QtCore/QDebug>
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
@@ -16,6 +12,10 @@
 #include <QtWidgets/QMessageBox>
 #include <QtQuick/QSGRendererInterface>
 #include <QtQuick/QQuickWindow>
+
+#ifdef Q_OS_WINDOWS
+  #include <windows.h> 
+#endif
 
 #include "parser/gcodepreprocessorutils.h"
 #include "parser/gcodeparser.h"
@@ -99,12 +99,11 @@ void setAllTranslators(const QString &language) {
     if (QFile::exists(translationFileName)) {
         setTranslator(translationFileName, &qt_translator);
     }
-
 }
 
 int main(int argc, char *argv[]) {
 
-#ifdef _WIN32
+#ifdef Q_OS_WINDOWS
     /**
      * Если программа запущена в консоли, разрешить консольный вывод.
      */

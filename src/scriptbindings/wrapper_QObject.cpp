@@ -8,7 +8,7 @@ QJSValue wrapper_QObject::findChild(const QString &aName, Qt::FindChildOptions o
     qCritical() << "no child" << aName << "found!!!";
     return QJSValue();
   }
-  const char* widgetClass = widget->metaObject()->className();
-  qDebug() << "found child class" << widgetClass << "by name" << aName;
-  return wrapperFactory(widgetClass, widget);
+  qDebug() << "found child class" << widget->metaObject()->className() << "by name" << aName;
+  return wrapperFactory(widget->metaObject()->className(), widget);
+//  return PointerToJsvalue(QWidget, widget);
 }

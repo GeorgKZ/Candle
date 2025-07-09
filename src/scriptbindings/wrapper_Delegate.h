@@ -133,30 +133,23 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_IconDelegate(IconDelegate *self) :
-    wrapper_QStyledItemDelegate(self) {
-    qDebug() << "wrapper_IconDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_IconDelegate(void *self) : wrapper_QStyledItemDelegate(self) {
+    qDebug() << "wrapper_IconDelegate::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const IconDelegate* get_selfptr() const {
-    if (wrapper_QStyledItemDelegate::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QStyledItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<const IconDelegate*>(wrapper_QStyledItemDelegate::get_selfptr());
+    return static_cast<const IconDelegate*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   IconDelegate* get_selfptr() {
-    if (wrapper_QStyledItemDelegate::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QStyledItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<IconDelegate*>(wrapper_QStyledItemDelegate::get_selfptr());
+    return static_cast<IconDelegate*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_IconDelegate() override {
-    qDebug() << "wrapper_IconDelegate::destructor";
+    qDebug() << "wrapper_IconDelegate::destructor(self=" << get_selfvalue() << ")";
   }
 };
 
@@ -274,30 +267,23 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_CodeDelegate(CodeDelegate *self) :
-    wrapper_QStyledItemDelegate(self) {
-    qDebug() << "wrapper_CodeDelegate::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_CodeDelegate(void *self) : wrapper_QStyledItemDelegate(self) {
+    qDebug() << "wrapper_CodeDelegate::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const CodeDelegate* get_selfptr() const {
-    if (wrapper_QStyledItemDelegate::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QStyledItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<const CodeDelegate*>(wrapper_QStyledItemDelegate::get_selfptr());
+    return static_cast<const CodeDelegate*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   CodeDelegate* get_selfptr() {
-    if (wrapper_QStyledItemDelegate::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QStyledItemDelegate::get_selfptr - got nullptr";
-    }
-    return static_cast<CodeDelegate*>(wrapper_QStyledItemDelegate::get_selfptr());
+    return static_cast<CodeDelegate*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_CodeDelegate() override {
-    qDebug() << "wrapper_CodeDelegate::destructor";
+    qDebug() << "wrapper_CodeDelegate::denstructor(self=" << get_selfvalue() << ")";
   }
 };
 

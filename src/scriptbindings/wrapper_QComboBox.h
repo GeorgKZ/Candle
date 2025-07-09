@@ -190,29 +190,23 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QComboBox(QComboBox *self) :
-    wrapper_QWidget(self) {
-    qDebug() << "wrapper_QComboBox::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QComboBox(void *self) : wrapper_QWidget(self) {
+    qDebug() << "wrapper_QComboBox::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QComboBox* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QConboBox::get_selfptr - got nullptr";
-    }
-    return static_cast<const QComboBox*>(wrapper_QWidget::get_selfptr());
+    return static_cast<const QComboBox*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QComboBox* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QConboBox::get_selfptr - got nullptr";
-    }
-    return static_cast<QComboBox*>(wrapper_QWidget::get_selfptr());
+    return static_cast<QComboBox*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_QComboBox() override {
+    qDebug() << "wrapper_QComboBox::destructor(self=" << get_selfvalue() << ")";
   }
 };
 

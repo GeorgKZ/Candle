@@ -4,6 +4,8 @@
 #include <QtCore/QObject>
 #include "camerawidget.h"
 #include "wrapper_QWidget.h"
+#include "wrapper_QSize.h"
+#include "wrapper_QPoint.h"
 
 class WRAPPER_DLL_EXPORT wrapper_CameraWidget : public wrapper_QWidget {
 
@@ -80,7 +82,8 @@ public:
   Q_INVOKABLE  QJSValue resolution() const {
     qDebug() << "wrapper_CameraWidget::resolution()";
     QSize* p = new QSize(get_selfptr()->resolution());
-    return wrapperFactory("QSize", p);
+//  return wrapperFactory("QSize", p);
+    return PointerToJsvalue(QSize, p);
   }
 
   Q_INVOKABLE void setZoom(qreal zoom) {
@@ -103,7 +106,8 @@ public:
 
   Q_INVOKABLE QJSValue pos() const {
     QPoint* p = new QPoint(get_selfptr()->pos());
-    return wrapperFactory("QPoint", p);
+//  return wrapperFactory("QPoint", p);
+    return PointerToJsvalue(QPoint, p);
   }
 
   Q_INVOKABLE void setAimPos(const QJSValue &aimPos) {
@@ -116,7 +120,8 @@ public:
   Q_INVOKABLE QJSValue aimPos() const {
     qDebug() << "wrapper_CameraWidget::aimPos()";
     QPoint* p = new QPoint(get_selfptr()->aimPos());
-    return wrapperFactory("QPoint", p);
+//  return wrapperFactory("QPoint", p);
+    return PointerToJsvalue(QPoint, p);
   }
 
   Q_INVOKABLE void setAimSize(int aimSize) {
@@ -201,30 +206,24 @@ private:
 public:
 
   // Конструктор из объекта
-  wrapper_CameraWidget(CameraWidget *self) : wrapper_QWidget(self) {
-    qDebug() << "wrapper_CameraWidget::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_CameraWidget(void *self) : wrapper_QWidget(self) {
+    qDebug() << "wrapper_CameraWidget::constructor(self=" << get_selfvalue() << ")";
     set_connections();
   }
 
   // Получение константного указателя на объект
   const CameraWidget* get_selfptr() const {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_CameraWidget::get_selfptr - got nullptr";
-    }
-   return static_cast<const CameraWidget*>(wrapper_QWidget::get_selfptr());
+   return static_cast<const CameraWidget*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   CameraWidget* get_selfptr() {
-    if (wrapper_QWidget::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_CameraWidget::get_selfptr - got nullptr";
-    }
-    return static_cast<CameraWidget*>(wrapper_QWidget::get_selfptr());
+    return static_cast<CameraWidget*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
   virtual ~wrapper_CameraWidget() override {
-    qDebug() << "wrapper_CameraWidget::destructor";
+    qDebug() << "wrapper_CameraWidget::destructor(self=" << get_selfvalue() << ")";
   }
 };
 

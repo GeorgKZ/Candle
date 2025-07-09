@@ -31,7 +31,7 @@ public:
   Q_INVOKABLE explicit wrapper_QHeaderView(Qt::Orientation orientation, wrapper_QWidget *parent = nullptr) :
     wrapper_QAbstractItemView(static_cast<QAbstractItemView*>
       (new QHeaderView(orientation, parent == nullptr ? nullptr : parent->get_selfptr()))) {
-     qDebug() << "wrapper_QHeaderView::constructor(parent=" << (parent == nullptr ? 0 : reinterpret_cast<unsigned long long>(parent->get_selfptr())) << ")";
+     qDebug() << "wrapper_QHeaderView::constructor(parent=" << (parent == nullptr ? 0 : parent->get_selfvalue()) << ")";
  }
 
 //  Q_INVOKABLE void setModel(QAbstractItemModel *model) { get_selfptr()->setModel(model); }
@@ -42,7 +42,8 @@ public:
 
   // QSize sizeHint() const
   Q_INVOKABLE virtual QJSValue sizeHint() const override {
-    return wrapperFactory("QSize", new QSize(get_selfptr()->sizeHint()));
+//  return wrapperFactory("QSize", new QSize(get_selfptr()->sizeHint()));
+    return PointerToJsvalue(QSize, new QSize(get_selfptr()->sizeHint()));
   }
 
   Q_INVOKABLE void setVisible(bool v) { get_selfptr()->setVisible(v); }
@@ -164,23 +165,24 @@ Q_SIGNALS:
 public:
 
   // Конструктор из объекта
-  wrapper_QHeaderView(QHeaderView *self) :
-    wrapper_QAbstractItemView(self) {
-    qDebug() << "wrapper_QHeaderView::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QHeaderView(void *self) : wrapper_QAbstractItemView(self) {
+    qDebug() << "wrapper_QHeaderView::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QHeaderView* get_selfptr() const {
-    return static_cast<const QHeaderView*>(wrapper_QAbstractItemView::get_selfptr());
+    return static_cast<const QHeaderView*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QHeaderView* get_selfptr() {
-    return static_cast<QHeaderView*>(wrapper_QAbstractItemView::get_selfptr());
+    return static_cast<QHeaderView*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор
-  virtual ~wrapper_QHeaderView() override { }
+  virtual ~wrapper_QHeaderView() override {
+      qDebug() << "wrapper_QHeaderView::destructor(self=" << get_selfvalue() << ")";
+  }
 };
 
 Q_DECLARE_METATYPE(wrapper_QHeaderView)

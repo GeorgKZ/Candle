@@ -7,6 +7,11 @@
 #define prequoting(a) #a
 
 
+/**
+ * \brief Регистрация прокси-классов в указанном JS Engine
+ * \param [in] se указатель на используемый JS Engine
+ *
+ */
 WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se);
 
 /**
@@ -27,7 +32,7 @@ WRAPPER_DLL_EXPORT QJSValue newScript(QJSEngine *se, QObject* parent);
  * \brief Преобразование объекта из контейнера JSValue в указатель на класс, возможно с извлечением из прокси-класса
  *
  */
-WRAPPER_DLL_EXPORT void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue value, QString *returnType = nullptr);
+WRAPPER_DLL_EXPORT void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue &value, QString *returnType = nullptr);
 
 #define jsvalueToPointer(classname, value) static_cast< classname *>( jsvalueToObject_ptr(quoting(classname), value) )
 

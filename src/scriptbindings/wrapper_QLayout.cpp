@@ -64,6 +64,7 @@ QJSValue wrapper_QLayout::widget() const {
   QWidget *widget = get_selfptr()->widget();
   qDebug() << "wrapper_QLayout::widget() ->" << widget->metaObject()->className();
   return wrapperFactory(widget->metaObject()->className(), widget);
+//  return PointerToJsvalue(QWidget, widget);
 }
 
 // virtual QLayout *layout();
@@ -71,6 +72,7 @@ QJSValue wrapper_QLayout::layout() {
   QLayout* layout = get_selfptr()->layout();
   qDebug() << "wrapper_QLayout::layout() ->" << layout->metaObject()->className();
   return wrapperFactory(layout->metaObject()->className(), layout);
+//  return PointerToJsvalue(QLayout, layout);
 }
 
 // virtual QSpacerItem *spacerItem();
@@ -156,14 +158,15 @@ void wrapper_QLayout::addWidget(const QJSValue &widget) {
 // virtual QLayoutItem *itemAt(int index) const
 QJSValue wrapper_QLayout::itemAt(int index) const {
   QLayoutItem* item = get_selfptr()->itemAt(index);
-  return wrapperFactory("QLayoutItem", item);
-
+//  return wrapperFactory("QLayoutItem", item);
+  return PointerToJsvalue(QLayoutItem, item);
 } 
 
 // virtual QLayoutItem *takeAt(int index)
 QJSValue wrapper_QLayout::takeAt(int index) {
   QLayoutItem* item = get_selfptr()->takeAt(index);
-  return wrapperFactory("QLayoutItem", item);
+//  return wrapperFactory("QLayoutItem", item);
+  return PointerToJsvalue(QLayoutItem, item);
 }
 
 #if 0

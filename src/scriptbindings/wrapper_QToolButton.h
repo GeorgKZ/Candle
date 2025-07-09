@@ -41,13 +41,15 @@ public:
   // QSize sizeHint() const
   Q_INVOKABLE virtual QJSValue sizeHint() const override {
     QSize *size = new QSize(get_selfptr()->sizeHint());
-    return wrapperFactory("QSize", size);
+//  return wrapperFactory("QSize", size);
+    return PointerToJsvalue(QSize, size);
   }
 
   // QSize minimumSizeHint()
   Q_INVOKABLE virtual QJSValue minimumSizeHint() const override {
     QSize *size = new QSize(get_selfptr()->minimumSizeHint());
-    return wrapperFactory("QSize", size);
+//  return wrapperFactory("QSize", size);
+    return PointerToJsvalue(QSize, size);
   }
 
   // Qt::ToolButtonStyle toolButtonStyle() const;
@@ -115,25 +117,18 @@ Q_SIGNALS:
 public:
 
   // Конструктор из объекта
-  wrapper_QToolButton(QToolButton *self) :
-    wrapper_QAbstractButton(self) {
-    qDebug() << "wrapper_QToolButton::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QToolButton(void *self) : wrapper_QAbstractButton(self) {
+    qDebug() << "wrapper_QToolButton::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QToolButton* get_selfptr() const {
-    if (wrapper_QAbstractButton::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QToolButton::get_selfptr - got nullptr";
-    }
-    return static_cast<const QToolButton*>(wrapper_QAbstractButton::get_selfptr());
+    return static_cast<const QToolButton*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QToolButton* get_selfptr() {
-    if (wrapper_QAbstractButton::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QToolButton::get_selfptr - got nullptr";
-    }
-    return static_cast<QToolButton*>(wrapper_QAbstractButton::get_selfptr());
+    return static_cast<QToolButton*>(wrapper_common::get_selfptr());
   }
 
   // Деструктор

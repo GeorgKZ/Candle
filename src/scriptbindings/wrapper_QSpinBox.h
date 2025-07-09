@@ -80,25 +80,18 @@ Q_SIGNALS:
     public:
 
     // Конструктор из объекта
-    wrapper_QSpinBox(QSpinBox *self) :
-        wrapper_QAbstractSpinBox(self) {
-        qDebug() << "wrapper_QSpinBox::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+    wrapper_QSpinBox(void *self) :  wrapper_QAbstractSpinBox(self) {
+        qDebug() << "wrapper_QSpinBox::constructor(self=" << get_selfvalue() << ")";
     }
 
     // Получение константного указателя на объект
     const QSpinBox* get_selfptr() const {
-        if (wrapper_QAbstractSpinBox::get_selfptr() == nullptr) {
-            qCritical() << "wrapper_QSpinBox::get_selfptr - got nullptr";
-        }
-        return static_cast<const QSpinBox*>(wrapper_QAbstractSpinBox::get_selfptr());
+        return static_cast<const QSpinBox*>(wrapper_common::get_selfptr());
     }
 
     // Получение указателя на объект
     QSpinBox* get_selfptr() {
-        if (wrapper_QAbstractSpinBox::get_selfptr() == nullptr) {
-            qCritical() << "wrapper_QSpinBox::get_selfptr - got nullptr";
-        }
-        return static_cast<QSpinBox*>(wrapper_QAbstractSpinBox::get_selfptr());
+        return static_cast<QSpinBox*>(wrapper_common::get_selfptr());
     }
 
     // Деструктор
@@ -187,25 +180,18 @@ Q_SIGNALS:
     public:
 
     // Конструктор из объекта
-    wrapper_QDoubleSpinBox(QDoubleSpinBox *self) :
-        wrapper_QAbstractSpinBox(self) {
-        qDebug() << "wrapper_QDoubleSpinBox::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+    wrapper_QDoubleSpinBox(void *self) : wrapper_QAbstractSpinBox(self) {
+        qDebug() << "wrapper_QDoubleSpinBox::constructor(self=" << get_selfvalue() << ")";
     }
 
     // Получение константного указателя на объект
     const QDoubleSpinBox* get_selfptr() const {
-        if (wrapper_QAbstractSpinBox::get_selfptr() == nullptr) {
-            qCritical() << "wrapper_QDoubleSpinBox::get_selfptr - got nullptr";
-        }
-        return static_cast<const QDoubleSpinBox*>(wrapper_QAbstractSpinBox::get_selfptr());
+        return static_cast<const QDoubleSpinBox*>(wrapper_common::get_selfptr());
     }
 
     // Получение указателя на объект
     QDoubleSpinBox* get_selfptr() {
-        if (wrapper_QAbstractSpinBox::get_selfptr() == nullptr) {
-            qCritical() << "wrapper_QDoubleSpinBox::get_selfptr - got nullptr";
-        }
-        return static_cast<QDoubleSpinBox*>(wrapper_QAbstractSpinBox::get_selfptr());
+        return static_cast<QDoubleSpinBox*>(wrapper_common::get_selfptr());
     }
 
     // Деструктор

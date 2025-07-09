@@ -137,24 +137,17 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QRect(QRect *self) :
-    wrapper_common(self) {
-    qDebug() << "wrapper_QRect::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  wrapper_QRect(void *self) : wrapper_common(self) {
+    qDebug() << "wrapper_QRect::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QRect* get_selfptr() const {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "const wrapper_QRect::get_selfptr - got nullptr";
-    }
     return static_cast<const QRect*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QRect* get_selfptr() {
-    if (wrapper_common::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QRect::get_selfptr - got nullptr";
-    }
     return static_cast<QRect*>(wrapper_common::get_selfptr());
   }
 

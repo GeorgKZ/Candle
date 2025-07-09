@@ -122,35 +122,27 @@ public:
 public:
 
   // Конструктор из объекта
-  explicit wrapper_QLayout(QLayout* self) :
-    wrapper_QObject(static_cast<QObject*>(self)) {
-    qDebug() << "wrapper_QLayout::constructor(self=" << reinterpret_cast<unsigned long long>(self) << ")";
+  explicit wrapper_QLayout(void* self) : wrapper_QObject(self) {
+    qDebug() << "wrapper_QLayout::constructor(self=" << get_selfvalue() << ")";
   }
 
   // Деструктор
   virtual ~wrapper_QLayout() override {
-    qDebug() << "wrapper_QLayout destructor";
-//    delete static_cast<QLayout*>(wrapper_QObject::get_selfptr());
+    qDebug() << "wrapper_QLayout::destructor(self=" << get_selfvalue() << ")";
   }
 
   // Получение константного указателя на объект
   const QLayout* get_selfptr() const {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<const QLayout*>(wrapper_QObject::get_selfptr());
+    return static_cast<const QLayout*>(wrapper_common::get_selfptr());
   }
 
   // Получение указателя на объект
   QLayout* get_selfptr() {
-    if (wrapper_QObject::get_selfptr() == nullptr) {
-      qCritical() << "wrapper_QLayout::get_selfptr - got nullptr";
-    }
-    return static_cast<QLayout*>(wrapper_QObject::get_selfptr());
+    return static_cast<QLayout*>(wrapper_common::get_selfptr());
   }
 };
 
-Q_DECLARE_METATYPE(wrapper_QLayout)
-Q_DECLARE_METATYPE(wrapper_QLayout*)
+//Q_DECLARE_METATYPE(wrapper_QLayout)
+//Q_DECLARE_METATYPE(wrapper_QLayout*)
 
 #endif // WRAPPER_QLAYOUT_H
