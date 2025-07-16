@@ -302,12 +302,6 @@ void* wrapper_common::get_selfptr() {
     return selfptr_;
 }
 
-//void wrapper_common::set_selfptr(void *self) {
-//    selfptr_ = self;
-//  qDebug() << "wrapper_common::set_selfptr(" << get_selfvalue() << ")";
-//}
-
-
 /**
  * \file
  * * \copybrief wrapper_common::variantToJSValue(const QVariant&) const
@@ -318,7 +312,7 @@ QJSValue wrapper_common::variantToJSValue(const QVariant &variant) const {
 }
 
 #define wfactory(class, name, obj) do { if (strcmp(class, #name ) == 0) { \
-  return qjsEngine(this)->toScriptValue< wrapper_##name *>( new wrapper_##name ( /* static_cast<name *>( */ object /* ) */ ) ); } } while(0)
+  return qjsEngine(this)->toScriptValue< wrapper_##name *>( new wrapper_##name ( object ) ); } } while(0)
 
 QJSValue wrapper_common::wrapperFactory(const char *className, void *object) const {
 

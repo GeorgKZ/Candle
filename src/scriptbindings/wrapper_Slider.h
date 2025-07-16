@@ -34,6 +34,13 @@ public:
     qDebug() << "wrapper_Slider::constructor(self=" << get_selfvalue() << ")";
   }
 
+  // Деструктор
+  virtual ~wrapper_Slider() override {
+    qDebug() << "wrapper_Slider::destructor(self=" << get_selfvalue() << ")";
+  }
+
+private:
+
   // Получение константного указателя на объект
   const Slider* get_selfptr() const {
     return static_cast<const Slider*>(wrapper_common::get_selfptr());
@@ -42,11 +49,6 @@ public:
   // Получение указателя на объект
   Slider* get_selfptr() {
     return static_cast<Slider*>(wrapper_common::get_selfptr());
-  }
-
-  // Деструктор
-  virtual ~wrapper_Slider() override {
-    qDebug() << "wrapper_Slider::destructor";
   }
 };
 

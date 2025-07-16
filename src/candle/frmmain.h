@@ -89,6 +89,7 @@ struct CommandQueue {
     }
 };
 
+#if 0
 
 /**
  * \brief Установить перевод согласно языковому файлу
@@ -105,6 +106,7 @@ void setAllTranslators(const QString &language);
  */
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
+#endif
 
 class CancelException : public std::exception {
 public:
@@ -112,11 +114,8 @@ public:
 #undef _GLIBCXX_USE_NOEXCEPT
 #define _GLIBCXX_USE_NOEXCEPT _NOEXCEPT
 #endif
-
-    virtual const char* what() const noexcept override
-    {
-        return "Operation was cancelled by user";
-    }
+  
+    virtual const char* what() const noexcept override;
 };
 
 class frmMain : public QMainWindow

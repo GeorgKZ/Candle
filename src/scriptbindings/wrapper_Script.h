@@ -17,9 +17,6 @@ public:
 
 // path()
 
-  Q_INVOKABLE static void importExtension(const QString &name) {
-    Q_UNUSED(name);
-  }
 };
 
 #endif // WRAPPER_SCRIPT_H

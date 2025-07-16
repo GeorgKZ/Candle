@@ -9,26 +9,15 @@ class WidgetMimeData: public QMimeData
 
 public:
 
-    WidgetMimeData(): QMimeData()
-    {
-        m_widget = nullptr;
-    }
+    WidgetMimeData();
 
-    static QString mimeType()
-    {
-        return "application/widget";
-    }
+    virtual ~WidgetMimeData() override;
 
-    void setWidget(QWidget *widget)
-    {
-        setData(WidgetMimeData::mimeType(), QByteArray());
-        m_widget = widget;
-    }
+    static QString mimeType();
 
-    QWidget *widget() const
-    {
-        return m_widget;
-    }
+    void setWidget(QWidget *widget);
+
+    QWidget *widget() const;
 
 private:
 

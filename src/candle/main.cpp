@@ -22,6 +22,10 @@
 #include "parser/gcodeviewparse.h"
 
 #include "frmmain.h"
+#include "bootstrap.h"
+
+
+#if 0
 
 static QtMessageHandler originalHandler = nullptr;
 
@@ -29,6 +33,9 @@ static QtMessageHandler originalHandler = nullptr;
  * Выводить информационные и отладочные сообщение в консоль
  */
 static bool debugOutput = false;
+
+
+QList<int> fontIds;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
 
@@ -101,7 +108,30 @@ void setAllTranslators(const QString &language) {
     }
 }
 
+#endif
+
+
 int main(int argc, char *argv[]) {
+
+    /**
+     * * Создать экземпляр типа QApplication
+     */
+    QApplication a(argc, argv);
+
+    a.setAttribute(Qt::AA_ForceRasterWidgets, false);
+
+    /**
+     * * Установить для экземпляра QApplication версию и название программы
+     */
+    a.setApplicationDisplayName(quoting(PROJECT_NAME));
+    a.setApplicationVersion(VERSION_STR);
+
+//    qDebug() << "Version:" << a.applicationVersion();
+
+
+  bootstrap::init(argc, argv);
+
+#if 0
 
 #ifdef Q_OS_WINDOWS
     /**
@@ -131,35 +161,42 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
+     
+#endif
 
-    /**
-     * Создать экземпляр типа QApplication
-     */
-    QApplication a(argc, argv);
 
-    a.setAttribute(Qt::AA_ForceRasterWidgets, false);
-
-    /**
-     * Установить для экземпляра QApplication версию и название программы
-     */
-    a.setApplicationDisplayName(quoting(PROJECT_NAME));
-    a.setApplicationVersion(VERSION_STR);
-
-    qDebug() << "Version:" << a.applicationVersion();
 
     /**
      * Установить перевод согласно выбранному в настройках языку
      */
     QSettings set(a.applicationDirPath() + "/settings.ini", QSettings::IniFormat);
-//!!! По умолчанию нет???
     QString loc = set.value("language", "en").toString();
     if (loc.isEmpty()) {
-        qDebug() << "Set defaule language 'en'";
         loc = "en";
     }
-    setAllTranslators(loc);
+    bootstrap::setAllTranslators(loc);
 
     qDebug() << "Found system styles:" << QStyleFactory::keys();
+
+#if 0
+    /**
+     * Загрузить шрифты из ресурса программы для использования в программе.
+     */
+    foreach(const QString &fontName, QDir(":/fonts").entryList()) {  
+        QFileInfo fontFile(fontName);
+
+        int fontID = QFontDatabase::addApplicationFont(QString(":/fonts/") + fontName);
+        if (fontID == -1) {
+            qCritical() << "Adding font ':/fonts/" << fontName << "' error";
+        } else {
+            fontIds.append(fontID);
+            qInfo() << "Installed font " << QFontDatabase::applicationFontFamilies(fontID).at(0);
+          //  qApp->setFont(QFont(QFontDatabase::applicationFontFamilies(fontID).at(0)));
+            qDebug() << "Font family #" << fontID << ": " << QFontDatabase::applicationFontFamilies(fontID);
+        }
+    }
+    qDebug() << "Font families: " << QFontDatabase::families();
+#endif
 
 
 #if 0 

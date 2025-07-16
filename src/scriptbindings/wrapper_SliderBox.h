@@ -136,6 +136,13 @@ public:
     qDebug() << "wrapper_SliderBox::constructor(self=" << get_selfvalue() << ")";
   }
 
+  // Деструктор
+  virtual ~wrapper_SliderBox() override {
+    qDebug() << "wrapper_SliderBox::destructor(self=" << get_selfvalue() << ")";
+  }
+
+private:
+
   // Получение константного указателя на объект
   const SliderBox* get_selfptr() const {
     return static_cast<const SliderBox*>(wrapper_common::get_selfptr());
@@ -145,13 +152,8 @@ public:
   SliderBox* get_selfptr() {
     return static_cast<SliderBox*>(wrapper_common::get_selfptr());
   }
-
-  // Деструктор
-  virtual ~wrapper_SliderBox() override {
-    qDebug() << "wrapper_SliderBox::destructor";
-  }
 };
 
-Q_DECLARE_METATYPE(wrapper_SliderBox)
+//Q_DECLARE_METATYPE(wrapper_SliderBox)
 
 #endif // WRAPPER_SLIDERBOX_H

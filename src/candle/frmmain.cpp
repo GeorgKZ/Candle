@@ -21,7 +21,6 @@
 #include <QtQml/QJSValueIterator>
 
 #ifdef QT_FEATURE_permissions
-//#if QT_CONFIG(permissions)
   #include <QPermission>
 #endif
 
@@ -32,6 +31,12 @@
 #include "widgets/widgetmimedata.h"
 
 #include "wrapper_extern.h"
+
+const char* CancelException::what() const noexcept
+{
+    return "Operation was cancelled by user";
+}
+
 
 frmMain::frmMain(QWidget *parent) :
     QMainWindow(parent),

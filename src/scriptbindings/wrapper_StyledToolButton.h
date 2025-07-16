@@ -70,6 +70,13 @@ public:
     qDebug() << "wrapper_StyledToolButton::constructor(self=" << get_selfvalue() << ")";
   }
 
+  // Деструктор
+  virtual ~wrapper_StyledToolButton() override {
+    qDebug() << "wrapper_StyledToolButton::destructor(self=" << get_selfvalue() << ")";
+  }
+
+private:
+
   // Получение константного указателя на объект
   const StyledToolButton* get_selfptr() const {
     return static_cast<const StyledToolButton*>(wrapper_common::get_selfptr());
@@ -79,13 +86,8 @@ public:
   StyledToolButton* get_selfptr() {
     return static_cast<StyledToolButton*>(wrapper_common::get_selfptr());
   }
-
-  // Деструктор
-  virtual ~wrapper_StyledToolButton() override {
-    qDebug() << "wrapper_StyledToolButton::destructor";
-  }
 };
 
-Q_DECLARE_METATYPE(wrapper_StyledToolButton)
+//Q_DECLARE_METATYPE(wrapper_StyledToolButton)
 
 #endif // WRAPPER_STYLEDTOOLBUTTON_H

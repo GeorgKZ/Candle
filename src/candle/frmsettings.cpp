@@ -14,61 +14,62 @@
 #include <QtWidgets/QPlainTextEdit>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+#include "bootstrap.h"
 #include "frmmain.h"
 #include "frmsettings.h"
 #include "ui_frmsettings.h"
+#include "customkeysequenceedit.h"
+#include "shortcutdelegate.h"
 
-class CustomKeySequenceEdit : public QKeySequenceEdit
+extern QList<int> fontIds;
+
+CustomKeySequenceEdit::CustomKeySequenceEdit(QWidget *parent): QKeySequenceEdit(parent) {
+}
+
+CustomKeySequenceEdit::~CustomKeySequenceEdit() {
+}
+
+void CustomKeySequenceEdit::keyPressEvent(QKeyEvent *pEvent) {
+    QKeySequenceEdit::keyPressEvent(pEvent);
+    QString s = keySequence().toString().split(", ").first();
+
+    QString shiftedKeys = "~!@#$%^&*()_+{}|:?><\"";
+    QString key = s.right(1);
+    
+    if (pEvent->modifiers() & Qt::KeypadModifier) s = "Num+" + s;
+    else if (!key.isEmpty() && shiftedKeys.contains(key)) {
+        s.remove("Shift+");
+        s = s.left(s.size() - 1) + QString("Shift+%1").arg(key);
+    }
+
+    QKeySequence seq(QKeySequence::fromString(s));
+    setKeySequence(seq);
+}
+
+ShortcutDelegate::ShortcutDelegate() {
+}
+
+ShortcutDelegate::~ShortcutDelegate() {
+}
+
+
+QWidget *ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-public:
+    Q_UNUSED(option)
+    Q_UNUSED(index)
 
-    explicit CustomKeySequenceEdit(QWidget *parent = nullptr): QKeySequenceEdit(parent) {}
+    return new CustomKeySequenceEdit(parent);
+}
 
-    virtual ~CustomKeySequenceEdit() override {}
-
-protected:
-
-    virtual void keyPressEvent(QKeyEvent *pEvent) override {
-        QKeySequenceEdit::keyPressEvent(pEvent);
-        QString s = keySequence().toString().split(", ").first();
-
-        QString shiftedKeys = "~!@#$%^&*()_+{}|:?><\"";
-        QString key = s.right(1);
-        
-        if (pEvent->modifiers() & Qt::KeypadModifier) s = "Num+" + s;
-        else if (!key.isEmpty() && shiftedKeys.contains(key)) {
-            s.remove("Shift+");
-            s = s.left(s.size() - 1) + QString("Shift+%1").arg(key);
-        }
-
-        QKeySequence seq(QKeySequence::fromString(s));
-        setKeySequence(seq);
-    }
-};
-
-class ShortcutDelegate: public QStyledItemDelegate
+void ShortcutDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-public:
-    ShortcutDelegate() {}
+    static_cast<QKeySequenceEdit*>(editor)->setKeySequence(index.data(Qt::DisplayRole).toString());
+}
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override
-    {
-        Q_UNUSED(option)
-        Q_UNUSED(index)
-
-        return new CustomKeySequenceEdit(parent);
-    }
-
-    void setEditorData(QWidget *editor, const QModelIndex &index) const override
-    {
-        static_cast<QKeySequenceEdit*>(editor)->setKeySequence(index.data(Qt::DisplayRole).toString());
-    }
-
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override
-    {
-        model->setData(index, static_cast<QKeySequenceEdit*>(editor)->keySequence().toString());
-    }
-};
+void ShortcutDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    model->setData(index, static_cast<QKeySequenceEdit*>(editor)->keySequence().toString());
+}
 
 frmSettings::frmSettings(QWidget *parent) :
     QDialog(parent),
@@ -91,12 +92,20 @@ frmSettings::frmSettings(QWidget *parent) :
     }  
 
     /**
-     * Заполнить выпадающий список щрифтов шрифтами из ресурса программы.
+     * Заполнить выпадающий список шрифтов шрифтами из ресурса программы.
      */
-    foreach(const QString &fontName, QDir(":/fonts").entryList()) {  
-        QFileInfo fontFile(fontName);
-        ui->cboFont->addItem(fontFile.baseName());
-    }  
+    for (const QString& item : bootstrap::getLoadedFonts()) {
+        ui->cboFont->addItem(item);
+    }
+
+//!!!
+//    int i = 0;
+//    foreach(const QString &fontName, QDir(":/fonts").entryList()) {  
+//        QFileInfo fontFile(fontName);
+//        ui->cboFont->addItem(QFontDatabase::applicationFontFamilies(fontIds[i++]).at(0));
+//fontFile.baseName());
+//    }
+
 
     foreach (QGroupBox *box, this->findChildren<QGroupBox*>()) {
         ui->listCategories->addItem(box->title());
@@ -704,7 +713,7 @@ void frmSettings::setLanguage(QString language)
     int i = ui->cboLanguage->findData(language);
     if (i != -1) {
         ui->cboLanguage->setCurrentIndex(i);
-        setAllTranslators(language);
+        bootstrap::setAllTranslators(language);
     }
 }
 
@@ -974,6 +983,8 @@ void frmSettings::on_cboFontSize_currentTextChanged(const QString &newSize)
 
 void frmSettings::on_cboFont_currentTextChanged(const QString &newFont)
 {
+    qDebug() << "Setting font " << newFont;
+
     qApp->setStyleSheet(QString("QDialog {border: 1px solid palette(mid);}") +
         QString(" QWidget {font-family: \"") + newFont + QString("\";}") +
         QString(" QWidget {font-size: ") + QString("%1").arg(fontSize()) + QString("pt}"));
