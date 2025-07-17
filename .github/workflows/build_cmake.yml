@@ -496,7 +496,6 @@ jobs:
       shell: cmake -P {0}
       run: |
         file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" github_workspace)
-#       include(${github_workspace}/cmake/QtCreatorIDEBranding.cmake)
         string(REPLACE "." ";" IDE_VERSION_LIST ${IDE_VERSION_DISPLAY})
         list(GET IDE_VERSION_LIST 0 IDE_VERSION_MAJOR)
         file(APPEND "$ENV{GITHUB_OUTPUT}" "archive_name=ccache-${{ matrix.config.os }}-${{ matrix.config.cc }}-qtc${IDE_VERSION_MAJOR}")
