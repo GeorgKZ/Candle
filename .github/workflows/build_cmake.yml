@@ -382,7 +382,6 @@ jobs:
 #        file(GLOB openssl_shared_objects "openssl/${openssl_localdir}/*${shared_suffix}")
 #        execute_process(
 #          COMMAND ${CMAKE_COMMAND} -E copy ${openssl_shared_objects} ${openssl_dest_dir})
-
     - name: Download libclang
       id: libclang
       shell: cmake -P {0}
