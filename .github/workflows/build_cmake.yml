@@ -423,41 +423,6 @@ jobs:
         file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/libclang" libclang_dir)
         file(APPEND "$ENV{GITHUB_OUTPUT}" "libclang_dir=${libclang_dir}")
 
-#    - name: Download elfutils
-#      if: runner.os == 'Windows' || runner.os == 'Linux'
-#      id: elfutils
-#      shell: cmake -P {0}
-#      run: |
-#        set(elfutils_version "$ENV{ELFUTILS_VERSION}")
-#
-#        if ("${{ runner.os }}" STREQUAL "Windows")
-#          if ("${{ matrix.config.environment_script }}" MATCHES "vcvars64.bat")
-#            set(elfutils "elfutils-release_${elfutils_version}qt-windows-x86_64.7z")
-#          elseif ("${{ matrix.config.environment_script }}" MATCHES "vcvars32.bat")
-#            set(elfutils "elfutils-release_${elfutils_version}qt-windows-i686.7z")
-#          endif()
-#        elseif ("${{ runner.os }}" STREQUAL "Linux")
-#          set(elfutils "elfutils-release_${elfutils_version}qt-linux-x86_64.7z")
-#        endif()
-#
-#        set(elfutils_url "https://\${qt_mirror}/development_releases/prebuilt/elfutils/${elfutils}")
-#
-#        foreach(qt_mirror $ENV{QT_MIRRORS})
-#          cmake_language(EVAL CODE "
-#            message(\"Downloading ${elfutils_url}\")
-#            file(DOWNLOAD \"${elfutils_url}\" ./elfutils.7z)
-#          ")
-#          file(SIZE ./elfutils.7z fileSize)
-#          if (fileSize GREATER 0)
-#            break()
-#          endif()
-#        endforeach()
-#        file(MAKE_DIRECTORY elfutils)
-#        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ../elfutils.7z WORKING_DIRECTORY elfutils)
-#
-#        # Save the path for other steps
-#        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/elfutils" elfutils_dir)
-#        file(APPEND "$ENV{GITHUB_OUTPUT}" "elfutils_dir=${elfutils_dir}")
     - name: Build
       shell: cmake -P {0}
       run: |
