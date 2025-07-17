@@ -343,7 +343,7 @@ jobs:
             unset(WITH_LLVM_LINK)
         endif()
         # В переменную окружения QT_ROOT поместить путь к Qt
-        set(ENV{QT_ROOT} ${{ qt_dir }})
+        set(ENV{QT_ROOT} $ENV{GITHUB_WORKSPACE}/qt)
 
     - name: Конфигурирование CMake для не мультиконфигурационного генератора
       run: >
