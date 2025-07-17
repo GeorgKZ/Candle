@@ -4,6 +4,7 @@
  *
  * <BR>
  */
+#include <QtCore/QSettings>
 #include "bootstrap.h"
 
 /**
@@ -111,6 +112,16 @@ void bootstrap::init(int &argc, char **argv)
             qDebug() << "Installed font " << QFontDatabase::applicationFontFamilies(fontID).at(0);
         }
     }
+
+    /**
+     * * Установить локализацию согласно указанному в файле конфигурации языку.
+     */
+    QSettings set(qApp->applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+    QString loc = set.value("language", "en").toString();
+    if (loc.isEmpty()) {
+        loc = "en";
+    }
+    setAllTranslators(loc);
 }
 
 /**

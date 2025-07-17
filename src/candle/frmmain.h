@@ -89,25 +89,6 @@ struct CommandQueue {
     }
 };
 
-#if 0
-
-/**
- * \brief Установить перевод согласно языковому файлу
- */
-void setTranslator(const QString &translationFileName, QTranslator **translator);
-
-/**
- * \brief Установить перевод интерфейса согласно указанному языку
- */
-void setAllTranslators(const QString &language);
-
-/**
- * \brief Своя функция для вывода информационных и отладочных сообщений
- */
-void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-
-#endif
-
 class CancelException : public std::exception {
 public:
 #ifdef Q_OS_MAC

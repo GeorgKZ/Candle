@@ -1,32 +1,37 @@
 Candle
 -----------
-GRBL controller application with G-Code visualizer written in Qt.
+Приложение для управления станками с числовым программным управлением (далее - ЧПУ),
+имеющими контроллер "GRBL" v1.1 (далее - контроллер) с визуализацией управляющих программ
+(далее - УП) в форме G-кода, написанное на Qt.
 
-Supported functions:
-* Controlling GRBL-based cnc-machine via console commands, buttons on form, numpad.
-* Monitoring cnc-machine state.
-* Loading, editing, saving and sending of G-code files to cnc-machine.
-* Visualizing G-code files.
+Основные функции программы:
+* Управление ЧПУ с контроллером "GRBL" при помощи консольных команд,
+  кнопок графического интерфейса, кнопок цифровой клавиатуры.
+* Отображение состояния ЧПУ.
+* Загрузка, редактирование, сохранение управляющих программ (далее - УП).
+* Визуализация УП.
 
-System requirements for running "Candle":
--------------------
-* Windows/Linux x86
-* CPU with SSE2 instruction set support
-* Graphics card with OpenGL 2.0 support
-* 120 MB free storage space
+Программно-аппаратные требования для выполнения программы "Candle":
+-------------------------------------------------------------------
+* Windows/Linux x86/Mac OS
+* процессор, поддерживающий набор инструкций SSE2
+* графический адаптер, поддерживающий спецификацию OpenGL версии 2.0 и выше
+* свободное место на запоминающем устройстве не менее 20 Мб.
 
-Build requirements:
+Требования для сборки из исходных текстов:
 ------------------
-Qt 5.4.2 with MinGW/GCC compiler
+* Qt 6.X.X для используемого компилятора
+* Компилятор GCC, Clang в случае сборки для среды Linux
+* Компилятор Microsoft Visual Studio 2022 в случае сборки для среды Windows
+* Компилятор Clang в случае сборки для среды Mac OS
+* Cmake весии 3.9 и более новой
+* Ninja весии 1.X и более новой (только при использовании данного генератора)
 
-Downloads:
-----------
-For GRBL v1.1 firmware
+Загрузки исполняемых файлов:
+----------------------------
 
 * Windows: [candle_1.1.7.zip](https://github.com/Denvi/Candle/releases/download/v1.1/Candle_1.1.7.zip)
 * Linux: [candle_1.1.7.tar.gz](https://github.com/Denvi/Candle/releases/download/v1.1/Candle_1.1.7.tar.gz)
 
-(for GRBL v0.9 and below use Candle 1.0)
-
-"Candle" main window:
+Пример главного окна программы "Candle":
 ![screenshot](/screenshots/screenshot_heightmap_original.png)

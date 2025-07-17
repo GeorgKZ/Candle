@@ -13,11 +13,6 @@
   <property name="windowTitle">
    <string>About</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QWidget {
-	font-size: 9pt;
-}</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
     <number>9</number>
@@ -92,11 +87,6 @@
    </item>
    <item>
     <widget class="QPlainTextEdit" name="txtLicense">
-     <property name="font">
-      <font>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>

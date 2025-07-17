@@ -513,8 +513,8 @@ set(ARCHIVE_NAME "${CMAKE_PROJECT_NAME}.tar.gz")
 add_custom_target(backup
     COMMENT "Создание архива исходных текстов"
     COMMAND touch ${ARCHIVE_NAME}
-    COMMAND tar --exclude=build --exclude=TEST* --exclude=${ARCHIVE_NAME} --create --gzip --file=${ARCHIVE_NAME} .
-    WORKING_DIRECTORY ${BUILD_PATH}
+    COMMAND tar --exclude=.git --exclude=${ARCHIVE_NAME} --create --gzip --file=${ARCHIVE_NAME} .
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     VERBATIM
 )
 

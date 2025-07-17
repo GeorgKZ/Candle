@@ -14,10 +14,7 @@
    <string>Settings</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*QWidget {
-	font-size: 9pt;
-}*/
-
+   <string notr="true">
 QSpinBox, QDoubleSpinBox {
 	padding-top: 1px;
 	padding-bottom: 1px;
@@ -40,7 +37,8 @@ QSplitter::handle:vertical {
 
 QSplitter::handle:horizontal {
 	background-image: url(&quot;:/images/handle_vertical.png&quot;);
-}</string>
+}
+   </string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
@@ -56,9 +54,11 @@ QSplitter::handle:horizontal {
      </property>
      <widget class="QListWidget" name="listCategories">
       <property name="styleSheet">
-       <string notr="true">QListWidget::item {
+       <string notr="true">
+QListWidget::item {
 	height: 1.75em;
-}</string>
+}
+       </string>
       </property>
       <property name="spacing">
        <number>1</number>
@@ -211,11 +211,6 @@ QSplitter::handle:horizontal {
              </item>
              <item row="1" column="4">
               <widget class="QSpinBox" name="txtQueryStateTime">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                </font>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
@@ -266,11 +261,6 @@ QSplitter::handle:horizontal {
              </item>
              <item row="1" column="4">
               <widget class="QSpinBox" name="txtSpindleSpeedMax">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                </font>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
@@ -284,11 +274,6 @@ QSplitter::handle:horizontal {
              </item>
              <item row="2" column="1">
               <widget class="QSpinBox" name="txtLaserPowerMin">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                </font>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
@@ -318,11 +303,6 @@ QSplitter::handle:horizontal {
              </item>
              <item row="1" column="1">
               <widget class="QSpinBox" name="txtSpindleSpeedMin">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                </font>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
@@ -343,11 +323,6 @@ QSplitter::handle:horizontal {
              </item>
              <item row="2" column="4">
               <widget class="QSpinBox" name="txtLaserPowerMax">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                </font>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
