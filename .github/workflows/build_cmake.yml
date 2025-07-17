@@ -15,7 +15,6 @@ env:
   CMAKE_VERSION: 3.30.3
   NINJA_VERSION: 1.10.2
   BUILD_TYPE: Release
-  CCACHE_VERSION: 4.11.2
   QT_MIRRORS: download.qt.io;mirrors.ocf.berkeley.edu/qt;ftp.fau.de/qtproject;mirrors.sau.edu.cn/qt
 
 jobs:
@@ -461,90 +460,6 @@ jobs:
         file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/elfutils" elfutils_dir)
         file(APPEND "$ENV{GITHUB_OUTPUT}" "elfutils_dir=${elfutils_dir}")
 
-    - name: Download ccache
-      shell: cmake -P {0}
-      run: |
-        if ("${{ runner.os }}" STREQUAL "Windows")
-          set(ccache_dir "ccache-$ENV{CCACHE_VERSION}-windows-x86_64")
-          set(ccache_archive "${ccache_dir}.zip")
-        elseif ("${{ runner.os }}" STREQUAL "Linux")
-          set(ccache_dir "ccache-$ENV{CCACHE_VERSION}-linux-x86_64")
-          set(ccache_archive "${ccache_dir}.tar.xz")
-        elseif ("${{ runner.os }}" STREQUAL "macOS")
-          set(ccache_dir "ccache-$ENV{CCACHE_VERSION}-darwin")
-          set(ccache_archive "${ccache_dir}.tar.gz")
-        endif()
-
-        set(ccache_url "https://github.com/ccache/ccache/releases/download/v$ENV{CCACHE_VERSION}/${ccache_archive}")
-        file(DOWNLOAD "${ccache_url}" ./${ccache_archive} SHOW_PROGRESS)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./${ccache_archive})
-
-        # Add to PATH environment variable
-        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/${ccache_dir}" ccache_dir)
-        set(path_separator ":")
-        if ("${{ runner.os }}" STREQUAL "Windows")
-          set(path_separator ";")
-        endif()
-        file(APPEND "$ENV{GITHUB_PATH}" "$ENV{GITHUB_WORKSPACE}${path_separator}${ccache_dir}")
-
-        if (NOT "${{ runner.os }}" STREQUAL "Windows")
-          execute_process(COMMAND chmod +x ${ccache_dir}/ccache)
-        endif()
-
-    - name: Prepare ccache archive name
-      id: ccache
-      shell: cmake -P {0}
-      run: |
-        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" github_workspace)
-        string(REPLACE "." ";" IDE_VERSION_LIST ${IDE_VERSION_DISPLAY})
-        list(GET IDE_VERSION_LIST 0 IDE_VERSION_MAJOR)
-        file(APPEND "$ENV{GITHUB_OUTPUT}" "archive_name=ccache-${{ matrix.config.os }}-${{ matrix.config.cc }}-qtc${IDE_VERSION_MAJOR}")
-
-    - name: Download ccache archive
-      shell: cmake -P {0}
-      run: |
-        foreach(page_id RANGE 1 10)
-          file(
-            DOWNLOAD "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?per_page=100&page=${page_id}"
-            HTTPHEADER "Accept: application/vnd.github+json"
-            HTTPHEADER "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-            HTTPHEADER "X-GitHub-Api-Version: 2022-11-28"
-            SHOW_PROGRESS
-            artifacts.json)
-          file(READ artifacts.json artifacts_json)
-
-          string(JSON artifacts_length LENGTH "${artifacts_json}" "artifacts")
-          math(EXPR artifacts_length "${artifacts_length} - 1")
-          if(${artifacts_length} GREATER_EQUAL 0)
-            foreach(idx RANGE 0 ${artifacts_length})
-              string(JSON artifact_js GET "${artifacts_json}" "artifacts" ${idx})
-              string(JSON name GET "${artifact_js}" "name")
-              if ("${name}" STREQUAL "${{ steps.ccache.outputs.archive_name }}")
-                string(JSON download_url GET "${artifact_js}" "archive_download_url")
-
-                foreach(retry RANGE 10)
-                  file(DOWNLOAD "${download_url}"
-                    "${{ steps.ccache.outputs.archive_name }}.zip"
-                    HTTPHEADER "Accept: application/vnd.github+json"
-                    HTTPHEADER "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-                    HTTPHEADER "X-GitHub-Api-Version: 2022-11-28"
-                    SHOW_PROGRESS)
-                  file(SIZE "${{ steps.ccache.outputs.archive_name }}.zip" fileSize)
-                  if (fileSize GREATER 0)
-                    break()
-                  endif()
-                endforeach()
-
-                execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "${{ steps.ccache.outputs.archive_name }}.zip")
-                file(MAKE_DIRECTORY .ccache)
-                execute_process(COMMAND ${CMAKE_COMMAND} -E tar xf "../${{ steps.ccache.outputs.archive_name }}.tar" WORKING_DIRECTORY .ccache)
-
-                return()
-              endif()
-            endforeach()
-          endif()
-        endforeach()
-
     - name: Build
       shell: cmake -P {0}
       run: |
@@ -567,27 +482,10 @@ jobs:
 
         set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
 
-        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
-        set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
-        set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
-        set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
-        set(ENV{CCACHE_COMPRESS} "true")
-        set(ENV{CCACHE_COMPRESSLEVEL} "9")
-        set(ENV{CCACHE_MAXSIZE} "400M")
-        if ("${{ matrix.config.cxx }}" STREQUAL "cl")
-          set(ENV{CCACHE_MAXSIZE} "600M")
-        endif()
-
         execute_process(
           COMMAND git log --format=%B -n 1 ${{ github.event.after }}
           OUTPUT_VARIABLE git_commit_msg
         )
-        if ("${git_commit_msg}" MATCHES "ccache:[ ]*clea[r|n]")
-          execute_process(COMMAND ccache --clear COMMAND_ECHO STDOUT)
-        endif()
-
-        execute_process(COMMAND ccache -p)
-        execute_process(COMMAND ccache -z)
 
         if ("x${{ matrix.config.environment_script }}" STREQUAL "x")
           set(CDB_OPTION "--no-cdb")
@@ -636,54 +534,6 @@ jobs:
             unset(WITH_LLVM_LINK)
         endif()
 
-        execute_process(
-          COMMAND python
-            -u
-            scripts/build.py
-            --build-type Release
-            --src .
-            --build build
-            --qt-path "${{ steps.qt.outputs.qt_dir }}"
-            --llvm-path "${{ steps.libclang.outputs.libclang_dir }}"
-            --python3 "${Python3_EXECUTABLE}"
-            ${WITH_TESTS}
-            ${CDB_OPTION}
-            ${ELFUTILS_OPTION}
-            ${NO_DMG}
-            ${WITH_LLVM_LINK}
-            --add-config=-DCMAKE_C_COMPILER_LAUNCHER=ccache
-            --add-config=-DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-            --add-config=-DIDE_REVISION_URL=https://github.com/$ENV{GITHUB_REPOSITORY}/commits/$ENV{GITHUB_SHA}
-            --zip-infix=-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}
-            --no-qbs
-            ${WITH_CPACK}
-          RESULT_VARIABLE result
-          COMMAND_ECHO STDOUT
-          OUTPUT_VARIABLE output
-          ERROR_VARIABLE output
-          ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
-        )
-        if (NOT result EQUAL 0)
-          string(REGEX MATCH "FAILED:.*$" error_message "${output}")
-          string(REPLACE "\n" "%0A" error_message "${error_message}")
-          message("::error::${error_message}")
-          message(FATAL_ERROR "Build failed")
-        endif()
-
-    - name: ccache statistics
-      shell: cmake -P {0}
-      run: |
-        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
-        set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
-        set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
-        set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
-        set(ENV{CCACHE_COMPRESS} "true")
-        set(ENV{CCACHE_COMPRESSLEVEL} "9")
-        set(ENV{CCACHE_MAXSIZE} "400M")
-        if ("${{ matrix.config.cxx }}" STREQUAL "cl")
-          set(ENV{CCACHE_MAXSIZE} "600M")
-        endif()
-        execute_process(COMMAND ccache -s)
 
 #    - name: Run tests
 #      shell: cmake -P {0}
