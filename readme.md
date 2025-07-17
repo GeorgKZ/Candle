@@ -1,3 +1,5 @@
+[![CMake Build Matrix](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml)
+
 Candle
 -----------
 Приложение для управления станками с числовым программным управлением (далее - ЧПУ),

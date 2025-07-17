@@ -59,20 +59,20 @@ jobs:
             file(APPEND "$ENV{GITHUB_OUTPUT}" "tag=${{github.run_id}}\n")
         endif()
 
-    - name: Setup Go 1.22.x
-      uses: actions/setup-go@v5
-      with:
-        go-version: 1.22.x
-    - name: Install UPX
-      if: ${{ !startsWith(matrix.config.os, 'macos') }}
-      uses: crazy-max/ghaction-upx@v3
-      with:
-        install-only: true
-    - name: Install UPX (macOS)
-      if: ${{ startsWith(matrix.config.os, 'macos') }}
-      run: |
-        brew update
-        brew install upx
+#    - name: Setup Go 1.22.x
+#      uses: actions/setup-go@v5
+#      with:
+#        go-version: 1.22.x
+#    - name: Install UPX
+#      if: ${{ !startsWith(matrix.config.os, 'macos') }}
+#      uses: crazy-max/ghaction-upx@v3
+#      with:
+#        install-only: true
+#    - name: Install UPX (macOS)
+#      if: ${{ startsWith(matrix.config.os, 'macos') }}
+#      run: |
+#        brew update
+#        brew install upx
     - name: Download Ninja and CMake
       shell: cmake -P {0}
       run: |
@@ -534,103 +534,38 @@ jobs:
             unset(WITH_LLVM_LINK)
         endif()
 
-
-#    - name: Run tests
-#      shell: cmake -P {0}
-#      run: |
-#        include(ProcessorCount)
-#        ProcessorCount(N)
-#
-#        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
-#
-#        if ("${{ runner.os }}" STREQUAL "Linux")
-#          set(ENV{DISPLAY} ":1")
-#          set(ENV{LIBGL_ALWAYS_SOFTWARE} "1")
-#          set(ctest_launcher xvfb-run --auto-servernum --server-num=1)
-#        elseif ("${{ runner.os }}" STREQUAL "Windows")
-#          set(ENV{QT_OPENGL} "software")
-#          set(ENV{QT_ASSUME_STDERR_HAS_CONSOLE} "1")
-#        endif()
-#
-#        execute_process(
-#          COMMAND ${ctest_launcher} ctest -j ${N} --timeout 300 --label-exclude exclude_from_precheck --exclude-regex tst_perfdata
-#          WORKING_DIRECTORY build/build
-#          RESULT_VARIABLE result
-#          OUTPUT_VARIABLE output
-#          ERROR_VARIABLE output
-#          ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
-#          TIMEOUT 600
-#        )
-#        if (NOT result EQUAL 0)
-#          string(REGEX MATCH "[0-9]+% tests.*[0-9.]+ sec.*$" test_results "${output}")
-#          string(REPLACE "\n" "%0A" test_results "${test_results}")
-#          message("::error::${test_results}")
-#          message(FATAL_ERROR "Tests failed")
-#        endif()
-
 #    - name: Upload
 #      uses: actions/upload-artifact@v4
 #      with:
-#        path: build/qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
-#        name: qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
+#        path: build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
+#        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
 
 #    - name: Upload Devel
 #      uses: actions/upload-artifact@v4
 #      with:
-#        path: build/qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}_dev.7z
-#        name: qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}_dev.7z
+#        path: build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}_dev.7z
+#        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}_dev.7z
 
-#    - name: Upload wininterrupt
-#      if: runner.os == 'Windows'
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: build/wininterrupt-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
-#        name: wininterrupt-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
+    - name: Upload Debian package
+      if: runner.os == 'Linux' && contains(github.ref, 'tags/v')
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.deb
+        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.deb
 
-#    - name: Upload qtcreatorcdbext
-#      if: runner.os == 'Windows'
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: build/qtcreatorcdbext-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
-#        name: qtcreatorcdbext-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
+    - name: Upload MSI package
+      if: runner.os == 'Windows' && contains(github.ref, 'tags/v')
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.msi
+        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.msi
 
-#    - name: Upload Debian package
-#      if: runner.os == 'Linux' && contains(github.ref, 'tags/v')
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: build/build/qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.deb
-#        name: qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.deb
-
-#    - name: Upload MSI package
-#      if: runner.os == 'Windows' && contains(github.ref, 'tags/v')
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: build/build/qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.msi
-#        name: qtcreator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.msi
-
-#    - name: Upload disk image
-#      if: runner.os == 'macOS' && contains(github.ref, 'tags/v')
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: build/qt-creator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.dmg
-#        name: qt-creator-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.dmg
-
-#    - name: Create ccache archive
-#      working-directory: .ccache
-#      run: cmake -E tar cf ../${{ steps.ccache.outputs.archive_name }}.tar .
-
-#    - name: Upload ccache archive
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: ./${{ steps.ccache.outputs.archive_name }}.tar
-#        name: ${{ steps.ccache.outputs.archive_name }}
-
-#    - name: Upload Release Changelog
-#      if: runner.os == 'macOS' && contains(github.ref, 'tags/v')
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: ./release/changelog.md
-#        name: changelog.md
+    - name: Upload disk image
+      if: runner.os == 'macOS' && contains(github.ref, 'tags/v')
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.dmg
+        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.dmg
 
 #  release:
 #    if: contains(github.ref, 'tags/v')

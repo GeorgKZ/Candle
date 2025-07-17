@@ -13,7 +13,7 @@ table {
 
 # Программа "Candle"
 
-[![CMake on multiple platforms](https://github.com/GeorgKZ/Candle/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=master)](https://github.com/GeorgKZ/Candle/actions/workflows/cmake-multi-platform.yml)
+[![CMake Build Matrix](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml)
 
 # Содержание
 
