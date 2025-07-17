@@ -127,7 +127,7 @@ jobs:
             RESULT_VARIABLE result
           )
           if (NOT result EQUAL 0)
-            message(FATAL_ERROR "Failed to install dependencies")
+            message(FATAL_ERROR "Не удалось установить зависимости")
           endif()
         endif()
 
@@ -137,7 +137,7 @@ jobs:
           foreach(qt_mirror $ENV{QT_MIRRORS})
             foreach(retry RANGE 10)
               cmake_language(EVAL CODE "
-                message(\"Downloading ${opengl_sw_url}\")
+                message(\"Загрузка ${opengl_sw_url}\")
                 file(DOWNLOAD \"${opengl_sw_url}\" ./opengl32sw-64.7z SHOW_PROGRESS)
               ")
               file(SIZE ./opengl32sw-64.7z fileSize)
@@ -159,7 +159,7 @@ jobs:
           foreach(qt_mirror $ENV{QT_MIRRORS})
             foreach(retry RANGE 10)
               cmake_language(EVAL CODE "
-                message(\"Downloading ${{ matrix.config.toolchain }}\")
+                message(\"Загрузка ${{ matrix.config.toolchain }}\")
                 file(DOWNLOAD \"${{ matrix.config.toolchain }}\" ./toolchain.7z SHOW_PROGRESS)
               ")
               file(SIZE ./toolchain.7z fileSize)
@@ -256,7 +256,7 @@ jobs:
             set(url "${qt_base_url}/${sub_url}")
             foreach(retry RANGE 10)
               cmake_language(EVAL CODE "
-                message(\"Загрузка ${module} из ${url}\")
+                message(\"Загрузка модуля ${module} из ${url}\")
                 file(DOWNLOAD \"${url}\" \"$ENV{GITHUB_WORKSPACE}/${archive}\" SHOW_PROGRESS)
               ")
               file(SIZE "$ENV{GITHUB_WORKSPACE}/${archive}" fileSize)
@@ -343,7 +343,7 @@ jobs:
             unset(WITH_LLVM_LINK)
         endif()
         # В переменную окружения QT_ROOT поместить путь к Qt
-        set(ENV{QT_ROOT} ${{ qtdir }})
+        set(ENV{QT_ROOT} ${{ qt_dir }})
 
     - name: Конфигурирование CMake для не мультиконфигурационного генератора
       run: >
