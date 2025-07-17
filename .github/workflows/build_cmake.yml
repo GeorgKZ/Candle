@@ -55,7 +55,7 @@ jobs:
             file(APPEND "$ENV{GITHUB_OUTPUT}" "tag=${{github.run_id}}\n")
         endif()
 
-    - name: Загрузить Ninja и CMake
+    - name: Загрузка Ninja и CMake
       shell: cmake -P {0}
       run: |
         set(cmake_version "$ENV{CMAKE_VERSION}")
@@ -183,7 +183,7 @@ jobs:
           execute_process(COMMAND ${docker_executable} pull alpine:latest COMMAND_ECHO STDOUT)
         endif()
 
-    - name: Загрузить Qt
+    - name: Загрузка Qt
       id: qt
       shell: cmake -P {0}
       run: |
@@ -205,7 +205,7 @@ jobs:
         foreach(qt_mirror $ENV{QT_MIRRORS})
           foreach(retry RANGE 10)
             cmake_language(EVAL CODE "
-              message(\"Downloading ${qt_base_url}/Updates.xml}\")
+              message(\"Загрузка ${qt_base_url}/Updates.xml}\")
               file(DOWNLOAD \"${qt_base_url}/Updates.xml\" ./Updates.xml)
             ")
             file(SIZE ./Updates.xml fileSize)
@@ -264,7 +264,7 @@ jobs:
                 break()
               endif()
             endforeach()
-            message("... extracting to ${qt_dir}/${subdir}")
+            message("... разжатие в ${qt_dir}/${subdir}")
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "$ENV{GITHUB_WORKSPACE}/${archive}" WORKING_DIRECTORY "${qt_dir}/${subdir}")
           endfunction()
 
@@ -342,6 +342,8 @@ jobs:
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
             unset(WITH_LLVM_LINK)
         endif()
+        # В переменную окружения QT_ROOT поместить путь к Qt
+        set(ENV{QT_ROOT} ${{ qtdir }})
 
     - name: Конфигурирование CMake для не мультиконфигурационного генератора
       run: >
