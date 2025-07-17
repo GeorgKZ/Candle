@@ -342,15 +342,18 @@ jobs:
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
             unset(WITH_LLVM_LINK)
         endif()
-        # В переменную окружения QT_ROOT поместить путь к Qt
-        set(ENV{QT_ROOT} $ENV{GITHUB_WORKSPACE}/qt)
 
     - name: Конфигурирование CMake для не мультиконфигурационного генератора
+      env:
+        # В переменную окружения QT_ROOT поместить путь к Qt
+        QT_ROOT: $ENV{GITHUB_WORKSPACE}/qt
+        # В переменную окружения BUILDROOT поместить путь к промежуточным и собранным файлам
+        BUILDROOT: $ENV{GITHUB_WORKSPACE}/build
       run: >
         cmake -B ${{ github.workspace }}/cmake
         -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
         -DCMAKE_C_COMPILER=${{ matrix.config.cc }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
         -S ${{ github.workspace }}
 
 #    - name: Upload
