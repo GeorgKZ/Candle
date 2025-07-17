@@ -458,7 +458,6 @@ jobs:
 #        # Save the path for other steps
 #        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/elfutils" elfutils_dir)
 #        file(APPEND "$ENV{GITHUB_OUTPUT}" "elfutils_dir=${elfutils_dir}")
-
     - name: Build
       shell: cmake -P {0}
       run: |
