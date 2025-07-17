@@ -1,5 +1,9 @@
 name: CMake Build Matrix
 
+# Процесс запускается только вручную (кнопка Actions)
+on: workflow_dispatch
+
+# Окружение - версии используемых инструментов, тип сборки, зеркала Qt
 env:
   QT_VERSION: 6.9.1
   MACOS_DEPLOYMENT_TARGET: 11.0
@@ -7,7 +11,7 @@ env:
   CMAKE_VERSION: 3.30.3
   NINJA_VERSION: 1.10.2
   BUILD_TYPE: Release
-  QT_MIRRORS: download.qt.io;mirrors.ocf.berkeley.edu/qt;ftp.fau.de/qtproject;mirrors.sau.edu.cn/qt
+  QT_MIRRORS: download.qt.io;mirrors.ocf.berkeley.edu/qt;ftp.fau.de/qtproject;mirrors.sau.edu.cn/qt;mirrors.ukfast.co.uk/sites/qt.io
 
 jobs:
   build:
@@ -51,7 +55,7 @@ jobs:
             file(APPEND "$ENV{GITHUB_OUTPUT}" "tag=${{github.run_id}}\n")
         endif()
 
-    - name: Download Ninja and CMake
+    - name: Загрузить Ninja и CMake
       shell: cmake -P {0}
       run: |
         set(cmake_version "$ENV{CMAKE_VERSION}")
@@ -107,7 +111,7 @@ jobs:
           )
         endif()
 
-    - name: Install system libs
+    - name: Установка системных библиотек
       shell: cmake -P {0}
       run: |
         if ("${{ runner.os }}" STREQUAL "Linux")
@@ -179,7 +183,7 @@ jobs:
           execute_process(COMMAND ${docker_executable} pull alpine:latest COMMAND_ECHO STDOUT)
         endif()
 
-    - name: Download Qt
+    - name: Загрузить Qt
       id: qt
       shell: cmake -P {0}
       run: |
@@ -244,7 +248,7 @@ jobs:
             set(${outvar} "${name}/${version}${archive}" PARENT_SCOPE)
           endfunction()
 
-          message("Downloading Qt to ${qt_dir}")
+          message("Загрузка Qt в ${qt_dir}")
           function(downloadAndExtract module subdir)
             file(MAKE_DIRECTORY "${qt_dir}/${subdir}")
             set(archive "${module}.7z")
@@ -252,7 +256,7 @@ jobs:
             set(url "${qt_base_url}/${sub_url}")
             foreach(retry RANGE 10)
               cmake_language(EVAL CODE "
-                message(\"Downloading ${module} from ${url}\")
+                message(\"Загрузка ${module} из ${url}\")
                 file(DOWNLOAD \"${url}\" \"$ENV{GITHUB_WORKSPACE}/${archive}\" SHOW_PROGRESS)
               ")
               file(SIZE "$ENV{GITHUB_WORKSPACE}/${archive}" fileSize)
@@ -280,7 +284,7 @@ jobs:
         execute_process(COMMAND ${qt_dir}/bin/qmake -query)
 
         if ("${{ runner.os }}" STREQUAL "Windows")
-          # deploy "system" runtimes into Qt, so they get deployed as well
+          # для Windows поместить системные библиотеки в директорию Qt, чтобы их было проще собрать в установочный пакет
           foreach(file vcruntime140.dll concrt140.dll msvcp140_1.dll msvcp140_2.dll
                        msvcp140_codecvt_ids.dll vcruntime140_1.dll msvcp140.dll)
             file(INSTALL "C:/Windows/System32/${file}"
@@ -288,48 +292,7 @@ jobs:
           endforeach()
         endif()
 
-    - name: Download libclang
-      id: libclang
-      shell: cmake -P {0}
-      run: |
-        set(clang_version "$ENV{CLANG_VERSION}")
-
-        if ("${{ runner.os }}" STREQUAL "Windows")
-          set(libclang "libclang-release_${clang_version}-based-windows-vs2019_64.7z")
-        elseif ("${{ runner.os }}" STREQUAL "Linux")
-          set(libclang "libclang-release_${clang_version}-based-linux-Ubuntu22.04-gcc11.4-x86_64.7z")
-        elseif ("${{ runner.os }}" STREQUAL "macOS")
-          set(libclang "libclang-release_${clang_version}-based-macos-universal.7z")
-        endif()
-
-        set(libclang_url "https://\${qt_mirror}/development_releases/prebuilt/libclang/${libclang}")
-        foreach(qt_mirror $ENV{QT_MIRRORS})
-          foreach(retry RANGE 10)
-            cmake_language(EVAL CODE "
-              message(\"Downloading ${libclang_url}\")
-              file(DOWNLOAD \"${libclang_url}\" ./libclang.7z)
-            ")
-            file(SIZE ./libclang.7z fileSize)
-            if (fileSize GREATER 0)
-              break()
-            endif()
-          endforeach()
-
-          # Check to see if we have the file, if not, go to next mirror
-          file(SIZE ./libclang.7z fileSize)
-          if (fileSize GREATER 0)
-            break()
-          endif()
-        endforeach()
-
-        # Comes with libclang inside the archive
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./libclang.7z)
-
-        # Save the path for other steps
-        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/libclang" libclang_dir)
-        file(APPEND "$ENV{GITHUB_OUTPUT}" "libclang_dir=${libclang_dir}")
-
-    - name: Build
+    - name: Предварительная настройка
       shell: cmake -P {0}
       run: |
         set(ENV{CC} ${{ matrix.config.cc }})
@@ -356,23 +319,6 @@ jobs:
           OUTPUT_VARIABLE git_commit_msg
         )
 
-        if ("x${{ matrix.config.environment_script }}" STREQUAL "x")
-          set(CDB_OPTION "--no-cdb")
-        else()
-          set(CDB_OPTION)
-        endif()
-
-        find_package(Python3 REQUIRED COMPONENTS Interpreter)
-        string(REPLACE "x86" "x64" Python3_EXECUTABLE "${Python3_EXECUTABLE}")
-
-        set(WITH_TESTS "--with-tests")
-        set(NO_DMG "--no-dmg")
-        if (${{github.ref}} MATCHES "tags/v")
-          unset(WITH_TESTS)
-          unset(NO_DMG)
-          set(WITH_CPACK "--with-cpack")
-        endif()
-
         if (NOT "x${{ matrix.config.toolchain_path }}" STREQUAL "x")
           set(path_separator ":")
           if ("${{ runner.os }}" STREQUAL "Windows")
@@ -396,6 +342,14 @@ jobs:
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
             unset(WITH_LLVM_LINK)
         endif()
+
+    - name: Конфигурирование CMake для не мультиконфигурационного генератора
+      run: >
+        cmake -B ${{ github.workspace }}/cmake
+        -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+        -DCMAKE_C_COMPILER=${{ matrix.config.cc }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{ github.workspace }}
 
 #    - name: Upload
 #      uses: actions/upload-artifact@v4
