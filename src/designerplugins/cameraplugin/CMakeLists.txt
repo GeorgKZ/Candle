@@ -32,15 +32,13 @@ add_definitions(-DCUSTOMWIDGETS_EXPORT)
 # Определение исполняемого файла
 ##############################################################################
 
-find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
-
 # Требуемые компоненты Qt6
-find_package(Qt6 COMPONENTS Core REQUIRED)
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
-find_package(Qt6 COMPONENTS Designer REQUIRED)
-find_package(Qt6 COMPONENTS Multimedia REQUIRED)
-find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
-find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Designer REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Multimedia REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS MultimediaWidgets REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS OpenGLWidgets REQUIRED)
 
 # Определение собираемой библиотеки, её зависимости
 add_library(${MAIN_NAME} SHARED
