@@ -97,7 +97,7 @@ jobs:
 
         set(ninja_url "https://github.com/ninja-build/ninja/releases/download/v${ninja_version}/ninja-${ninja_suffix}")
         foreach(retry RANGE 10)
-          file(DOWNLOAD "${ninja_url}" ./ninja.zip SHOW_PROGRESS)
+          file(DOWNLOAD "${ninja_url}" ./ninja.zip)
           file(SIZE ./ninja.zip fileSize)
           if (fileSize GREATER 0)
             break()
@@ -108,7 +108,7 @@ jobs:
 
         set(cmake_url "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/cmake-${cmake_version}-${cmake_suffix}")
         foreach(retry RANGE 10)
-          file(DOWNLOAD "${cmake_url}" ./cmake.zip SHOW_PROGRESS)
+          file(DOWNLOAD "${cmake_url}" ./cmake.zip)
           file(SIZE ./cmake.zip fileSize)
           if (fileSize GREATER 0)
             break()
@@ -158,7 +158,7 @@ jobs:
             foreach(retry RANGE 10)
               cmake_language(EVAL CODE "
                 message(\"Загрузка ${opengl_sw_url}\")
-                file(DOWNLOAD \"${opengl_sw_url}\" ./opengl32sw-64.7z SHOW_PROGRESS)
+                file(DOWNLOAD \"${opengl_sw_url}\" ./opengl32sw-64.7z)
               ")
               file(SIZE ./opengl32sw-64.7z fileSize)
               if (fileSize GREATER 0)
@@ -180,7 +180,7 @@ jobs:
             foreach(retry RANGE 10)
               cmake_language(EVAL CODE "
                 message(\"Загрузка ${{ matrix.config.toolchain }}\")
-                file(DOWNLOAD \"${{ matrix.config.toolchain }}\" ./toolchain.7z SHOW_PROGRESS)
+                file(DOWNLOAD \"${{ matrix.config.toolchain }}\" ./toolchain.7z)
               ")
               file(SIZE ./toolchain.7z fileSize)
               if (fileSize GREATER 0)
@@ -277,7 +277,7 @@ jobs:
             foreach(retry RANGE 10)
               cmake_language(EVAL CODE "
                 message(\"Загрузка модуля ${module} из ${url}\")
-                file(DOWNLOAD \"${url}\" \"$ENV{GITHUB_WORKSPACE}/${archive}\" SHOW_PROGRESS)
+                file(DOWNLOAD \"${url}\" \"$ENV{GITHUB_WORKSPACE}/${archive}\")
               ")
               file(SIZE "$ENV{GITHUB_WORKSPACE}/${archive}" fileSize)
               if (fileSize GREATER 0)
