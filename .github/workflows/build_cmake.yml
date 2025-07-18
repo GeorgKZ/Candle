@@ -339,7 +339,7 @@ jobs:
     - name: Конфигурирование CMake для не мультиконфигурационного генератора
       shell: cmake -P {0}
       run: |
-        set(build_type "$ENV{BUILD_TYPE}")
+        set(b_type "$ENV{BUILD_TYPE}")
 
         # В переменную окружения QT_ROOT поместить путь к Qt
         # В переменную окружения BUILDROOT поместить путь к промежуточным и собранным файлам
@@ -350,7 +350,7 @@ jobs:
           -D BUILDROOT=${{ github.workspace }}/build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
           -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
-          -D CMAKE_BUILD_TYPE=${{ build_type }}
+          -D CMAKE_BUILD_TYPE=${{ b_type }}
           -S ${{ github.workspace }}
         )
         # Проверить код завершения, в случае ошибки дать сообщение
