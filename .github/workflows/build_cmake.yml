@@ -375,7 +375,7 @@ jobs:
         # Привести к ОС-принятому \ или  /
         set(path_slash "/")
         if ("${{ runner.os }}" STREQUAL "Windows")
-          set(path_slash "\")
+          set(path_slash "\\")
         endif()
 
 
@@ -392,7 +392,7 @@ jobs:
           -G Ninja
           ${log_level}
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-#         -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
+          -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
           -D CMAKE_BUILD_TYPE=${build_type}
           RESULT_VARIABLE result
           OUTPUT_VARIABLE output
