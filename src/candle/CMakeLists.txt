@@ -377,9 +377,9 @@ else()
     endif()
     # Если исполняемый файл собран под Windows для выполнения под Windows
     if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows") AND (CMAKE_SYSTEM_NAME STREQUAL "Windows"))
-        # Установка исполняемого файла в C:/Program Files/AltLibGenUtils
+        # Установка исполняемого файла в C:/Program Files/???
         message(DEBUG "Предусмотрена установка для выполнения под Windows")
-#       install(TARGETS ${MAIN_NAME} RUNTIME) # DESTINATION "C:/Program Files/AltLibGenUtils")
+#       install(TARGETS ${MAIN_NAME} RUNTIME) # DESTINATION "C:/Program Files/????")
     endif()
 endif()
 

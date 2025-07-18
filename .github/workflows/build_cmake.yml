@@ -62,10 +62,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Установить субмодули из других репозиториев
+    - name: Установка субмодулей из других репозиториев
       id: git
       shell: cmake -P {0}
       run: |
+
         #execute_process(COMMAND git submodule set-url -- perfparser https://code.qt.io/qt-creator/perfparser.git)
         #execute_process(COMMAND git submodule update --init --recursive)
         file(MAKE_DIRECTORY release)
@@ -78,6 +79,7 @@ jobs:
     - name: Загрузка Ninja и CMake
       shell: cmake -P {0}
       run: |
+
         set(cmake_version "$ENV{CMAKE_VERSION}")
         set(ninja_version "$ENV{NINJA_VERSION}")
 
@@ -134,6 +136,7 @@ jobs:
     - name: Установка системных библиотек
       shell: cmake -P {0}
       run: |
+
         if ("${{ runner.os }}" STREQUAL "Linux")
           execute_process(
             COMMAND sudo apt update
@@ -207,6 +210,7 @@ jobs:
       id: qt
       shell: cmake -P {0}
       run: |
+
         set(qt_version "$ENV{QT_VERSION}")
 
         string(REPLACE "." "" qt_version_dotless "${qt_version}")
@@ -269,6 +273,7 @@ jobs:
           endfunction()
 
           message("Загрузка Qt в ${qt_dir}")
+          # Загрузка и разжатие файлов типа ${module}.7z
           function(downloadAndExtract module subdir)
             file(MAKE_DIRECTORY "${qt_dir}/${subdir}")
             set(archive "${module}.7z")
@@ -285,10 +290,14 @@ jobs:
               endif()
             endforeach()
             message("... разжатие в ${qt_dir}/${subdir}")
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "$ENV{GITHUB_WORKSPACE}/${archive}" WORKING_DIRECTORY "${qt_dir}/${subdir}")
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "$ENV{GITHUB_WORKSPACE}/${archive}" WORKING_DIRECTORY "${qt_dir}/${subdir}" OUTPUT_QUIET)
           endfunction()
 
-          foreach(package qtbase qtdeclarative qttools qtsvg qttranslations qtimageformats qtserialport qtquicktimeline qtquick3d qt5compat qtshadertools)
+          # Обязательные:
+          # +base (Core, Gui, Widgets) OpenGL +serialport Qml OpenGLWidgets  UiTools Quick +multimedia(Multimedia, MultimediaWidgets)
+
+
+          foreach(package qtbase qtdeclarative qttools qtsvg qttranslations qtimageformats qtmultimedia qtserialport qtquicktimeline qtquick3d qt5compat qtshadertools)
             downloadAndExtract(${package} "")
           endforeach()
 
@@ -366,8 +375,8 @@ jobs:
 
         # В переменную окружения QT_ROOT поместить путь к Qt
         set(ENV{QT_ROOT} "${{ github.workspace }}/qt")
-        # В переменную окружения BUILDROOT поместить путь к промежуточным и собранным файлам
-        set(ENV{BUILDROOT} "${{ github.workspace }}/build")
+        # В переменную окружения BUILDDIR поместить путь к промежуточным и собранным файлам
+        set(ENV{BUILDDIR} "${{ github.workspace }}/build")
 
         # Запустить CMake с необходимыми аргументами
         execute_process(
