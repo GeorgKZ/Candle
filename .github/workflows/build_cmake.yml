@@ -353,9 +353,15 @@ jobs:
           -D CMAKE_BUILD_TYPE=${build_type}
           -S ${{ github.workspace }}
           RESULT_VARIABLE result
+          OUTPUT_VARIABLE output
+          ERROR_VARIABLE output
+          ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
         )
         # Проверить полученный код завершения, в случае ошибки дать сообщение
         if (NOT result EQUAL 0)
+          string(REGEX MATCH "FAILED:.*$" error_message "${output}")
+          string(REPLACE "\n" "%0A" error_message "${error_message}")
+          message("::error::${error_message}")
           message(FATAL_ERROR "-- Конфигурирование завершено с ошибкой. Выход.")
         endif()
 
