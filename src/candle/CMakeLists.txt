@@ -121,17 +121,17 @@ endif()
 ##############################################################################
 
 # Требуемые компоненты Qt6
-find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS Gui REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS OpenGL REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS SerialPort REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS Qml REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS OpenGLWidgets REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS Widgets REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS UiTools REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS Quick REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS Multimedia REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS MultimediaWidgets REQUIRED)
+find_package(Qt6 COMPONENTS Core REQUIRED)
+find_package(Qt6 COMPONENTS Gui REQUIRED)
+find_package(Qt6 COMPONENTS OpenGL REQUIRED)
+find_package(Qt6 COMPONENTS SerialPort REQUIRED)
+find_package(Qt6 COMPONENTS Qml REQUIRED)
+find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
+find_package(Qt6 COMPONENTS Widgets REQUIRED)
+find_package(Qt6 COMPONENTS UiTools REQUIRED)
+find_package(Qt6 COMPONENTS Quick REQUIRED)
+find_package(Qt6 COMPONENTS Multimedia REQUIRED)
+find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
 
 # Сформировать список файлов с описанием интерфейса
 file(GLOB UI "${SOURCES_PATH}/*.ui")
@@ -252,7 +252,7 @@ target_link_libraries(${MAIN_NAME} PUBLIC
 ##############################################################################
 
 # Подключить подсистему лингвистики Qt
-find_package(QT NAMES Qt6 COMPONENTS LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS LinguistTools REQUIRED)
 
 # Добавить файлы переводов в список файлов TS_FILES
 #file(GLOB TS_FILES "${SOURCES_PATH}/translations/${MAIN_NAME}_*.ts")

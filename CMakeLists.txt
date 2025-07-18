@@ -20,14 +20,29 @@ project(Candle
 
 if(DEFINED ENV{QT_ROOT})
     message(DEBUG "Для определения местоположения Qt использована переменная окружения QT_ROOT: $ENV{QT_ROOT}")
+    # Эти переменные должны указывать на директорию, в которой расположен файл Qt6Config.cmake,
+    # например /opt/qt691/lib/cmake/Qt6/
     set(QT_DIR  "$ENV{QT_ROOT}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for QT.")
     set(Qt6_DIR "$ENV{QT_ROOT}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for Qt6.")
-    set(CMAKE_PREFIX_PATH $ENV{QT_ROOT})
+    # Эта переменная должна указывать на установочную директорию Qt
+    set(CMAKE_PREFIX_PATH "$ENV{QT_ROOT}")
     find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
+    find_package(Qt6 COMPONENTS Core REQUIRED)
+    # Получить путь к библиотеке libQt6Core, например /opt/qt691/lib/libQt6Core.so.6.9.1
+    get_target_property(QtCore_location Qt6::Core LOCATION)
+    message(DEBUG "Qt6 libQt6Core location: ${QtCore_location}")
 else()
     find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
-    set(CMAKE_PREFIX_PATH ${QT_DIR}/../../)
-    message(DEBUG "Значение CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+    find_package(Qt6 COMPONENTS Core REQUIRED)
+    # Получить путь к библиотеке libQt6Core, например /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.4.2
+    get_target_property(QtCore_location Qt6::Core LOCATION)
+    message(DEBUG "Qt6 libQt6Core location: ${QtCore_location}")
+    # Получить из этого пути директорию, в которой расположен файл Qt6Config.cmake,
+    # например /usr/lib/x86_64-linux-gnu/cmake/Qt6, и присвоить полченное значение
+    # переменным QT_DIR, Qt6_DIR
+    cmake_path(GET QtCore_location ROOT_DIRECTORY QtCore_path)
+    set(QT_DIR  "$ENV{QtCore_path}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for QT.")
+    set(Qt6_DIR "$ENV{QtCore_path}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for Qt6.")
 endif()
 
 ##############################################################################

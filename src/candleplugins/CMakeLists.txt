@@ -12,7 +12,7 @@ set(MAIN_NAME "JavaScript_plugins")
 # Путь к директории с плюгинами
 set(SOURCES_PATH "${CMAKE_SOURCE_DIR}/src/candleplugins")
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
 ##############################################################################
 # Перебор плюгинов

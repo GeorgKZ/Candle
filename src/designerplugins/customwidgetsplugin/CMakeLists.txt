@@ -37,11 +37,11 @@ add_definitions("-DCUSTOMWIDGETS_EXPORT")
 # Определение исполняемого файла
 ##############################################################################
 
-find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS Widgets REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS UiPlugin REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS Multimedia REQUIRED)
-find_package(QT NAMES Qt6 COMPONENTS MultimediaWidgets REQUIRED)
+find_package(Qt6 COMPONENTS Core REQUIRED)
+find_package(Qt6 COMPONENTS Widgets REQUIRED)
+find_package(Qt6 COMPONENTS UiPlugin REQUIRED)
+find_package(Qt6 COMPONENTS Multimedia REQUIRED)
+find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
 
 # Определение собираемой библиотеки, её зависимости
 add_library(${MAIN_NAME} SHARED
