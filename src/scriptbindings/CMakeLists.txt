@@ -32,10 +32,10 @@ add_definitions(-DWRAPPER_EXPORT_SYMBOLS)
 ##############################################################################
 
 # Требуемые компоненты Qt6
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Qml)
-find_package(Qt6 REQUIRED COMPONENTS UiTools)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Qml)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS UiTools)
 
 # Определение собираемой библиотеки, её зависимости
 add_library(${MAIN_NAME} SHARED
