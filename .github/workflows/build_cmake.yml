@@ -352,8 +352,9 @@ jobs:
           -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
           -D CMAKE_BUILD_TYPE=${build_type}
           -S ${{ github.workspace }}
+          RESULT_VARIABLE result
         )
-        # Проверить код завершения, в случае ошибки дать сообщение
+        # Проверить полученный код завершения, в случае ошибки дать сообщение
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "-- Конфигурирование завершено с ошибкой. Выход.")
         endif()
