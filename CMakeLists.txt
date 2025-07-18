@@ -51,7 +51,7 @@ endif()
 
 # Директория для промежуточных и собранных файлов
 if(DEFINED ENV{BUILDDIR}) 
-    message(DEBUG "Для определения местоположения Qt использована переменная окружения BUILDDIR: $ENV{BUILDDIR}")
+    message(DEBUG "Для определения местоположения диретории сборки использована переменная окружения BUILDDIR: $ENV{BUILDDIR}")
     cmake_path(SET BUILD_PATH NORMALIZE "$ENV{BUILDDIR}")
 else()
     set(BUILD_PATH "${CMAKE_BINARY_DIR}/build")

@@ -296,7 +296,6 @@ jobs:
           # Обязательные:
           # +base (Core, Gui, Widgets) OpenGL +serialport Qml OpenGLWidgets  UiTools Quick +multimedia(Multimedia, MultimediaWidgets)
 
-
           foreach(package qtbase qtdeclarative qttools qtsvg qttranslations qtimageformats qtmultimedia qtserialport qtquicktimeline qtquick3d qt5compat qtshadertools)
             downloadAndExtract(${package} "")
           endforeach()
@@ -373,8 +372,10 @@ jobs:
           set(log_level "--log-level=$ENV{LOG_LEVEL}")
         endif()
 
+        # !!! Привести к ОС-принятому \ или  /
         # В переменную окружения QT_ROOT поместить путь к Qt
         set(ENV{QT_ROOT} "${{ github.workspace }}/qt")
+        # !!! Привести к ОС-принятому \ или  /
         # В переменную окружения BUILDDIR поместить путь к промежуточным и собранным файлам
         set(ENV{BUILDDIR} "${{ github.workspace }}/build")
 
@@ -386,7 +387,7 @@ jobs:
           -G Ninja
           ${log_level}
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-          -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
+#         -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
           -D CMAKE_BUILD_TYPE=${build_type}
           RESULT_VARIABLE result
           OUTPUT_VARIABLE output
