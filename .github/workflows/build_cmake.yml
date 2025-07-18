@@ -344,14 +344,15 @@ jobs:
         # В переменную окружения QT_ROOT поместить путь к Qt
         # В переменную окружения BUILDROOT поместить путь к промежуточным и собранным файлам
         execute_process(
-          COMMAND ${cmake_dir}/cmake
+          COMMAND cmake
+          -S ${{ github.workspace }}
           -B ${{ github.workspace }}/cmake
+          -G Ninja
           -D QT_ROOT=${{ github.workspace }}/qt
           -D BUILDROOT=${{ github.workspace }}/build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
           -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
           -D CMAKE_BUILD_TYPE=${build_type}
-          -S ${{ github.workspace }}
           RESULT_VARIABLE result
           OUTPUT_VARIABLE output
           ERROR_VARIABLE output
