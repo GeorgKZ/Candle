@@ -375,7 +375,7 @@ jobs:
         # Привести к ОС-принятому \ или  /
         set(path_slash "/")
         if ("${{ runner.os }}" STREQUAL "Windows")
-          set(path_slash "\\")
+          set(path_slash "\")
         endif()
 
 
