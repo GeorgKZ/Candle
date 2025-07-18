@@ -18,7 +18,8 @@ project(Candle
 # Настройка местоположения Qt
 ##############################################################################
 
-if(DEFINED ENV{QT_ROOT}) 
+if(DEFINED ENV{QT_ROOT})
+    message(DEBUG "-- Для определения местоположения Qt использована переменная окружения QT_ROOT: $ENV{QT_ROOT}")
     set(QT_DIR  "$ENV{QT_ROOT}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for QT.")
     set(Qt6_DIR "$ENV{QT_ROOT}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for Qt6.")
     set(CMAKE_PREFIX_PATH $ENV{QT_ROOT})
@@ -32,9 +33,10 @@ find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
 
 # Директория для промежуточных и собранных файлов
 if(DEFINED ENV{BUILDDIR}) 
+    message(DEBUG "-- Для определения местоположения Qt использована переменная окружения BUILDDIR: $ENV{BUILDDIR}")
     cmake_path(SET BUILD_PATH NORMALIZE "$ENV{BUILDDIR}")
 else()
-    set(BUILD_PATH "${CMAKE_BINARY_DIR}/..")
+    set(BUILD_PATH "${CMAKE_BINARY_DIR}/build")
 endif()
 
 # Директория для результирующих бинарных файлов
