@@ -16,7 +16,7 @@ env:
   # RelWithDebInfo - с отладочной информацией, с оптимизацией скорости исполнения;
   # MinSizeRel - без отладочной информации, с оптимизацией размера.
   BUILD_TYPE: Release
-  # Существуют следующие уровни выводимых сообщений:
+  # Существуют следующие уровни детализации выводимых сообщений:
   # FATAL_ERROR - серьёзная ошибка, вызывающая полную остановку сборки;
   # SEND_ERROR - серьёзная ошибка, вызывающая остановку сборки без остановки выполнения скрипта Cmake;
   # WARNING - предупреждение;
@@ -358,21 +358,24 @@ jobs:
     - name: Конфигурирование CMake для не мультиконфигурационного генератора
       shell: cmake -P {0}
       run: |
+        # Если задан, установить уровень детализации выводимых сообщений
         set(build_type "$ENV{BUILD_TYPE}")
         if(DEFINED ENV{LOG_LEVEL}) 
           set(log_level "--log-level=$ENV{LOG_LEVEL}")
         endif()
 
         # В переменную окружения QT_ROOT поместить путь к Qt
+        set(ENV{QT_ROOT} "${{ github.workspace }}/qt")
         # В переменную окружения BUILDROOT поместить путь к промежуточным и собранным файлам
+        set(ENV{BUILDROOT} "${{ github.workspace }}/build")
+
+        # Запустить CMake с необходимыми аргументами
         execute_process(
           COMMAND cmake
           -S ${{ github.workspace }}
           -B ${{ github.workspace }}/cmake
           -G Ninja
           ${log_level}
-          -D QT_ROOT=${{ github.workspace }}/qt
-          -D BUILDROOT=${{ github.workspace }}/build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
           -D CMAKE_C_COMPILER=${{ matrix.config.cc }}
           -D CMAKE_BUILD_TYPE=${build_type}
