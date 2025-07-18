@@ -1,6 +1,6 @@
 name: CMake Build Matrix
 
-# Процесс запускается только вручную (кнопка Actions)
+# Процесс запускается только вручную (кнопка Actions).
 on: workflow_dispatch
 
 # Окружение - версии используемых инструментов, тип сборки, зеркала Qt
@@ -10,7 +10,26 @@ env:
   CLANG_VERSION: 20.1.3
   CMAKE_VERSION: 3.30.3
   NINJA_VERSION: 1.10.2
+  # Существуют следующие типы сборки:
+  # Debug - с отладочной информацией, с отладочным выводом, с использованием механизма assert, без оптимизации;
+  # Release - без отладочной информации, с оптимизацией скорости исполнения;
+  # RelWithDebInfo - с отладочной информацией, с оптимизацией скорости исполнения;
+  # MinSizeRel - без отладочной информации, с оптимизацией размера.
   BUILD_TYPE: Release
+  # Существуют следующие уровни выводимых сообщений:
+  # FATAL_ERROR - серьёзная ошибка, вызывающая полную остановку сборки;
+  # SEND_ERROR - серьёзная ошибка, вызывающая остановку сборки без остановки выполнения скрипта Cmake;
+  # WARNING - предупреждение;
+  # AUTHOR_WARNING - предупреждение разработчика;
+  # DEPRECATION - ошибка или предупреждение об использовании устаревшей функции Cmake;
+  # NOTICE - важное сообщение, выводимое на устройство stderr;
+  # STATUS - краткое важное сообщение;
+  # VERBOSE - подробная информация об особенностях сборки;
+  # DEBUG - подробная информация, необходимая только разработчику;
+  # TRACE - сообщение о ходе сборки для точного отслеживания процесса.
+  # Выводятся сообщения от указанного уровня (включая) и выше.
+  LOG_LEVEL: DEBUG
+  # URL зеркал с установочными архивами Qt, перечислены через точку с запятой. 
   QT_MIRRORS: download.qt.io;mirrors.ocf.berkeley.edu/qt;ftp.fau.de/qtproject;mirrors.sau.edu.cn/qt;mirrors.ukfast.co.uk/sites/qt.io
 
 jobs:
@@ -340,6 +359,9 @@ jobs:
       shell: cmake -P {0}
       run: |
         set(build_type "$ENV{BUILD_TYPE}")
+        if(DEFINED ENV{LOG_LEVEL}) 
+          set(log_level "--log-level=$ENV{LOG_LEVEL}")
+        endif()
 
         # В переменную окружения QT_ROOT поместить путь к Qt
         # В переменную окружения BUILDROOT поместить путь к промежуточным и собранным файлам
@@ -348,6 +370,7 @@ jobs:
           -S ${{ github.workspace }}
           -B ${{ github.workspace }}/cmake
           -G Ninja
+          ${log_level}
           -D QT_ROOT=${{ github.workspace }}/qt
           -D BUILDROOT=${{ github.workspace }}/build
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
