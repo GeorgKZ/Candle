@@ -32,6 +32,8 @@ add_definitions(-DCUSTOMWIDGETS_EXPORT)
 # Определение исполняемого файла
 ##############################################################################
 
+find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
+
 # Требуемые компоненты Qt6
 find_package(Qt6 COMPONENTS Core REQUIRED)
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
