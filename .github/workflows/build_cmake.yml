@@ -380,7 +380,9 @@ jobs:
 
 
         # В переменную окружения QT_ROOT поместить путь к Qt
-        set(ENV{QT_ROOT} "${{ github.workspace }}${path_slash}qt")
+        cmake_path(NATIVE_PATH "${{ github.workspace }}${path_slash}qt" NORMALIZE tp)
+#        set(ENV{QT_ROOT} "${{ github.workspace }}${path_slash}qt")
+        set(ENV{QT_ROOT} "${tp}")
         # В переменную окружения BUILDDIR поместить путь к промежуточным и собранным файлам
         set(ENV{BUILDDIR} "${{ github.workspace }}${path_slash}build")
 
