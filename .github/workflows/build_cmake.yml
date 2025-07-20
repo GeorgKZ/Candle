@@ -380,7 +380,7 @@ jobs:
 
 
         # В переменную окружения QT_ROOT поместить путь к Qt
-        set(tp_in "${{ github.workspace }}/qt")
+        cmake_path(SET tp_in [NORMALIZE] "${{ github.workspace }}/qt")
         cmake_path(NATIVE_PATH tp_in NORMALIZE tp_out)
         set(ENV{QT_ROOT} "${tp_out}")
 
