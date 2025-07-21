@@ -232,6 +232,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
         "-Wno-documentation-unknown-command"
         "-Wno-poison-system-directories"
         "-Wno-global-constructors"
+        "-Wno-ctad-maybe-unsupported"
 
         # Временно
         "-Wno-implicit-float-conversion"
