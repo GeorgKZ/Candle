@@ -84,6 +84,7 @@ foreach(I ${SUBDIRS})
             ${SRC_FILES}
             ${QM_FILES}
             DESTINATION ${DEST_PATH}/plugins/${I}
+            COMPONENT plugins
         )
 
         # Установка изображений (при наличии)
@@ -92,6 +93,7 @@ foreach(I ${SUBDIRS})
             FILE(GLOB IMG_FILES ${IMG_PATH}/*)
             install(FILES ${IMG_FILES}
                 DESTINATION ${DEST_PATH}/plugins/${I}/images
+                COMPONENT plugins
             )
         ENDIF()
     ENDIF()
