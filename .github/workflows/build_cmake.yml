@@ -320,7 +320,7 @@ jobs:
           endforeach()
         endif()
 
-    - name: Предварительная настройка
+    - name: Настройка среды сборки и конфигурирование CMake
       shell: cmake -P {0}
       run: |
         set(ENV{CC} ${{ matrix.config.cc }})
@@ -328,6 +328,7 @@ jobs:
         set(ENV{MACOSX_DEPLOYMENT_TARGET} "${{ env.MACOS_DEPLOYMENT_TARGET }}")
 
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
+          message(NOTICE "Настройка окружения MSVC (сборка под Windows)"
           execute_process(
             COMMAND "${{ matrix.config.environment_script }}" && set
             OUTPUT_FILE environment_script_output.txt
@@ -363,33 +364,30 @@ jobs:
             endif()
         endif()
 
-    - name: Конфигурирование CMake для не мультиконфигурационного генератора
-      shell: cmake -P {0}
-      run: |
+        # Конфигурирование CMake для не мультиконфигурационного генератора
+
         # Если задан, установить уровень детализации выводимых сообщений
         set(build_type "$ENV{BUILD_TYPE}")
         if(DEFINED ENV{LOG_LEVEL}) 
           set(log_level "--log-level=$ENV{LOG_LEVEL}")
         endif()
 
-        # Привести к ОС-принятому \ или  /
+        # Установить символ-разделитель директорий, принятый в ОС
         set(path_slash "/")
         if ("${{ runner.os }}" STREQUAL "Windows")
           set(path_slash "\\")
         endif()
 
-
         # В переменную окружения QT_ROOT поместить путь к Qt
         set(ENV{QT_ROOT} "$ENV{GITHUB_WORKSPACE}${path_slash}qt")
-        
         # В переменную окружения BUILDDIR поместить путь к промежуточным и собранным файлам
         set(ENV{BUILDDIR} "$ENV{GITHUB_WORKSPACE}${path_slash}build")
 
         # Запустить CMake с необходимыми аргументами
         execute_process(
           COMMAND cmake
-          -S ${{ github.workspace }}
-          -B ${{ github.workspace }}/cmake
+          -S $ENV{GITHUB_WORKSPACE}
+          -B $ENV{GITHUB_WORKSPACE}${path_slash}cmake
           -G Ninja
           ${log_level}
           -D CMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
