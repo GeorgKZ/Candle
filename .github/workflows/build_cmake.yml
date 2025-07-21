@@ -328,7 +328,7 @@ jobs:
         set(ENV{MACOSX_DEPLOYMENT_TARGET} "${{ env.MACOS_DEPLOYMENT_TARGET }}")
 
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          message(NOTICE "Настройка окружения MSVC (сборка под Windows)"
+          message(NOTICE "Настройка окружения MSVC (сборка под Windows)")
           execute_process(
             COMMAND "${{ matrix.config.environment_script }}" && set
             OUTPUT_FILE environment_script_output.txt
