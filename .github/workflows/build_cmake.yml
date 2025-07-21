@@ -342,11 +342,9 @@ jobs:
           endforeach()
         endif()
 
-        execute_process(
-          COMMAND git log --format=%B -n 1 ${{ github.event.after }}
-          OUTPUT_VARIABLE git_commit_msg
-        )
+        find_package(Vulkan)
 
+        # При необходимости добавить к переменной окружения PATH путь к инструментам
         if (NOT "x${{ matrix.config.toolchain_path }}" STREQUAL "x")
           set(path_separator ":")
           if ("${{ runner.os }}" STREQUAL "Windows")
