@@ -409,6 +409,12 @@ jobs:
     - name: Сборка при помощи CMake
       shell: cmake -P {0}
       run: |
+        # Установить символ-разделитель директорий, принятый в ОС
+        set(path_slash "/")
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          set(path_slash "\\")
+        endif()
+
         # Запустить CMake с необходимыми аргументами
         execute_process(
           COMMAND cmake
