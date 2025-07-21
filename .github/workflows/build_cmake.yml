@@ -412,7 +412,6 @@ jobs:
         # Запустить CMake с необходимыми аргументами
         execute_process(
           COMMAND cmake
-          -S $ENV{GITHUB_WORKSPACE}
           --build $ENV{GITHUB_WORKSPACE}${path_slash}cmake
           --parallel
           RESULT_VARIABLE result
