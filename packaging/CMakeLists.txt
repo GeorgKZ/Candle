@@ -11,6 +11,36 @@ set(IDE_ICON_PATH "")
 # Absolute, or relative to /src/app
 # Should contain images/logo/(16|24|32|48|64|128|256|512)/${IDE_ID}.png
 set(IDE_LOGO_PATH "")
+
+# При сборке для работы в среде Linux
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    set(CPACK_BINARY_DEB "ON")
+
+# При сборке для работы в среде MacOS/OS X
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    # Mac OSX bundle
+#    set(CPACK_BINARY_BUNDLE "ON")
+    # Mac OSX Drag And Drop 
+    set(CPACK_BINARY_DRAGNDROP "ON")
+    # Mac OSX pkg
+    set(CPACK_BINARY_PRODUCTBUILD "ON")
+
+# При сборке для работы в среде Windows
+elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+
+    # Qt Installer Framework
+    set(CPACK_BINARY_IFW "ON")
+    # Null Soft Installer
+    set(CPACK_BINARY_NSIS "ON")
+
+else()
+    message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
+endif()
+
+
+
  
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -36,10 +66,15 @@ file(CREATE_LINK
   COPY_ON_ERROR)
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt)
 
+# Специфичные для создания пакета Bundle настройки:
+# Имя пакета
+set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+set(CPACK_BUNDLE_PLIST "???")
+
+
 #set(CPACK_THREADS 4)
 
 # Специфичные для создания пакета .deb настройки:
-set(CPACK_BINARY_DEB "ON")
 # Имя пакета Debian
 set(CPACK_DEBIAN_PACKAGE_NAME ${PROJECT_NAME})
 # Имя файла пакета Debian
