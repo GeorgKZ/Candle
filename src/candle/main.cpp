@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
                     QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white;}"
                     QMenuBar {background-color: #303030; padding-top: 2px; padding-bottom: 2px;}
                     QMenuBar::item {spacing: 3px; padding: 2px 8px; background: transparent; color: white;}
-                    QMenuBar::item:pressed {border: 1px solid #505050; border-bottom: 1px; border-top-left-radius: 3px; border-top-right-radius: 3px; background: #404040; color: white;}
+                    QMenuBar::item:pressed {border: 1px solid #505050; border-bottom: 1px; border-top-left-radius: 3px; border-top-right-radius: 3px; background: #404040; color: white;});
 #endif
 
 

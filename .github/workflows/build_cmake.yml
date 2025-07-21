@@ -118,7 +118,7 @@ jobs:
         endforeach()
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./cmake.zip)
 
-        # Add to PATH environment variable
+        # Добавить путь к CMake к переменной окружения PATH
         file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/${cmake_dir}" cmake_dir)
         set(path_separator ":")
         if ("${{ runner.os }}" STREQUAL "Windows")
@@ -126,6 +126,7 @@ jobs:
         endif()
         file(APPEND "$ENV{GITHUB_PATH}" "$ENV{GITHUB_WORKSPACE}${path_separator}${cmake_dir}")
 
+        # Установить атрибут "исполняемости" для линуксоподобных систем
         if (NOT "${{ runner.os }}" STREQUAL "Windows")
           execute_process(
             COMMAND chmod +x ninja
@@ -320,7 +321,7 @@ jobs:
           endforeach()
         endif()
 
-    - name: Настройка среды сборки и конфигурирование CMake
+    - name: Настройка среды сборки, конфигурирование и сборка при помощи CMake
       shell: cmake -P {0}
       run: |
         set(ENV{CC} ${{ matrix.config.cc }})
@@ -364,8 +365,6 @@ jobs:
             endif()
         endif()
 
-        # Конфигурирование CMake для не мультиконфигурационного генератора
-
         # Если задан, установить уровень детализации выводимых сообщений
         set(build_type "$ENV{BUILD_TYPE}")
         if(DEFINED ENV{LOG_LEVEL}) 
@@ -383,7 +382,7 @@ jobs:
         # В переменную окружения BUILDDIR поместить путь к промежуточным и собранным файлам
         set(ENV{BUILDDIR} "$ENV{GITHUB_WORKSPACE}${path_slash}build")
 
-        # Запустить CMake с необходимыми аргументами
+        # Вызвать CMake с необходимыми аргументами для конфигурирования (не мультиконфигурационный генератор)
         execute_process(
           COMMAND cmake
           -S $ENV{GITHUB_WORKSPACE}
@@ -398,6 +397,7 @@ jobs:
           ERROR_VARIABLE output
           ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
         )
+
         # Проверить полученный код завершения, в случае ошибки дать сообщение
         if (NOT result EQUAL 0)
           string(REGEX MATCH "FAILED:.*$" error_message "${output}")
@@ -406,16 +406,7 @@ jobs:
           message(FATAL_ERROR "-- Конфигурирование завершено с ошибкой. Выход.")
         endif()
 
-    - name: Сборка при помощи CMake
-      shell: cmake -P {0}
-      run: |
-        # Установить символ-разделитель директорий, принятый в ОС
-        set(path_slash "/")
-        if ("${{ runner.os }}" STREQUAL "Windows")
-          set(path_slash "\\")
-        endif()
-
-        # Запустить CMake с необходимыми аргументами
+        # Вызвать CMake для сборки приложения с необходимыми аргументами
         execute_process(
           COMMAND cmake
           --build $ENV{GITHUB_WORKSPACE}${path_slash}cmake
@@ -425,6 +416,7 @@ jobs:
           ERROR_VARIABLE output
           ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
         )
+
         # Проверить полученный код завершения, в случае ошибки дать сообщение
         if (NOT result EQUAL 0)
           string(REGEX MATCH "FAILED:.*$" error_message "${output}")
