@@ -423,7 +423,23 @@ jobs:
           message(FATAL_ERROR "-- Сборка завершена с ошибкой. Выход.")
         endif()
 
+        # Вызвать CMake для формирования установочного набора приложения с необходимыми аргументами
+        execute_process(
+          COMMAND cmake
+          --install $ENV{GITHUB_WORKSPACE}${path_slash}cmake
+          RESULT_VARIABLE result
+          OUTPUT_VARIABLE output
+          ERROR_VARIABLE output
+          ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
+        )
 
+        # Проверить полученный код завершения, в случае ошибки дать сообщение
+        if (NOT result EQUAL 0)
+          string(REGEX MATCH "FAILED:.*$" error_message "${output}")
+          string(REPLACE "\n" "%0A" error_message "${error_message}")
+          message("::error::${error_message}")
+          message(FATAL_ERROR "-- Установка завершена с ошибкой. Выход.")
+        endif()
 
 #    - name: Upload
 #      uses: actions/upload-artifact@v4
