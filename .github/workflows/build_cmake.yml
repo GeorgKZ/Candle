@@ -147,7 +147,7 @@ jobs:
               sudo apt install chrpath
                                libgl1-mesa-dev libvulkan-dev libxcb-xinput-dev libxcb-xinerama0-dev libxkbcommon-dev libxkbcommon-x11-dev
                                libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xkb1 libxcb-randr0 libxcb-icccm4 libsecret-1-dev
-                               xvfb
+                               xvfb libpulse-dev
             RESULT_VARIABLE result
           )
           if (NOT result EQUAL 0)
@@ -341,8 +341,6 @@ jobs:
             endif()
           endforeach()
         endif()
-
-        set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
 
         execute_process(
           COMMAND git log --format=%B -n 1 ${{ github.event.after }}

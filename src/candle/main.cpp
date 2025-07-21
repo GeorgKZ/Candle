@@ -1,10 +1,6 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#ifdef Q_OS_WINDOWS
-  #include <windows.h> 
-#endif
-
 #include "frmmain.h"
 #include "bootstrap.h"
 

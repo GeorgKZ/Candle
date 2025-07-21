@@ -5,6 +5,9 @@
  * <BR>
  */
 #include <QtCore/QSettings>
+#ifdef Q_OS_WINDOWS
+  #include <windows.h> 
+#endif
 #include "bootstrap.h"
 
 /**
