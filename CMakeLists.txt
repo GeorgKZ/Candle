@@ -733,7 +733,7 @@ set(
 set(CPACK_VERBATIM_VARIABLES YES)
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
-SET(CPACK_OUTPUT_FILE_PREFIX "${BUILD_PATH}/packages")
+set(CPACK_OUTPUT_FILE_PREFIX "${BUILD_PATH}/packages")
 set(CPACK_STRIP_FILES YES)
 
 set(
@@ -767,7 +767,17 @@ set(CPACK_DEB_COMPONENT_INSTALL YES)
 # list dependencies
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS YES)
 
-include(CPack)
+# под-проект "MySub", собранный в директории "SubProject"
+# set(CPACK_INSTALL_CMAKE_PROJECTS  "SubProject;MySub;ALL;/")
+
+
+set(CPACK_INSTALL_CMAKE_PROJECTS
+  "${DEST_PATH};candle;ALL;/"
+  "${DEST_PATH};scriptbindings;ALL;/"
+  "${DEST_PATH}/plugins;Plugins;ALL;/"
+)
+
+#set(CPACK_INSTALL_SCRIPT ${CMAKE_SOURCE_DIR}/CPackScript.cmake)
 
 # optionally, you can add various meta information to the components defined in INSTALLs
 # cpack_add_component(some-application
@@ -789,8 +799,11 @@ include(CPack)
 #cpack_add_component_group(group1)
 #cpack_add_component_group(group2)
 
-cpack_add_component(application DISPLAY_NAME "Application")
-cpack_add_component(libraries DISPLAY_NAME "Libraries")
-cpack_add_component(plugins DISPLAY_NAME "Plugins")
+include(CPack)
+
+#cpack_add_component(application DISPLAY_NAME "Application")
+#cpack_add_component(libraries DISPLAY_NAME "Libraries")
+#cpack_add_component(plugins DISPLAY_NAME "Plugins")
 
 message(STATUS "Components to pack: ${CPACK_COMPONENTS_ALL}")
+
