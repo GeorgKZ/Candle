@@ -439,38 +439,45 @@ jobs:
           message(FATAL_ERROR "-- Установка завершена с ошибкой. Выход.")
         endif()
 
-#    - name: Upload
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
-#        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
+        # Вызвать CMake для формирования установочных пакетов
+        execute_process(
+          COMMAND cmake
+          --build $ENV{GITHUB_WORKSPACE}${path_slash}cmake
+          --target package
+          RESULT_VARIABLE result
+          OUTPUT_VARIABLE output
+          ERROR_VARIABLE output
+          ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
+        )
 
-#    - name: Upload Devel
-#      uses: actions/upload-artifact@v4
-#      with:
-#        path: build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}_dev.7z
-#        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}_dev.7z
+        # Проверить полученный код завершения, в случае ошибки дать сообщение
+        if (NOT result EQUAL 0)
+          string(REGEX MATCH "FAILED:.*$" error_message "${output}")
+          string(REPLACE "\n" "%0A" error_message "${error_message}")
+          message("::error::${error_message}")
+          message(FATAL_ERROR "-- Формирование установочных пакетов завершено с ошибкой. Выход.")
+        endif()
 
     - name: Upload Debian package
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        path: build/build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.deb
-        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.deb
+        path: build/packaging/Candle-1.2.15-${{ runner.os }}.deb
+        name: Candle-1.2.15-${{ runner.os }}.deb
 
     - name: Upload MSI package
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        path: build/build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.msi
-        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.msi
+        path: build/packaging/Candle-1.2.15-${{ runner.os }}.msi
+        name: Candle-1.2.15-${{ runner.os }}.msi
 
     - name: Upload disk image
       if: runner.os == 'macOS'
       uses: actions/upload-artifact@v4
       with:
-        path: build/application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.dmg
-        name: application-${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.dmg
+        path: build/packaging/Candle-1.2.15-${{ runner.os }}.dmg
+        name: Candle-1.2.15-${{ runner.os }}.dmg
 
 #  release:
 #    if: contains(github.ref, 'tags/v')
