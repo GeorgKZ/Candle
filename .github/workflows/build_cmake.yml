@@ -461,14 +461,14 @@ jobs:
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        path: build/packaging/Candle-1.2.15-${{ runner.os }}.msi
+        path: build/packaging/Candle-1.2.15-win64.msi
         name: Candle-1.2.15-${{ runner.os }}.msi
 
     - name: Отдать установочный пакет ZIP для Windows
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        path: build/packaging/Candle-1.2.15-${{ runner.os }}.zip
+        path: build/packaging/Candle-1.2.15-win64.zip
         name: Candle-1.2.15-${{ runner.os }}.zip
 
 

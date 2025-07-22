@@ -42,7 +42,7 @@ elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "M
 # Для IFW необходим binarycreator
 # NSIS надо будет сделать
 #       "IFW;NSIS;ZIP"
-        "ZIP"
+        "NSIS;ZIP"
     )
     set(CPACK_PACKAGING_INSTALL_PREFIX "")
 
