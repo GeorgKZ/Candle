@@ -1,8 +1,8 @@
-string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)                # The IDE id (no spaces, lowercase!)
+string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)                 # The application id (no spaces, lowercase!)
 
 #set(IDE_BUNDLE_IDENTIFIER "org.${PROJECT_NAME_LOWERCASE}")            # The macOS application bundle identifier.
 #set(IDE_APP_ID "org.${PROJECT_NAME_LOWERCASE}")                       # The free desktop application identifier.
-#set(IDE_PUBLISHER "The Qt Company Ltd.")
+#set(IDE_PUBLISHER "Publisher.")
 #set(IDE_AUTHOR "${IDE_PUBLISHER} and other contributors.")
 #set(IDE_COPYRIGHT "Copyright (C) ${IDE_AUTHOR}")
 
@@ -40,8 +40,9 @@ elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "M
 
     set(CPACK_GENERATOR
 # Для IFW необходим binarycreator
+# NSIS надо будет сделать
 #       "IFW;NSIS;ZIP"
-        "NSIS;ZIP"
+        "ZIP"
     )
     set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -120,18 +121,32 @@ if (NOT WIN32)
  # endif()
 endif()
 
-
+##############################################################################
+# Специфичные для создания пакетов-архивов (.7z, .tar, .tar.bz2, .tar.gz,
+# .tar.xz, .tar.Z, .tar.zst, .zip) настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/archive.html
+##############################################################################
 
 ##############################################################################
 # Специфичные для создания пакета Bundle настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/bundle.html
 ##############################################################################
 
 # Имя пакета
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
-set(CPACK_BUNDLE_PLIST "???")
+# Файл Info.plist приложения
+set(CPACK_BUNDLE_PLIST "${CMAKE_INSTALL_PREFIX}/candle.app/Contents/Info.plist")
+# Значок прилжения
+set(CPACK_BUNDLE_ICON "???")
+
+##############################################################################
+# Специфичные для создания пакета Cygwin настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/cygwin.html
+##############################################################################
 
 ##############################################################################
 # Специфичные для создания пакета Debian (.deb) настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/deb.html
 ##############################################################################
 
 # Имя пакета Debian - обычно CPACK_PACKAGE_NAME в нижнем регистре
@@ -164,53 +179,84 @@ set(CPACK_DEBIAN_COMPRESSION_ARCHIVE gnutar)
 # Алгоритм сжатия пакета (lzma, xz, bzip2, gzip, zstd)
 set(CPACK_DEBIAN_COMPRESSION_TYPE gzip)
 
+
+##############################################################################
+# Специфичные для создания пакета DragNDrop (.dmg) настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/dmg.html
+##############################################################################
+
+##############################################################################
+# https://cmake.org/cmake/help/latest/cpack_gen/innosetup.html
+##############################################################################
+
+##############################################################################
+# https://cmake.org/cmake/help/latest/cpack_gen/ifw.html
+##############################################################################
+
+##############################################################################
+# Специфичные для создания пакета NSIS (.msi) настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/nsis.html
+##############################################################################
+
+# The default installation directory presented to the end user by the NSIS installer is under this root dir
+set(CPACK_NSIS_INSTALL_ROOT "C:")
+# Значок для установки пакета
+set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
+# Значок для удаления пакета
+set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
+
+#set(CPACK_NSIS_INSTALLED_ICON_NAME "${IDE_APP_PATH}\\${IDE_APP_TARGET}.exe")
+set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_DESCRIPTION} ${CMAKE_PROJECT_VERSION}")
+set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_DESCRIPTION} ${CMAKE_PROJECT_VERSION}")
+# Параметры, которые будут переданы архиватору
+set(CPACK_NSIS_COMPRESSOR "/SOLID lzma\n  SetCompressorDictSize 64")
+# Specify an executable to add an option to run on the finish page of the NSIS installer
+#set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${IDE_APP_TARGET}")
+# Additional NSIS commands for creating Start Menu shortcuts
+#set(CPACK_NSIS_CREATE_ICONS_EXTRA
+#   "CreateShortCut '$SMPROGRAMS\\$STARTMENU_FOLDER\\${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}.lnk' '$INSTDIR\\${IDE_APP_PATH}\\${IDE_APP_TARGET}.exe' "
+#)
+# if set, declares that the installer is DPI-aware
+set(CPACK_NSIS_MANIFEST_DPI_AWARE ON)
+
+##############################################################################
+# https://cmake.org/cmake/help/latest/cpack_gen/nuget.html
+##############################################################################
+
+##############################################################################
+# https://cmake.org/cmake/help/latest/cpack_gen/packagemaker.html
+##############################################################################
+
+##############################################################################
+# https://cmake.org/cmake/help/latest/cpack_gen/productbuild.html
+##############################################################################
+
 ##############################################################################
 # Специфичные для создания пакета RPM (.rpm) настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/rpm.html
 ##############################################################################
 
 # Обычно CPACK_PACKAGE_DESCRIPTION_SUMMARY
 set(CPACK_RPM_PACKAGE_SUMMARY ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
-
 # defaults to lower case of CPACK_PACKAGE_NAME
 set(CPACK_RPM_PACKAGE_NAME ${PROJECT_NAME_LOWERCASE})
-
 # Обычно of CPACK_PACKAGE_VERSION.
 set(CPACK_RPM_PACKAGE_VERSION $CPACK_PACKAGE_VERSION})
-
 # Архитектура целевого процессора
 set(CPACK_RPM_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
-
 # Версия файла RPM
 set(CPACK_RPM_PACKAGE_RELEASE "1")
-
 #
 set(CPACK_RPM_PACKAGE_GROUP "none")
-
 #
 set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
 
 ##############################################################################
-# Специфичные для создания пакета NSIS (???) настройки
+# Специфичные для создания пакета WIX (.msi) настройки
+# https://cmake.org/cmake/help/latest/cpack_gen/wix.html
 ##############################################################################
 
-set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/../src/candle/images/candle.ico")
-set(CPACK_NSIS_MUI_UNIICON "${CMAKE_CURRENT_SOURCE_DIR}/../src/candle/images/candle.ico")
-set(CPACK_NSIS_INSTALLED_ICON_NAME "${IDE_APP_PATH}\\${IDE_APP_TARGET}.exe")
-set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_DESCRIPTION} ${CMAKE_PROJECT_VERSION}")
-set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_DESCRIPTION} ${CMAKE_PROJECT_VERSION}")
-set(CPACK_NSIS_COMPRESSOR "/SOLID lzma\n  SetCompressorDictSize 64")
-#set(CPACK_NSIS_INSTALL_ROOT "C:\\Qt")
-set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${IDE_APP_TARGET}")
-set(CPACK_NSIS_CREATE_ICONS_EXTRA
-   "CreateShortCut '$SMPROGRAMS\\$STARTMENU_FOLDER\\${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}.lnk' '$INSTDIR\\${IDE_APP_PATH}\\${IDE_APP_TARGET}.exe' "
-)
-set(CPACK_NSIS_MANIFEST_DPI_AWARE ON)
-
-##############################################################################
-# Специфичные для создания пакета WIX (???) настройки
-##############################################################################
-
-set(CPACK_WIX_PRODUCT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/../src/candle/images/candle.ico")
+set(CPACK_WIX_PRODUCT_ICON "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
 set(CPACK_WIX_UPGRADE_GUID "E6A093A5-83DE-47FA-B669-1DE0102BE92A")
 set(CPACK_WIX_LIGHT_EXTRA_FLAGS "-dcl:high") # set high compression
 

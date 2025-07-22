@@ -165,18 +165,6 @@ target_include_directories(${MAIN_NAME}
 #    )
 #endif()
 
-# Дополнения для macOS/OS X
-#if(APPLE AND NOT IOS)
-#    set_target_properties(${MAIN_NAME} PROPERTIES
-#        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-#    )
-#
-#    set_target_properties(${MAIN_NAME} PROPERTIES
-#        MACOSX_BUNDLE TRUE
-#    )
-#
-#endif()
-
 # Сформировать список шрифтов-ресурсов
 set(RESOURCE_FONTS_PATH "${SOURCES_PATH}/fonts")
 file(GLOB RC_FONTS "${RESOURCE_FONTS_PATH}/*.ttf")
