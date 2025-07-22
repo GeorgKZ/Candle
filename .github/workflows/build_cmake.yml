@@ -36,8 +36,6 @@ jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
-    outputs:
-        tag: ${{ steps.git.outputs.tag }}
     strategy:
       fail-fast: false
       matrix:
@@ -199,12 +197,6 @@ jobs:
             endif()
           endforeach()
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./toolchain.7z)
-        endif()
-
-        # For tests update the docker image
-        find_program(docker_executable docker)
-        if (docker_executable)
-          execute_process(COMMAND ${docker_executable} pull alpine:latest COMMAND_ECHO STDOUT)
         endif()
 
     - name: Загрузка Qt
@@ -458,21 +450,21 @@ jobs:
           message(FATAL_ERROR "-- Формирование установочных пакетов завершено с ошибкой. Выход.")
         endif()
 
-    - name: Upload Debian package
+    - name: Отдать установочный пакет DEB для Linux
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
         path: build/packaging/Candle-1.2.15-${{ runner.os }}.deb
         name: Candle-1.2.15-${{ runner.os }}.deb
 
-    - name: Upload MSI package
+    - name: Отдать установочный пакет MSI для Windows
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
         path: build/packaging/Candle-1.2.15-${{ runner.os }}.msi
         name: Candle-1.2.15-${{ runner.os }}.msi
 
-    - name: Upload disk image
+    - name: Отдать установочный образ DMG для MacOS
       if: runner.os == 'macOS'
       uses: actions/upload-artifact@v4
       with:

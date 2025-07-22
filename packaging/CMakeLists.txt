@@ -28,58 +28,21 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 # При сборке для работы в среде MacOS/OS X
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-    # используется в среде Windows
-    set(CPACK_BINARY_NSIS "OFF")
-    set(CPACK_BINARY_ZIP "OFF")
-    # используется в среде Cygwin
-    set(CPACK_BINARY_CYGWIN_BINARY "OFF")
-    # используется в среде Linux
-    set(CPACK_BINARY_DEB "OFF")
-    set(CPACK_BINARY_RPM "OFF")
-    set(CPACK_BINARY_STGZ "OFF")
-    set(CPACK_BINARY_TBZ2 "OFF")
-    set(CPACK_BINARY_TGZ "OFF")
-    set(CPACK_BINARY_TXZ "OFF")
-    set(CPACK_BINARY_TZ "OFF")
-
-    # Mac OSX bundle
-#    set(CPACK_BINARY_BUNDLE "ON")
-    # Mac OSX Drag And Drop (образ диска .dmg с символической ссылкой на директорию Applications
-    # и копией установочной директории приложения)
-    set(CPACK_BINARY_DRAGNDROP "ON")
-    # Mac OSX pkg
-    set(CPACK_BINARY_PRODUCTBUILD "ON")
-    # OSXX11
+    set(CPACK_GENERATOR
+        # BUNDLE
+        "DRAGNDROP;PRODUCTBUILD"
+    )
 
     set(CPACK_PACKAGING_INSTALL_PREFIX "/")
 
 # При сборке для работы в среде Windows
 elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
-    # Qt Installer Framework
-    set(CPACK_BINARY_IFW "ON")
-    # Null Soft Installer
-    set(CPACK_BINARY_NSIS "ON")
-    # Файл ZIP
-    set(CPACK_BINARY_ZIP "ON")
-
-    # используется в среде Cygwin
-    set(CPACK_BINARY_CYGWIN_BINARY "OFF")
-    # используется в среде Linux
-    set(CPACK_BINARY_DEB "OFF")
-    set(CPACK_BINARY_RPM "OFF")
-    set(CPACK_BINARY_DEB "OFF")
-    set(CPACK_BINARY_RPM "OFF")
-    set(CPACK_BINARY_STGZ "OFF")
-    set(CPACK_BINARY_TBZ2 "OFF")
-    set(CPACK_BINARY_TGZ "OFF")
-    set(CPACK_BINARY_TXZ "OFF")
-    set(CPACK_BINARY_TZ "OFF")
-    # используется в среде MacOS/OS X
-    # PACKAGEMAKER
-    set(CPACK_BINARY_DRAGNDROP "OFF")
-    set(CPACK_BINARY_BUNDLE "OFF")
-    # OSXX11
+    set(CPACK_GENERATOR
+# Для IFW необходим binarycreator
+#       "IFW;NSIS;ZIP"
+        "NSIS;ZIP"
+    )
 
 else()
     message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
@@ -104,19 +67,23 @@ set(CPACK_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
 # Краткое описание приложения
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 # Контактные данные поставщика установочного пакета
-set(CPACK_PACKAGE_CONTACT "Maintainer <email@email>")
+set(CPACK_PACKAGE_CONTACT "Maintainer <maintainer@mail.com>")
 # Директория целевой среды выполненния, в которую будет выполнена установка
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME_LOWERCASE}-${CMAKE_PROJECT_VERSION})
 # Лицензия, которая будет встроена в установочный пакет (для WIX необходимо расширение .txt)
 file(CREATE_LINK
-  ${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE
-  ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt
+  ${CMAKE_SOURCE_DIR}/LICENSE
+  ${MISC_PATH}/LICENSE.txt
   COPY_ON_ERROR)
-set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt)
-# Файл ReadMe, который будет встроен в инсталлятор
-set(CPACK_RESOURCE_FILE_README ${CMAKE_CURRENT_SOURCE_DIR}/../readme.md)
-#set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../Description.txt)
-#set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_CURRENT_SOURCE_DIR}/../Welcome.txt)
+set(CPACK_RESOURCE_FILE_LICENSE ${MISC_PATH}/LICENSE.txt)
+# Файл ReadMe, который будет встроен в инсталлятор (для PRODUCTBUILD необходимо расширение .txt)
+file(CREATE_LINK
+  ${CMAKE_SOURCE_DIR}/readme.md
+  ${MISC_PATH}/readme.txt
+  COPY_ON_ERROR)
+set(CPACK_RESOURCE_FILE_README ${MISC_PATH}/readme.txt)
+#set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/Description.txt)
+#set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/Welcome.txt)
 
 # Переменные CPACK_... будут записаны в файлы конфигурации как есть, т.е.
 # никакие управляющий символы не будут обработаны
