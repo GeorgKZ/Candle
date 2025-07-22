@@ -457,11 +457,11 @@ jobs:
         path: build/packaging/Candle-1.2.15-Linux.deb
         name: Candle-1.2.15-${{ runner.os }}.deb
 
-    - name: Отдать установочный пакет MSI для Windows
+    - name: Отдать установочный пакет NSIS для Windows
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        path: build/packaging/Candle-1.2.15-win64.msi
+        path: build/packaging/Candle-1.2.15-win64.exe
         name: Candle-1.2.15-${{ runner.os }}.msi
 
     - name: Отдать установочный пакет ZIP для Windows
