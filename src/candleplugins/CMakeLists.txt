@@ -83,7 +83,7 @@ foreach(I ${SUBDIRS})
             ${PLUGIN_PATH}/script.js
             ${SRC_FILES}
             ${QM_FILES}
-            DESTINATION ${DEST_PATH}/plugins/${I}
+            DESTINATION "./plugins/${I}"
             COMPONENT plugins
         )
 
@@ -92,7 +92,7 @@ foreach(I ${SUBDIRS})
         IF(IS_DIRECTORY ${IMG_PATH} AND EXISTS ${IMG_PATH})
             FILE(GLOB IMG_FILES ${IMG_PATH}/*)
             install(FILES ${IMG_FILES}
-                DESTINATION ${DEST_PATH}/plugins/${I}/images
+                DESTINATION "./plugins/${I}/images"
                 COMPONENT plugins
             )
         ENDIF()

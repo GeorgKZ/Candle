@@ -73,12 +73,17 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONS_PATH})
 set(DOC_PATH "${BUILD_PATH}/docs")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
 
-# Директория для сборки установочного набора
+# Директория для установочного набора
+set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install")
+# Директория для собираемых бинарных файлов сборки установочного набора
+
+#!!! Потом убрать DEST_PATH
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     # При сборке для работы в среде MacOS
-    set(DEST_PATH "${BUILD_PATH}/install/candle.app/Contents/MacOS")
+    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}/candle.app/Contents/MacOS")
 else()
-    set(DEST_PATH "${BUILD_PATH}/install")
+    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}")
 endif()
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/plugins)
@@ -697,7 +702,7 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 
 # Файл лицензии
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-    DESTINATION "${DEST_PATH}"
+    DESTINATION "./"
     COMPONENT docs
 )
 
@@ -716,7 +721,7 @@ foreach(I ${QT_LIBS})
     endif()
 
     install(FILES ${LIB_FILE1} ${LIB_FILE2} ${LIB_FILE3}
-        DESTINATION ${DEST_PATH}
+        DESTINATION "./"
         COMPONENT libraries
     )
 endforeach(I)

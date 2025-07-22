@@ -23,14 +23,14 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CPACK_GENERATOR
         "DEB"
     )
-    set(CPACK_PACKAGING_INSTALL_PREFIX "/opt")
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
 # При сборке для работы в среде MacOS/OS X
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     set(CPACK_GENERATOR
-        # BUNDLE
-        "DRAGNDROP;PRODUCTBUILD"
+        # Bundle;DragNDrop
+        "DragNDrop"
     )
 
     set(CPACK_PACKAGING_INSTALL_PREFIX "/")
@@ -43,6 +43,7 @@ elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "M
 #       "IFW;NSIS;ZIP"
         "NSIS;ZIP"
     )
+    set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
 else()
     message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
@@ -161,7 +162,7 @@ set(CPACK_DEBIAN_PACKAGE_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MIN
 set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
 set(CPACK_DEBIAN_COMPRESSION_ARCHIVE gnutar)
 # Алгоритм сжатия пакета (lzma, xz, bzip2, gzip, zstd)
-set(CPACK_DEBIAN_COMPRESSION_TYPE zstd)
+set(CPACK_DEBIAN_COMPRESSION_TYPE gzip)
 
 ##############################################################################
 # Специфичные для создания пакета RPM (.rpm) настройки
