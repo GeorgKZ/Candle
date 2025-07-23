@@ -151,8 +151,8 @@ set(CPACK_BUNDLE_ICON "???")
 
 # Имя пакета Debian - обычно CPACK_PACKAGE_NAME в нижнем регистре
 set(CPACK_DEBIAN_PACKAGE_NAME ${PROJECT_NAME_LOWERCASE})
-# Архитектура целевого процессора
-set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+# Архитектура целевого процессора CPACK_DEBIAN_PACKAGE_ARCHITECTURE
+# устанавливается автоматически по архитектуре среды выполнения
 # Зависимости от других пакетов
 #set(CPACK_DEBIAN_PACKAGE_DEPENDS "libdouble-conversion3,libxcb-cursor0")
 # Обычно CPACK_PACKAGE_CONTACT

@@ -80,7 +80,7 @@ set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install")
 #!!! Потом убрать DEST_PATH
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # При сборке для работы в среде MacOS
+    # При сборке для работы в среде MacOS/OS X
     set(DEST_PATH "${CMAKE_INSTALL_PREFIX}/candle.app/Contents/MacOS")
 else()
     set(DEST_PATH "${CMAKE_INSTALL_PREFIX}")
@@ -381,10 +381,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         "-D__STDC_WANT_SECURE_LIB__=1"
         "-D_CRT_SECURE_NO_WARNINGS"
     )
-#!!!
-#   include_directories($ENV{INCLUDE})
-#!!!
-#   link_directories($ENV{LIB})
+
     add_compile_options(
         /vd2
 #       Разрешить все предупреждения
@@ -428,6 +425,10 @@ endif()
 
 # При сборке для работы в среде Linux
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    # Путь, где искать динамические библиотеки
+    set(CMAKE_INSTALL_RPATH "../lib:./:")
+#   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # При сборке для работы в среде MacOS/OS X
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -700,28 +701,75 @@ endif()
 # Вывод сообщений об установке только если было изменение
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-# Файл лицензии
-install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-    DESTINATION "./"
-    COMPONENT docs
-)
+# Если сборка предназначена для выполнения под Windows
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-# Файлы библиотек Qt
-set(QT_LIBS "Core;Gui;Qml;Multimedia;MultimediaWidgets;OpenGL;OpenGLWidgets;SerialPort;Widgets")
-foreach(I ${QT_LIBS})
-
-    if(EXISTS        "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-        set(LIB_FILE1 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-        set(LIB_FILE2 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
-        set(LIB_FILE3 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    elseif(EXISTS    "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-        set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-        set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
-        set(LIB_FILE3 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    endif()
-
-    install(FILES ${LIB_FILE1} ${LIB_FILE2} ${LIB_FILE3}
+    # Файл лицензии
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
         DESTINATION "./"
+        COMPONENT docs
+    )
+
+# Если сборка предназначена для выполнения под Linux
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    # Файл лицензии
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+        DESTINATION "share/doc/candle"
+        COMPONENT docs
+    )
+
+    #!!! Можно использовать один и тот же SVG для всех разрешений
+    # Значок программы
+    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/candle_256.png
+        DESTINATION "share/icons/hicolor/256x256/apps"
+        RENAME candle.png
+    )
+
+    # Файлы библиотек Qt
+    set(QT_LIBS "Core;Gui;Qml;Multimedia;MultimediaWidgets;OpenGL;OpenGLWidgets;SerialPort;Widgets;Network;DBus")
+    foreach(I ${QT_LIBS})
+
+        if(EXISTS        "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+            set(LIB_FILE1 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+            set(LIB_FILE2 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
+            set(LIB_FILE3 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        elseif(EXISTS    "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+            set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+            set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
+            set(LIB_FILE3 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        endif()
+
+        install(FILES ${LIB_FILE1} ${LIB_FILE2} ${LIB_FILE3}
+            DESTINATION "lib"
+            COMPONENT libraries
+        )
+    endforeach(I)
+
+    # libicui18n.so.73.2
+    # libicui18n.so.73
+    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicui18n.so.73.2")
+    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicui18n.so.73")
+    install(FILES ${LIB_FILE1} ${LIB_FILE2}
+        DESTINATION "lib"
         COMPONENT libraries
     )
-endforeach(I)
+    # libicuuc.so.73.2
+    # libicuuc.so.73
+    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicuuc.so.73.2")
+    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicuuc.so.73")
+    install(FILES ${LIB_FILE1} ${LIB_FILE2}
+        DESTINATION "lib"
+        COMPONENT libraries
+    )
+    # libicudata.so.73.2
+    # libicudata.so.73
+    
+endif()
+    
+    
+    
+    
+    
+    
+    

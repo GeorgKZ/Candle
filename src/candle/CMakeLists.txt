@@ -2,8 +2,9 @@
 # Информация о компоненте
 ##############################################################################
 
-# Имя проекта приложения
-set(MAIN_NAME "candle")
+# Имя компонента по имени директории, содержащей компонент
+cmake_path(GET CMAKE_CURRENT_SOURCE_DIR STEM LAST_ONLY MAIN_NAME)
+message(STATUS "DIR: ${MAIN_NAME}")
 
 # Вывод информации о собираемом компоненте
 message(STATUS "##############################################################################")
@@ -214,7 +215,7 @@ qt6_add_resources(${MAIN_NAME} "images"
 target_link_libraries(${MAIN_NAME} PRIVATE
     scriptbindings
     cameraplugin
-    customwidgets
+    customwidgetsplugin
 )
 target_link_libraries(${MAIN_NAME} PUBLIC
     Qt6::Core
@@ -333,7 +334,7 @@ if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"
         WIN32_EXECUTABLE TRUE
     )
 
-# При сборке для работы в среде MacOS
+# При сборке для работы в среде MacOS/OS X
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     set_target_properties(${MAIN_NAME} PROPERTIES
@@ -341,12 +342,16 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     )
 
     set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+        MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-        MACOSX_BUNDLE_ICON_FILE qdia.icns
+        MACOSX_BUNDLE_ICON_FILE not_yet.icns
         MACOSX_BUNDLE TRUE
     )
+
+# При сборке для работы в среде Linux
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
 endif()
 
 
@@ -369,6 +374,12 @@ else()
         message(DEBUG "Предусмотрена установка для выполнения под Windows")
 #       install(TARGETS ${MAIN_NAME} RUNTIME) # DESTINATION "C:/Program Files/????")
     endif()
+    # Если исполняемый файл собран под MacOS/OS X для выполнения под MacOS/OS X
+    if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin") AND (CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
+        # Установка исполняемого файла в /Applications/???
+        message(DEBUG "Предусмотрена установка для выполнения под MacOS/OS X")
+#       install(TARGETS ${MAIN_NAME} RUNTIME) # DESTINATION "/Applications/????")
+    endif()
 endif()
 
 ##############################################################################
@@ -388,7 +399,7 @@ endif()
 
 # Исполняемый файл
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # При сборке для работы в среде MacOS
+    # При сборке для работы в среде MacOS/OS X
     install(DIRECTORY ${BINPATH}/${MAIN_NAME}.app
         DESTINATION "./"
         USE_SOURCE_PERMISSIONS
@@ -401,9 +412,9 @@ else()
 #        COMPONENT application
 #    )
     install(TARGETS ${MAIN_NAME}
-        RUNTIME
-        DESTINATION "./"
-        COMPONENT application
+         RUNTIME
+#        DESTINATION "./"
+#        COMPONENT application
 )
 
 endif()
