@@ -727,49 +727,106 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     )
 
     # Файлы библиотек Qt
-    set(QT_LIBS "Core;Gui;Qml;Multimedia;MultimediaWidgets;OpenGL;OpenGLWidgets;SerialPort;Widgets;Network;DBus")
-    foreach(I ${QT_LIBS})
-
-        if(EXISTS        "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-            set(LIB_FILE1 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-            set(LIB_FILE2 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
-            set(LIB_FILE3 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        elseif(EXISTS    "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-            set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-            set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
-            set(LIB_FILE3 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        endif()
-
-        install(FILES ${LIB_FILE1} ${LIB_FILE2} ${LIB_FILE3}
-            DESTINATION "lib"
-            COMPONENT libraries
-        )
-    endforeach(I)
-
-    # libicui18n.so.73.2
-    # libicui18n.so.73
-    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicui18n.so.73.2")
-    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicui18n.so.73")
-    install(FILES ${LIB_FILE1} ${LIB_FILE2}
-        DESTINATION "lib"
-        COMPONENT libraries
-    )
-    # libicuuc.so.73.2
-    # libicuuc.so.73
-    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicuuc.so.73.2")
-    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}/libicuuc.so.73")
-    install(FILES ${LIB_FILE1} ${LIB_FILE2}
-        DESTINATION "lib"
-        COMPONENT libraries
-    )
-    # libicudata.so.73.2
-    # libicudata.so.73
+#    set(QT_LIBS "Core;Gui;Qml;Multimedia;MultimediaWidgets;OpenGL;OpenGLWidgets;SerialPort;Widgets;Network;DBus;UiTools")
+#    foreach(I ${QT_LIBS})
+#
+#        if(EXISTS        "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+#            set(LIB_FILE1 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+#            set(LIB_FILE2 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
+#            set(LIB_FILE3 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+#        elseif(EXISTS    "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+#            set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
+#            set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
+#            set(LIB_FILE3 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+#        endif()
+#
+#        install(FILES ${LIB_FILE1} ${LIB_FILE2} ${LIB_FILE3}
+#            DESTINATION "lib"
+#            COMPONENT libraries
+#        )
+#    endforeach(I)
+#
+#    # libicui18n.so.73.2
+#    # libicui18n.so.73
+#    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icui18n.so.73.2")
+#    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icui18n.so.73")
+#    install(FILES ${LIB_FILE1} ${LIB_FILE2}
+#        DESTINATION "lib"
+#        COMPONENT libraries
+#    )
+#    # libicuuc.so.73.2
+#    # libicuuc.so.73
+#    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icuuc.so.73.2")
+#    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icuuc.so.73")
+#    install(FILES ${LIB_FILE1} ${LIB_FILE2}
+#        DESTINATION "lib"
+#        COMPONENT libraries
+#    )
+#
+#    # libicudata.so.73.2
+#    # libicudata.so.73
+#    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icudata.so.73.2")
+#    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icudata.so.73")
+#    install(FILES ${LIB_FILE1} ${LIB_FILE2}
+#        DESTINATION "lib"
+#        COMPONENT libraries
+#    )
     
 endif()
+
+
     
-    
-    
-    
-    
-    
-    
+install(CODE [[
+    function(install_library_with_deps LIBRARY QTD)
+        # Проверить, может такая библиотека уже установлена, тогда ничего не делать
+        message(STATUS "XXX dep ${LIBRARY}")
+        get_filename_component(NAME "${LIBRARY}" NAME)
+        if((DEFINED ENV{QT_ROOT}) AND (EXISTS "${QTD}/../../${NAME}"))
+            set(LIBRARY "${QTD}/../../${NAME}")
+            message(STATUS "XXX is ${QTD}/../../${NAME}")
+        endif()
+        message(STATUS "XXX check lib/${NAME}")
+        if (EXISTS "${CMAKE_INSTALL_PREFIX}/lib/${NAME}")
+            message(STATUS "XXX skip lib/${NAME}")
+        else()
+            file(INSTALL
+              DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+              TYPE SHARED_LIBRARY
+              FOLLOW_SYMLINK_CHAIN
+              FILES "${LIBRARY}"
+            )
+            file(GET_RUNTIME_DEPENDENCIES
+              LIBRARIES ${LIBRARY}
+              RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
+              UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
+            )
+            # перебрать все зависимости
+            foreach(FILE ${RESOLVED_DEPS})
+                if(NOT IS_SYMLINK ${FILE})
+                    install_library_with_deps("${FILE}" "${QTD}")
+                endif()
+            endforeach()
+            foreach(FILE ${UNRESOLVED_DEPS})
+                message(STATUS "Unresolved from ${LIBRARY}: ${FILE}")
+            endforeach()
+        endif()
+    endfunction()
+
+
+    if(DEFINED ENV{QT_ROOT})
+        set(QT_DIR "$ENV{QT_ROOT}/lib/cmake/Qt6/")
+    endif()
+
+    message(STATUS "XXX exe: ${CMAKE_INSTALL_PREFIX}/bin/candle")
+    file(GET_RUNTIME_DEPENDENCIES
+      EXECUTABLES "${CMAKE_INSTALL_PREFIX}/bin/candle"
+      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
+      UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
+    )
+    foreach(FILE ${RESOLVED_DEPS})
+        install_library_with_deps("${FILE}" "${QT_DIR}")
+    endforeach()
+    foreach(FILE ${UNRESOLVED_DEPS})
+        message(STATUS "XXX Unresolved: ${FILE}")
+    endforeach()
+]])
