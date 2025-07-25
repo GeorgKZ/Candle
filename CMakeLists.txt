@@ -86,7 +86,7 @@ else()
     set(DEST_PATH "${CMAKE_INSTALL_PREFIX}")
 endif()
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/plugins)
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/candle_plugins)
 
 # Путь к директории с изображениями для Doxygen
 set(DOXY_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/images;${CMAKE_SOURCE_DIR}/wiki/images")
@@ -774,59 +774,94 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     
 endif()
 
+# !!!
+# Также установить минимально необходимый перечень плюгинов и их завивимости-библиотеки
+# iconengines imageformats networkinformation platforminputcontexts platforms platformthemes tls wayland-decoration-client wayland-graphics-integration-client wayland-shell-integration xcbglintegrations
+
 
     
 install(CODE [[
     function(install_library_with_deps LIBRARY QTD)
-        # Проверить, может такая библиотека уже установлена, тогда ничего не делать
-        message(STATUS "XXX dep ${LIBRARY}")
+        # Разделить полный путь на директорию и файл
         get_filename_component(NAME "${LIBRARY}" NAME)
+        message(STATUS "XXX checking ${NAME}")
+
+        # Проверить, может это библиотека из указанного Qt
         if((DEFINED ENV{QT_ROOT}) AND (EXISTS "${QTD}/../../${NAME}"))
-            set(LIBRARY "${QTD}/../../${NAME}")
-            message(STATUS "XXX is ${QTD}/../../${NAME}")
+            set(TEST_LIB "${QTD}/../../${NAME}")
+            set(DIRR "${QTD}/../..")
+            message(STATUS "XXX is ${DIRR}/${NAME}")
+        else()
+            set(TEST_LIB "${LIBRARY}")
+            get_filename_component(DIRR "${LIBRARY}" DIRECTORY)
+            message(STATUS "XXX is ${DIRR}/${NAME}")
         endif()
-        message(STATUS "XXX check lib/${NAME}")
+
+        # Проверить, может такая библиотека уже установлена, тогда ничего не делать
         if (EXISTS "${CMAKE_INSTALL_PREFIX}/lib/${NAME}")
-            message(STATUS "XXX skip lib/${NAME}")
+            message(STATUS "XXX skipping ${NAME}")
         else()
             file(INSTALL
               DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
               TYPE SHARED_LIBRARY
-              FOLLOW_SYMLINK_CHAIN
-              FILES "${LIBRARY}"
+              FILES "${TEST_LIB}"
             )
-            file(GET_RUNTIME_DEPENDENCIES
-              LIBRARIES ${LIBRARY}
-              RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
-              UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
-            )
-            # перебрать все зависимости
-            foreach(FILE ${RESOLVED_DEPS})
-                if(NOT IS_SYMLINK ${FILE})
+
+            if(IS_SYMLINK ${TEST_LIB})
+                # Эта зависимотсь - символическиая ссылка.
+                # Повотрить процедуру для файла, на который указывает эта сылка.
+                file(READ_SYMLINK ${TEST_LIB} SYM_FILE)
+                message(STATUS "ZZZ GOT SYMLINK ${DIRR}/${SYM_FILE}")
+                install_library_with_deps("${DIRR}/${SYM_FILE}" "${QTD}")
+            else()
+
+                # Определить зависимости для файла
+                file(GET_RUNTIME_DEPENDENCIES
+                  LIBRARIES ${TEST_LIB}
+                  RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
+                  UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
+                )
+
+                message(STATUS "ZZZ ${NAME} Deps List")
+                foreach(FILE ${RESOLVED_DEPS})
+                    message(STATUS "ZZZ ${NAME} -> ${FILE}")
+                endforeach()
+      
+                # Перебрать все зависимости, для каждой повторить процедуру
+                foreach(FILE ${RESOLVED_DEPS})
+                    message(STATUS "XXX - ${NAME} BEGIN for ${FILE}")
                     install_library_with_deps("${FILE}" "${QTD}")
-                endif()
-            endforeach()
-            foreach(FILE ${UNRESOLVED_DEPS})
-                message(STATUS "Unresolved from ${LIBRARY}: ${FILE}")
-            endforeach()
+                    message(STATUS "XXX - ${NAME} END for ${FILE}")
+                endforeach()
+                foreach(FILE ${UNRESOLVED_DEPS})
+                message(STATUS "Unresolved from ${TEST_LIB}: ${FILE}")
+                endforeach()
+            endif()
         endif()
     endfunction()
 
-
+    # Восстановть значение переменной QT_DIR
     if(DEFINED ENV{QT_ROOT})
-        set(QT_DIR "$ENV{QT_ROOT}/lib/cmake/Qt6/")
+        set(QT_DIR "$ENV{QT_ROOT}/lib/cmake/Qt6")
     endif()
 
-    message(STATUS "XXX exe: ${CMAKE_INSTALL_PREFIX}/bin/candle")
-    file(GET_RUNTIME_DEPENDENCIES
-      EXECUTABLES "${CMAKE_INSTALL_PREFIX}/bin/candle"
-      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
-      UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
-    )
-    foreach(FILE ${RESOLVED_DEPS})
-        install_library_with_deps("${FILE}" "${QT_DIR}")
-    endforeach()
-    foreach(FILE ${UNRESOLVED_DEPS})
-        message(STATUS "XXX Unresolved: ${FILE}")
+    set(DEP_FILE_SET "bin/candle" "lib/libscriptbindings.so" "lib/libcustomwidgetsplugin.so" "lib/libcameraplugin.so")
+    foreach(F ${DEP_FILE_SET})
+
+        file(GET_RUNTIME_DEPENDENCIES
+          EXECUTABLES "${CMAKE_INSTALL_PREFIX}/${F}"
+          RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
+          UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
+        )
+
+        foreach(FILE ${RESOLVED_DEPS})
+            message(STATUS "XXX Candle Deps - BEGIN for ${FILE}")
+            install_library_with_deps("${FILE}" "${QT_DIR}")
+            message(STATUS "XXX Candle Deps - END for ${FILE}")
+        endforeach()
+
+        foreach(FILE ${UNRESOLVED_DEPS})
+            message(STATUS "XXX Unresolved: ${FILE}")
+        endforeach()
     endforeach()
 ]])

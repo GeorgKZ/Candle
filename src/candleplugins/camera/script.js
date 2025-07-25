@@ -28,7 +28,7 @@ function init()
 
     loader.addPluginPath(appPath);
     loader.addPluginPath(appPath + "/libs");
-    loader.addPluginPath(pluginPath + "/plugins")
+    loader.addPluginPath(pluginPath + "/candle_plugins")
     loader.setLanguageChangeEnabled(true);
 
     app.settingsLoaded.connect(onAppSettingsLoaded);

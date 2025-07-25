@@ -212,7 +212,7 @@ void bootstrap::setAllTranslators(const QString &language) {
      * * Для каждой директории плюгина проверить наличие файлов локализации
      * и при наличии установить.
      */
-    QString pluginsDir = qApp->applicationDirPath() + "/plugins/";
+    QString pluginsDir = qApp->applicationDirPath() + "/candle_plugins/";
     QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     foreach (QString p, pl) {
         translationFileName = pluginsDir + p + "/" + p + "_" + language + ".qm";
