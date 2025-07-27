@@ -1,202 +1,93 @@
-#ifndef WRAPPER_QPAINTER_H
-#define WRAPPER_QPAINTER_H
+#include "wrapper_QPainter.h"
 
-#include <QtCore/QObject>
-#include <QtGui/QPainter>
-#include "wrapper_common.h"
+// virtual int devType() const
+int wrapper_QPaintDevice::devType() const { return get_selfptr()->devType(); }
 
-class WRAPPER_DLL_EXPORT wrapper_QPaintDevice : public wrapper_common {
+// bool paintingActive() const
+bool wrapper_QPaintDevice::paintingActive() const { return get_selfptr()->paintingActive(); }
 
-public:
+// int width() const
+int wrapper_QPaintDevice::width() const { return get_selfptr()->width(); }
 
-  enum PaintDeviceMetric {
-    PdmWidth = 1,
-    PdmHeight,
-    PdmWidthMM,
-    PdmHeightMM,
-    PdmNumColors,
-    PdmDepth,
-    PdmDpiX,
-    PdmDpiY,
-    PdmPhysicalDpiX,
-    PdmPhysicalDpiY,
-    PdmDevicePixelRatio,
-    PdmDevicePixelRatioScaled
-  };
+// int height() const
+int wrapper_QPaintDevice::height() const { return get_selfptr()->height(); }
 
-  // virtual int devType() const
-  Q_INVOKABLE int devType() const;
+// int widthMM() const
+int wrapper_QPaintDevice::widthMM() const { return get_selfptr()->widthMM(); }
 
-  // bool paintingActive() const
-  Q_INVOKABLE bool paintingActive() const;
+// int heightMM() const
+int wrapper_QPaintDevice::heightMM() const { return get_selfptr()->heightMM(); }
 
-  //!!! virtual QPaintEngine *paintEngine() const = 0;
+// int logicalDpiX() const
+int wrapper_QPaintDevice::logicalDpiX() const { return get_selfptr()->logicalDpiX(); }
 
-  // int width() const
-  Q_INVOKABLE int width() const;
+// int logicalDpiY() const
+int wrapper_QPaintDevice::logicalDpiY() const { return get_selfptr()->logicalDpiY(); }
 
-  // int height() const
-  Q_INVOKABLE int height() const;
+// int physicalDpiX() const
+int wrapper_QPaintDevice::physicalDpiX() const { return get_selfptr()->physicalDpiX(); }
 
-  // int widthMM() const
-  Q_INVOKABLE int widthMM() const;
+// int physicalDpiY() const
+int wrapper_QPaintDevice::physicalDpiY() const { return get_selfptr()->physicalDpiY(); }
 
-  // int heightMM() const
-  Q_INVOKABLE int heightMM() const;
+// qreal devicePixelRatio() const
+qreal wrapper_QPaintDevice::devicePixelRatio() const { return get_selfptr()->devicePixelRatio(); }
 
-  // int logicalDpiX() const
-  Q_INVOKABLE int logicalDpiX() const;
+// qreal devicePixelRatioF()
+qreal wrapper_QPaintDevice::devicePixelRatioF()  const { return get_selfptr()->devicePixelRatioF(); }
 
-  // int logicalDpiY() const
-  Q_INVOKABLE int logicalDpiY() const;
+// int colorCount()
+int wrapper_QPaintDevice::colorCount() const { return get_selfptr()->colorCount(); }
 
-  // int physicalDpiX() const
-  Q_INVOKABLE int physicalDpiX() const;
+// int depth() const
+int wrapper_QPaintDevice::depth() const { return get_selfptr()->depth(); }
 
-  // int physicalDpiY() const
-  Q_INVOKABLE int physicalDpiY() const;
-
-  // qreal devicePixelRatio() const
-  Q_INVOKABLE qreal devicePixelRatio() const;
-
-  // qreal devicePixelRatioF()
-  Q_INVOKABLE qreal devicePixelRatioF() const;
-
-  // int colorCount()
-  Q_INVOKABLE int colorCount() const;
-
-  // int depth() const
-  Q_INVOKABLE int depth() const;
-
-  // static qreal devicePixelRatioFScale()
-  Q_INVOKABLE static qreal devicePixelRatioFScale();
-
-protected:
-
-//  wrapper_QPaintDevice() noexcept;
-
-public:
-
-  // Конструктор из объекта
-  wrapper_QPaintDevice(void *self);
-
-  // Деструктор
-  virtual ~wrapper_QPaintDevice() override;
-
-  // Получение константного указателя на объект
-  const QPaintDevice* get_selfptr() const;
-
-  // Получение указателя на объект
-  QPaintDevice* get_selfptr();
-};
+// static qreal devicePixelRatioFScale()
+qreal wrapper_QPaintDevice::devicePixelRatioFScale() { return QPaintDevice::devicePixelRatioFScale(); }
 
 
-class wrapper_QPainter : public wrapper_common {
+// Конструктор из объекта
+wrapper_QPaintDevice::wrapper_QPaintDevice(void *self) : wrapper_common(self) {
+  qDebug() << "wrapper_QPaintDevice::constructor(self=" << get_selfvalue() << ")";
+}
 
-public:
+// Деструктор
+wrapper_QPaintDevice::~wrapper_QPaintDevice() {
+  qDebug() << "wrapper_QPaintDevice::destructor(self=" << get_selfvalue() << ")";
+}
 
-  enum RenderHint {
-      Antialiasing = 0x01,
-      TextAntialiasing = 0x02,
-      SmoothPixmapTransform = 0x04,
-      VerticalSubpixelPositioning = 0x08,
-      LosslessImageRendering = 0x40,
-  };
-  Q_FLAG(RenderHint)
+// Получение константного указателя на объект
+const QPaintDevice* wrapper_QPaintDevice::get_selfptr() const {
+  return static_cast<const QPaintDevice*>(wrapper_common::get_selfptr());
+}
 
-  Q_DECLARE_FLAGS(RenderHints, RenderHint)
-  Q_FLAG(RenderHints)
+// Получение указателя на объект
+QPaintDevice* wrapper_QPaintDevice::get_selfptr() {
+  return static_cast<QPaintDevice*>(wrapper_common::get_selfptr());
+}
 
-  class PixmapFragment {
-
-  public:
-      qreal x;
-      qreal y;
-      qreal sourceLeft;
-      qreal sourceTop;
-      qreal width;
-      qreal height;
-      qreal scaleX;
-      qreal scaleY;
-      qreal rotation;
-      qreal opacity;
-      static PixmapFragment Q_GUI_EXPORT create(const QPointF &pos, const QRectF &sourceRect,
-                                          qreal scaleX = 1, qreal scaleY = 1,
-                                          qreal rotation = 0, qreal opacity = 1);
-  };
-
-  enum PixmapFragmentHint {
-      OpaqueHint = 0x01
-  };
-
-  Q_DECLARE_FLAGS(PixmapFragmentHints, PixmapFragmentHint)
 
 #if 0
 
-  Q_INVOKABLE  wrapper_QPainter();
+   wrapper_QPainter();
 
-  Q_INVOKABLE explicit wrapper_QPainter(QPaintDevice *);
+  explicit wrapper_QPainter(QPaintDevice *);
 
-  Q_INVOKABLE QPaintDevice *device() const;
+  QPaintDevice *device() const;
 
-  Q_INVOKABLE bool begin(QPaintDevice *);
+  bool begin(QPaintDevice *);
 
-  Q_INVOKABLE bool end();
+  bool end();
 
-  Q_INVOKABLE bool isActive() const;
+  bool isActive() const;
 
-  enum CompositionMode {
-      CompositionMode_SourceOver,
-      CompositionMode_DestinationOver,
-      CompositionMode_Clear,
-      CompositionMode_Source,
-      CompositionMode_Destination,
-      CompositionMode_SourceIn,
-      CompositionMode_DestinationIn,
-      CompositionMode_SourceOut,
-      CompositionMode_DestinationOut,
-      CompositionMode_SourceAtop,
-      CompositionMode_DestinationAtop,
-      CompositionMode_Xor,
+  void setCompositionMode(CompositionMode mode);
 
-      //svg 1.2 blend modes
-      CompositionMode_Plus,
-      CompositionMode_Multiply,
-      CompositionMode_Screen,
-      CompositionMode_Overlay,
-      CompositionMode_Darken,
-      CompositionMode_Lighten,
-      CompositionMode_ColorDodge,
-      CompositionMode_ColorBurn,
-      CompositionMode_HardLight,
-      CompositionMode_SoftLight,
-      CompositionMode_Difference,
-      CompositionMode_Exclusion,
+  CompositionMode compositionMode() const;
 
-      // ROPs
-      RasterOp_SourceOrDestination,
-      RasterOp_SourceAndDestination,
-      RasterOp_SourceXorDestination,
-      RasterOp_NotSourceAndNotDestination,
-      RasterOp_NotSourceOrNotDestination,
-      RasterOp_NotSourceXorDestination,
-      RasterOp_NotSource,
-      RasterOp_NotSourceAndDestination,
-      RasterOp_SourceAndNotDestination,
-      RasterOp_NotSourceOrDestination,
-      RasterOp_SourceOrNotDestination,
-      RasterOp_ClearDestination,
-      RasterOp_SetDestination,
-      RasterOp_NotDestination
-  };
+//  const QFont &font() const;
 
-  Q_INVOKABLE void setCompositionMode(CompositionMode mode);
-
-  Q_INVOKABLE CompositionMode compositionMode() const;
-
-//  Q_INVOKABLE const QFont &font() const;
-
-//  Q_INVOKABLE void setFont(const QFont &f);
+//  void setFont(const QFont &f);
 
 //  QFontMetrics fontMetrics() const;
 //  QFontInfo fontInfo() const;
@@ -491,19 +382,22 @@ public:
 
 #endif
 
-public:
+// Конструктор из объекта
+wrapper_QPainter::wrapper_QPainter(void *self) :  wrapper_common(self) {
+    qDebug() << "wrapper_QPainter::constructor(self=" << get_selfvalue() << ")";
+  }
 
-  // Конструктор из объекта
-  wrapper_QPainter(void *self);
+// Деструктор
+wrapper_QPainter::~wrapper_QPainter() {
+  qDebug() << "wrapper_QPainter::destructor(self=" << get_selfvalue() << ")";
+}
 
-  // Деструктор
-  virtual ~wrapper_QPainter() override;
+// Получение константного указателя на объект
+const QPainter* wrapper_QPainter::get_selfptr() const {
+  return static_cast<const QPainter*>(wrapper_common::get_selfptr());
+}
 
-  // Получение константного указателя на объект
-  const QPainter* get_selfptr() const;
-
-  // Получение указателя на объект
-  QPainter* get_selfptr();
-};
-
-#endif // WRAPPER_QPAINTER_H
+// Получение указателя на объект
+QPainter* wrapper_QPainter::get_selfptr() {
+  return static_cast<QPainter*>(wrapper_common::get_selfptr());
+}

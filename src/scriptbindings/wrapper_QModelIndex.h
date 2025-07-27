@@ -11,20 +11,13 @@ class WRAPPER_DLL_EXPORT wrapper_QModelIndex : public wrapper_common {
 
 public:
 
-  wrapper_QModelIndex() :
-    wrapper_common(new QModelIndex()) {
-    qDebug() << "wrapper_QModelIndex::constructor()";
-  }
+  wrapper_QModelIndex();
 
   // int row() const
-  Q_INVOKABLE int row() const {
-    return get_selfptr()->row();
-  }
+  Q_INVOKABLE int row() const;
 
   // int column() const
-  Q_INVOKABLE int column() const {
-    return get_selfptr()->column();
-  }
+  Q_INVOKABLE int column() const;
 
   // quintptr internalId() const
 
@@ -45,16 +38,12 @@ public:
   // void multiData(QModelRoleDataSpan roleDataSpan) const;
 
   // Qt::ItemFlags flags() const;
-  Q_INVOKABLE Qt::ItemFlags flags() const {
-    return get_selfptr()->flags();
-  }
+  Q_INVOKABLE Qt::ItemFlags flags() const;
 
   // const QAbstractItemModel *model() const
 
   // bool isValid() const
-  bool isValid() const {
-    return get_selfptr()->isValid();
-  }
+  bool isValid() const;
 
   // bool operator==(const QModelIndex &other) const
 
@@ -65,24 +54,16 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_QModelIndex(void *self) : wrapper_common(self) {
-    qDebug() << "wrapper_QModelIndex::constructor(self=" << get_selfvalue() << ")";
-  }
+  wrapper_QModelIndex(void *self);
 
   // Деструктор
-  virtual ~wrapper_QModelIndex() override {
-    qDebug() << "wrapper_QModelIndex::destructor(self=" << get_selfvalue() << ")";
-  }
+  virtual ~wrapper_QModelIndex() override;
 
   // Получение константного указателя на объект
-  const QModelIndex* get_selfptr() const {
-    return static_cast<const QModelIndex*>(wrapper_common::get_selfptr());
-  }
+  const QModelIndex* get_selfptr() const;
 
   // Получение указателя на объект
-  QModelIndex* get_selfptr() {
-    return static_cast<QModelIndex*>(wrapper_common::get_selfptr());
-  }
+  QModelIndex* get_selfptr();
 };
 
 #endif // WRAPPER_QMODELINDEX_H

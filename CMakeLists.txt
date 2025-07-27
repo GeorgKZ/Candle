@@ -774,94 +774,130 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     
 endif()
 
+# При сборке для работы в среде Windows
+if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+
+# При сборке для работы в среде MacOS/OS X
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    set(DEP_FILE_SET
+      "candle.app/Contents/MacOS/candle${CMAKE_EXECUTABLE_SUFFIX}"
+      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    )
+
+#    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
+#            DESTINATION "${CMAKE_INSTALL_BUNDLEDIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
+#    )
+
+#    include(BundleUtilities)
+#    fixup_bundle("${CMAKE_INSTALL_PREFIX}/${MACOSX_BUNDLE_BUNDLE_NAME}.app"
+#                 ""
+#                 "${CMAKE_INSTALL_PREFIX}/lib") # Or wherever your libraries are installed
+
+
+# При сборке для работы в среде Linux
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    set(DEP_FILE_SET
+      "bin/candle${CMAKE_EXECUTABLE_SUFFIX}"
+      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    )
+
+endif()
+
+# Формирование файла-скрипта для установки зависимостей
+file(WRITE
+    ${MISC_PATH}/inst_deps.cmake
+
+"function(install_library_with_deps LIBRARY)\n"
+"    # Разделить полный путь на директорию и файл\n"
+"    get_filename_component(NAME \"\${LIBRARY}\" NAME)\n"
+"    message(STATUS \"XXX checking \${NAME}\")\n"
+"\n"
+"    # Проверить, может это библиотека из указанного Qt\n"
+"    if(EXISTS \"${QT_DIR}/../../\${NAME}\")\n"
+"        set(TEST_LIB \"${QT_DIR}/../../\${NAME}\")\n"
+"        set(DIRR \"${QT_DIR}/../..\")\n"
+"        message(STATUS \"XXX is \${DIRR}/\${NAME}\")\n"
+"    else()\n"
+"        set(TEST_LIB \"\${LIBRARY}\")\n"
+"        get_filename_component(DIRR \"\${LIBRARY}\" DIRECTORY)\n"
+"        message(STATUS \"XXX is \${DIRR}/\${NAME}\")\n"
+"    endif()\n"
+"\n"
+"    # Проверить, может такая библиотека уже установлена, тогда ничего не делать\n"
+"    if (EXISTS \"${CMAKE_INSTALL_PREFIX}/lib/\${NAME}\")\n"
+"        message(STATUS \"XXX skipping \${NAME}\")\n"
+"    else()\n"
+"        file(INSTALL\n"
+"          DESTINATION \"${CMAKE_INSTALL_PREFIX}/lib\"\n"
+"          TYPE SHARED_LIBRARY\n"
+"          FILES \"\${TEST_LIB}\"\n"
+"        )\n"
+"\n"
+"        if(IS_SYMLINK \${TEST_LIB})\n"
+"            # Эта зависимотсь - символическиая ссылка.\n"
+"            # Повотрить процедуру для файла, на который указывает эта сылка.\n"
+"            file(READ_SYMLINK \${TEST_LIB} SYM_FILE)\n"
+"            message(STATUS \"ZZZ GOT SYMLINK \${DIRR}/\${SYM_FILE}\")\n"
+"            install_library_with_deps(\"\${DIRR}/\${SYM_FILE}\" \"${QT_DIR}\")\n"
+"        else()\n"
+"\n"
+"            # Определить зависимости для файла\n"
+"            file(GET_RUNTIME_DEPENDENCIES\n"
+"              LIBRARIES \${TEST_LIB}\n"
+"              RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
+"              UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
+"            )\n"
+"\n"
+"            message(STATUS \"ZZZ \${NAME} Deps List\")\n"
+"            foreach(FILE \${RESOLVED_DEPS})\n"
+"                message(STATUS \"ZZZ \${NAME} -> \${FILE}\")\n"
+"            endforeach()\n"
+"\n"
+"            # Перебрать все зависимости, для каждой повторить процедуру\n"
+"            foreach(FILE \${RESOLVED_DEPS})\n"
+"                message(STATUS \"XXX - \${NAME} BEGIN for \${FILE}\")\n"
+"                install_library_with_deps(\"\${FILE}\")\n"
+"                message(STATUS \"XXX - \${NAME} END for \${FILE}\")\n"
+"            endforeach()\n"
+"            foreach(FILE \${UNRESOLVED_DEPS})\n"
+"            message(STATUS \"Unresolved from \${TEST_LIB}: \${FILE}\")\n"
+"            endforeach()\n"
+"        endif()\n"
+"    endif()\n"
+"endfunction()\n"
+"\n"
+"foreach(F ${DEP_FILE_SET})\n"
+"\n"
+"    message(STATUS \"XXX Deps for \${F}\")\n"
+"    file(GET_RUNTIME_DEPENDENCIES\n"
+"      EXECUTABLES \"${CMAKE_INSTALL_PREFIX}/\${F}\"\n"
+"      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
+"      UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
+"    )\n"
+"\n"
+"    foreach(FILE \${RESOLVED_DEPS})\n"
+"        message(STATUS \"XXX Deps - BEGIN for \${FILE}\")\n"
+"        install_library_with_deps(\"\${FILE}\")\n"
+"        message(STATUS \"XXX Deps - END for \${FILE}\")\n"
+"    endforeach()\n"
+"\n"
+"    foreach(FILE \${UNRESOLVED_DEPS})\n"
+"        message(STATUS \"XXX Unresolved: \${FILE}\")\n"
+"    endforeach()\n"
+"endforeach()\n"
+)
+
+
+
+
 # !!!
 # Также установить минимально необходимый перечень плюгинов и их завивимости-библиотеки
 # iconengines imageformats networkinformation platforminputcontexts platforms platformthemes tls wayland-decoration-client wayland-graphics-integration-client wayland-shell-integration xcbglintegrations
 
-
-    
-install(CODE [[
-    function(install_library_with_deps LIBRARY QTD)
-        # Разделить полный путь на директорию и файл
-        get_filename_component(NAME "${LIBRARY}" NAME)
-        message(STATUS "XXX checking ${NAME}")
-
-        # Проверить, может это библиотека из указанного Qt
-        if((DEFINED ENV{QT_ROOT}) AND (EXISTS "${QTD}/../../${NAME}"))
-            set(TEST_LIB "${QTD}/../../${NAME}")
-            set(DIRR "${QTD}/../..")
-            message(STATUS "XXX is ${DIRR}/${NAME}")
-        else()
-            set(TEST_LIB "${LIBRARY}")
-            get_filename_component(DIRR "${LIBRARY}" DIRECTORY)
-            message(STATUS "XXX is ${DIRR}/${NAME}")
-        endif()
-
-        # Проверить, может такая библиотека уже установлена, тогда ничего не делать
-        if (EXISTS "${CMAKE_INSTALL_PREFIX}/lib/${NAME}")
-            message(STATUS "XXX skipping ${NAME}")
-        else()
-            file(INSTALL
-              DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
-              TYPE SHARED_LIBRARY
-              FILES "${TEST_LIB}"
-            )
-
-            if(IS_SYMLINK ${TEST_LIB})
-                # Эта зависимотсь - символическиая ссылка.
-                # Повотрить процедуру для файла, на который указывает эта сылка.
-                file(READ_SYMLINK ${TEST_LIB} SYM_FILE)
-                message(STATUS "ZZZ GOT SYMLINK ${DIRR}/${SYM_FILE}")
-                install_library_with_deps("${DIRR}/${SYM_FILE}" "${QTD}")
-            else()
-
-                # Определить зависимости для файла
-                file(GET_RUNTIME_DEPENDENCIES
-                  LIBRARIES ${TEST_LIB}
-                  RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
-                  UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
-                )
-
-                message(STATUS "ZZZ ${NAME} Deps List")
-                foreach(FILE ${RESOLVED_DEPS})
-                    message(STATUS "ZZZ ${NAME} -> ${FILE}")
-                endforeach()
-      
-                # Перебрать все зависимости, для каждой повторить процедуру
-                foreach(FILE ${RESOLVED_DEPS})
-                    message(STATUS "XXX - ${NAME} BEGIN for ${FILE}")
-                    install_library_with_deps("${FILE}" "${QTD}")
-                    message(STATUS "XXX - ${NAME} END for ${FILE}")
-                endforeach()
-                foreach(FILE ${UNRESOLVED_DEPS})
-                message(STATUS "Unresolved from ${TEST_LIB}: ${FILE}")
-                endforeach()
-            endif()
-        endif()
-    endfunction()
-
-    # Восстановть значение переменной QT_DIR
-    if(DEFINED ENV{QT_ROOT})
-        set(QT_DIR "$ENV{QT_ROOT}/lib/cmake/Qt6")
-    endif()
-
-    set(DEP_FILE_SET "bin/candle" "lib/libscriptbindings.so" "lib/libcustomwidgetsplugin.so" "lib/libcameraplugin.so")
-    foreach(F ${DEP_FILE_SET})
-
-        file(GET_RUNTIME_DEPENDENCIES
-          EXECUTABLES "${CMAKE_INSTALL_PREFIX}/${F}"
-          RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
-          UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
-        )
-
-        foreach(FILE ${RESOLVED_DEPS})
-            message(STATUS "XXX Candle Deps - BEGIN for ${FILE}")
-            install_library_with_deps("${FILE}" "${QT_DIR}")
-            message(STATUS "XXX Candle Deps - END for ${FILE}")
-        endforeach()
-
-        foreach(FILE ${UNRESOLVED_DEPS})
-            message(STATUS "XXX Unresolved: ${FILE}")
-        endforeach()
-    endforeach()
-]])
+install(SCRIPT "${MISC_PATH}/inst_deps.cmake")

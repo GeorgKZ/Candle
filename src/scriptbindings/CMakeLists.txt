@@ -66,7 +66,9 @@ target_link_libraries(${MAIN_NAME} PRIVATE
 #    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
 #endif()
 
-#set_target_properties(${MAIN_NAME} PROPERTIES OUTPUT_NAME "${MAIN_NAME}${SUFFIX}")
+#set_target_properties(${MAIN_NAME} PROPERTIES
+#        MACOSX_BUNDLE TRUE
+#)
 
 ##############################################################################
 # Формирование установочного набора
@@ -92,6 +94,6 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 # Библиотека
 install(TARGETS ${MAIN_NAME}
     LIBRARY
-#    DESTINATION "./"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
 #    COMPONENT libraries
 )

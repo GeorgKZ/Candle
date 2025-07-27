@@ -159,13 +159,6 @@ target_include_directories(${MAIN_NAME}
     PRIVATE ${CMAKE_SOURCE_DIR}/src/scriptbindings
 )
 
-# !!!! win32!!
-#if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-#    set_target_properties(${MAIN_NAME} PROPERTIES
-#        WIN32_EXECUTABLE TRUE
-#    )
-#endif()
-
 # Сформировать список шрифтов-ресурсов
 set(RESOURCE_FONTS_PATH "${SOURCES_PATH}/fonts")
 file(GLOB RC_FONTS "${RESOURCE_FONTS_PATH}/*.ttf")
@@ -339,9 +332,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     set_target_properties(${MAIN_NAME} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-    )
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
         MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -391,20 +381,30 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 
 # Для мультиконфигурации учесть директорию, в которой будет расположен результат сборки,
 # значение которой будет определено в параметре cmake --config только на этапе сборки
-if (isMultiConfig)
-    set(BINPATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>")
-else()
-    set(BINPATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
-endif()
+#if (isMultiConfig)
+#    set(BINPATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>")
+#else()
+#    set(BINPATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+#endif()
+
 
 # Исполняемый файл
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     # При сборке для работы в среде MacOS/OS X
-    install(DIRECTORY ${BINPATH}/${MAIN_NAME}.app
-        DESTINATION "./"
-        USE_SOURCE_PERMISSIONS
-        COMPONENT application
+#    install(DIRECTORY ${BINPATH}/${MAIN_NAME}.app
+#        DESTINATION "./"
+#        USE_SOURCE_PERMISSIONS
+#        COMPONENT application
+#    )
+
+
+    install(TARGETS ${MAIN_NAME}
+        RUNTIME DESTINATION ""
+        BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}"
+        LIBRARY DESTINATION lib
     )
+
+
 else()
 #    install(FILES ${BINPATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}
 #        DESTINATION "./" # ${DEST_PATH}
