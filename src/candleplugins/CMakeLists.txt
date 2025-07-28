@@ -2,24 +2,48 @@
 # Информация о компоненте
 ##############################################################################
 
-# Имя проекта приложения
-set(MAIN_NAME "JavaScript_plugins")
+# Имя компонента по имени директории, содержащей компонент
+cmake_path(GET CMAKE_CURRENT_SOURCE_DIR STEM LAST_ONLY MAIN_NAME)
 
 ##############################################################################
 # Директории с файлами, необходимыми для сборки
 ##############################################################################
 
 # Путь к директории с плюгинами
-set(SOURCES_PATH "${CMAKE_SOURCE_DIR}/src/candleplugins")
+set(SOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}") # "${CMAKE_SOURCE_DIR}/src/candleplugins")
+
+##############################################################################
+# Настройка в зависимости от целевой среды выполнения.
+##############################################################################
+
+# При сборке для работы в среде Linux
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    # Путь для установки плюгинов
+    set(DEST_DIR "./share/candle/plugins")
+
+# При сборке для работы в среде MacOS/OS X
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    # Путь для установки плюгинов
+    set(DEST_DIR "./candle.app/Contents/Resources/candle_plugins")
+
+# При сборке для работы в среде Windows
+elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+
+    # Путь для установки плюгинов
+    set(DEST_DIR "./candle_plugins")
+
+else()
+    message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
+endif()
+
+
+##############################################################################
+# Обработка файлов с переводом
+##############################################################################
 
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
-
-##############################################################################
-# Перебор плюгинов
-##############################################################################
-
-# Вывод сообщений об установке только если было изменение
-set(CMAKE_INSTALL_MESSAGE LAZY)
 
 file(GLOB SUBDIRS RELATIVE ${SOURCES_PATH} ${SOURCES_PATH}/*)
 foreach(I ${SUBDIRS})
@@ -29,10 +53,6 @@ foreach(I ${SUBDIRS})
         message(STATUS "##############################################################################")
         message(STATUS "Проект '${CMAKE_PROJECT_NAME}', компонент '${MAIN_NAME}': ${I}")
         message(STATUS "##############################################################################")
-
-        ##############################################################################
-        # Обработка файлов с переводом
-        ##############################################################################
 
         set(PLUGIN_PATH "${SOURCES_PATH}/${I}")
         set(SRC_FILES "")
@@ -73,17 +93,25 @@ foreach(I ${SUBDIRS})
             list(APPEND QM_FILES ${QM_FILE})
 
         ENDFOREACH(L)
+    ENDIF()
+ENDFOREACH(I)
 
-        ##############################################################################
-        # Формирование установочного набора
-        ##############################################################################
+##############################################################################
+# Формирование установочного набора
+##############################################################################
 
-        # Установка файлов плюгина
+# Вывод сообщений об установке только если было изменение
+set(CMAKE_INSTALL_MESSAGE LAZY)
+
+file(GLOB SUBDIRS RELATIVE ${SOURCES_PATH} ${SOURCES_PATH}/*)
+foreach(I ${SUBDIRS})
+    if(IS_DIRECTORY ${SOURCES_PATH}/${I} AND EXISTS ${SOURCES_PATH}/${I})
+
         install(FILES
             ${PLUGIN_PATH}/script.js
             ${SRC_FILES}
             ${QM_FILES}
-            DESTINATION "./candle_plugins/${I}"
+            DESTINATION "${DEST_DIR}/${I}"
             COMPONENT plugins
         )
 
@@ -92,7 +120,7 @@ foreach(I ${SUBDIRS})
         IF(IS_DIRECTORY ${IMG_PATH} AND EXISTS ${IMG_PATH})
             FILE(GLOB IMG_FILES ${IMG_PATH}/*)
             install(FILES ${IMG_FILES}
-                DESTINATION "./candle_plugins/${I}/images"
+                DESTINATION "${DEST_DIR}/${I}/images"
                 COMPONENT plugins
             )
         ENDIF()

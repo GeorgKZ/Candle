@@ -86,7 +86,7 @@ else()
     set(DEST_PATH "${CMAKE_INSTALL_PREFIX}")
 endif()
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/candle_plugins)
+#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/candle_plugins)
 
 # Путь к директории с изображениями для Doxygen
 set(DOXY_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/images;${CMAKE_SOURCE_DIR}/wiki/images")
@@ -427,7 +427,7 @@ endif()
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     # Путь, где искать динамические библиотеки
-    set(CMAKE_INSTALL_RPATH "../lib:./:")
+#    set(CMAKE_INSTALL_RPATH "../lib:./:")
 #   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # При сборке для работы в среде MacOS/OS X

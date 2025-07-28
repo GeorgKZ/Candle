@@ -4,7 +4,6 @@
 
 # Имя компонента по имени директории, содержащей компонент
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR STEM LAST_ONLY MAIN_NAME)
-message(STATUS "DIR: ${MAIN_NAME}")
 
 # Вывод информации о собираемом компоненте
 message(STATUS "##############################################################################")

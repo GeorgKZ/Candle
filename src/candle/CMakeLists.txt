@@ -399,9 +399,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
 
     install(TARGETS ${MAIN_NAME}
-        RUNTIME DESTINATION ""
-        BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}"
-        LIBRARY DESTINATION lib
+      RUNTIME DESTINATION ""
+      BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}"
+      LIBRARY DESTINATION lib
     )
 
 
@@ -412,7 +412,8 @@ else()
 #        COMPONENT application
 #    )
     install(TARGETS ${MAIN_NAME}
-         RUNTIME
+      RUNTIME DESTINATION ""
+      LIBRARY DESTINATION lib/candle
 #        DESTINATION "./"
 #        COMPONENT application
 )
