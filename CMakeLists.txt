@@ -787,6 +787,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
       "lib/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
     )
 
+    set(CMAKE_INSTALL_LIBDIR "${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
+
+
 #    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
 #            DESTINATION "${CMAKE_INSTALL_BUNDLEDIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
 #    )
@@ -806,6 +809,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       "lib/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
       "lib/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
     )
+
+    set(CMAKE_INSTALL_LIBDIR "lib/candle")
+
 
 endif()
 
