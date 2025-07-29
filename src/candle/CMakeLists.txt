@@ -316,33 +316,45 @@ qt6_add_resources(${MAIN_NAME} "system_translations"
     FILES ${QM_SYSTEM_FILES}
 )
 
+set_target_properties(${MAIN_NAME} PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+    MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE_ICON_FILE not_yet.icns
+)
+
+
 ##############################################################################
 # Настройка свойств в зависимости от целевой среды выполнения.
 ##############################################################################
 
+
 # При сборке для работы в среде Windows
-if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
-
+#if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+#
+#    set_target_properties(${MAIN_NAME} PROPERTIES
+#        WIN32_EXECUTABLE TRUE
+#    )
+#
 # При сборке для работы в среде MacOS/OS X
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-    set_target_properties(${MAIN_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-        MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
-        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-        MACOSX_BUNDLE_ICON_FILE not_yet.icns
-        MACOSX_BUNDLE TRUE
-    )
-
+#elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+#
+#    set_target_properties(${MAIN_NAME} PROPERTIES
+#        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+#        MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
+#        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+#        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+#        MACOSX_BUNDLE_ICON_FILE not_yet.icns
+#        MACOSX_BUNDLE TRUE
+#    )
+#
 # При сборке для работы в среде Linux
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
-endif()
+#elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+#
+#endif()
 
 
 ##############################################################################
@@ -399,8 +411,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
 
     install(TARGETS ${MAIN_NAME}
-      RUNTIME DESTINATION ""
-      BUNDLE DESTINATION "${CMAKE_INSTALL_PREFIX}"
+      RUNTIME DESTINATION .
+      BUNDLE DESTINATION . # Install to CMAKE_INSTALL_PREFIX/MyApp.app/Contents/MacOS/MyApp "${CMAKE_INSTALL_PREFIX}"
     )
 
 
@@ -411,8 +423,8 @@ else()
 #        COMPONENT application
 #    )
     install(TARGETS ${MAIN_NAME}
-      RUNTIME DESTINATION ""
-      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 endif()

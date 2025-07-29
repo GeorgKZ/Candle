@@ -5,6 +5,22 @@
 cmake_minimum_required(VERSION 3.9...3.28)
 
 ##############################################################################
+# Установки, которые необходимо выполнить до директивы project(...)
+##############################################################################
+
+# Директория для промежуточных и собранных файлов
+if(DEFINED ENV{BUILDDIR}) 
+    message(DEBUG "Для определения местоположения директории сборки использована переменная окружения BUILDDIR: $ENV{BUILDDIR}")
+    cmake_path(SET BUILD_PATH NORMALIZE "$ENV{BUILDDIR}")
+else()
+    set(BUILD_PATH "${CMAKE_BINARY_DIR}/build")
+endif()
+
+# Директория для установочного набора
+set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install" CACHE PATH "Install path prefix, prepended onto install directories.")
+
+
+##############################################################################
 # Информация о проекте
 ##############################################################################
 
@@ -13,6 +29,39 @@ project(Candle
     DESCRIPTION "GRBL controller application with G-Code visualizer"
     LANGUAGES CXX
 )
+
+##############################################################################
+# Установки, которые необходимо выполнить до поиска Qt
+##############################################################################
+
+# При сборке для работы в среде Linux
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    # Путь, где искать динамические библиотеки
+    set(CMAKE_INSTALL_LIBDIR "lib/candle"
+      CACHE  PATH "Object code libraries (lib)"
+    )
+    set(CMAKE_INSTALL_BINDIR "bin"
+      CACHE  PATH "User executables (bin)"
+    )
+
+# При сборке для работы в среде MacOS/OS X
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    set(CMAKE_INSTALL_LIBDIR "${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources"
+      CACHE PATH "Object code libraries (lib)"
+    )
+    set(CMAKE_INSTALL_BINDIR "${MACOSX_BUNDLE_BUNDLE_NAME}.app/MacOS"
+      CACHE  PATH "User executables (bin)"
+    )
+
+# При сборке для работы в среде Windows
+elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+
+else()
+    message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
+endif()
+
 
 ##############################################################################
 # Настройка местоположения Qt
@@ -49,14 +98,6 @@ endif()
 # Директории, создаваемые для выполнения сборки
 ##############################################################################
 
-# Директория для промежуточных и собранных файлов
-if(DEFINED ENV{BUILDDIR}) 
-    message(DEBUG "Для определения местоположения директории сборки использована переменная окружения BUILDDIR: $ENV{BUILDDIR}")
-    cmake_path(SET BUILD_PATH NORMALIZE "$ENV{BUILDDIR}")
-else()
-    set(BUILD_PATH "${CMAKE_BINARY_DIR}/build")
-endif()
-
 # Директория для результирующих бинарных файлов
 set(BIN_PATH "${BUILD_PATH}/bin")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_PATH})
@@ -73,19 +114,15 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONS_PATH})
 set(DOC_PATH "${BUILD_PATH}/docs")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
 
-# Директория для установочного набора
-set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install")
 # Директория для собираемых бинарных файлов сборки установочного набора
-
 #!!! Потом убрать DEST_PATH
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # При сборке для работы в среде MacOS/OS X
-    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}/candle.app/Contents/MacOS")
-else()
-    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}")
-endif()
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
+#if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+#    # При сборке для работы в среде MacOS/OS X
+#    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}/candle.app/Contents/MacOS")
+#else()
+#    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}")
+#endif()
+#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
 #execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/candle_plugins)
 
 # Путь к директории с изображениями для Doxygen
@@ -787,9 +824,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
       "lib/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
     )
 
-    set(CMAKE_INSTALL_LIBDIR "${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
-
-
 #    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
 #            DESTINATION "${CMAKE_INSTALL_BUNDLEDIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
 #    )
@@ -805,13 +839,10 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     set(DEP_FILE_SET
       "bin/candle${CMAKE_EXECUTABLE_SUFFIX}"
-      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
-      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
-      "lib/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      "lib/candle/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      "lib/candle/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      "lib/candle/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
     )
-
-    set(CMAKE_INSTALL_LIBDIR "lib/candle")
-
 
 endif()
 
@@ -836,11 +867,11 @@ file(WRITE
 "    endif()\n"
 "\n"
 "    # Проверить, может такая библиотека уже установлена, тогда ничего не делать\n"
-"    if (EXISTS \"${CMAKE_INSTALL_PREFIX}/lib/\${NAME}\")\n"
+"    if (EXISTS \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${NAME}\")\n"
 "        message(STATUS \"XXX skipping \${NAME}\")\n"
 "    else()\n"
 "        file(INSTALL\n"
-"          DESTINATION \"${CMAKE_INSTALL_PREFIX}/lib\"\n"
+"          DESTINATION \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"\n"
 "          TYPE SHARED_LIBRARY\n"
 "          FILES \"\${TEST_LIB}\"\n"
 "        )\n"
