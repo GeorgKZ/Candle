@@ -463,9 +463,18 @@ endif()
 # При сборке для работы в среде Linux
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-    # Путь, где искать динамические библиотеки
-#    set(CMAKE_INSTALL_RPATH "../lib:./:")
-#   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+# Параметры настройки RPATH - пути, где искать динамические библиотеки (для бинарника "установки")
+
+# использовать (не пропускать) установку RPATH (для бинарника "сборки") - по месту сборки
+#SET(CMAKE_SKIP_BUILD_RPATH FALSE)
+# при сборке не применять "установочный" RPATH (CMAKE_INSTALL_RPATH)
+#SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+# RPATH, который будет вписан в бинарник "установки"
+ SET(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
+# don't add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+#SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 
 # При сборке для работы в среде MacOS/OS X
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -811,40 +820,47 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     
 endif()
 
-# При сборке для работы в среде Windows
-if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+# Включить в список файлов, для которых будут найдены зависимости, цели проекта
+# (исполняемый файл, библиотеки).
+set(DEP_FILE_SET
+  "${CMAKE_INSTALL_BINDIR}/candle${CMAKE_EXECUTABLE_SUFFIX}"
+  "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+)
 
-# При сборке для работы в среде MacOS/OS X
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+# !!!TODO!!! Не устанавливать .debug для релизной сборки
 
-    set(DEP_FILE_SET
-      "${CMAKE_INSTALL_BINDIR}/candle${CMAKE_EXECUTABLE_SUFFIX}"
-      "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
-      "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
-      "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+# Получить список файлов в плюгинах Qt
+file(GLOB_RECURSE PLUG_LIST
+  RELATIVE "${QT_DIR}/../../../plugins"
+  "${QT_DIR}/../../../plugins/*"
+)
+# Установить плюгины Qt, добавить библиотеки в список файлов,
+# для которых будут найдены зависимости
+foreach(FILE ${PLUG_LIST})
+    get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
+    get_filename_component(FILE_NAME "${FILE}" NAME)
+    get_filename_component(EXTENSION "${FILE}" LAST_EXT)
+#   message(DEBUG "QT plugin file: ${FILE_NAME} from ${FILE_PATH}")
+    install(FILES "${QT_DIR}/../../../plugins/${FILE}"
+      DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
     )
+    if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        list(APPEND DEP_FILE_SET "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE}")
+    endif()
+endforeach()
 
+
+# if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 #    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
 #            DESTINATION "${CMAKE_INSTALL_BUNDLEDIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
 #    )
-
 #    include(BundleUtilities)
 #    fixup_bundle("${CMAKE_INSTALL_PREFIX}/${MACOSX_BUNDLE_BUNDLE_NAME}.app"
 #                 ""
 #                 "${CMAKE_INSTALL_PREFIX}/lib") # Or wherever your libraries are installed
 
-
-# При сборке для работы в среде Linux
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
-    set(DEP_FILE_SET
-      "${CMAKE_INSTALL_BINDIR}/candle${CMAKE_EXECUTABLE_SUFFIX}"
-      "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
-      "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
-      "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
-    )
-
-endif()
 
 # Формирование файла-скрипта для установки зависимостей
 file(WRITE
@@ -867,11 +883,13 @@ file(WRITE
 "    endif()\n"
 "\n"
 "    # Проверить, может такая библиотека уже установлена, тогда ничего не делать\n"
-"    if (EXISTS \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${NAME}\")\n"
+"    if ((EXISTS \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${NAME}\")\n"
+"       OR (EXISTS \"${MISC_PATH}/libs/\${NAME}\"))\n"
 "        message(STATUS \"XXX skipping \${NAME}\")\n"
 "    else()\n"
 "        file(INSTALL\n"
-"          DESTINATION \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"\n"
+#"          DESTINATION \"${CMAKE_INSTALL_LIBDIR}\"\n"
+"          DESTINATION \"${MISC_PATH}/libs\"\n"
 "          TYPE SHARED_LIBRARY\n"
 "          FILES \"\${TEST_LIB}\"\n"
 "        )\n"
@@ -911,7 +929,7 @@ file(WRITE
 "\n"
 "foreach(F ${DEP_FILE_SET})\n"
 "\n"
-"    message(STATUS \"XXX Deps for \${F}\")\n"
+"    message(STATUS \"RRR Deps for \${F}\")\n"
 "    file(GET_RUNTIME_DEPENDENCIES\n"
 "      EXECUTABLES \"${CMAKE_INSTALL_PREFIX}/\${F}\"\n"
 "      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
@@ -930,11 +948,18 @@ file(WRITE
 "endforeach()\n"
 )
 
-
-
-
-# !!!
-# Также установить минимально необходимый перечень плюгинов и их завивимости-библиотеки
-# iconengines imageformats networkinformation platforminputcontexts platforms platformthemes tls wayland-decoration-client wayland-graphics-integration-client wayland-shell-integration xcbglintegrations
-
+# Запустить скрипт поиска зависимостей
 install(SCRIPT "${MISC_PATH}/inst_deps.cmake")
+
+# !!! Проблема - скрипт заполнит /misc/libs после этого этапа
+
+# Установить найденные библиотеки зависимостей
+file(GLOB DEP_LIST
+  "${MISC_PATH}/libs/*.*"
+)
+foreach(FILE ${DEP_LIST})
+    message(DEBUG "From MISC: ${FILE} to ${CMAKE_INSTALL_LIBDIR}")
+    install(FILES "${FILE}"
+      DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    )
+endforeach()

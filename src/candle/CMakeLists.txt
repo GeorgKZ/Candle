@@ -310,22 +310,27 @@ endforeach(L)
 
 # Добавить системные переводы-ресурсы к ресурсам исполняемого файла
 qt6_add_resources(${MAIN_NAME} "system_translations"
-    PREFIX "/system_translations"
-    BIG_RESOURCES
-    BASE ${QT_TBASE}
-    FILES ${QM_SYSTEM_FILES}
+  PREFIX "/system_translations"
+  BIG_RESOURCES
+  BASE ${QT_TBASE}
+  FILES ${QM_SYSTEM_FILES}
 )
 
 set_target_properties(${MAIN_NAME} PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
-    MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE_ICON_FILE not_yet.icns
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+  MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
+  MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
+  MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+  MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+  MACOSX_BUNDLE_ICON_FILE not_yet.icns
 )
 
+if((CMAKE_CXX_COMPILER_ID STREQUAL "GCC") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+    set_target_properties(${MAIN_NAME} PROPERTIES
+      LINK_FLAGS "-Wl,-rpath,./../lib/candle"
+    )
+endif()
 
 ##############################################################################
 # Настройка свойств в зависимости от целевой среды выполнения.
@@ -402,13 +407,6 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 
 # Исполняемый файл
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # При сборке для работы в среде MacOS/OS X
-#    install(DIRECTORY ${BINPATH}/${MAIN_NAME}.app
-#        DESTINATION "./"
-#        USE_SOURCE_PERMISSIONS
-#        COMPONENT application
-#    )
-
 
     install(TARGETS ${MAIN_NAME}
       RUNTIME DESTINATION .
@@ -417,14 +415,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
 
 else()
-#    install(FILES ${BINPATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}
-#        DESTINATION "./" # ${DEST_PATH}
-#        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-#        COMPONENT application
-#    )
+
     install(TARGETS ${MAIN_NAME}
       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 endif()
