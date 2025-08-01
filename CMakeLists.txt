@@ -747,79 +747,6 @@ endif()
 # Вывод сообщений об установке только если было изменение
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-# Если сборка предназначена для выполнения под Windows
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-
-    # Файл лицензии
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION "./"
-        COMPONENT docs
-    )
-
-# Если сборка предназначена для выполнения под Linux
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
-    # Файл лицензии
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION "share/doc/candle"
-        COMPONENT docs
-    )
-
-    #!!! Можно использовать один и тот же SVG для всех разрешений
-    # Значок программы
-    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/candle_256.png
-        DESTINATION "share/icons/hicolor/256x256/apps"
-        RENAME candle.png
-    )
-
-    # Файлы библиотек Qt
-#    set(QT_LIBS "Core;Gui;Qml;Multimedia;MultimediaWidgets;OpenGL;OpenGLWidgets;SerialPort;Widgets;Network;DBus;UiTools")
-#    foreach(I ${QT_LIBS})
-#
-#        if(EXISTS        "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-#            set(LIB_FILE1 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-#            set(LIB_FILE2 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
-#            set(LIB_FILE3 "/usr/lib/x86_64-linux-gnu/${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-#        elseif(EXISTS    "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-#            set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
-#            set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}")
-#            set(LIB_FILE3 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}Qt6${I}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-#        endif()
-#
-#        install(FILES ${LIB_FILE1} ${LIB_FILE2} ${LIB_FILE3}
-#            DESTINATION "lib"
-#            COMPONENT libraries
-#        )
-#    endforeach(I)
-#
-#    # libicui18n.so.73.2
-#    # libicui18n.so.73
-#    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icui18n.so.73.2")
-#    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icui18n.so.73")
-#    install(FILES ${LIB_FILE1} ${LIB_FILE2}
-#        DESTINATION "lib"
-#        COMPONENT libraries
-#    )
-#    # libicuuc.so.73.2
-#    # libicuuc.so.73
-#    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icuuc.so.73.2")
-#    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icuuc.so.73")
-#    install(FILES ${LIB_FILE1} ${LIB_FILE2}
-#        DESTINATION "lib"
-#        COMPONENT libraries
-#    )
-#
-#    # libicudata.so.73.2
-#    # libicudata.so.73
-#    set(LIB_FILE1 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icudata.so.73.2")
-#    set(LIB_FILE2 "${QT_DIR}/../../${CMAKE_SHARED_LIBRARY_PREFIX}icudata.so.73")
-#    install(FILES ${LIB_FILE1} ${LIB_FILE2}
-#        DESTINATION "lib"
-#        COMPONENT libraries
-#    )
-    
-endif()
-
 # Включить в список файлов, для которых будут найдены зависимости, цели проекта
 # (исполняемый файл, библиотеки).
 set(DEP_FILE_SET
@@ -828,8 +755,6 @@ set(DEP_FILE_SET
   "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
   "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
 )
-
-# !!!TODO!!! Не устанавливать .debug для релизной сборки
 
 # Получить список файлов в плюгинах Qt
 file(GLOB_RECURSE PLUG_LIST
@@ -842,12 +767,14 @@ foreach(FILE ${PLUG_LIST})
     get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
     get_filename_component(FILE_NAME "${FILE}" NAME)
     get_filename_component(EXTENSION "${FILE}" LAST_EXT)
-#   message(DEBUG "QT plugin file: ${FILE_NAME} from ${FILE_PATH}")
     install(FILES "${QT_DIR}/../../../plugins/${FILE}"
       DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
     )
+    # Если это библиотека, дополнить список поиска зависимостей
     if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
         list(APPEND DEP_FILE_SET "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE}")
+    else()
+# !!!TODO!!! Не устанавливать .debug для релизной сборки
     endif()
 endforeach()
 
@@ -866,29 +793,48 @@ endforeach()
 file(WRITE
     ${MISC_PATH}/inst_deps.cmake
 
+"# Функция, выполняющая поиск библиотеки по имени в известных директориях,\n"
+"# установку её во временную директорию вместе с её зависимостями\n"
+"function(install_unresolved_library_with_deps LIB_NAME)\n"
+"    # Проверить, может это библиотека из указанного Qt\n"
+"    if(EXISTS \"${QT_DIR}/../../\${LIB_NAME}\")\n"
+"        set(LIBRARY \"${QT_DIR}/../../\${LIB_NAME}\")\n"
+"    # Проверить, может это библиотека приложения\n"
+"    elseif(EXISTS \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${LIB_NAME}\")\n"
+"        set(LIBRARY \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${LIB_NAME}\")\n"
+"    # Проверить, может эта библиотека уже установлена\n"
+"    elseif(EXISTS \"${MISC_PATH}/libs/\${LIB_NAME}\")\n"
+"        set(LIBRARY \"\")\n"
+"    else()\n"
+"        set(LIBRARY \"\")\n"
+"        message(DEBUG \"Не удалось определить расположение библиотеки \${LIB_NAME}\")\n"
+"    endif()\n"
+"    # Если библиотека найдена, обработать её\n"
+"    if(NOT \"^^\${LIBRARY}\" STREQUAL \"^^\")\n"
+"        install_library_with_deps(\"\${LIBRARY}\")\n"
+"    endif()\n"
+"endfunction()\n"
+"\n"
+"# Функция, выполняющая установку во временную директорию\n"
+"# указанной библиотеки и её зависимостей\n"
 "function(install_library_with_deps LIBRARY)\n"
 "    # Разделить полный путь на директорию и файл\n"
 "    get_filename_component(NAME \"\${LIBRARY}\" NAME)\n"
-"    message(STATUS \"XXX checking \${NAME}\")\n"
 "\n"
 "    # Проверить, может это библиотека из указанного Qt\n"
 "    if(EXISTS \"${QT_DIR}/../../\${NAME}\")\n"
 "        set(TEST_LIB \"${QT_DIR}/../../\${NAME}\")\n"
 "        set(DIRR \"${QT_DIR}/../..\")\n"
-"        message(STATUS \"XXX is \${DIRR}/\${NAME}\")\n"
 "    else()\n"
 "        set(TEST_LIB \"\${LIBRARY}\")\n"
 "        get_filename_component(DIRR \"\${LIBRARY}\" DIRECTORY)\n"
-"        message(STATUS \"XXX is \${DIRR}/\${NAME}\")\n"
 "    endif()\n"
 "\n"
 "    # Проверить, может такая библиотека уже установлена, тогда ничего не делать\n"
 "    if ((EXISTS \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${NAME}\")\n"
 "       OR (EXISTS \"${MISC_PATH}/libs/\${NAME}\"))\n"
-"        message(STATUS \"XXX skipping \${NAME}\")\n"
 "    else()\n"
 "        file(INSTALL\n"
-#"          DESTINATION \"${CMAKE_INSTALL_LIBDIR}\"\n"
 "          DESTINATION \"${MISC_PATH}/libs\"\n"
 "          TYPE SHARED_LIBRARY\n"
 "          FILES \"\${TEST_LIB}\"\n"
@@ -898,8 +844,7 @@ file(WRITE
 "            # Эта зависимотсь - символическиая ссылка.\n"
 "            # Повотрить процедуру для файла, на который указывает эта сылка.\n"
 "            file(READ_SYMLINK \${TEST_LIB} SYM_FILE)\n"
-"            message(STATUS \"ZZZ GOT SYMLINK \${DIRR}/\${SYM_FILE}\")\n"
-"            install_library_with_deps(\"\${DIRR}/\${SYM_FILE}\" \"${QT_DIR}\")\n"
+"            install_library_with_deps(\"\${DIRR}/\${SYM_FILE}\")\n"
 "        else()\n"
 "\n"
 "            # Определить зависимости для файла\n"
@@ -909,27 +854,21 @@ file(WRITE
 "              UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
 "            )\n"
 "\n"
-"            message(STATUS \"ZZZ \${NAME} Deps List\")\n"
-"            foreach(FILE \${RESOLVED_DEPS})\n"
-"                message(STATUS \"ZZZ \${NAME} -> \${FILE}\")\n"
-"            endforeach()\n"
-"\n"
 "            # Перебрать все зависимости, для каждой повторить процедуру\n"
 "            foreach(FILE \${RESOLVED_DEPS})\n"
-"                message(STATUS \"XXX - \${NAME} BEGIN for \${FILE}\")\n"
 "                install_library_with_deps(\"\${FILE}\")\n"
-"                message(STATUS \"XXX - \${NAME} END for \${FILE}\")\n"
 "            endforeach()\n"
 "            foreach(FILE \${UNRESOLVED_DEPS})\n"
-"            message(STATUS \"Unresolved from \${TEST_LIB}: \${FILE}\")\n"
+"                install_unresolved_library_with_deps(\"\${FILE}\")\n"
 "            endforeach()\n"
 "        endif()\n"
 "    endif()\n"
 "endfunction()\n"
 "\n"
+"message(STATUS \"Установить файлы-библиотеки зависимостей для списка файлов:\")\n"
 "foreach(F ${DEP_FILE_SET})\n"
 "\n"
-"    message(STATUS \"RRR Deps for \${F}\")\n"
+"    message(STATUS \"Найти и установить зависимости для \${F}\")\n"
 "    file(GET_RUNTIME_DEPENDENCIES\n"
 "      EXECUTABLES \"${CMAKE_INSTALL_PREFIX}/\${F}\"\n"
 "      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
@@ -937,29 +876,64 @@ file(WRITE
 "    )\n"
 "\n"
 "    foreach(FILE \${RESOLVED_DEPS})\n"
-"        message(STATUS \"XXX Deps - BEGIN for \${FILE}\")\n"
 "        install_library_with_deps(\"\${FILE}\")\n"
-"        message(STATUS \"XXX Deps - END for \${FILE}\")\n"
 "    endforeach()\n"
 "\n"
 "    foreach(FILE \${UNRESOLVED_DEPS})\n"
-"        message(STATUS \"XXX Unresolved: \${FILE}\")\n"
+"        install_unresolved_library_with_deps(\"\${FILE}\")\n"
 "    endforeach()\n"
+"endforeach()\n"
+"\n"
+"message(DEBUG \"Получить список файлов-библиотек зависимостей во временной директории\")\n"
+"file(GLOB TMP_DEP_LIST\n"
+"  \"${MISC_PATH}/libs/*.*\"\n"
+")\n"
+"list(LENGTH TMP_DEP_LIST TMP_DEP_LIST_SIZE)\n"
+"message(STATUS \"Установить файлы-библиотеки зависимостей (\${TMP_DEP_LIST_SIZE} шт.) из временной директории\")\n"
+"foreach(FILE \${TMP_DEP_LIST})\n"
+"    message(DEBUG \"From MISC: \${FILE} to ${CMAKE_INSTALL_LIBDIR}\")\n"
+
+# Только для Линукса и Макоси!
+"execute_process(COMMAND \${CMAKE_COMMAND} -E chdir \"${CMAKE_INSTALL_PREFIX}\")\n"
+
+#!!!TODO!!! Проблема: абсолютный путь портит этап установки
+"    file(INSTALL\n"
+#"      DESTINATION \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"\n"
+"      DESTINATION \"${CMAKE_INSTALL_LIBDIR}\"\n"
+"      TYPE SHARED_LIBRARY\n"
+"      FILES \"\${FILE}\"\n"
+"    )\n"
 "endforeach()\n"
 )
 
-# Запустить скрипт поиска зависимостей
+# Запустить скрипт поиска зависимостей (этап установки)
 install(SCRIPT "${MISC_PATH}/inst_deps.cmake")
 
-# !!! Проблема - скрипт заполнит /misc/libs после этого этапа
+# Если сборка предназначена для выполнения под Windows
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-# Установить найденные библиотеки зависимостей
-file(GLOB DEP_LIST
-  "${MISC_PATH}/libs/*.*"
-)
-foreach(FILE ${DEP_LIST})
-    message(DEBUG "From MISC: ${FILE} to ${CMAKE_INSTALL_LIBDIR}")
-    install(FILES "${FILE}"
-      DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    # Файл лицензии (этап конфигурации)
+    message(DEBUG "Установить файл лицензии")
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+        DESTINATION "./"
+        COMPONENT docs
     )
-endforeach()
+
+# Если сборка предназначена для выполнения под Linux
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    # Файл лицензии (этап конфигурации)
+    message(DEBUG "Установить файл лицензии")
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+        DESTINATION "share/doc/candle"
+        COMPONENT docs
+    )
+
+    #!!! Можно использовать один и тот же SVG для всех разрешений
+    # Значок программы (этап конфигурации)
+    message(DEBUG "Установить файл значка программы")
+    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/candle_256.png
+        DESTINATION "share/icons/hicolor/256x256/apps"
+        RENAME candle.png
+    )
+endif()
