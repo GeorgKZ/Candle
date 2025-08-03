@@ -20,19 +20,19 @@ set(SOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}") # "${CMAKE_SOURCE_DIR}/src/candl
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     # Путь для установки плюгинов
-    set(DEST_DIR "./share/candle/plugins")
+    set(DEST_DIR "share/candle/plugins")
 
 # При сборке для работы в среде MacOS/OS X
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     # Путь для установки плюгинов
-    set(DEST_DIR "./candle.app/Contents/Resources/candle_plugins")
+    set(DEST_DIR "candle.app/Contents/Resources/candle_plugins")
 
 # При сборке для работы в среде Windows
 elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
     # Путь для установки плюгинов
-    set(DEST_DIR "./candle_plugins")
+    set(DEST_DIR "candle_plugins")
 
 else()
     message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
@@ -111,8 +111,7 @@ foreach(I ${SUBDIRS})
             ${PLUGIN_PATH}/script.js
             ${SRC_FILES}
             ${QM_FILES}
-            DESTINATION "${DEST_DIR}/${I}"
-            COMPONENT plugins
+            DESTINATION ${DEST_DIR}/${I}
         )
 
         # Установка изображений (при наличии)
@@ -120,8 +119,7 @@ foreach(I ${SUBDIRS})
         IF(IS_DIRECTORY ${IMG_PATH} AND EXISTS ${IMG_PATH})
             FILE(GLOB IMG_FILES ${IMG_PATH}/*)
             install(FILES ${IMG_FILES}
-                DESTINATION "${DEST_DIR}/${I}/images"
-                COMPONENT plugins
+                DESTINATION ${DEST_DIR}/${I}/images
             )
         ENDIF()
     ENDIF()

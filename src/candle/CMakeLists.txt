@@ -326,11 +326,11 @@ set_target_properties(${MAIN_NAME} PROPERTIES
   MACOSX_BUNDLE_ICON_FILE not_yet.icns
 )
 
-if((CMAKE_CXX_COMPILER_ID STREQUAL "GCC") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
-    set_target_properties(${MAIN_NAME} PROPERTIES
-      LINK_FLAGS "-Wl,-rpath,./../lib/candle"
-    )
-endif()
+#if((CMAKE_CXX_COMPILER_ID STREQUAL "GCC") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+#    set_target_properties(${MAIN_NAME} PROPERTIES
+#      LINK_FLAGS "-Wl,-rpath,./../lib/candle"
+#    )
+#endif()
 
 ##############################################################################
 # Настройка свойств в зависимости от целевой среды выполнения.
@@ -389,12 +389,10 @@ else()
     endif()
 endif()
 
-##############################################################################
-# Формирование установочного набора
-##############################################################################
 
-# Вывод сообщений об установке только если было изменение
-set(CMAKE_INSTALL_MESSAGE LAZY)
+##############################################################################
+# Формирование набора зависимостей
+##############################################################################
 
 # Для мультиконфигурации учесть директорию, в которой будет расположен результат сборки,
 # значение которой будет определено в параметре cmake --config только на этапе сборки
@@ -403,6 +401,30 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 #else()
 #    set(BINPATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 #endif()
+
+#if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+#    # При сборке для работы в среде MacOS/OS X
+#   set(TARGET_CANDLE "${BIN_PATH}/candle.app/Contents/MacOS/candle${CMAKE_EXECUTABLE_SUFFIX}")
+#else()
+#   set(TARGET_CANDLE "${BIN_PATH}/candle${CMAKE_EXECUTABLE_SUFFIX}")
+#endif()
+
+
+# Подготовка набора динамических библиотек, от которых зависит приложение
+add_custom_target(get_deps ALL
+            ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${MISC_PATH}/find_deps/candle${CMAKE_EXECUTABLE_SUFFIX}"
+    COMMAND ${CMAKE_COMMAND} -P "${MISC_PATH}/inst_deps.cmake"
+    COMMENT "Подготовка зависимостей исполняемого файла"
+)
+add_dependencies(get_deps ${MAIN_NAME})
+
+
+##############################################################################
+# Формирование установочного набора
+##############################################################################
+
+# Вывод сообщений об установке только если было изменение
+set(CMAKE_INSTALL_MESSAGE LAZY)
 
 
 # Исполняемый файл

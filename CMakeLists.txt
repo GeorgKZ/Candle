@@ -125,6 +125,20 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
 #execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
 #execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/candle_plugins)
 
+
+
+# Файлы-цели сборки
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # При сборке для работы в среде MacOS/OS X
+   set(TARGET_CANDLE "${BIN_PATH}/candle.app/Contents/MacOS/candle${CMAKE_EXECUTABLE_SUFFIX}")
+else()
+   set(TARGET_CANDLE "${BIN_PATH}/candle${CMAKE_EXECUTABLE_SUFFIX}")
+endif()
+set(TARGET_SCRBIND "${BIN_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set(TARGET_CUSPLUG "${BIN_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set(TARGET_CAMPLUG "${BIN_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+
 # Путь к директории с изображениями для Doxygen
 set(DOXY_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/images;${CMAKE_SOURCE_DIR}/wiki/images")
 # Путь к директории с переводами
@@ -741,52 +755,42 @@ else()
 endif()
 
 ##############################################################################
-# Формирование установочного набора
+# Формирование набора зависимостей
 ##############################################################################
-
-# Вывод сообщений об установке только если было изменение
-set(CMAKE_INSTALL_MESSAGE LAZY)
 
 # Включить в список файлов, для которых будут найдены зависимости, цели проекта
 # (исполняемый файл, библиотеки).
-set(DEP_FILE_SET
-  "${CMAKE_INSTALL_BINDIR}/candle${CMAKE_EXECUTABLE_SUFFIX}"
-  "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
-  "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
-  "${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
-)
+list(APPEND DEP_FILE_SET "${MISC_PATH}/find_deps/candle${CMAKE_EXECUTABLE_SUFFIX}")
+
+
+#set(DEP_FILE_SET
+#  "${MISC_PATH}/find_deps/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}"
+#  "${MISC_PATH}/find_deps/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+#  "${MISC_PATH}/find_deps/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}"
+#)
 
 # Получить список файлов в плюгинах Qt
 file(GLOB_RECURSE PLUG_LIST
   RELATIVE "${QT_DIR}/../../../plugins"
   "${QT_DIR}/../../../plugins/*"
 )
-# Установить плюгины Qt, добавить библиотеки в список файлов,
+# Добавить библиотеки плюгинов в список файлов,
 # для которых будут найдены зависимости
 foreach(FILE ${PLUG_LIST})
     get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
     get_filename_component(FILE_NAME "${FILE}" NAME)
     get_filename_component(EXTENSION "${FILE}" LAST_EXT)
-    install(FILES "${QT_DIR}/../../../plugins/${FILE}"
-      DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
-    )
+#    install(FILES "${QT_DIR}/../../../plugins/${FILE}"
+#      DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
+#    )
     # Если это библиотека, дополнить список поиска зависимостей
     if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        list(APPEND DEP_FILE_SET "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE}")
+#!!!!!!!!!!!!        list(APPEND DEP_FILE_SET "${QT_DIR}/../../../plugins/${FILE_PATH}/${FILE_NAME}")
     else()
 # !!!TODO!!! Не устанавливать .debug для релизной сборки
     endif()
 endforeach()
 
-
-# if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
-#            DESTINATION "${CMAKE_INSTALL_BUNDLEDIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
-#    )
-#    include(BundleUtilities)
-#    fixup_bundle("${CMAKE_INSTALL_PREFIX}/${MACOSX_BUNDLE_BUNDLE_NAME}.app"
-#                 ""
-#                 "${CMAKE_INSTALL_PREFIX}/lib") # Or wherever your libraries are installed
 
 
 # Формирование файла-скрипта для установки зависимостей
@@ -800,10 +804,10 @@ file(WRITE
 "    if(EXISTS \"${QT_DIR}/../../\${LIB_NAME}\")\n"
 "        set(LIBRARY \"${QT_DIR}/../../\${LIB_NAME}\")\n"
 "    # Проверить, может это библиотека приложения\n"
-"    elseif(EXISTS \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${LIB_NAME}\")\n"
-"        set(LIBRARY \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${LIB_NAME}\")\n"
+"    elseif(EXISTS \"${MISC_PATH}/find_deps/\${LIB_NAME}\")\n"
+"        set(LIBRARY \"${MISC_PATH}/find_deps/\${LIB_NAME}\")\n"
 "    # Проверить, может эта библиотека уже установлена\n"
-"    elseif(EXISTS \"${MISC_PATH}/libs/\${LIB_NAME}\")\n"
+"    elseif(EXISTS \"${MISC_PATH}/found_deps/\${LIB_NAME}\")\n"
 "        set(LIBRARY \"\")\n"
 "    else()\n"
 "        set(LIBRARY \"\")\n"
@@ -830,14 +834,13 @@ file(WRITE
 "        get_filename_component(DIRR \"\${LIBRARY}\" DIRECTORY)\n"
 "    endif()\n"
 "\n"
-"    # Проверить, может такая библиотека уже установлена, тогда ничего не делать\n"
-"    if ((EXISTS \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/\${NAME}\")\n"
-"       OR (EXISTS \"${MISC_PATH}/libs/\${NAME}\"))\n"
+"    # Проверить, может такая библиотека уже найдена, тогда ничего не делать\n"
+"    if ((EXISTS \"${MISC_PATH}/find_deps/\${NAME}\")\n"
+"       OR (EXISTS \"${MISC_PATH}/found_deps/\${NAME}\"))\n"
 "    else()\n"
-"        file(INSTALL\n"
-"          DESTINATION \"${MISC_PATH}/libs\"\n"
-"          TYPE SHARED_LIBRARY\n"
-"          FILES \"\${TEST_LIB}\"\n"
+"        file(COPY\n"
+"          \"\${TEST_LIB}\"\n"
+"          DESTINATION \"${MISC_PATH}/found_deps\"\n"
 "        )\n"
 "\n"
 "        if(IS_SYMLINK \${TEST_LIB})\n"
@@ -870,7 +873,7 @@ file(WRITE
 "\n"
 "    message(STATUS \"Найти и установить зависимости для \${F}\")\n"
 "    file(GET_RUNTIME_DEPENDENCIES\n"
-"      EXECUTABLES \"${CMAKE_INSTALL_PREFIX}/\${F}\"\n"
+"      EXECUTABLES \"\${F}\"\n"
 "      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
 "      UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
 "    )\n"
@@ -884,30 +887,61 @@ file(WRITE
 "    endforeach()\n"
 "endforeach()\n"
 "\n"
-"message(DEBUG \"Получить список файлов-библиотек зависимостей во временной директории\")\n"
-"file(GLOB TMP_DEP_LIST\n"
-"  \"${MISC_PATH}/libs/*.*\"\n"
-")\n"
-"list(LENGTH TMP_DEP_LIST TMP_DEP_LIST_SIZE)\n"
-"message(STATUS \"Установить файлы-библиотеки зависимостей (\${TMP_DEP_LIST_SIZE} шт.) из временной директории\")\n"
-"foreach(FILE \${TMP_DEP_LIST})\n"
-"    message(DEBUG \"From MISC: \${FILE} to ${CMAKE_INSTALL_LIBDIR}\")\n"
-
-# Только для Линукса и Макоси!
-"execute_process(COMMAND \${CMAKE_COMMAND} -E chdir \"${CMAKE_INSTALL_PREFIX}\")\n"
-
-#!!!TODO!!! Проблема: абсолютный путь портит этап установки
-"    file(INSTALL\n"
+#"message(DEBUG \"Получить список файлов-библиотек зависимостей во временной директории\")\n"
+#"file(GLOB TMP_DEP_LIST\n"
+#"  \"${MISC_PATH}/found_deps/*.*\"\n"
+#")\n"
+#"list(LENGTH TMP_DEP_LIST TMP_DEP_LIST_SIZE)\n"
+#"message(STATUS \"Установить файлы-библиотеки зависимостей (\${TMP_DEP_LIST_SIZE} шт.) из временной директории\")\n"
+#"foreach(FILE \${TMP_DEP_LIST})\n"
+#"    message(DEBUG \"From MISC: \${FILE} to ${CMAKE_INSTALL_LIBDIR}\")\n"
+#"    file(COPY\n"
 #"      DESTINATION \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"\n"
-"      DESTINATION \"${CMAKE_INSTALL_LIBDIR}\"\n"
-"      TYPE SHARED_LIBRARY\n"
-"      FILES \"\${FILE}\"\n"
-"    )\n"
-"endforeach()\n"
+#"      TYPE SHARED_LIBRARY\n"
+#"      FILES \"\${FILE}\"\n"
+#"    )\n"
+#"endforeach()\n"
 )
 
+
+
+
+
+
+# Подготовка набора динамических библиотек, от которых зависит приложение
+#add_custom_target(get_dependencies ALL
+#    COMMAND ${CMAKE_COMMAND} -P "${MISC_PATH}/inst_deps.cmake"
+#    WORKING_DIRECTORY ${DOC_PATH}
+#    COMMENT "Подготовка зависимостей"
+#    VERBATIM
+#)
+#add_dependencies(get_dependencies ${TARGET_CANDLE} ${TARGET_SCRBIND} ${TARGET_CUSPLUG} ${TARGET_CAMPLUG})
+
+
+# Вывод сообщений об установке только если было изменение
+set(CMAKE_INSTALL_MESSAGE LAZY)
+
+
+
+
+# if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+#    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
+#            DESTINATION "${CMAKE_INSTALL_BUNDLEDIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
+#    )
+#    include(BundleUtilities)
+#    fixup_bundle("${CMAKE_INSTALL_PREFIX}/${MACOSX_BUNDLE_BUNDLE_NAME}.app"
+#                 ""
+#                 "${CMAKE_INSTALL_PREFIX}/lib") # Or wherever your libraries are installed
+
+
+
 # Запустить скрипт поиска зависимостей (этап установки)
-install(SCRIPT "${MISC_PATH}/inst_deps.cmake")
+#install(SCRIPT "${MISC_PATH}/inst_deps.cmake")
+
+
+##############################################################################
+# Формирование установочного набора
+##############################################################################
 
 # Если сборка предназначена для выполнения под Windows
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -915,8 +949,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Файл лицензии (этап конфигурации)
     message(DEBUG "Установить файл лицензии")
     install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION "./"
-        COMPONENT docs
+        DESTINATION .
     )
 
 # Если сборка предназначена для выполнения под Linux
@@ -926,7 +959,6 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(DEBUG "Установить файл лицензии")
     install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
         DESTINATION "share/doc/candle"
-        COMPONENT docs
     )
 
     #!!! Можно использовать один и тот же SVG для всех разрешений
