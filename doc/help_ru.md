@@ -1,16 +1,3 @@
-<style type="text/css" rel="stylesheet">
-img[src*='#center'] {
-    display: block;
-    margin: auto;
-}
-.center {
-    text-align: center;
-}
-table {
-    width: 100%;
-}
-</style>
-
 # Программа "Candle"
 
 [![CMake Build Matrix](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml)

@@ -5,6 +5,18 @@
 cmake_minimum_required(VERSION 3.9...3.28)
 
 ##############################################################################
+# Функция удаления файла нулевой длины
+##############################################################################
+function(remove_zerofile FILENAME)
+    if(EXISTS "${FILENAME}")
+        file(SIZE "${FILENAME}" FILE_SIZE)
+        if(FILE_SIZE EQUAL 0)
+            file(REMOVE "${FILENAME}")
+        endif()
+    endif()
+endfunction()
+
+##############################################################################
 # Установки, которые необходимо выполнить до директивы project(...)
 ##############################################################################
 
@@ -417,11 +429,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         $<$<CONFIG:MINSIZEREL>:-s>
     )
 
-# Intel compiler
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-
-    message(DEBUG "Определён компилятор Intel")
-
 # Microsoft Visual Studio
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
@@ -477,13 +484,13 @@ endif()
 # При сборке для работы в среде Linux
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-# Параметры настройки RPATH - пути, где искать динамические библиотеки (для бинарника "установки")
+# Параметры настройки RPATH - пути, где искать динамические библиотеки
 
-# использовать (не пропускать) установку RPATH (для бинарника "сборки") - по месту сборки
-#SET(CMAKE_SKIP_BUILD_RPATH FALSE)
-# при сборке не применять "установочный" RPATH (CMAKE_INSTALL_RPATH)
-#SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
-# RPATH, который будет вписан в бинарник "установки"
+# не выполнять установку RPATH на этапе сборки
+SET(CMAKE_SKIP_BUILD_RPATH TRUE)
+# при сборке не применять RPATH этапа установки (CMAKE_INSTALL_RPATH)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+# RPATH, который будет использован на этапе установки
  SET(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
 # don't add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
@@ -686,6 +693,7 @@ if (DOXYGEN_FOUND)
 
     # Удаление файла warnings.log, если он нулевой длины
     add_custom_target(html_doc
+        # Команда удаления файла warnings.log нулевой длины !!!
         ${CMD_CLN_WARN}
         WORKING_DIRECTORY ${DOC_PATH}
         COMMENT "Удаление файлов нулевой длины"
@@ -785,7 +793,7 @@ foreach(FILE ${PLUG_LIST})
 #    )
     # Если это библиотека, дополнить список поиска зависимостей
     if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
-#!!!!!!!!!!!!        list(APPEND DEP_FILE_SET "${QT_DIR}/../../../plugins/${FILE_PATH}/${FILE_NAME}")
+        list(APPEND DEP_FILE_SET "${QT_DIR}/../../../plugins/${FILE_PATH}/${FILE_NAME}")
     else()
 # !!!TODO!!! Не устанавливать .debug для релизной сборки
     endif()
@@ -795,7 +803,7 @@ endforeach()
 
 # Формирование файла-скрипта для установки зависимостей
 file(WRITE
-    ${MISC_PATH}/inst_deps.cmake
+    ${MISC_PATH}/collect_deps.cmake
 
 "# Функция, выполняющая поиск библиотеки по имени в известных директориях,\n"
 "# установку её во временную директорию вместе с её зависимостями\n"
@@ -851,10 +859,12 @@ file(WRITE
 "        else()\n"
 "\n"
 "            # Определить зависимости для файла\n"
+"            message(DEBUG \"Поиск зависимостей для \${TEST_LIB}\")\n"
 "            file(GET_RUNTIME_DEPENDENCIES\n"
 "              LIBRARIES \${TEST_LIB}\n"
 "              RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
 "              UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
+"              CONFLICTING_DEPENDENCIES_PREFIX CONFLICT\n"
 "            )\n"
 "\n"
 "            # Перебрать все зависимости, для каждой повторить процедуру\n"
@@ -876,6 +886,7 @@ file(WRITE
 "      EXECUTABLES \"\${F}\"\n"
 "      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
 "      UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
+"      CONFLICTING_DEPENDENCIES_PREFIX CONFLICT\n"
 "    )\n"
 "\n"
 "    foreach(FILE \${RESOLVED_DEPS})\n"
@@ -886,26 +897,25 @@ file(WRITE
 "        install_unresolved_library_with_deps(\"\${FILE}\")\n"
 "    endforeach()\n"
 "endforeach()\n"
-"\n"
-#"message(DEBUG \"Получить список файлов-библиотек зависимостей во временной директории\")\n"
-#"file(GLOB TMP_DEP_LIST\n"
-#"  \"${MISC_PATH}/found_deps/*.*\"\n"
-#")\n"
-#"list(LENGTH TMP_DEP_LIST TMP_DEP_LIST_SIZE)\n"
-#"message(STATUS \"Установить файлы-библиотеки зависимостей (\${TMP_DEP_LIST_SIZE} шт.) из временной директории\")\n"
-#"foreach(FILE \${TMP_DEP_LIST})\n"
-#"    message(DEBUG \"From MISC: \${FILE} to ${CMAKE_INSTALL_LIBDIR}\")\n"
-#"    file(COPY\n"
-#"      DESTINATION \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"\n"
-#"      TYPE SHARED_LIBRARY\n"
-#"      FILES \"\${FILE}\"\n"
-#"    )\n"
-#"endforeach()\n"
 )
 
+file(WRITE
+    ${MISC_PATH}/install_deps.cmake
 
-
-
+"file(GLOB TMP_DEP_LIST\n"
+"  \"${MISC_PATH}/found_deps/*.*\"\n"
+")\n"
+"list(LENGTH TMP_DEP_LIST TMP_DEP_LIST_SIZE)\n"
+"message(STATUS \"Установить файлы-библиотеки зависимостей (\${TMP_DEP_LIST_SIZE} шт.) из временной директории\")\n"
+"foreach(FILE \${TMP_DEP_LIST})\n"
+"    message(DEBUG \"From MISC: \${FILE} to ${CMAKE_INSTALL_LIBDIR}\")\n"
+"    file(INSTALL\n"
+"      DESTINATION \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"\n"
+"      TYPE SHARED_LIBRARY\n"
+"      FILES \"\${FILE}\"\n"
+"    )\n"
+"endforeach()\n"
+)
 
 
 # Подготовка набора динамических библиотек, от которых зависит приложение
@@ -935,8 +945,8 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 
 
 
-# Запустить скрипт поиска зависимостей (этап установки)
-#install(SCRIPT "${MISC_PATH}/inst_deps.cmake")
+# Запустить скрипт установки зависимостей (этап установки)
+#install(SCRIPT "${MISC_PATH}/install_deps.cmake")
 
 
 ##############################################################################
@@ -969,3 +979,18 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
         RENAME candle.png
     )
 endif()
+
+file(GLOB TMP_DEP_LIST
+  "${MISC_PATH}/found_deps/*.*"
+)
+list(LENGTH TMP_DEP_LIST TMP_DEP_LIST_SIZE)
+message(STATUS "Установить файлы-библиотеки зависимостей (${TMP_DEP_LIST_SIZE} шт.) из временной директории")
+foreach(FILE ${TMP_DEP_LIST})
+    message(DEBUG "From MISC: ${FILE} to ${CMAKE_INSTALL_LIBDIR}")
+    file(INSTALL
+      DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
+      TYPE SHARED_LIBRARY
+      FILES "${FILE}"
+    )
+endforeach()
+

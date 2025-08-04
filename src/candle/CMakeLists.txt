@@ -413,7 +413,7 @@ endif()
 # Подготовка набора динамических библиотек, от которых зависит приложение
 add_custom_target(get_deps ALL
             ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${MISC_PATH}/find_deps/candle${CMAKE_EXECUTABLE_SUFFIX}"
-    COMMAND ${CMAKE_COMMAND} -P "${MISC_PATH}/inst_deps.cmake"
+    COMMAND ${CMAKE_COMMAND} -P "${MISC_PATH}/collect_deps.cmake"
     COMMENT "Подготовка зависимостей исполняемого файла"
 )
 add_dependencies(get_deps ${MAIN_NAME})
