@@ -71,6 +71,13 @@ target_link_libraries(${MAIN_NAME} PRIVATE
 
 #set_target_properties(${MAIN_NAME} PROPERTIES OUTPUT_NAME "${MAIN_NAME}${SUFFIX}")
 
+# Подготовка к поиску набора динамических библиотек, от которых зависит цель
+add_custom_target(get_deps_${MAIN_NAME} ALL
+            ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${FIND_DEPS_PATH}/" #candle${CMAKE_EXECUTABLE_SUFFIX}"
+    COMMENT "Подготовка к поиску зависимостей цели ${MAIN_NAME}"
+)
+add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})
+
 ##############################################################################
 # Формирование установочного набора
 ##############################################################################
@@ -94,5 +101,6 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 
 # Библиотека
 install(TARGETS ${MAIN_NAME}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY
+#   DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
