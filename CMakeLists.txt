@@ -495,11 +495,11 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 # Параметры настройки RPATH - пути, где искать динамические библиотеки
 
 # не выполнять установку RPATH на этапе сборки
-SET(CMAKE_SKIP_BUILD_RPATH TRUE)
+#SET(CMAKE_SKIP_BUILD_RPATH TRUE)
 # при сборке не применять RPATH этапа установки (CMAKE_INSTALL_RPATH)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+#SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
 # RPATH, который будет использован на этапе установки
- SET(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
+# SET(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
 # don't add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
 #SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -775,31 +775,6 @@ endif()
 # Формирование набора зависимостей
 ##############################################################################
 
-# Включить в список файлов, для которых будут найдены зависимости, цели проекта
-# (исполняемый файл, библиотеки).
-list(APPEND DEP_FILE_SET "${FIND_DEPS_PATH}/candle${CMAKE_EXECUTABLE_SUFFIX}")
-
-# Получить список файлов в плюгинах Qt
-file(GLOB_RECURSE PLUG_LIST
-  RELATIVE "${QT_DIR}/../../../plugins"
-  "${QT_DIR}/../../../plugins/*"
-)
-
-# Добавить библиотеки плюгинов в список файлов,
-# для которых будут найдены зависимости
-foreach(FILE ${PLUG_LIST})
-    # Директория, в которой находятся файлы плюгина (относительно plugins/)
-    get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
-    # Имя файла плюгина с расширением
-    get_filename_component(FILE_NAME "${FILE}" NAME)
-    # Расширение файла плюгина
-    get_filename_component(EXTENSION "${FILE}" LAST_EXT)
-    # Если это библиотека, дополнить список поиска зависимостей
-    if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        list(APPEND DEP_FILE_SET "${QT_DIR}/../../../plugins/${FILE_PATH}/${FILE_NAME}")
-    endif()
-endforeach()
-
 # Формирование файла-скрипта для установки зависимостей
 file(WRITE
     ${MISC_PATH}/collect_deps.cmake
@@ -807,7 +782,7 @@ file(WRITE
 "# Функция, выполняющая поиск библиотеки по имени в известных директориях,\n"
 "# установку её во временную директорию вместе с её зависимостями\n"
 "function(install_unresolved_library_with_deps LIB_NAME)\n"
-#"    message(STATUS \"UNRESOLVED \${LIB_NAME}\")\n"
+"    message(STATUS \"UNRESOLVED \${LIB_NAME}\")\n"
 "    # Проверить, может это библиотека из указанного Qt\n"
 "    if(EXISTS \"${QT_DIR}/../../\${LIB_NAME}\")\n"
 "        set(LIBRARY \"${QT_DIR}/../../\${LIB_NAME}\")\n"
@@ -832,7 +807,7 @@ file(WRITE
 "function(install_library_with_deps LIBRARY)\n"
 "    # Разделить полный путь на директорию и файл\n"
 "    get_filename_component(NAME \"\${LIBRARY}\" NAME)\n"
-#"    message(STATUS \"RESOLVED \${NAME}\")\n"
+"    message(STATUS \"RESOLVED \${NAME}\")\n"
 "    # Проверить, может это библиотека из указанного Qt\n"
 "    if(EXISTS \"${QT_DIR}/../../\${NAME}\")\n"
 "        set(TEST_LIB \"${QT_DIR}/../../\${NAME}\")\n"
@@ -861,7 +836,7 @@ file(WRITE
 "            install_library_with_deps(\"\${DIRR}/\${SYM_FILE}\")\n"
 "        else()\n"
 "\n"
-"            message(STATUS \"Поиск зависимостей для \${TEST_LIB}\")\n"
+"            message(STATUS \"2) Поиск зависимостей для \${TEST_LIB}\")\n"
 "            file(GET_RUNTIME_DEPENDENCIES\n"
 "              LIBRARIES \${TEST_LIB}\n"
 "              RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
@@ -881,8 +856,10 @@ file(WRITE
 "endfunction()\n"
 "\n"
 "message(STATUS \"Аргумент: \${ARGUMENT}\")\n"
-"foreach(F ${DEP_FILE_SET})\n"
-"    message(STATUS \"Поиск зависимостей для \${F}\")\n"
+"# Прочитать из файла список файлов, для которых ищется завивимость\n"
+"file(READ \"${MISC_PATH}/\${ARGUMENT}\" LIST)\n"
+"foreach(F \${LIST})\n"
+"    message(STATUS \"1) Поиск зависимостей для \${F}\")\n"
 "    file(GET_RUNTIME_DEPENDENCIES\n"
 "      EXECUTABLES \"\${F}\"\n"
 "      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
@@ -897,17 +874,13 @@ file(WRITE
 "    foreach(FILE \${UNRESOLVED_DEPS})\n"
 "        install_unresolved_library_with_deps(\"\${FILE}\")\n"
 "    endforeach()\n"
+"\n"
+#"    file(GLOB DLIST \"${FOUND_DEPS_PATH}/*\")\n"
+#"    file(WRITE \"${MISC_PATH}/dep_list.txt\" \"\${DLIST}\")\n"
+#"    set(DEP_LIST \"\${DLIST}\" CACHE STRING \"\" FORCE)\n"
+#"\n"
 "endforeach()\n"
 )
-
-# if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Resources/"
-#            DESTINATION "${CMAKE_INSTALL_BUNDLEDIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app/Contents/Resources")
-#    )
-#    include(BundleUtilities)
-#    fixup_bundle("${CMAKE_INSTALL_PREFIX}/${MACOSX_BUNDLE_BUNDLE_NAME}.app"
-#                 ""
-#                 "${CMAKE_INSTALL_PREFIX}/lib") # Or wherever your libraries are installed
 
 ##############################################################################
 # Формирование установочного набора
@@ -945,21 +918,46 @@ endif()
 
 # Устанавливать зависимости только когда появилас эта директория (чтобы не испортить
 # значение переменной DEP_LIST, пока эта директория пустая)
-if(EXISTS ${FOUND_DEPS_PATH})
+#if(EXISTS ${FOUND_DEPS_PATH})
 #if( (EXISTS ${FOUND_DEPS_PATH}) OR ("^^${DEP_LIST}" STREQUAL "^^") )
     # Получить список файлов найденных зависимостей
-    file(GLOB DEP_LIST
-      "${FOUND_DEPS_PATH}/*"
-    )
+#    file(GLOB DEP_LIST
+#      "${FOUND_DEPS_PATH}/*"
+#    )
     # Установить найденные зависимости в директорию для библиотек
-    foreach(FILE ${DEP_LIST})
-        install(FILES "${FILE}"
-          TYPE LIB
-        )
-    endforeach()
-endif()
+
+#message(DEBUG "CHECK1")
+#file(TOUCH_NOCREATE "${MISC_PATH}/dep_list.txt")
+#if(EXISTS "${MISC_PATH}/dep_list.txt")
+#    message(DEBUG "CHECK2")
+#    file(READ "${MISC_PATH}/dep_list.txt" DEP_LIST)
+
+#if(EXISTS "${MISC_PATH}/dep_list.txt")
+#    file(READ "${MISC_PATH}/dep_list.txt" DLIST)
+#    message(DEBUG "!!!READ")
+#    set(DEP_LIST "${DLIST}" CACHE STRING "" FORCE)
+#endif()
+
+#    foreach(FILE ${DEP_LIST})
+#        message(DEBUG "CHECKX")
+#        install(FILES "${FILE}"
+#          TYPE LIB
+#        )
+#    endforeach()
+
+#endif()
+
+
+# Установить найденные зависимости в директорию для библиотек
+install(DIRECTORY "${FOUND_DEPS_PATH}/"
+  TYPE LIB
+)
 
 # Установить плюгины Qt
+file(GLOB_RECURSE PLUG_LIST
+  RELATIVE "${QT_DIR}/../../../plugins"
+  "${QT_DIR}/../../../plugins/*"
+)
 foreach(FILE ${PLUG_LIST})
     # Директория, в которой находятся файлы плюгина (относительно plugins/)
     get_filename_component(FILE_PATH "${FILE}" DIRECTORY)

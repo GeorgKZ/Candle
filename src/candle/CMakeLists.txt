@@ -409,13 +409,44 @@ endif()
 #endif()
 
 
+# Включить цель в список файлов, для которых будут найдены зависимости
+list(APPEND DEP_FILE_ARG "${FIND_DEPS_PATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
+
+# Получить список файлов в плюгинах Qt
+file(GLOB_RECURSE PLUG_LIST
+  RELATIVE "${QT_DIR}/../../../plugins"
+  "${QT_DIR}/../../../plugins/*"
+)
+
+# Добавить библиотеки плюгинов в список файлов,
+# для которых будут найдены зависимости
+foreach(FILE ${PLUG_LIST})
+    # Директория, в которой находятся файлы плюгина (относительно plugins/)
+    get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
+    # Имя файла плюгина с расширением
+    get_filename_component(FILE_NAME "${FILE}" NAME)
+    # Расширение файла плюгина
+    get_filename_component(EXTENSION "${FILE}" LAST_EXT)
+    # Если это библиотека, дополнить список поиска зависимостей
+    if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        message(DEBUG "!!!Append ${FILE_NAME}")
+        list(APPEND DEP_FILE_ARG "${QT_DIR}/../../../plugins/${FILE_PATH}/${FILE_NAME}")
+    endif()
+endforeach()
+file(WRITE "${MISC_PATH}/dep_src.txt" "${DEP_FILE_ARG}")
+
+
 # Подготовка набора динамических библиотек, от которых зависит цель
 add_custom_target(get_deps_${MAIN_NAME} ALL
-            ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${FIND_DEPS_PATH}/" #candle${CMAKE_EXECUTABLE_SUFFIX}"
-    COMMAND ${CMAKE_COMMAND} -DARGUMENT=${DEP_FILE_SET} -P "${MISC_PATH}/collect_deps.cmake"
+            ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${FIND_DEPS_PATH}/"
+    COMMAND ${CMAKE_COMMAND} -DARGUMENT=dep_src.txt -P "${MISC_PATH}/collect_deps.cmake"
     COMMENT "Подготовка зависимостей цели ${MAIN_NAME}"
 )
 add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})
+
+#!!!file(READ "${MISC_PATH}/dep_list.txt" DEP_LIST)
+#!!!message(DEBUG "!!!CHECK : ${DEP_LIST}")
+
 
 ##############################################################################
 # Формирование установочного набора
