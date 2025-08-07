@@ -106,6 +106,15 @@ else()
     set(Qt6_DIR "$ENV{QtCore_path}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for Qt6.")
 endif()
 
+# Директория, в которой расположены плюгины Qt
+set(QT_PLUGIN_PATH "${QT_DIR}/../../../plugins")
+
+# Список файлов, относящихся к плюгинам Qt
+file(GLOB_RECURSE QT_PLUGIN_LIST
+  RELATIVE "${QT_PLUGIN_PATH}"
+  "${QT_PLUGIN_PATH}/*"
+)
+
 ##############################################################################
 # Директории, создаваемые для выполнения сборки
 ##############################################################################
@@ -124,7 +133,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${FIND_DEPS_PATH})
 
 # Директория найденных зависимостей
 set(FOUND_DEPS_PATH "${MISC_PATH}/found_deps")
-#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${FOUND_DEPS_PATH})
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${FOUND_DEPS_PATH})
 
 # Директория для файлов с изображениями значка
 set(ICONS_PATH "${BUILD_PATH}/icons")
@@ -134,30 +143,9 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONS_PATH})
 set(DOC_PATH "${BUILD_PATH}/docs")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
 
-# Директория для собираемых бинарных файлов сборки установочного набора
-#!!! Потом убрать DEST_PATH
-#if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#    # При сборке для работы в среде MacOS/OS X
-#    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}/candle.app/Contents/MacOS")
-#else()
-#    set(DEST_PATH "${CMAKE_INSTALL_PREFIX}")
-#endif()
-#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH})
-#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_PATH}/candle_plugins)
-
-
-
-# Файлы-цели сборки
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # При сборке для работы в среде MacOS/OS X
-   set(TARGET_CANDLE "${BIN_PATH}/candle.app/Contents/MacOS/candle${CMAKE_EXECUTABLE_SUFFIX}")
-else()
-   set(TARGET_CANDLE "${BIN_PATH}/candle${CMAKE_EXECUTABLE_SUFFIX}")
-endif()
-set(TARGET_SCRBIND "${BIN_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}scriptbindings${CMAKE_SHARED_LIBRARY_SUFFIX}")
-set(TARGET_CUSPLUG "${BIN_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}customwidgetsplugin${CMAKE_SHARED_LIBRARY_SUFFIX}")
-set(TARGET_CAMPLUG "${BIN_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}cameraplugin${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
+##############################################################################
+# Прочие директории и пути к файлам, помещаемые в переменные
+##############################################################################
 
 # Путь к директории с изображениями для Doxygen
 set(DOXY_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/images;${CMAKE_SOURCE_DIR}/wiki/images")
@@ -495,14 +483,14 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 # Параметры настройки RPATH - пути, где искать динамические библиотеки
 
 # не выполнять установку RPATH на этапе сборки
-#SET(CMAKE_SKIP_BUILD_RPATH TRUE)
+ SET(CMAKE_SKIP_BUILD_RPATH TRUE)
 # при сборке не применять RPATH этапа установки (CMAKE_INSTALL_RPATH)
-#SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+ SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
 # RPATH, который будет использован на этапе установки
-# SET(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
+ SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib/candle")
 # don't add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
-#SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 
 # При сборке для работы в среде MacOS/OS X
@@ -782,7 +770,7 @@ file(WRITE
 "# Функция, выполняющая поиск библиотеки по имени в известных директориях,\n"
 "# установку её во временную директорию вместе с её зависимостями\n"
 "function(install_unresolved_library_with_deps LIB_NAME)\n"
-"    message(STATUS \"UNRESOLVED \${LIB_NAME}\")\n"
+#"   message(STATUS \"UNRESOLVED \${LIB_NAME}\")\n"
 "    # Проверить, может это библиотека из указанного Qt\n"
 "    if(EXISTS \"${QT_DIR}/../../\${LIB_NAME}\")\n"
 "        set(LIBRARY \"${QT_DIR}/../../\${LIB_NAME}\")\n"
@@ -794,7 +782,7 @@ file(WRITE
 "        set(LIBRARY \"\")\n"
 "    else()\n"
 "        set(LIBRARY \"\")\n"
-"        message(STATUS \"Не удалось определить расположение библиотеки \${LIB_NAME}\")\n"
+#"       message(STATUS \"Не удалось определить расположение библиотеки \${LIB_NAME}\")\n"
 "    endif()\n"
 "    # Если библиотека найдена, обработать её\n"
 "    if(NOT \"^^\${LIBRARY}\" STREQUAL \"^^\")\n"
@@ -807,7 +795,7 @@ file(WRITE
 "function(install_library_with_deps LIBRARY)\n"
 "    # Разделить полный путь на директорию и файл\n"
 "    get_filename_component(NAME \"\${LIBRARY}\" NAME)\n"
-"    message(STATUS \"RESOLVED \${NAME}\")\n"
+#"   message(STATUS \"RESOLVED \${NAME}\")\n"
 "    # Проверить, может это библиотека из указанного Qt\n"
 "    if(EXISTS \"${QT_DIR}/../../\${NAME}\")\n"
 "        set(TEST_LIB \"${QT_DIR}/../../\${NAME}\")\n"
@@ -836,7 +824,7 @@ file(WRITE
 "            install_library_with_deps(\"\${DIRR}/\${SYM_FILE}\")\n"
 "        else()\n"
 "\n"
-"            message(STATUS \"2) Поиск зависимостей для \${TEST_LIB}\")\n"
+#"           message(STATUS \"2) Поиск зависимостей для \${TEST_LIB}\")\n"
 "            file(GET_RUNTIME_DEPENDENCIES\n"
 "              LIBRARIES \${TEST_LIB}\n"
 "              RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
@@ -855,11 +843,11 @@ file(WRITE
 "    endif()\n"
 "endfunction()\n"
 "\n"
-"message(STATUS \"Аргумент: \${ARGUMENT}\")\n"
+#"message(STATUS \"Аргумент: \${ARGUMENT}\")\n"
 "# Прочитать из файла список файлов, для которых ищется завивимость\n"
 "file(READ \"${MISC_PATH}/\${ARGUMENT}\" LIST)\n"
 "foreach(F \${LIST})\n"
-"    message(STATUS \"1) Поиск зависимостей для \${F}\")\n"
+#"   message(STATUS \"1) Поиск зависимостей для \${F}\")\n"
 "    file(GET_RUNTIME_DEPENDENCIES\n"
 "      EXECUTABLES \"\${F}\"\n"
 "      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
@@ -875,10 +863,6 @@ file(WRITE
 "        install_unresolved_library_with_deps(\"\${FILE}\")\n"
 "    endforeach()\n"
 "\n"
-#"    file(GLOB DLIST \"${FOUND_DEPS_PATH}/*\")\n"
-#"    file(WRITE \"${MISC_PATH}/dep_list.txt\" \"\${DLIST}\")\n"
-#"    set(DEP_LIST \"\${DLIST}\" CACHE STRING \"\" FORCE)\n"
-#"\n"
 "endforeach()\n"
 )
 
@@ -916,49 +900,13 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     )
 endif()
 
-# Устанавливать зависимости только когда появилас эта директория (чтобы не испортить
-# значение переменной DEP_LIST, пока эта директория пустая)
-#if(EXISTS ${FOUND_DEPS_PATH})
-#if( (EXISTS ${FOUND_DEPS_PATH}) OR ("^^${DEP_LIST}" STREQUAL "^^") )
-    # Получить список файлов найденных зависимостей
-#    file(GLOB DEP_LIST
-#      "${FOUND_DEPS_PATH}/*"
-#    )
-    # Установить найденные зависимости в директорию для библиотек
-
-#message(DEBUG "CHECK1")
-#file(TOUCH_NOCREATE "${MISC_PATH}/dep_list.txt")
-#if(EXISTS "${MISC_PATH}/dep_list.txt")
-#    message(DEBUG "CHECK2")
-#    file(READ "${MISC_PATH}/dep_list.txt" DEP_LIST)
-
-#if(EXISTS "${MISC_PATH}/dep_list.txt")
-#    file(READ "${MISC_PATH}/dep_list.txt" DLIST)
-#    message(DEBUG "!!!READ")
-#    set(DEP_LIST "${DLIST}" CACHE STRING "" FORCE)
-#endif()
-
-#    foreach(FILE ${DEP_LIST})
-#        message(DEBUG "CHECKX")
-#        install(FILES "${FILE}"
-#          TYPE LIB
-#        )
-#    endforeach()
-
-#endif()
-
-
 # Установить найденные зависимости в директорию для библиотек
 install(DIRECTORY "${FOUND_DEPS_PATH}/"
   TYPE LIB
 )
 
 # Установить плюгины Qt
-file(GLOB_RECURSE PLUG_LIST
-  RELATIVE "${QT_DIR}/../../../plugins"
-  "${QT_DIR}/../../../plugins/*"
-)
-foreach(FILE ${PLUG_LIST})
+foreach(FILE ${QT_PLUGIN_LIST})
     # Директория, в которой находятся файлы плюгина (относительно plugins/)
     get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
     # Имя файла плюгина с расширением
@@ -968,12 +916,12 @@ foreach(FILE ${PLUG_LIST})
     # Для конфигураций Release MinSizeRel включать только библиотеки,
     # без файлов отладочной информации
     if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        install(FILES "${QT_DIR}/../../../plugins/${FILE}"
+        install(FILES "$QT_PLUGIN_PATH}/${FILE}"
           CONFIGURATIONS Release MinSizeRel
           DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
         )
     endif()
-    install(FILES "${QT_DIR}/../../../plugins/${FILE}"
+    install(FILES "${QT_PLUGIN_PATH}/${FILE}"
       CONFIGURATIONS Debug RelWithDebInfo
       DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
     )
