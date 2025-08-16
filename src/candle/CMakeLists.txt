@@ -315,51 +315,19 @@ qt6_add_resources(${MAIN_NAME} "system_translations"
   FILES ${QM_SYSTEM_FILES}
 )
 
+##############################################################################
+# Настройка свойств, зависимых от целевой среды выполнения.
+##############################################################################
+
 set_target_properties(${MAIN_NAME} PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
   MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-  MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
+  MACOSX_BUNDLE_GUI_IDENTIFIER com.github.GeorgKZ.Candle
   MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
   MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
   MACOSX_BUNDLE_ICON_FILE not_yet.icns
 )
-
-#if((CMAKE_CXX_COMPILER_ID STREQUAL "GCC") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
-#    set_target_properties(${MAIN_NAME} PROPERTIES
-#      LINK_FLAGS "-Wl,-rpath,./../lib/candle"
-#    )
-#endif()
-
-##############################################################################
-# Настройка свойств в зависимости от целевой среды выполнения.
-##############################################################################
-
-
-# При сборке для работы в среде Windows
-#if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-#
-#    set_target_properties(${MAIN_NAME} PROPERTIES
-#        WIN32_EXECUTABLE TRUE
-#    )
-#
-# При сборке для работы в среде MacOS/OS X
-#elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#
-#    set_target_properties(${MAIN_NAME} PROPERTIES
-#        MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-#        MACOSX_BUNDLE_GUI_IDENTIFIER my.application.com
-#        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-#        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-#        MACOSX_BUNDLE_ICON_FILE not_yet.icns
-#        MACOSX_BUNDLE TRUE
-#    )
-#
-# При сборке для работы в среде Linux
-#elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-#
-#endif()
-
 
 ##############################################################################
 # Установка
@@ -396,26 +364,30 @@ endif()
 # Добавить цель (исполняемый файл) в список файлов, для которых будут найдены зависимости
 list(APPEND DEP_FILE_ARG "${FIND_DEPS_PATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
 
-# Добавить библиотеки плюгинов в список файлов,
+file(GLOB QT_PLATFORM_LIST
+  RELATIVE "${QT_PLATFORM_PATH}"
+  "${QT_PLATFORM_PATH}/*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+)
+
+# Добавить библиотеки платформ в список файлов,
 # для которых будут найдены зависимости
-foreach(FILE ${QT_PLUGIN_LIST})
-    # Директория, в которой находятся файлы плюгина (относительно plugins/)
-    get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
-    # Имя файла плюгина с расширением
-    get_filename_component(FILE_NAME "${FILE}" NAME)
-    # Расширение файла плюгина
-    get_filename_component(EXTENSION "${FILE}" LAST_EXT)
+foreach(FILE ${QT_PLATFORM_LIST})
     # Если это библиотека, дополнить список поиска зависимостей
-    if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        list(APPEND DEP_FILE_ARG "${QT_PLUGIN_PATH}/${FILE_PATH}/${FILE_NAME}")
-    endif()
+    list(APPEND DEP_FILE_ARG "${QT_PLATFORM_PATH}/${FILE}")
 endforeach()
 file(WRITE "${MISC_PATH}/dep_src.txt" "${DEP_FILE_ARG}")
 
 # Подготовка набора динамических библиотек, от которых зависит цель
 add_custom_target(get_deps_${MAIN_NAME} ALL
             ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${FIND_DEPS_PATH}/"
-    COMMAND ${CMAKE_COMMAND} -DARGUMENT=dep_src.txt -P "${MISC_PATH}/collect_deps.cmake"
+    COMMAND ${CMAKE_COMMAND}
+      -DARGUMENT=dep_src.txt
+      -DROOT_DIR="${CMAKE_SOURCE_DIR}"
+      -DMISC_PATH="${MISC_PATH}"
+      -DFOUND_DEPS_PATH="${FOUND_DEPS_PATH}"
+      -DFIND_DEPS_PATH="${FIND_DEPS_PATH}"
+      -DQT_DIR="${QT_DIR}"
+      -P "${CMAKE_SOURCE_DIR}/scripts/collect_deps.cmake"
     COMMENT "Подготовка зависимостей цели ${MAIN_NAME}"
 )
 add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})

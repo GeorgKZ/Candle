@@ -22,7 +22,7 @@ endfunction()
 
 # Директория для промежуточных и собранных файлов
 if(DEFINED ENV{BUILDDIR}) 
-    message(DEBUG "Для определения местоположения директории сборки использована переменная окружения BUILDDIR: $ENV{BUILDDIR}")
+    message(DEBUG "Директория сборки согласно окружению BUILDDIR=$ENV{BUILDDIR}")
     cmake_path(SET BUILD_PATH NORMALIZE "$ENV{BUILDDIR}")
 else()
     set(BUILD_PATH "${CMAKE_BINARY_DIR}/build")
@@ -60,7 +60,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 # При сборке для работы в среде MacOS/OS X
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-    set(CMAKE_INSTALL_LIBDIR "candle.app/Contents/Resources"
+    set(CMAKE_INSTALL_LIBDIR "candle.app/Contents/Frameworks"
       CACHE PATH "Object code libraries (lib)"
     )
     set(CMAKE_INSTALL_BINDIR "candle.app/Contents/MacOS"
@@ -80,7 +80,8 @@ endif()
 ##############################################################################
 
 if(DEFINED ENV{QT_ROOT})
-    message(DEBUG "Для определения местоположения Qt использована переменная окружения QT_ROOT: $ENV{QT_ROOT}")
+    message(DEBUG "Директория Qt согласно окружению QT_ROOT=$ENV{QT_ROOT}")
+
     # Эти переменные должны указывать на директорию, в которой расположен файл Qt6Config.cmake,
     # например /opt/qt691/lib/cmake/Qt6/
     set(QT_DIR  "$ENV{QT_ROOT}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for QT.")
@@ -107,13 +108,7 @@ else()
 endif()
 
 # Директория, в которой расположены плюгины Qt
-set(QT_PLUGIN_PATH "${QT_DIR}/../../../plugins")
-
-# Список файлов, относящихся к плюгинам Qt
-file(GLOB_RECURSE QT_PLUGIN_LIST
-  RELATIVE "${QT_PLUGIN_PATH}"
-  "${QT_PLUGIN_PATH}/*"
-)
+set(QT_PLATFORM_PATH "${QT_DIR}/../../../plugins/platforms")
 
 ##############################################################################
 # Директории, создаваемые для выполнения сборки
@@ -257,8 +252,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # clang
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
-    message(DEBUG "Определён компилятор Clang")
-
     add_compile_options(
 #        "-Wall"
 #        "-Wpedantic"
@@ -280,9 +273,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     )
 # clang из MacOX/OS X
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-
-    message(DEBUG "Определён компилятор AppleClang")
-
 
     add_compile_options(
 #        "-Wall"
@@ -324,8 +314,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
 
 # gcc
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-
-    message(DEBUG "Определён компилятор GNU gcc")
 
     # Подготовить командный файл для получения списка всех предупреждений компилятора
     set(CMD_GEN_WARN "${MISC_PATH}/gen_gcc_warn.sh")
@@ -427,8 +415,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
 # Microsoft Visual Studio
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-
-    message(DEBUG "Определён компилятор Microsoft Visual Studio")
 
     add_definitions(
         "-D__MYFUNCNAME__=__FUNCSIG__"
@@ -582,6 +568,14 @@ set(CMAKE_AUTOUIC ON)
 # Использовать метаобъектный компилятор
 set(CMAKE_AUTOMOC ON)
 
+# Формирование файла qt.conf
+file(WRITE
+  "${MISC_PATH}/qt.conf"
+  "[Paths]\n"
+  "Plugins = QtPlugins\n"
+)
+
+
 ##############################################################################
 # Обработка компонентов (библиотеки, скрипты, исполняемый файл, упаковка)
 ##############################################################################
@@ -596,7 +590,7 @@ add_subdirectory(src/candle)
 
 add_subdirectory(src/candleplugins)
 
-add_subdirectory(packaging)
+add_subdirectory(scripts)
 
 ##############################################################################
 # Архивирование всего проекта в директорию сборки
@@ -690,7 +684,7 @@ if (DOXYGEN_FOUND)
 
     # Удаление файла warnings.log, если он нулевой длины
     add_custom_target(html_doc
-        # Команда удаления файла warnings.log нулевой длины !!!
+        # Команда удаления файла warnings.log нулевой длины !!!сделать средствами cmake
         ${CMD_CLN_WARN}
         WORKING_DIRECTORY ${DOC_PATH}
         COMMENT "Удаление файлов нулевой длины"
@@ -742,7 +736,7 @@ find_program(PVS_STUDIO_CONVERTER
 
 if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
 
-    include(PVS-Studio.cmake)
+    include(scripts/PVS-Studio.cmake)
 
     # Анализ приложения
     pvs_studio_add_target(TARGET analyze
@@ -758,113 +752,6 @@ if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
 else()
     message(NOTICE "--- Программа PVS Studio не найдена: будет отсутствовать возможность статического анализа")
 endif()
-
-##############################################################################
-# Формирование набора зависимостей
-##############################################################################
-
-# Формирование файла-скрипта для установки зависимостей
-file(WRITE
-    ${MISC_PATH}/collect_deps.cmake
-
-"# Функция, выполняющая поиск библиотеки по имени в известных директориях,\n"
-"# установку её во временную директорию вместе с её зависимостями\n"
-"function(install_unresolved_library_with_deps LIB_NAME)\n"
-#"   message(STATUS \"UNRESOLVED \${LIB_NAME}\")\n"
-"    # Проверить, может это библиотека из указанного Qt\n"
-"    if(EXISTS \"${QT_DIR}/../../\${LIB_NAME}\")\n"
-"        set(LIBRARY \"${QT_DIR}/../../\${LIB_NAME}\")\n"
-"    # Проверить, может это библиотека приложения\n"
-"    elseif(EXISTS \"${FIND_DEPS_PATH}/\${LIB_NAME}\")\n"
-"        set(LIBRARY \"${FIND_DEPS_PATH}/\${LIB_NAME}\")\n"
-"    # Проверить, может эта библиотека уже установлена\n"
-"    elseif(EXISTS \"${FOUND_DEPS_PATH}/\${LIB_NAME}\")\n"
-"        set(LIBRARY \"\")\n"
-"    else()\n"
-"        set(LIBRARY \"\")\n"
-#"       message(STATUS \"Не удалось определить расположение библиотеки \${LIB_NAME}\")\n"
-"    endif()\n"
-"    # Если библиотека найдена, обработать её\n"
-"    if(NOT \"^^\${LIBRARY}\" STREQUAL \"^^\")\n"
-"        install_library_with_deps(\"\${LIBRARY}\")\n"
-"    endif()\n"
-"endfunction()\n"
-"\n"
-"# Функция, выполняющая установку во временную директорию\n"
-"# указанной библиотеки и её зависимостей\n"
-"function(install_library_with_deps LIBRARY)\n"
-"    # Разделить полный путь на директорию и файл\n"
-"    get_filename_component(NAME \"\${LIBRARY}\" NAME)\n"
-#"   message(STATUS \"RESOLVED \${NAME}\")\n"
-"    # Проверить, может это библиотека из указанного Qt\n"
-"    if(EXISTS \"${QT_DIR}/../../\${NAME}\")\n"
-"        set(TEST_LIB \"${QT_DIR}/../../\${NAME}\")\n"
-"        set(DIRR \"${QT_DIR}/../..\")\n"
-"    # Проверить, может это библиотека приложения\n"
-"    elseif(EXISTS \"${FIND_DEPS_PATH}/\$NAME}\")\n"
-"        set(TEST_LIB \"${FIND_DEPS_PATH}/\${NAME}\")\n"
-"        set(DIRR \"${FIND_DEPS_PATH}\")\n"
-"    else()\n"
-"        set(TEST_LIB \"\${LIBRARY}\")\n"
-"        get_filename_component(DIRR \"\${LIBRARY}\" DIRECTORY)\n"
-"    endif()\n"
-"\n"
-"    # Проверить, может такая библиотека уже найдена, тогда ничего не делать\n"
-"    if (EXISTS \"${FOUND_DEPS_PATH}/\${NAME}\")\n"
-"    else()\n"
-"        file(COPY\n"
-"          \"\${TEST_LIB}\"\n"
-"          DESTINATION \"${FOUND_DEPS_PATH}\"\n"
-"        )\n"
-"\n"
-"        if(IS_SYMLINK \${TEST_LIB})\n"
-"            # Эта зависимотсь - символическиая ссылка.\n"
-"            # Повотрить процедуру для файла, на который указывает эта сылка.\n"
-"            file(READ_SYMLINK \${TEST_LIB} SYM_FILE)\n"
-"            install_library_with_deps(\"\${DIRR}/\${SYM_FILE}\")\n"
-"        else()\n"
-"\n"
-#"           message(STATUS \"2) Поиск зависимостей для \${TEST_LIB}\")\n"
-"            file(GET_RUNTIME_DEPENDENCIES\n"
-"              LIBRARIES \${TEST_LIB}\n"
-"              RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
-"              UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
-"              CONFLICTING_DEPENDENCIES_PREFIX CONFLICT\n"
-"            )\n"
-"\n"
-"            # Перебрать все зависимости, для каждой повторить процедуру\n"
-"            foreach(FILE \${RESOLVED_DEPS})\n"
-"                install_library_with_deps(\"\${FILE}\")\n"
-"            endforeach()\n"
-"            foreach(FILE \${UNRESOLVED_DEPS})\n"
-"                install_unresolved_library_with_deps(\"\${FILE}\")\n"
-"            endforeach()\n"
-"        endif()\n"
-"    endif()\n"
-"endfunction()\n"
-"\n"
-#"message(STATUS \"Аргумент: \${ARGUMENT}\")\n"
-"# Прочитать из файла список файлов, для которых ищется завивимость\n"
-"file(READ \"${MISC_PATH}/\${ARGUMENT}\" LIST)\n"
-"foreach(F \${LIST})\n"
-#"   message(STATUS \"1) Поиск зависимостей для \${F}\")\n"
-"    file(GET_RUNTIME_DEPENDENCIES\n"
-"      EXECUTABLES \"\${F}\"\n"
-"      RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS\n"
-"      UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS\n"
-"      CONFLICTING_DEPENDENCIES_PREFIX CONFLICT\n"
-"    )\n"
-"\n"
-"    foreach(FILE \${RESOLVED_DEPS})\n"
-"        install_library_with_deps(\"\${FILE}\")\n"
-"    endforeach()\n"
-"\n"
-"    foreach(FILE \${UNRESOLVED_DEPS})\n"
-"        install_unresolved_library_with_deps(\"\${FILE}\")\n"
-"    endforeach()\n"
-"\n"
-"endforeach()\n"
-)
 
 ##############################################################################
 # Формирование установочного набора
@@ -905,24 +792,43 @@ install(DIRECTORY "${FOUND_DEPS_PATH}/"
   TYPE LIB
 )
 
-# Установить плюгины Qt
-foreach(FILE ${QT_PLUGIN_LIST})
-    # Директория, в которой находятся файлы плюгина (относительно plugins/)
-    get_filename_component(FILE_PATH "${FILE}" DIRECTORY)
-    # Имя файла плюгина с расширением
-    get_filename_component(FILE_NAME "${FILE}" NAME)
-    # Расширение файла плюгина
-    get_filename_component(EXTENSION "${FILE}" LAST_EXT)
-    # Для конфигураций Release MinSizeRel включать только библиотеки,
-    # без файлов отладочной информации
-    if("${EXTENSION}" STREQUAL "${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        install(FILES "$QT_PLUGIN_PATH}/${FILE}"
-          CONFIGURATIONS Release MinSizeRel
-          DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
-        )
-    endif()
-    install(FILES "${QT_PLUGIN_PATH}/${FILE}"
-      CONFIGURATIONS Debug RelWithDebInfo
-      DESTINATION "${CMAKE_INSTALL_LIBDIR}/plugins/${FILE_PATH}"
+file(GLOB QT_PLATFORM_LIST
+  RELATIVE "${QT_PLATFORM_PATH}"
+  "${QT_PLATFORM_PATH}/*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+)
+
+#MACOS!!!
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # Установить файл qt.conf
+    install(FILES "${MISC_PATH}/qt.conf"
+      DESTINATION "candle.app/Contents/Resources"
     )
+endif()
+
+#Resources:
+#qt.conf
+#
+#[Paths]
+#Plugins = QtPlugins
+
+
+# Установить платформы Qt
+foreach(FILE ${QT_PLATFORM_LIST})
+
+    #MACOS!!!
+    if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+        # Для конфигураций Release и MinSizeRel включать только библиотеки,
+        # без файлов отладочной информации
+        install(FILES "${QT_PLATFORM_PATH}/${FILE}"
+          DESTINATION "candle.app/Contents/QtPlugins/platforms"
+        )
+
+        # Для конфигураций Debug и RelWithDebInfo добавить файлы отладочной информации
+        install(DIRECTORY "${QT_PLATFORM_PATH}/${FILE}.dSYM"
+          CONFIGURATIONS Debug RelWithDebInfo
+          DESTINATION "candle.app/Contents/QtPlugins/platforms"
+        )
+
+    endif()
 endforeach()
