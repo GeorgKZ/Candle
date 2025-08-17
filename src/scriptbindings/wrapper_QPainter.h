@@ -129,7 +129,9 @@ public:
       OpaqueHint = 0x01
   };
 
+#if !defined(__DOXYGEN__)
   Q_DECLARE_FLAGS(PixmapFragmentHints, PixmapFragmentHint)
+#endif
 
 #if 0
 

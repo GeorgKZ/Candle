@@ -12,7 +12,9 @@
 class WRAPPER_DLL_EXPORT wrapper_QSettings : public wrapper_QObject {
 
   Q_OBJECT
+
   // Из файла qsettings.h
+
 public:
 
   enum Status {
@@ -20,7 +22,9 @@ public:
     AccessError,
     FormatError
   };
+#if !defined(__DOXYGEN__)
   Q_ENUM(Status)
+#endif
 
   enum Format {
     NativeFormat,
@@ -47,13 +51,17 @@ public:
     CustomFormat15,
     CustomFormat16
   };
+#if !defined(__DOXYGEN__)
   Q_ENUM(Format)
+#endif
 
   enum Scope {
     UserScope,
     SystemScope
   };
+#if !defined(__DOXYGEN__)
   Q_ENUM(Scope)
+#endif
 
   Q_INVOKABLE explicit wrapper_QSettings(const QString &organization, const QString &application = QString(), wrapper_QObject *parent = nullptr);
   Q_INVOKABLE wrapper_QSettings(Scope scope, const QString &organization, const QString &application = QString(), wrapper_QObject *parent = nullptr);

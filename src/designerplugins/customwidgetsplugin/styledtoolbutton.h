@@ -15,9 +15,11 @@
 class CUSTOMWIDGETS_DLLSPEC StyledToolButton : public QToolButton
 {
     Q_OBJECT
+#if !defined(__DOXYGEN__)
     Q_PROPERTY(QColor backgroundColor READ backColor WRITE setBackColor)
     Q_PROPERTY(QColor foregroundColor READ foreColor WRITE setForeColor)
     Q_PROPERTY(QColor highlightColor READ highlightColor WRITE setHighlightColor)
+#endif
     
 public:
 
@@ -41,7 +43,9 @@ protected:
 
 private:
 
+#if !defined(__DOXYGEN__)
     Q_DISABLE_COPY(StyledToolButton)
+#endif
 
     virtual void paintEvent(QPaintEvent *e) override;
 

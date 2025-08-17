@@ -11,7 +11,9 @@
 class CUSTOMWIDGETS_DLLSPEC ColorPicker : public QWidget
 {
     Q_OBJECT
+#if !defined(__DOXYGEN__)
     Q_PROPERTY(int colorInt READ colorInt WRITE setColorInt)
+#endif
 
 public:
     explicit ColorPicker(QWidget *parent = nullptr);

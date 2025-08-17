@@ -23,9 +23,7 @@ function(install_library_with_deps NAME)
         message(STATUS "FOUND application library")
 
     # Проверить, может такая библиотека уже найдена, тогда ничего не делать
-    elseif((EXISTS "${FOUND_DEPS_PATH}/${NAME}") OR
-           (EXISTS "${FOUND_DEPS_PATH}/${NAME}.framework")
-    )
+    elseif((EXISTS "${FOUND_DEPS_PATH}/${NAME}") OR (EXISTS "${FOUND_DEPS_PATH}/${NAME}.framework"))
         message(STATUS "SKIPPED founded library")
         return()
 
@@ -36,13 +34,9 @@ function(install_library_with_deps NAME)
 
     endif()
 
-#    if(${framework})
-#        set(PATH_WITH_NAME "${PATH_TO_NAME}/${NAME}.framework")
-#    else()
-        set(PATH_WITH_NAME "${PATH_TO_NAME}/${NAME}")
-#    endif()
+    set(PATH_WITH_NAME "${PATH_TO_NAME}/${NAME}")
 
-    # Скопировать библиотеку в директорию найденных библиотек
+    # Скопировать фреймворк в директорию найденных библиотек
     if(${framework})
         file(COPY "${PATH_WITH_NAME}.framework/Versions/A/Resources"
           DESTINATION "${FOUND_DEPS_PATH}/${NAME}.framework/Versions/A"
@@ -59,11 +53,7 @@ function(install_library_with_deps NAME)
         file(COPY "${PATH_WITH_NAME}.framework/${NAME}"
           DESTINATION "${FOUND_DEPS_PATH}/${NAME}.framework"
         )
-
-#        file(COPY
-#          "${PATH_WITH_NAME}.framework"
-#          DESTINATION "${FOUND_DEPS_PATH}"
-#        )
+    # Скопировать библиотеку в директорию найденных библиотек
     else()
         file(COPY
           "${PATH_WITH_NAME}"
@@ -79,14 +69,14 @@ function(install_library_with_deps NAME)
         return()
     endif()
 
-    message(STATUS "2) Поиск зависимостей для ${PATH_WITH_NAME}")
+#   message(STATUS "2) Поиск зависимостей для ${PATH_WITH_NAME}")
 
     if(framework)
         get_prerequisites("${PATH_WITH_NAME}.framework/Versions/A/${NAME}" FOUND_DEPS)
     else()
         get_prerequisites("${PATH_WITH_NAME}" FOUND_DEPS)
     endif()
-    message(STATUS "2X) FOUND: ${FOUND_DEPS}")
+#   message(STATUS "2X) FOUND: ${FOUND_DEPS}")
 
     # Перебрать все зависимости, для каждой повторить процедуру
     foreach(FILE ${FOUND_DEPS})
@@ -97,7 +87,7 @@ endfunction()
 # Прочитать из файла список файлов, для которых ищется завивимость
 file(READ "${MISC_PATH}/${ARGUMENT}" LIST)
 foreach(F ${LIST})
-    message(STATUS "1) Поиск зависимостей для ${F}")
+ #  message(STATUS "1) Поиск зависимостей для ${F}")
     get_prerequisites("${F}" FOUND_DEPS)
 
     foreach(FILE ${FOUND_DEPS})

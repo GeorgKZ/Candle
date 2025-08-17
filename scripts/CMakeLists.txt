@@ -1,5 +1,3 @@
-string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)                 # The application id (no spaces, lowercase!)
-
 #set(IDE_BUNDLE_IDENTIFIER "org.${PROJECT_NAME_LOWERCASE}")            # The macOS application bundle identifier.
 #set(IDE_APP_ID "org.${PROJECT_NAME_LOWERCASE}")                       # The free desktop application identifier.
 #set(IDE_PUBLISHER "Publisher.")
@@ -135,7 +133,7 @@ endif()
 # Имя пакета
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
 # Файл Info.plist приложения
-set(CPACK_BUNDLE_PLIST "${CMAKE_INSTALL_PREFIX}/candle.app/Contents/Info.plist")
+set(CPACK_BUNDLE_PLIST "${CMAKE_INSTALL_PREFIX}/${BUNDLE_CONTENT_PATH}/Info.plist")
 # Значок прилжения
 set(CPACK_BUNDLE_ICON "???")
 

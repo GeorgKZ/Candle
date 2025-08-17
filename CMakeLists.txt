@@ -36,11 +36,34 @@ set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install" CACHE PATH "Install path prefix
 # Информация о проекте
 ##############################################################################
 
+# Имя, версия, описание проекта
 project(Candle
     VERSION 1.2.15.1
     DESCRIPTION "GRBL controller application with G-Code visualizer"
     LANGUAGES CXX
 )
+
+# Имя проекта, приведённое к нижнему регистру
+string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
+
+##############################################################################
+# Относительные пути для пакетов MacOS/OS X
+##############################################################################
+
+# Имя пакета для MacOS/OS X
+set(BUNDLE_NAME "${PROJECT_NAME_LOWERCASE}.app")
+
+# Путь к директории содержимого пакета для MacOS/OS X
+set(BUNDLE_CONTENT_PATH "${BUNDLE_NAME}/Contents")
+
+# Путь к директории исполняемых файлов пакета для MacOS/OS X
+set(BUNDLE_BINARY_PATH "${BUNDLE_CONTENT_PATH}/MacOS")
+
+# Путь к директории фреймворков пакета для MacOS/OS X
+set(BUNDLE_FRAMEWORK_PATH "${BUNDLE_CONTENT_PATH}/Frameworks")
+
+# Путь к директории ресурсов пакета для MacOS/OS X
+set(BUNDLE_RESOURCE_PATH "${BUNDLE_CONTENT_PATH}/Resources")
 
 ##############################################################################
 # Установки, которые необходимо выполнить до поиска Qt
@@ -49,10 +72,11 @@ project(Candle
 # При сборке для работы в среде Linux
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-    # Путь, где искать динамические библиотеки
-    set(CMAKE_INSTALL_LIBDIR "lib/candle"
+    # Путь, куда устанавливать динамические библиотеки
+    set(CMAKE_INSTALL_LIBDIR "lib/candle/lib"
       CACHE PATH "Object code libraries (lib)"
     )
+    # Путь, куда устанавливать исполняемые файлы
     set(CMAKE_INSTALL_BINDIR "bin"
       CACHE PATH "User executables (bin)"
     )
@@ -60,10 +84,12 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 # При сборке для работы в среде MacOS/OS X
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-    set(CMAKE_INSTALL_LIBDIR "candle.app/Contents/Frameworks"
+    # Путь, куда устанавливать динамические библиотеки
+    set(CMAKE_INSTALL_LIBDIR "${BUNDLE_FRAMEWORK_PATH}"
       CACHE PATH "Object code libraries (lib)"
     )
-    set(CMAKE_INSTALL_BINDIR "candle.app/Contents/MacOS"
+    # Путь, куда устанавливать исполняемые файлы
+    set(CMAKE_INSTALL_BINDIR "${BUNDLE_BINARY_PATH}"
       CACHE PATH "User executables (bin)"
     )
 
@@ -107,8 +133,22 @@ else()
     set(Qt6_DIR "$ENV{QtCore_path}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for Qt6.")
 endif()
 
+
 # Директория, в которой расположены плюгины Qt
-set(QT_PLATFORM_PATH "${QT_DIR}/../../../plugins/platforms")
+set(QT_PLUGIN_PATH "${QT_DIR}/../../../plugins")
+
+# Директория, в которой расположены платформы Qt
+set(QT_PLATFORM_PATH "${QT_PLUGIN_PATH}/platforms")
+
+# Список необходимых для приложения плюгинов
+set(QT_PLUGIN_LIST
+  "iconengines"
+  "imageformats"
+  "platforminputcontexts"
+  "platforms"
+  "platformthemes"
+  "xcbglintegrations"
+)
 
 ##############################################################################
 # Директории, создаваемые для выполнения сборки
@@ -144,6 +184,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_PATH})
 
 # Путь к директории с изображениями для Doxygen
 set(DOXY_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/images;${CMAKE_SOURCE_DIR}/wiki/images")
+
 # Путь к директории с переводами
 set(TRANSLATE_PATH "${BUILD_PATH}/translations")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${TRANSLATE_PATH})
@@ -210,10 +251,8 @@ if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
 
 # Команда перенаправления потока в нуль
     set(CMD_TO_NUL >/dev/null 2>&1)
-# Команда удаления файла warnings.log нулевой длины
-    set(CMD_CLN_WARN find warnings.log -size 0 | xargs rm -f)
 # Командный файл для запуска pdflatex с параметром
-    set(CMD_RUN_LATEX "${MISC_PATH}/runlatex.sh")
+    set(CMD_RUN_LATEX "${MISC_PATH}/runlatex.bash")
 # Подготовить командный файл для запуска pdflatex с параметром
     file(WRITE ${CMD_RUN_LATEX} "#!/bin/bash\n\npdflatex --shell-escape $1")
     execute_process(COMMAND chmod +x ${CMD_RUN_LATEX})
@@ -222,17 +261,13 @@ elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
 
 # Команда перенаправления потока в нуль
     set(CMD_TO_NUL >NUL 2>&1)
-# Команда удаления файла warnings.log нулевой длины
-    set(CMD_CLN_WARN FOR %A in ( warnings.log ) DO @IF %~zA EQU 0 DEL warnings.log)
 
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
 
 # Команда перенаправления потока в нуль
     set(CMD_TO_NUL >/dev/null 2>&1)
-# Команда удаления файла warnings.log нулевой длины
-    set(CMD_CLN_WARN find warnings.log -size 0 | xargs rm -f)
 # Командный файл для запуска pdflatex с параметром
-    set(CMD_RUN_LATEX "${MISC_PATH}/runlatex.sh")
+    set(CMD_RUN_LATEX "${MISC_PATH}/runlatex.zsh")
 # Подготовить командный файл для запуска pdflatex с параметром
     file(WRITE ${CMD_RUN_LATEX} "#!/bin/zsh\n\npdflatex --shell-escape $1")
     execute_process(COMMAND chmod +x ${CMD_RUN_LATEX})
@@ -315,14 +350,14 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
 # gcc
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
-    # Подготовить командный файл для получения списка всех предупреждений компилятора
-    set(CMD_GEN_WARN "${MISC_PATH}/gen_gcc_warn.sh")
-    file(WRITE ${CMD_GEN_WARN} "#!/bin/bash\n\n${CMAKE_CXX_COMPILER} -Q --help=warning | sed -e \'s/^\\s*\\\(\\-\\S*\\\)\\s*\\[\\w*\\]/\\1 /gp;d\' | tr -d '\\n'")
-    execute_process(COMMAND chmod +x ${CMD_GEN_WARN})
-    # Получить список всех предупреждений компилятора
-    execute_process(COMMAND ${CMD_GEN_WARN} OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE CXX_WARNINGS)
-    # Обработать список всех предупреждений компилятора для избежания заключения его в кавычки
-    separate_arguments(CXX_WARNINGS UNIX_COMMAND "${CXX_WARNINGS}")
+#    # Подготовить командный файл для получения списка всех предупреждений компилятора
+#    set(CMD_GEN_WARN "${MISC_PATH}/gen_gcc_warn.sh")
+#    file(WRITE ${CMD_GEN_WARN} "#!/bin/bash\n\n${CMAKE_CXX_COMPILER} -Q --help=warning | sed -e \'s/^\\s*\\\(\\-\\S*\\\)\\s*\\[\\w*\\]/\\1 /gp;d\' | tr -d '\\n'")
+#    execute_process(COMMAND chmod +x ${CMD_GEN_WARN})
+#    # Получить список всех предупреждений компилятора
+#    execute_process(COMMAND ${CMD_GEN_WARN} OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE CXX_WARNINGS)
+#    # Обработать список всех предупреждений компилятора для избежания заключения его в кавычки
+#    separate_arguments(CXX_WARNINGS UNIX_COMMAND "${CXX_WARNINGS}")
  
     add_compile_options(
  #      ${CXX_WARNINGS}
@@ -464,26 +499,24 @@ endif()
 ##############################################################################
 
 # При сборке для работы в среде Linux
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
 # Параметры настройки RPATH - пути, где искать динамические библиотеки
 
 # не выполнять установку RPATH на этапе сборки
- SET(CMAKE_SKIP_BUILD_RPATH TRUE)
+set(CMAKE_SKIP_BUILD_RPATH TRUE)
 # при сборке не применять RPATH этапа установки (CMAKE_INSTALL_RPATH)
- SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
-# RPATH, который будет использован на этапе установки
- SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib/candle")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
 # don't add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
- SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 
 # При сборке для работы в среде MacOS/OS X
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
 # При сборке для работы в среде Windows
-elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+elseif((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
 else()
     message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
@@ -575,6 +608,97 @@ file(WRITE
   "Plugins = QtPlugins\n"
 )
 
+file(WRITE
+  "${MISC_PATH}/remove_zerofile.cmake"
+
+  "if(EXISTS \"\${FILENAME}\")\n"
+  "    file(SIZE \"\${FILENAME}\" FILE_SIZE)\n"
+  "    if(FILE_SIZE EQUAL 0)\n"
+  "        file(REMOVE \"\${FILENAME}\")\n"
+  "    endif()\n"
+  "endif()\n"
+)
+
+
+##############################################################################
+# Формирование установочного набора
+##############################################################################
+
+# Вывод сообщений об установке только если было изменение
+set(CMAKE_INSTALL_MESSAGE LAZY)
+
+# Если сборка предназначена для выполнения под Windows
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+
+    # Файл лицензии (этап конфигурации)
+    message(DEBUG "Установить файл лицензии")
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+        DESTINATION .
+    )
+
+# Если сборка предназначена для выполнения под Linux
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    # Файл лицензии (этап конфигурации)
+    message(DEBUG "Установить файл лицензии")
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+        DESTINATION "share/doc/candle"
+    )
+
+    #!!! Можно использовать один и тот же SVG для всех разрешений
+    # Значок программы (этап конфигурации)
+    message(DEBUG "Установить файл значка программы")
+    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/candle_256.png
+        DESTINATION "share/icons/hicolor/256x256/apps"
+        RENAME candle.png
+    )
+endif()
+
+# Установить найденные зависимости в директорию для библиотек
+install(DIRECTORY "${FOUND_DEPS_PATH}/"
+  TYPE LIB
+)
+
+# Установить файл qt.conf
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # Установить файл qt.conf
+    install(FILES "${MISC_PATH}/qt.conf"
+      DESTINATION "${BUNDLE_RESOURCE_PATH}"
+    )
+endif()
+
+#Установить плюгины Qt
+foreach(PLUGIN ${QT_PLUGIN_LIST})
+     # Получить список файлов плюгина
+    file(GLOB QT_PLUGIN_FILES_LIST
+      RELATIVE "${QT_PLUGIN_PATH}/${PLUGIN}"
+      "${QT_PLUGIN_PATH}/${PLUGIN}/*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    )
+     # Установить файлы плюгина Qt
+    foreach(FILE ${QT_PLUGIN_FILES_LIST})
+        if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+            # Для конфигураций Release и MinSizeRel включать только библиотеки,
+            # без файлов отладочной информации
+            install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
+              DESTINATION "lib/candle/plugins/${PLUGIN}"
+            )
+        elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+            # Для конфигураций Release и MinSizeRel включать только библиотеки,
+            # без файлов отладочной информации
+            install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
+              DESTINATION "${BUNDLE_CONTENT_PATH}/QtPlugins/${PLUGIN}"
+            )
+
+            # Для конфигураций Debug и RelWithDebInfo добавить файлы отладочной информации
+            install(DIRECTORY "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}.dSYM"
+              CONFIGURATIONS Debug RelWithDebInfo
+              DESTINATION "${BUNDLE_CONTENT_PATH}/QtPlugins/${PLUGIN}"
+            )
+        endif()
+        # Дополнить список поиска зависимостей
+        list(APPEND DEP_FILES_LIST "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}")
+    endforeach(FILE)
+endforeach(PLUGIN)
 
 ##############################################################################
 # Обработка компонентов (библиотеки, скрипты, исполняемый файл, упаковка)
@@ -591,6 +715,58 @@ add_subdirectory(src/candle)
 add_subdirectory(src/candleplugins)
 
 add_subdirectory(scripts)
+
+##############################################################################
+# Статический анализ исходных текстов при помощи PVS-Studio
+##############################################################################
+
+# Проверить наличие исполняемых файлов PVS-Studio
+find_program(PVS_STUDIO_ANALYZER
+    HINTS "C:/Program Files/PVS-Studio" "C:/Program Files (x86)/PVS-Studio" "D:/Program Files/PVS-Studio" "D:/Program Files (x86)/PVS-Studio"
+    NAMES CompilerCommandsAnalyzer.exe pvs-studio-analyzer
+)
+
+find_program(PVS_STUDIO_CONVERTER
+    HINTS "C:/Program Files/PVS-Studio" "C:/Program Files (x86)/PVS-Studio" "D:/Program Files/PVS-Studio" "D:/Program Files (x86)/PVS-Studio"
+    NAMES HtmlGenerator.exe plog-converter
+)
+
+# BIN path                      path to pvs-studio-analyzer (Unix) or CompilerCommandsAnalyzer.exe (Windows)
+# CONVERTER path                path to plog-converter (Unix) or HtmlGenerator.exe (Windows)
+
+if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
+
+    include(scripts/PVS-Studio.cmake)
+
+    # Анализ приложения
+    pvs_studio_add_target(TARGET analyze
+        FORMAT errorfile-verbose
+        ANALYZE "candle" #${CMAKE_PROJECT_NAME}
+        MODE GA;OP;CS;64
+        LOG ${BUILD_PATH}/pvs_report.txt
+#       CONVERTER_ARGS -d V112,V122,V550,V601,V2014
+        BIN ${PVS_STUDIO_ANALYZER}
+        CONVERTER ${PVS_STUDIO_CONVERTER}
+    )
+
+else()
+    message(NOTICE "--- Программа PVS Studio не найдена: будет отсутствовать возможность статического анализа")
+endif()
+
+##############################################################################
+# Статический анализ исходных текстов при помощи Clang-Tidy
+##############################################################################
+
+# Проверить наличие исполняемого файла Clang-Tidy
+find_program(CLANG_TIDY_EXE
+     NAMES "clang-tidy"
+)
+
+if (EXISTS ${CLANG_TIDY_EXE})
+
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}" -checks=-*, readability-*)
+
+endif()
 
 ##############################################################################
 # Архивирование всего проекта в директорию сборки
@@ -643,7 +819,7 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_FILE_PATTERNS           *.h *.hxx *.cpp *.md)
     set(DOXYGEN_EXAMPLE_PATH            "${SOURCES_PATH}")
     set(DOXYGEN_IMAGE_PATH              ${DOXY_IMAGES})
-    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE  readme.md)
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE  "${CMAKE_SOURCE_DIR}/readme.md")
     set(DOXYGEN_ALPHABETICAL_INDEX      NO)
     set(DOXYGEN_HTML_STYLESHEET         "${CMAKE_SOURCE_DIR}/doc/stylesheet.css")
     set(DOXYGEN_GENERATE_TREEVIEW       YES)
@@ -684,8 +860,10 @@ if (DOXYGEN_FOUND)
 
     # Удаление файла warnings.log, если он нулевой длины
     add_custom_target(html_doc
-        # Команда удаления файла warnings.log нулевой длины !!!сделать средствами cmake
-        ${CMD_CLN_WARN}
+        # Команда удаления файла warnings.log нулевой длины
+        ${CMAKE_COMMAND}
+          -DFILENAME=warnings.log
+          -P "${MISC_PATH}/remove_zerofile.cmake"
         WORKING_DIRECTORY ${DOC_PATH}
         COMMENT "Удаление файлов нулевой длины"
         VERBATIM
@@ -700,135 +878,3 @@ if (DOXYGEN_FOUND)
     )
     add_dependencies(pdf_doc html_doc)
 endif(DOXYGEN_FOUND)
-
-##############################################################################
-# Статический анализ исходных текстов при помощи Clang-Tidy
-##############################################################################
-
-# Проверить наличие исполняемого файла Clang-Tidy
-find_program(CLANG_TIDY_EXE
-     NAMES "clang-tidy"
-)
-
-if (EXISTS ${CLANG_TIDY_EXE})
-
-    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}" -checks=-*, readability-*)
-
-endif()
-
-##############################################################################
-# Статический анализ исходных текстов при помощи PVS-Studio
-##############################################################################
-
-# Проверить наличие исполняемых файлов PVS-Studio
-find_program(PVS_STUDIO_ANALYZER
-    HINTS "C:/Program Files/PVS-Studio" "C:/Program Files (x86)/PVS-Studio" "D:/Program Files/PVS-Studio" "D:/Program Files (x86)/PVS-Studio"
-    NAMES CompilerCommandsAnalyzer.exe pvs-studio-analyzer
-)
-
-find_program(PVS_STUDIO_CONVERTER
-    HINTS "C:/Program Files/PVS-Studio" "C:/Program Files (x86)/PVS-Studio" "D:/Program Files/PVS-Studio" "D:/Program Files (x86)/PVS-Studio"
-    NAMES HtmlGenerator.exe plog-converter
-)
-
-# BIN path                      path to pvs-studio-analyzer (Unix) or CompilerCommandsAnalyzer.exe (Windows)
-# CONVERTER path                path to plog-converter (Unix) or HtmlGenerator.exe (Windows)
-
-if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
-
-    include(scripts/PVS-Studio.cmake)
-
-    # Анализ приложения
-    pvs_studio_add_target(TARGET analyze
-        FORMAT errorfile-verbose
-        ANALYZE "candle" #${CMAKE_PROJECT_NAME}
-        MODE GA;OP;CS;64
-        LOG ${BUILD_PATH}/pvs_report.txt
-#       CONVERTER_ARGS -d V112,V122,V550,V601,V2014
-        BIN ${PVS_STUDIO_ANALYZER}
-        CONVERTER ${PVS_STUDIO_CONVERTER}
-    )
-
-else()
-    message(NOTICE "--- Программа PVS Studio не найдена: будет отсутствовать возможность статического анализа")
-endif()
-
-##############################################################################
-# Формирование установочного набора
-##############################################################################
-
-# Вывод сообщений об установке только если было изменение
-set(CMAKE_INSTALL_MESSAGE LAZY)
-
-# Если сборка предназначена для выполнения под Windows
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-
-    # Файл лицензии (этап конфигурации)
-    message(DEBUG "Установить файл лицензии")
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION .
-    )
-
-# Если сборка предназначена для выполнения под Linux
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
-    # Файл лицензии (этап конфигурации)
-    message(DEBUG "Установить файл лицензии")
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION "share/doc/candle"
-    )
-
-    #!!! Можно использовать один и тот же SVG для всех разрешений
-    # Значок программы (этап конфигурации)
-    message(DEBUG "Установить файл значка программы")
-    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/candle_256.png
-        DESTINATION "share/icons/hicolor/256x256/apps"
-        RENAME candle.png
-    )
-endif()
-
-# Установить найденные зависимости в директорию для библиотек
-install(DIRECTORY "${FOUND_DEPS_PATH}/"
-  TYPE LIB
-)
-
-file(GLOB QT_PLATFORM_LIST
-  RELATIVE "${QT_PLATFORM_PATH}"
-  "${QT_PLATFORM_PATH}/*${CMAKE_SHARED_LIBRARY_SUFFIX}"
-)
-
-#MACOS!!!
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # Установить файл qt.conf
-    install(FILES "${MISC_PATH}/qt.conf"
-      DESTINATION "candle.app/Contents/Resources"
-    )
-endif()
-
-#Resources:
-#qt.conf
-#
-#[Paths]
-#Plugins = QtPlugins
-
-
-# Установить платформы Qt
-foreach(FILE ${QT_PLATFORM_LIST})
-
-    #MACOS!!!
-    if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-        # Для конфигураций Release и MinSizeRel включать только библиотеки,
-        # без файлов отладочной информации
-        install(FILES "${QT_PLATFORM_PATH}/${FILE}"
-          DESTINATION "candle.app/Contents/QtPlugins/platforms"
-        )
-
-        # Для конфигураций Debug и RelWithDebInfo добавить файлы отладочной информации
-        install(DIRECTORY "${QT_PLATFORM_PATH}/${FILE}.dSYM"
-          CONFIGURATIONS Debug RelWithDebInfo
-          DESTINATION "candle.app/Contents/QtPlugins/platforms"
-        )
-
-    endif()
-endforeach()

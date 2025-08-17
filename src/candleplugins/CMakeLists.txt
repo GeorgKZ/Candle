@@ -26,7 +26,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     # Путь для установки плюгинов
-    set(DEST_DIR "candle.app/Contents/Resources/candle_plugins")
+    set(DEST_DIR "${BUNDLE_RESOURCE_PATH}/plugins")
 
 # При сборке для работы в среде Windows
 elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
@@ -56,16 +56,16 @@ foreach(I ${SUBDIRS})
 
         set(PLUGIN_PATH "${SOURCES_PATH}/${I}")
         set(SRC_FILES "")
-        IF(EXISTS ${PLUGIN_PATH}/settings.ui)
-            LIST(APPEND SRC_FILES ${PLUGIN_PATH}/settings.ui)
-        ENDIF()
-        IF(EXISTS ${PLUGIN_PATH}/widget.ui)
-            LIST(APPEND SRC_FILES ${PLUGIN_PATH}/widget.ui)
-        ENDIF()
+        if(EXISTS ${PLUGIN_PATH}/settings.ui)
+            list(APPEND SRC_FILES ${PLUGIN_PATH}/settings.ui)
+        endif()
+        if(EXISTS ${PLUGIN_PATH}/widget.ui)
+            list(APPEND SRC_FILES ${PLUGIN_PATH}/widget.ui)
+        endif()
 
         # Перебрать все поддерживаемые языки
         set(QM_FILES "")
-        FOREACH(L ${QT_LANG})
+        foreach(L ${QT_LANG})
             string(SUBSTRING ${L} 0 2 LANG_F)
 
             # Обновить файл перевода
@@ -92,9 +92,9 @@ foreach(I ${SUBDIRS})
 
             list(APPEND QM_FILES ${QM_FILE})
 
-        ENDFOREACH(L)
-    ENDIF()
-ENDFOREACH(I)
+        endforeach(L)
+    endif()
+endforeach(I)
 
 ##############################################################################
 # Формирование установочного набора
@@ -115,12 +115,12 @@ foreach(I ${SUBDIRS})
         )
 
         # Установка изображений (при наличии)
-        SET(IMG_PATH "${PLUGIN_PATH}/images")
-        IF(IS_DIRECTORY ${IMG_PATH} AND EXISTS ${IMG_PATH})
-            FILE(GLOB IMG_FILES ${IMG_PATH}/*)
+        set(IMG_PATH "${PLUGIN_PATH}/images")
+        if(IS_DIRECTORY ${IMG_PATH} AND EXISTS ${IMG_PATH})
+            file(GLOB IMG_FILES ${IMG_PATH}/*)
             install(FILES ${IMG_FILES}
                 DESTINATION ${DEST_DIR}/${I}/images
             )
-        ENDIF()
-    ENDIF()
-ENDFOREACH(I)
+        endif()
+    endif()
+endforeach(I)

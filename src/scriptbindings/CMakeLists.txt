@@ -11,7 +11,7 @@ message(STATUS "Проект '${CMAKE_PROJECT_NAME}', компонент '${MAIN
 message(STATUS "##############################################################################")
 
 # RPATH, который будет использован на этапе установки
- SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../../lib/candle")
+set(CMAKE_INSTALL_RPATH "\$ORIGIN")
 
 ##############################################################################
 # Директории с файлами, необходимыми для сборки
@@ -64,17 +64,9 @@ target_link_libraries(${MAIN_NAME} PRIVATE
     Qt6::UiTools
 )
 
-#if(WIN32)
-#    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
-#endif()
-
-#set_target_properties(${MAIN_NAME} PROPERTIES
-#        MACOSX_BUNDLE TRUE
-#)
-
 # Подготовка к поиску набора динамических библиотек, от которых зависит цель
 add_custom_target(get_deps_${MAIN_NAME} ALL
-  ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${FIND_DEPS_PATH}/" # /${CMAKE_SHARED_LIBRARY_PREFIX}${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}"
+  ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${MAIN_NAME}>" "${FIND_DEPS_PATH}/"
   COMMENT "Подготовка к поиску зависимостей цели ${MAIN_NAME}"
 )
 add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})
@@ -86,22 +78,7 @@ add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})
 # Вывод сообщений об установке только если было изменение
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-# Для мультиконфигурации учесть директорию, в которой будет расположен результат сборки,
-# значение которой будет определено в параметре cmake --config только на этапе сборки
-#if (isMultiConfig)
-#    set(BINPATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>")
-#else()
-#    set(BINPATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-#endif()
-# Библиотека
-#install(FILES ${BINPATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${MAIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
-#    DESTINATION "./"
-#    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-#    COMPONENT libraries
-#)
-
 # Библиотека
 install(TARGETS ${MAIN_NAME}
-    LIBRARY
-#   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY
 )

@@ -13,6 +13,7 @@ class WRAPPER_DLL_EXPORT wrapper_QToolButton : public wrapper_QAbstractButton {
 
   // из файла QToolButton.h
 
+#if !defined(__DOXYGEN__)
   Q_ENUMS(Qt::ToolButtonStyle Qt::ArrowType)
 
 #if QT_CONFIG(menu)
@@ -22,6 +23,7 @@ class WRAPPER_DLL_EXPORT wrapper_QToolButton : public wrapper_QAbstractButton {
   Q_PROPERTY(Qt::ToolButtonStyle toolButtonStyle READ toolButtonStyle WRITE setToolButtonStyle)
   Q_PROPERTY(bool                autoRaise       READ autoRaise       WRITE setAutoRaise)
   Q_PROPERTY(Qt::ArrowType       arrowType       READ arrowType       WRITE setArrowType)
+#endif
     
 public:
 

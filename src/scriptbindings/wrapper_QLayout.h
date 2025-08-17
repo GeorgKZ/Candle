@@ -16,9 +16,11 @@ class WRAPPER_DLL_EXPORT wrapper_QLayout : public wrapper_QObject {
 
   Q_OBJECT
 
+#if !defined(__DOXYGEN__)
   Q_PROPERTY(int spacing                       READ spacing         WRITE setSpacing)
 //Q_PROPERTY(wrapper_QMargins *contentsMargins READ contentsMargins WRITE setContentsMargins  RESET unsetContentsMargins)
   Q_PROPERTY(SizeConstraint sizeConstraint     READ sizeConstraint  WRITE setSizeConstraint)
+#endif
 
 public:
 
@@ -35,8 +37,49 @@ public:
   // explicit QLayout(QWidget *parent = nullptr)
   Q_INVOKABLE explicit wrapper_QLayout(wrapper_QWidget *parent = nullptr);
 
-  // Прокси-функции класса wrapper_QLayoutItem
-  #include "funcs_QLayoutItem.h"
+  // virtual QSize sizeHint() const
+  Q_INVOKABLE virtual wrapper_QSize *sizeHint() const;
+
+  // virtual QSize minimumSize() const
+  Q_INVOKABLE virtual wrapper_QSize *minimumSize() const;
+
+  // virtual QSize maximumSize() const
+  Q_INVOKABLE virtual wrapper_QSize *maximumSize() const;
+
+  // virtual Qt::Orientations expandingDirections() const
+  Q_INVOKABLE virtual Qt::Orientations expandingDirections() const;
+
+//  /*Q_INVOKABLE*/ virtual void setGeometry(const wrapper_QRect&);
+
+//  /*Q_INVOKABLE*/ virtual wrapper_QRect *geometry() const;
+
+  Q_INVOKABLE virtual bool isEmpty() const;
+
+  Q_INVOKABLE virtual bool hasHeightForWidth() const;
+
+  Q_INVOKABLE virtual int heightForWidth(int width) const;
+
+  Q_INVOKABLE virtual int minimumHeightForWidth(int width) const;
+
+  /*Q_INVOKABLE*/ virtual void invalidate();
+
+  // virtual QWidget *widget() const;
+  Q_INVOKABLE virtual QJSValue widget() const;
+
+  // virtual QLayout *layout();
+  Q_INVOKABLE virtual QJSValue layout();
+
+  // virtual QSpacerItem *spacerItem();
+//  Q_INVOKABLE virtual wrapper_QSpacerItem *spacerItem();
+
+  // Qt::Alignment alignment() const
+  Q_INVOKABLE Qt::Alignment alignment() const;
+
+  // void setAlignment(Qt::Alignment a)
+  Q_INVOKABLE void setAlignment(Qt::Alignment a);
+
+  // virtual QSizePolicy::ControlTypes controlTypes() const
+  // Q_INVOKABLE virtual wrapper_QSizePolicy::ControlTypes controlTypes() const;
 
   // virtual int spacing() const;
   Q_INVOKABLE virtual int spacing() const;

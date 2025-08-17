@@ -37,16 +37,6 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(
     qDebug() << "Using premissions feature";
 #endif
 
-
-    /** 
-     * Для MacOS в файле Info.plist должны быть установлены разрешения:
-     * <key>NSCameraUsageDescription</key>
-     * <string>The camera is used by CameraWidget plugin.</string>
-     * <key>com.apple.security.device.camera</key>
-     * <true/>
-     * https://doc.qt.io/qt-6/macos.html
-     */
-
     m_view = new myGraphicsView(this);
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

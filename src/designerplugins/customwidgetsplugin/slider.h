@@ -11,7 +11,9 @@
 class CUSTOMWIDGETS_DLLSPEC Slider : public QSlider
 {
     Q_OBJECT
+#if !defined(__DOXYGEN__)
     Q_PROPERTY(int currentValue READ currentValue WRITE setCurrentValue)
+#endif
 
 public:
 

@@ -3,7 +3,9 @@
 class SliderPlugin: public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+#if !defined(__DOXYGEN__)
     Q_INTERFACES(QDesignerCustomWidgetInterface)
+#endif
 
 public:
     explicit SliderPlugin(QObject *parent = nullptr);

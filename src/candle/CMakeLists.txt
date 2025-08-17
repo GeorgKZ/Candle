@@ -10,6 +10,9 @@ message(STATUS "################################################################
 message(STATUS "Проект '${CMAKE_PROJECT_NAME}', компонент '${MAIN_NAME}'")
 message(STATUS "##############################################################################")
 
+# RPATH, который будет использован на этапе установки
+set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib/candle/lib")
+
 ##############################################################################
 # Директории с файлами, необходимыми для сборки
 ##############################################################################
@@ -362,20 +365,21 @@ endif()
 ##############################################################################
 
 # Добавить цель (исполняемый файл) в список файлов, для которых будут найдены зависимости
-list(APPEND DEP_FILE_ARG "${FIND_DEPS_PATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
+list(APPEND DEP_FILES_LIST "${FIND_DEPS_PATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
 
-file(GLOB QT_PLATFORM_LIST
-  RELATIVE "${QT_PLATFORM_PATH}"
-  "${QT_PLATFORM_PATH}/*${CMAKE_SHARED_LIBRARY_SUFFIX}"
-)
+#file(GLOB QT_PLATFORM_LIST
+#  RELATIVE "${QT_PLATFORM_PATH}"
+#  "${QT_PLATFORM_PATH}/*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+#)
 
 # Добавить библиотеки платформ в список файлов,
 # для которых будут найдены зависимости
-foreach(FILE ${QT_PLATFORM_LIST})
-    # Если это библиотека, дополнить список поиска зависимостей
-    list(APPEND DEP_FILE_ARG "${QT_PLATFORM_PATH}/${FILE}")
-endforeach()
-file(WRITE "${MISC_PATH}/dep_src.txt" "${DEP_FILE_ARG}")
+#foreach(FILE ${QT_PLATFORM_LIST})
+#    # Если это библиотека, дополнить список поиска зависимостей
+#    list(APPEND DEP_FILE_ARG "${QT_PLATFORM_PATH}/${FILE}")
+#endforeach()
+
+file(WRITE "${MISC_PATH}/dep_src.txt" "${DEP_FILES_LIST}")
 
 # Подготовка набора динамических библиотек, от которых зависит цель
 add_custom_target(get_deps_${MAIN_NAME} ALL
@@ -404,13 +408,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     install(TARGETS ${MAIN_NAME}
       RUNTIME # DESTINATION .
-      BUNDLE DESTINATION . # Install to CMAKE_INSTALL_PREFIX/MyApp.app/Contents/MacOS/MyApp "${CMAKE_INSTALL_PREFIX}"
+      BUNDLE DESTINATION .
     )
 
 else()
 
     install(TARGETS ${MAIN_NAME}
-      RUNTIME #  DESTINATION ${CMAKE_INSTALL_BINDIR}
+      RUNTIME
 )
 
 endif()

@@ -12,6 +12,7 @@ class SliderBox;
 class CUSTOMWIDGETS_DLLSPEC SliderBox : public QWidget
 {
     Q_OBJECT
+#if !defined(__DOXYGEN__)
     Q_PROPERTY(int value READ value WRITE setValue)
     Q_PROPERTY(int currentValue READ currentValue WRITE setCurrentValue)
     Q_PROPERTY(int sliderPosition READ sliderPosition WRITE setSliderPosition)
@@ -22,6 +23,7 @@ class CUSTOMWIDGETS_DLLSPEC SliderBox : public QWidget
     Q_PROPERTY(int maximum READ maximum WRITE setMaximum)
     Q_PROPERTY(QString suffix READ suffix WRITE setSuffix)
     Q_PROPERTY(QString title READ title WRITE setTitle)
+#endif
     
 public:
     explicit SliderBox(QWidget *parent = nullptr);

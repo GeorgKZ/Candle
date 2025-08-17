@@ -26,9 +26,11 @@ public:
     ExistingOnly = 0x0080
   };
 
+#if !defined(__DOXYGEN__)
   Q_ENUM(OpenModeFlag)
   Q_DECLARE_FLAGS(OpenMode, OpenModeFlag)
   Q_FLAGS(OpenMode)
+#endif
 
 public:
 
@@ -200,13 +202,17 @@ public:
         ReadGroup = 0x0040, WriteGroup = 0x0020, ExeGroup = 0x0010,
         ReadOther = 0x0004, WriteOther = 0x0002, ExeOther = 0x0001
     };
+#if !defined(__DOXYGEN__)
     Q_DECLARE_FLAGS(Permissions, Permission)
+#endif
 
     enum FileHandleFlag {
         AutoCloseHandle = 0x0001,
         DontCloseHandle = 0
     };
+#if !defined(__DOXYGEN__)
     Q_DECLARE_FLAGS(FileHandleFlags, FileHandleFlag)
+#endif
 
 #if 0
     ~QFileDevice();

@@ -3,7 +3,9 @@
 class SliderBoxPlugin: public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+#if !defined(__DOXYGEN__)
     Q_INTERFACES(QDesignerCustomWidgetInterface)
+#endif
 
 public:
     explicit SliderBoxPlugin(QObject *parent = nullptr);
