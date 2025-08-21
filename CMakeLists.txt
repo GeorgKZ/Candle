@@ -65,6 +65,9 @@ set(BUNDLE_FRAMEWORK_PATH "${BUNDLE_CONTENT_PATH}/Frameworks")
 # Путь к директории ресурсов пакета для MacOS/OS X
 set(BUNDLE_RESOURCE_PATH "${BUNDLE_CONTENT_PATH}/Resources")
 
+# Путь к директории плюгинов Qt для MacOS/OS X
+set(BUNDLE_PLUGIN_PATH "${BUNDLE_CONTENT_PATH}/plugins")
+
 ##############################################################################
 # Установки, которые необходимо выполнить до поиска Qt
 ##############################################################################
@@ -105,6 +108,7 @@ endif()
 # Настройка местоположения Qt
 ##############################################################################
 
+# Определить местоположение Qt
 if(DEFINED ENV{QT_ROOT})
     message(DEBUG "Директория Qt согласно окружению QT_ROOT=$ENV{QT_ROOT}")
 
@@ -133,20 +137,18 @@ else()
     set(Qt6_DIR "$ENV{QtCore_path}/lib/cmake/Qt6/" CACHE PATH "The directory containing a CMake configuration file for Qt6.")
 endif()
 
-
 # Директория, в которой расположены плюгины Qt
 set(QT_PLUGIN_PATH "${QT_DIR}/../../../plugins")
-
-# Директория, в которой расположены платформы Qt
-set(QT_PLATFORM_PATH "${QT_PLUGIN_PATH}/platforms")
 
 # Список необходимых для приложения плюгинов
 set(QT_PLUGIN_LIST
   "iconengines"
   "imageformats"
+  "permissions"
   "platforminputcontexts"
   "platforms"
   "platformthemes"
+  "styles"
   "xcbglintegrations"
 )
 
@@ -601,25 +603,6 @@ set(CMAKE_AUTOUIC ON)
 # Использовать метаобъектный компилятор
 set(CMAKE_AUTOMOC ON)
 
-# Формирование файла qt.conf
-file(WRITE
-  "${MISC_PATH}/qt.conf"
-  "[Paths]\n"
-  "Plugins = QtPlugins\n"
-)
-
-file(WRITE
-  "${MISC_PATH}/remove_zerofile.cmake"
-
-  "if(EXISTS \"\${FILENAME}\")\n"
-  "    file(SIZE \"\${FILENAME}\" FILE_SIZE)\n"
-  "    if(FILE_SIZE EQUAL 0)\n"
-  "        file(REMOVE \"\${FILENAME}\")\n"
-  "    endif()\n"
-  "endif()\n"
-)
-
-
 ##############################################################################
 # Формирование установочного набора
 ##############################################################################
@@ -652,20 +635,20 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
         DESTINATION "share/icons/hicolor/256x256/apps"
         RENAME candle.png
     )
+# Если сборка предназначена для выполнения под MacOS / OS X
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    # Файл лицензии (этап конфигурации)
+    message(DEBUG "Установить файл лицензии")
+    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+        DESTINATION "${BUNDLE_RESOURCE_PATH}"
+    )
 endif()
 
 # Установить найденные зависимости в директорию для библиотек
 install(DIRECTORY "${FOUND_DEPS_PATH}/"
   TYPE LIB
 )
-
-# Установить файл qt.conf
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # Установить файл qt.conf
-    install(FILES "${MISC_PATH}/qt.conf"
-      DESTINATION "${BUNDLE_RESOURCE_PATH}"
-    )
-endif()
 
 #Установить плюгины Qt
 foreach(PLUGIN ${QT_PLUGIN_LIST})
@@ -686,13 +669,13 @@ foreach(PLUGIN ${QT_PLUGIN_LIST})
             # Для конфигураций Release и MinSizeRel включать только библиотеки,
             # без файлов отладочной информации
             install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
-              DESTINATION "${BUNDLE_CONTENT_PATH}/QtPlugins/${PLUGIN}"
+              DESTINATION "${BUNDLE_PLUGIN_PATH}/${PLUGIN}"
             )
 
             # Для конфигураций Debug и RelWithDebInfo добавить файлы отладочной информации
             install(DIRECTORY "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}.dSYM"
               CONFIGURATIONS Debug RelWithDebInfo
-              DESTINATION "${BUNDLE_CONTENT_PATH}/QtPlugins/${PLUGIN}"
+              DESTINATION "${BUNDLE_PLUGIN_PATH}/${PLUGIN}"
             )
         endif()
         # Дополнить список поиска зависимостей
@@ -863,7 +846,7 @@ if (DOXYGEN_FOUND)
         # Команда удаления файла warnings.log нулевой длины
         ${CMAKE_COMMAND}
           -DFILENAME=warnings.log
-          -P "${MISC_PATH}/remove_zerofile.cmake"
+          -P "scripts/remove_zerofile.cmake"
         WORKING_DIRECTORY ${DOC_PATH}
         COMMENT "Удаление файлов нулевой длины"
         VERBATIM

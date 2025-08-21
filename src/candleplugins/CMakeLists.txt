@@ -64,7 +64,7 @@ foreach(I ${SUBDIRS})
         endif()
 
         # Перебрать все поддерживаемые языки
-        set(QM_FILES "")
+#        set(QM_FILES "")
         foreach(L ${QT_LANG})
             string(SUBSTRING ${L} 0 2 LANG_F)
 
@@ -90,7 +90,7 @@ foreach(I ${SUBDIRS})
                 DEPENDS ${QM_FILE}
             )
 
-            list(APPEND QM_FILES ${QM_FILE})
+#            list(APPEND QM_FILES ${QM_FILE})
 
         endforeach(L)
     endif()
@@ -107,12 +107,22 @@ file(GLOB SUBDIRS RELATIVE ${SOURCES_PATH} ${SOURCES_PATH}/*)
 foreach(I ${SUBDIRS})
     if(IS_DIRECTORY ${SOURCES_PATH}/${I} AND EXISTS ${SOURCES_PATH}/${I})
 
+        # Установка яваскриптов и файлов ui
         install(FILES
             ${PLUGIN_PATH}/script.js
             ${SRC_FILES}
-            ${QM_FILES}
+#            ${QM_FILES}
             DESTINATION ${DEST_DIR}/${I}
         )
+
+        # Установка скомпилированных файлов перевода
+        foreach(L ${QT_LANG})
+            string(SUBSTRING ${L} 0 2 LANG_F)
+            install(FILES
+                "${TRANSLATE_PATH}/${I}_${LANG_F}.qm"
+                DESTINATION ${DEST_DIR}/${I}
+            )
+        endforeach(L)
 
         # Установка изображений (при наличии)
         set(IMG_PATH "${PLUGIN_PATH}/images")

@@ -367,18 +367,7 @@ endif()
 # Добавить цель (исполняемый файл) в список файлов, для которых будут найдены зависимости
 list(APPEND DEP_FILES_LIST "${FIND_DEPS_PATH}/${MAIN_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
 
-#file(GLOB QT_PLATFORM_LIST
-#  RELATIVE "${QT_PLATFORM_PATH}"
-#  "${QT_PLATFORM_PATH}/*${CMAKE_SHARED_LIBRARY_SUFFIX}"
-#)
-
-# Добавить библиотеки платформ в список файлов,
-# для которых будут найдены зависимости
-#foreach(FILE ${QT_PLATFORM_LIST})
-#    # Если это библиотека, дополнить список поиска зависимостей
-#    list(APPEND DEP_FILE_ARG "${QT_PLATFORM_PATH}/${FILE}")
-#endforeach()
-
+# Сохранить файл со приском файлов, для которых будут найдены зависимости
 file(WRITE "${MISC_PATH}/dep_src.txt" "${DEP_FILES_LIST}")
 
 # Подготовка набора динамических библиотек, от которых зависит цель
