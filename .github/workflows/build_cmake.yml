@@ -307,8 +307,6 @@ jobs:
           break()
         endforeach()
 
-#       execute_process(COMMAND ${qt_dir}/bin/qmake -query)
-
         if ("${{ runner.os }}" STREQUAL "Windows")
           # для Windows поместить системные библиотеки в директорию Qt, чтобы их было проще собрать в установочный пакет
           foreach(file vcruntime140.dll concrt140.dll msvcp140_1.dll msvcp140_2.dll
