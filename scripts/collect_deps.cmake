@@ -11,6 +11,10 @@ function(install_library_with_deps NAME)
         set(PATH_TO_NAME "${QT_DIR}/../..")
         message(STATUS "FOUND Qt library")
 
+    elseif(EXISTS "${QT_DIR}/../../../bin/${NAME}")
+        set(PATH_TO_NAME "${QT_DIR}/../../../bin")
+        message(STATUS "FOUND Qt library")
+
     # Проверить, может это фреймворк из указанного Qt
     elseif(EXISTS "${QT_DIR}/../../${NAME}.framework")
         set(PATH_TO_NAME "${QT_DIR}/../..")

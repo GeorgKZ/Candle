@@ -52,6 +52,11 @@ jobs:
             cc: "gcc", cxx: "g++"
           }
         - {
+            name: "macOS 13 Clang", artifact: "macos-13",
+            os: macos-13,
+            cc: "clang", cxx: "clang++"
+          }
+        - {
             name: "macOS Latest Clang", artifact: "macos-universal",
             os: macos-latest,
             cc: "clang", cxx: "clang++"
@@ -302,7 +307,7 @@ jobs:
           break()
         endforeach()
 
-        execute_process(COMMAND ${qt_dir}/bin/qmake -query)
+#       execute_process(COMMAND ${qt_dir}/bin/qmake -query)
 
         if ("${{ runner.os }}" STREQUAL "Windows")
           # для Windows поместить системные библиотеки в директорию Qt, чтобы их было проще собрать в установочный пакет

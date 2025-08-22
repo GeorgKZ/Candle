@@ -60,8 +60,7 @@ add_definitions(
 # При сборке для работы в среде Windows
 if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
-    # Путь к файлу значка ICO для сборки исполняемого файла Windows
-    set(ICON_FILE "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
+    # Строка ресурса, содержащая путь к файлу значка ICO
     set(ICON_RESOURCE_STRING "IDI_ICON1 ICON DISCARDABLE \"${ICON_FILE}\"\n\n")
 
     # Создать файл ресурса по шаблону

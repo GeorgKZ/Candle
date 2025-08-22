@@ -77,10 +77,12 @@ add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})
 # Формирование установочного набора
 ##############################################################################
 
+# Будет установлено как зависимости
+
 # Вывод сообщений об установке только если было изменение
-set(CMAKE_INSTALL_MESSAGE LAZY)
+#set(CMAKE_INSTALL_MESSAGE LAZY)
 
 # Библиотека
-install(TARGETS ${MAIN_NAME}
-  LIBRARY
-)
+#install(TARGETS ${MAIN_NAME}
+#  LIBRARY
+#)

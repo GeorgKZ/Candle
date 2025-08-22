@@ -5,18 +5,6 @@
 cmake_minimum_required(VERSION 3.9...3.28)
 
 ##############################################################################
-# Функция удаления файла нулевой длины
-##############################################################################
-function(remove_zerofile FILENAME)
-    if(EXISTS "${FILENAME}")
-        file(SIZE "${FILENAME}" FILE_SIZE)
-        if(FILE_SIZE EQUAL 0)
-            file(REMOVE "${FILENAME}")
-        endif()
-    endif()
-endfunction()
-
-##############################################################################
 # Установки, которые необходимо выполнить до директивы project(...)
 ##############################################################################
 
@@ -31,7 +19,6 @@ endif()
 # Директория для установочного набора
 set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install" CACHE PATH "Install path prefix, prepended onto install directories.")
 
-
 ##############################################################################
 # Информация о проекте
 ##############################################################################
@@ -40,11 +27,15 @@ set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install" CACHE PATH "Install path prefix
 project(Candle
     VERSION 1.2.15.1
     DESCRIPTION "GRBL controller application with G-Code visualizer"
+    HOMEPAGE_URL "https://github.com/GeorgKZ/Candle"
     LANGUAGES CXX
 )
 
 # Имя проекта, приведённое к нижнему регистру
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
+
+# Путь к файлу значка ICO проекта
+set(ICON_FILE "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
 
 ##############################################################################
 # Относительные пути для пакетов MacOS/OS X
@@ -72,8 +63,20 @@ set(BUNDLE_PLUGIN_PATH "${BUNDLE_CONTENT_PATH}/plugins")
 # Установки, которые необходимо выполнить до поиска Qt
 ##############################################################################
 
+# При сборке для работы в среде Windows
+if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
+
+    # Путь, куда устанавливать динамические библиотеки
+    set(CMAKE_INSTALL_LIBDIR "./"
+      CACHE PATH "Object code libraries (lib)"
+    )
+    # Путь, куда устанавливать исполняемые файлы
+    set(CMAKE_INSTALL_BINDIR "./"
+      CACHE PATH "User executables (bin)"
+    )
+
 # При сборке для работы в среде Linux
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     # Путь, куда устанавливать динамические библиотеки
     set(CMAKE_INSTALL_LIBDIR "lib/candle/lib"
@@ -85,7 +88,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     )
 
 # При сборке для работы в среде MacOS/OS X
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     # Путь, куда устанавливать динамические библиотеки
     set(CMAKE_INSTALL_LIBDIR "${BUNDLE_FRAMEWORK_PATH}"
@@ -95,9 +98,6 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_INSTALL_BINDIR "${BUNDLE_BINARY_PATH}"
       CACHE PATH "User executables (bin)"
     )
-
-# При сборке для работы в среде Windows
-elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
 else()
     message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
@@ -142,6 +142,8 @@ set(QT_PLUGIN_PATH "${QT_DIR}/../../../plugins")
 
 # Список необходимых для приложения плюгинов
 set(QT_PLUGIN_LIST
+  "accessible"
+  "accessiblebridge"
   "iconengines"
   "imageformats"
   "permissions"
@@ -580,6 +582,7 @@ set(CMAKE_MESSAGE_LOG_LEVEL "${CMAKE_LOGGING_LEVEL}" CACHE STRING "Уровен�
 
 message(STATUS "##############################################################################")
 message(STATUS "Проект '${CMAKE_PROJECT_NAME}' версии ${PROJECT_VERSION}")
+message(STATUS "Сайт приложения ${PROJECT_HOMEPAGE_URL}")
 message(STATUS "CMake версии ${CMAKE_VERSION}")
 message(STATUS "Уровень журналирования CMake ${CMAKE_LOGGING_LEVEL} и выше")
 message(STATUS "Компилятор ${CMAKE_CXX_COMPILER_ID}")
@@ -645,7 +648,8 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     )
 endif()
 
-# Установить найденные зависимости в директорию для библиотек
+# Установить найденные зависимости (включая свои библиотеки)
+# в директорию для библиотек
 install(DIRECTORY "${FOUND_DEPS_PATH}/"
   TYPE LIB
 )
@@ -659,13 +663,24 @@ foreach(PLUGIN ${QT_PLUGIN_LIST})
     )
      # Установить файлы плюгина Qt
     foreach(FILE ${QT_PLUGIN_FILES_LIST})
-        if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+
+            # Для конфигураций Release и MinSizeRel включать только библиотеки,
+            # без файлов отладочной информации
+            install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
+              DESTINATION "plugins/${PLUGIN}"
+            )
+
+        elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
             # Для конфигураций Release и MinSizeRel включать только библиотеки,
             # без файлов отладочной информации
             install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
               DESTINATION "lib/candle/plugins/${PLUGIN}"
             )
+
         elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
             # Для конфигураций Release и MinSizeRel включать только библиотеки,
             # без файлов отладочной информации
             install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
@@ -677,6 +692,7 @@ foreach(PLUGIN ${QT_PLUGIN_LIST})
               CONFIGURATIONS Debug RelWithDebInfo
               DESTINATION "${BUNDLE_PLUGIN_PATH}/${PLUGIN}"
             )
+
         endif()
         # Дополнить список поиска зависимостей
         list(APPEND DEP_FILES_LIST "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}")
@@ -684,7 +700,7 @@ foreach(PLUGIN ${QT_PLUGIN_LIST})
 endforeach(PLUGIN)
 
 ##############################################################################
-# Обработка компонентов (библиотеки, скрипты, исполняемый файл, упаковка)
+# Обработка компонентов (библиотеки, скрипты, исполняемый файл)
 ##############################################################################
 
 add_subdirectory(src/designerplugins/cameraplugin)
@@ -697,7 +713,13 @@ add_subdirectory(src/candle)
 
 add_subdirectory(src/candleplugins)
 
-add_subdirectory(scripts)
+##############################################################################
+# Упаковка
+##############################################################################
+
+include(scripts/CPpack.cmake)
+
+#add_subdirectory(scripts)
 
 ##############################################################################
 # Статический анализ исходных текстов при помощи PVS-Studio
@@ -750,20 +772,6 @@ if (EXISTS ${CLANG_TIDY_EXE})
     set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}" -checks=-*, readability-*)
 
 endif()
-
-##############################################################################
-# Архивирование всего проекта в директорию сборки
-##############################################################################
-
-set(ARCHIVE_NAME "${CMAKE_PROJECT_NAME}.tar.gz") 
-
-add_custom_target(backup
-    COMMENT "Создание архива исходных текстов"
-    COMMAND touch ${ARCHIVE_NAME}
-    COMMAND tar --exclude=.git --exclude=${ARCHIVE_NAME} --create --gzip --file=${ARCHIVE_NAME} .
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    VERBATIM
-)
 
 ##############################################################################
 # Создание файлов документации (HTML, PDF)

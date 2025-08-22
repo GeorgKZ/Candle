@@ -1,16 +1,3 @@
-#set(IDE_BUNDLE_IDENTIFIER "org.${PROJECT_NAME_LOWERCASE}")            # The macOS application bundle identifier.
-#set(IDE_APP_ID "org.${PROJECT_NAME_LOWERCASE}")                       # The free desktop application identifier.
-#set(IDE_PUBLISHER "Publisher.")
-#set(IDE_AUTHOR "${IDE_PUBLISHER} and other contributors.")
-#set(IDE_COPYRIGHT "Copyright (C) ${IDE_AUTHOR}")
-
-# Absolute, or relative to /src/app
-# Should contain candle.ico, candle.xcassets
-set(IDE_ICON_PATH "")
-# Absolute, or relative to /src/app
-# Should contain images/logo/(16|24|32|48|64|128|256|512)/${PROJECT_NAME_LOWERCASE}.png
-set(IDE_LOGO_PATH "")
-
 ##############################################################################
 # Выбор типов установочных пакетов в зависимости от целевой среды выполнения
 ##############################################################################
@@ -36,9 +23,14 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 # При сборке для работы в среде Windows
 elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
+#    find_program(NSIS_EXE
+#      NAMES "makensis.exe" 
+#      PATHS "C:/nsis-windows-x86_64/nsis-3.11"
+#      PATHS "C:/Program Files (x86)/NSIS"
+#    )
+
     set(CPACK_GENERATOR
 # Для IFW необходим binarycreator
-# NSIS надо будет сделать
 #       "IFW;NSIS;ZIP"
         "NSIS;ZIP"
     )
@@ -55,7 +47,7 @@ endif()
 # Имя для установочного пакета, по умолчанию PROJECT_NAME
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 # Имя поставщика
-set(CPACK_PACKAGE_VENDOR "Vendor name")
+set(CPACK_PACKAGE_VENDOR "${VENDOR}")
 # Директория, в которой будет производиться упаковка
 set(CPACK_PACKAGE_DIRECTORY "${BUILD_PATH}/packaging")
 # Версия упаковываемого приложения
@@ -67,7 +59,7 @@ set(CPACK_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
 # Краткое описание приложения
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 # Контактные данные поставщика установочного пакета
-set(CPACK_PACKAGE_CONTACT "Maintainer <maintainer@mail.com>")
+#set(CPACK_PACKAGE_CONTACT "Maintainer <maintainer@mail.com>")
 # Директория целевой среды выполненния, в которую будет выполнена установка
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME_LOWERCASE}-${CMAKE_PROJECT_VERSION})
 # Лицензия, которая будет встроена в установочный пакет (для WIX необходимо расширение .txt)
@@ -196,26 +188,133 @@ set(CPACK_DEBIAN_COMPRESSION_TYPE gzip)
 # https://cmake.org/cmake/help/latest/cpack_gen/nsis.html
 ##############################################################################
 
-# The default installation directory presented to the end user by the NSIS installer is under this root dir
-set(CPACK_NSIS_INSTALL_ROOT "C:")
-# Значок для установки пакета
-set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
-# Значок для удаления пакета
-set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
+# Корневая директория по умолчанию для инсталлятора NSIS.
+# Полный путь будет таким: ${CPACK_NSIS_INSTALL_ROOT}/${CPACK_PACKAGE_INSTALL_DIRECTORY}
+set(CPACK_NSIS_INSTALL_ROOT "C:\\Program Files")
 
-#set(CPACK_NSIS_INSTALLED_ICON_NAME "${IDE_APP_PATH}\\${IDE_APP_TARGET}.exe")
-set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_DESCRIPTION} ${CMAKE_PROJECT_VERSION}")
-set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_DESCRIPTION} ${CMAKE_PROJECT_VERSION}")
+# Значок (*.ico) для установки пакета
+set(CPACK_NSIS_MUI_ICON "${ICON_FILE}")
+
+# Значок (*.ico) для удаления пакета
+set(CPACK_NSIS_MUI_UNIICON "${ICON_FILE}")
+
+# Не документировано
+#set(CPACK_NSIS_INSTALLER_MUI_ICON_CODE
+
+# Имя файла-битмапа для MUI_WELCOMEFINISHPAGE_BITMAP
+#set(CPACK_NSIS_MUI_WELCOMEFINISHPAGE_BITMAP
+
+# Имя файла-битмапа для MUI_UNWELCOMEFINISHPAGE_BITMAP
+#set(CPACK_NSIS_MUI_UNWELCOMEFINISHPAGE_BITMAP
+
+# Дополнительные директтивы NSIS, которые будут добавлены в начало секции установки, before your install tree is available on the target system.
+#set(CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS
+
+# Дополнительные директтивы NSIS, которые будут добавлены в конец секции установки, after your install tree is available on the target system.
+#set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
+
+# Дополнительные директтивы NSIS, которые будут добавлены к секции удаления, before your install tree is removed from the target system.
+#set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS
+
 # Параметры, которые будут переданы архиватору
-set(CPACK_NSIS_COMPRESSOR "/SOLID lzma\n  SetCompressorDictSize 64")
-# Specify an executable to add an option to run on the finish page of the NSIS installer
-#set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${IDE_APP_TARGET}")
-# Additional NSIS commands for creating Start Menu shortcuts
-#set(CPACK_NSIS_CREATE_ICONS_EXTRA
-#   "CreateShortCut '$SMPROGRAMS\\$STARTMENU_FOLDER\\${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}.lnk' '$INSTDIR\\${IDE_APP_PATH}\\${IDE_APP_TARGET}.exe' "
+set(CPACK_NSIS_COMPRESSOR "/SOLID lzma\n SetCompressorDictSize 64")
+
+# Спросить (при значнии ON) о необходимости удаления предыдущих версий приложения
+set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+
+# Необходимость (при значнии ON) добавить к переменной окружения PATH путь к приложению
+set(CPACK_NSIS_MODIFY_PATH OFF)
+
+# Название программы, отображаемое в "Программах и компонентах" панели управления Windows
+set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
+
+# Название, отображаемое в строке заголовка окна установщика,
+# а также на приветственной (если не указано CPACK_NSIS_WELCOME_TITLE)
+# и заключительной странице (если не указано CPACK_NSIS_FINISH_TITLE)
+set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
+
+# Путь к исполняемому файлу, содержащему значок для установщика
+set(CPACK_NSIS_INSTALLED_ICON_NAME "./${PROJECT_NAME_LOWERCASE}.exe")
+
+# Ссылка (URL) на страницу веб-сайта, где представлена помощь в установке приложения.
+#set(CPACK_NSIS_HELP_LINK
+
+# Ссылка (URL) на страницу веб-сайта, где представлена дополнительная информация о приложении.
+# Эта ссылка будет добавлена в реестр и в ссылки на программы в инструменте «Добавить или удалить программы».
+set(CPACK_NSIS_URL_INFO_ABOUT "${PROJECT_HOMEPAGE_URL}")
+
+# Contact information for questions and comments about the installation process.
+#set(CPACK_NSIS_CONTACT
+
+# Custom install directory for the specified component <compName> instead of $INSTDIR.
+#set(CPACK_NSIS_<compName>_INSTALL_DIRECTORY
+
+# Дополнительные директивы NSIS для создания ярлычков в меню "Пуск"
+set(CPACK_NSIS_CREATE_ICONS_EXTRA
+   "CreateShortCut '$SMPROGRAMS\\$STARTMENU_FOLDER\\${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}.lnk' '$INSTDIR\\${PROJECT_NAME_LOWERCASE}.exe'"
+)
+
+# Дополнительные директивы NSIS для удаления ярлычков в меню "Пуск".
+#set(CPACK_NSIS_DELETE_ICONS_EXTRA
+#  "Delete '$DESKTOP\\${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}.lnk'"
 #)
-# if set, declares that the installer is DPI-aware
+
+# Путь (по умолчанию bin) к исполняемым файлам пакета для меню "Пуск"
+set(CPACK_NSIS_EXECUTABLES_DIRECTORY "./")
+
+# Исполняемый файл, который будет предложено запустить после установки
+set(CPACK_NSIS_MUI_FINISHPAGE_RUN "./${PROJECT_NAME_LOWERCASE}.exe")
+
+# Specify links in [application] menu. This should contain a list of pair link link name. The link may be a URL or a path relative to installation prefix. Like:
+#
+# set(CPACK_NSIS_MENU_LINKS
+#   "doc/cmake-@CMake_VERSION_MAJOR@.@CMake_VERSION_MINOR@/cmake.html"
+#   "CMake Help" "https://cmake.org" "CMake Web Site")
+#set(CPACK_NSIS_MENU_LINKS
+
+# Имя программы для удаления приложения. По умолчанию Uninstall.
+#set(CPACK_NSIS_UNINSTALL_NAME "Uninstall")
+
+# Название, отображаемое на странице приветствия
+set(CPACK_NSIS_WELCOME_TITLE "Установка ${PROJECT_DESCRIPTION} ${CMAKE_PROJECT_VERSION}")
+
+# Отображать (значение ON) заголовок приложения на странице приветствия в три строки, а не в две
+set(CPACK_NSIS_WELCOME_TITLE_3LINES ON)
+
+# Название, отображаемое на заключительной странице
+set(CPACK_NSIS_FINISH_TITLE "Завершение установки ${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
+
+# Отображать (значение ON) заголовок приложения на заключительной странице в три строки, а не в две
+set(CPACK_NSIS_FINISH_TITLE_3LINES ON)
+
+# Изображение, отображаемое на заголовке установочных окон
+#set(CPACK_NSIS_MUI_HEADERIMAGE
+
+# Если установлено (значение ON), указывает в манифесте установщика, что установщик
+# может корректно масштабироваться при работе с экранами с высокой плотностью пикселей (DPI-aware)
 set(CPACK_NSIS_MANIFEST_DPI_AWARE ON)
+
+# Если установлено, updates the text at the bottom of the install window. To set the string to blank, use a space (" ").
+#set(CPACK_NSIS_BRANDING_TEXT " ")
+
+# Если установлено, trim down the size of the control to the size of the branding text string. Allowed values for this variable are LEFT, CENTER or RIGHT. If not specified, the default behavior is LEFT.
+#set(CPACK_NSIS_BRANDING_TEXT_TRIM_POSITION CENTER)
+
+# Если установлено, то указывает имя исполняемого файла NSIS (по умолчанию makensis)
+#set(CPACK_NSIS_EXECUTABLE makensis)
+
+# Если установлено (значение ON), то при установке лицензия не бует отображаться
+set(CPACK_NSIS_IGNORE_LICENSE_PAGE OFF)
+
+# This variable is a semicolon-separated list of arguments to prepend to the nsis script to run. If the arguments do not start with a / or a -, it will add one automatically to the corresponding arguments. The command that will be run is:
+# makensis.exe <preArgs>... "nsisFileName.nsi" <postArgs>...
+# where <preArgs>... is constructed from CPACK_NSIS_EXECUTABLE_PRE_ARGUMENTS and <postArgs>... is constructed from CPACK_NSIS_EXECUTABLE_POST_ARGUMENTS.
+#set(CPACK_NSIS_EXECUTABLE_PRE_ARGUMENTS
+
+# This variable is a semicolon-separated list of arguments to append to the nsis script to run. If the arguments do not start with a / or a -, it will add one automatically to the corresponding arguments. The command that will be run is:
+# makensis.exe <preArgs>... "nsisFileName.nsi" <postArgs>...
+# where <preArgs>... is constructed from CPACK_NSIS_EXECUTABLE_PRE_ARGUMENTS and <postArgs>... is constructed from CPACK_NSIS_EXECUTABLE_POST_ARGUMENTS.
+#set(CPACK_NSIS_EXECUTABLE_POST_ARGUMENTS
 
 ##############################################################################
 # https://cmake.org/cmake/help/latest/cpack_gen/nuget.html
@@ -254,7 +353,7 @@ set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
 # https://cmake.org/cmake/help/latest/cpack_gen/wix.html
 ##############################################################################
 
-set(CPACK_WIX_PRODUCT_ICON "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
+set(CPACK_WIX_PRODUCT_ICON "${ICON_FILE}")
 set(CPACK_WIX_UPGRADE_GUID "E6A093A5-83DE-47FA-B669-1DE0102BE92A")
 set(CPACK_WIX_LIGHT_EXTRA_FLAGS "-dcl:high") # set high compression
 

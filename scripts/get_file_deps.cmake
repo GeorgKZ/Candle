@@ -16,6 +16,7 @@ function(get_prerequisites target prerequisites_var)
     # При работе в среде Windows - dumpbin
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
         set(gp_cmd_paths ${gp_cmd_paths}
+          "$ENV{VS170COMNTOOLS}/../../VC/bin"
           "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\14.0;InstallDir]/../../VC/bin"
           "$ENV{VS140COMNTOOLS}/../../VC/bin"
           "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
@@ -41,7 +42,7 @@ function(get_prerequisites target prerequisites_var)
           "C:/Program Files/Microsoft Visual Studio .NET 2003/VC7/BIN"
           "C:/Program Files (x86)/Microsoft Visual Studio .NET 2003/VC7/BIN"
         )
-        set(gp_tool "${CMAKE_OBJDUMP}")
+        set(gp_tool "dumpbin")
         find_program(gp_cmd ${gp_tool} PATHS ${gp_cmd_paths})
     # При работе в среде Cygwin - ?
     elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "CYGWIN.*")
@@ -211,7 +212,7 @@ function(get_prerequisites target prerequisites_var)
 
 
 
-      # Вызвать инструмент gp_cmd для исследуемого файла
+      # Вызвать инструмент dumpbin для исследуемого файла
       execute_process(
         COMMAND ${gp_cmd} /dependents ${target}
         RESULT_VARIABLE gp_rv
@@ -246,7 +247,7 @@ function(get_prerequisites target prerequisites_var)
           if("${candidate}" MATCHES "${gp_regex}")
               # Extract information from each candidate:
               string(REGEX REPLACE "${gp_regex}" "\\1" raw_item "${candidate}")
-              message(STATUS "Found items: ${raw_item}") 
+#             message(STATUS "Found items: ${raw_item}") 
               set(${prerequisites_var} ${${prerequisites_var}} "${raw_item}" )
           endif()
       endforeach()
@@ -297,7 +298,7 @@ function(get_prerequisites target prerequisites_var)
           if("${candidate}" MATCHES "${gp_regex}")
               # Extract information from each candidate:
               string(REGEX REPLACE "${gp_regex}" "\\1" raw_item "${candidate}")
-              message(STATUS "Found items: ${raw_item}") 
+#             message(STATUS "Found items: ${raw_item}") 
               set(${prerequisites_var} ${${prerequisites_var}} "${raw_item}" )       
           endif()
       endforeach()

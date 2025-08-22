@@ -64,7 +64,6 @@ foreach(I ${SUBDIRS})
         endif()
 
         # Перебрать все поддерживаемые языки
-#        set(QM_FILES "")
         foreach(L ${QT_LANG})
             string(SUBSTRING ${L} 0 2 LANG_F)
 
@@ -89,9 +88,6 @@ foreach(I ${SUBDIRS})
             add_custom_target("translation_${I}__${LANG_F}" ALL
                 DEPENDS ${QM_FILE}
             )
-
-#            list(APPEND QM_FILES ${QM_FILE})
-
         endforeach(L)
     endif()
 endforeach(I)
@@ -105,13 +101,15 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 
 file(GLOB SUBDIRS RELATIVE ${SOURCES_PATH} ${SOURCES_PATH}/*)
 foreach(I ${SUBDIRS})
-    if(IS_DIRECTORY ${SOURCES_PATH}/${I} AND EXISTS ${SOURCES_PATH}/${I})
+
+    set(PLUGIN_PATH "${SOURCES_PATH}/${I}")
+    if(IS_DIRECTORY ${PLUGIN_PATH} AND EXISTS ${PLUGIN_PATH})
 
         # Установка яваскриптов и файлов ui
+        file(GLOB UI_FILES ${PLUGIN_PATH}/*.ui)
         install(FILES
             ${PLUGIN_PATH}/script.js
-            ${SRC_FILES}
-#            ${QM_FILES}
+            ${UI_FILES}
             DESTINATION ${DEST_DIR}/${I}
         )
 
