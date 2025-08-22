@@ -458,21 +458,21 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: build/packaging/Candle-1.2.15-Linux.deb
-        name: Candle-1.2.15-${{ runner.os }}.deb
+        name: Candle-1.2.15-${{ matrix.config.os }}.deb
 
     - name: Отдать установочный пакет NSIS для Windows
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
         path: build/packaging/Candle-1.2.15-win64.exe
-        name: Candle-1.2.15-${{ runner.os }}.exe
+        name: Candle-1.2.15-${{ matrix.config.os }}.exe
 
     - name: Отдать установочный пакет ZIP для Windows
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
         path: build/packaging/Candle-1.2.15-win64.zip
-        name: Candle-1.2.15-${{ runner.os }}.zip
+        name: Candle-1.2.15-${{ matrix.config.os }}.zip
 
     - name: Отдать установочный образ DMG для MacOS
       if: runner.os == 'macOS'
@@ -481,24 +481,7 @@ jobs:
         path: build/packaging/Candle-1.2.15-Darwin.dmg
         name: Candle-1.2.15-${{ matrix.config.os }}.dmg
 
-#  release:
-#    if: contains(github.ref, 'tags/v')
-#    runs-on: ubuntu-latest
-#    needs: build
-
-#    steps:
-#    - name: Download artifacts
-#      uses: actions/download-artifact@v4
-#      with:
-#        path: release-with-dirs
-#
-#    - name: Fixup artifacts
-#      run: |
-#        mkdir release
-#        mv release-with-dirs/*/* release/
-#        rm release/ccache*
-#
-#    - name: Create Release
+#    - name: Создать релиз
 #      id: create_release
 #      uses: softprops/action-gh-release@v2
 #      env:
@@ -506,6 +489,7 @@ jobs:
 #      with:
 #        tag_name: v${{ needs.build.outputs.tag }}
 #        body_path: release/changelog.md
-#        files: release/*
+#        files: |
+
 #        draft: false
 #        prerelease: false
