@@ -474,13 +474,12 @@ jobs:
         path: build/packaging/Candle-1.2.15-win64.zip
         name: Candle-1.2.15-${{ runner.os }}.zip
 
-
     - name: Отдать установочный образ DMG для MacOS
       if: runner.os == 'macOS'
       uses: actions/upload-artifact@v4
       with:
         path: build/packaging/Candle-1.2.15-Darwin.dmg
-        name: Candle-1.2.15-${{ runner.os }}.dmg
+        name: Candle-1.2.15-${{ matrix.os }}.dmg
 
 #  release:
 #    if: contains(github.ref, 'tags/v')

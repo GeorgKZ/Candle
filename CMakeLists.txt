@@ -34,6 +34,12 @@ project(Candle
 # Имя проекта, приведённое к нижнему регистру
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
 
+# Поставщик установочного пакета
+set(APPLICATION_VENDOR "GeorgKZ")
+
+# Контактные данные поставщика установочного пакета
+set(APPLICATION_MAINTAINER "${APPLICATION_VENDOR} https://github.com/GeorgKZ")
+
 # Путь к файлу значка ICO проекта
 set(ICON_FILE "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
 

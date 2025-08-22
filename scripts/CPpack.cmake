@@ -46,53 +46,54 @@ endif()
 
 # Имя для установочного пакета, по умолчанию PROJECT_NAME
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-# Имя поставщика
-set(CPACK_PACKAGE_VENDOR "${VENDOR}")
+
 # Директория, в которой будет производиться упаковка
 set(CPACK_PACKAGE_DIRECTORY "${BUILD_PATH}/packaging")
+
 # Версия упаковываемого приложения
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+
 # Описание приложения
 set(CPACK_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
+
 # Краткое описание приложения
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
+
+# Имя поставщика
+set(CPACK_PACKAGE_VENDOR "${APPLICATION_VENDOR}")
+
 # Контактные данные поставщика установочного пакета
-#set(CPACK_PACKAGE_CONTACT "Maintainer <maintainer@mail.com>")
+set(CPACK_PACKAGE_CONTACT "${APPLICATION_MAINTAINER}")
+
 # Директория целевой среды выполненния, в которую будет выполнена установка
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME_LOWERCASE}-${CMAKE_PROJECT_VERSION})
+
 # Лицензия, которая будет встроена в установочный пакет (для WIX необходимо расширение .txt)
 file(CREATE_LINK
   ${CMAKE_SOURCE_DIR}/LICENSE
   ${MISC_PATH}/LICENSE.txt
   COPY_ON_ERROR)
 set(CPACK_RESOURCE_FILE_LICENSE ${MISC_PATH}/LICENSE.txt)
+
 # Файл ReadMe, который будет встроен в инсталлятор (для PRODUCTBUILD необходимо расширение .txt)
 file(CREATE_LINK
   ${CMAKE_SOURCE_DIR}/readme.md
   ${MISC_PATH}/readme.txt
   COPY_ON_ERROR)
 set(CPACK_RESOURCE_FILE_README ${MISC_PATH}/readme.txt)
+
 #set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/Description.txt)
 #set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/Welcome.txt)
 
 # Переменные CPACK_... будут записаны в файлы конфигурации как есть, т.е.
 # никакие управляющий символы не будут обработаны
 set(CPACK_VERBATIM_VARIABLES YES)
+
 # Количество потоков, которые будут задействованы при сжатии установщика
 set(CPACK_THREADS 4)
 
-
-
-# Make CMAKE_INSTALL_DEFAULT_COMPONENT_NAME the first component to install
-#get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
-#list(REMOVE_ITEM CPACK_COMPONENTS_ALL ${CMAKE_INSTALL_DEFAULT_COMPONENT_NAME})
-#list(REMOVE_ITEM CPACK_COMPONENTS_ALL libraries) # empty component, breaks WIX
-#list(REMOVE_ITEM CPACK_COMPONENTS_ALL DebugInfo) # exclude the huge debug info
-#list(PREPEND CPACK_COMPONENTS_ALL ${CMAKE_INSTALL_DEFAULT_COMPONENT_NAME})
-
-#set(CPACK_COMPONENT_Dependencies_HIDDEN TRUE)
 
 #if (APPLE)
 #  set(CPACK_INSTALL_PREFIX "/")
@@ -101,7 +102,8 @@ set(CPACK_THREADS 4)
 if (NOT WIN32)
 # устанавливать префикс пути установки автоматически
 #  set(CPACK_SET_DESTDIR ON)
-  set(CPACK_STRIP_FILES ON)
+
+#  set(CPACK_STRIP_FILES ON)
 
  # if (NOT APPLE)
  #   set(CPACK_INSTALL_CMAKE_PROJECTS
@@ -139,16 +141,35 @@ set(CPACK_BUNDLE_ICON "???")
 # https://cmake.org/cmake/help/latest/cpack_gen/deb.html
 ##############################################################################
 
+# Разрешить покомпонентную установку
+set(CPACK_DEB_COMPONENT_INSTALL OFF)
+
 # Имя пакета Debian - обычно CPACK_PACKAGE_NAME в нижнем регистре
 set(CPACK_DEBIAN_PACKAGE_NAME ${PROJECT_NAME_LOWERCASE})
+
+# Имя файла пакета Debian
+#set(CPACK_DEBIAN_FILE_NAME ${PROJECT_NAME}.deb)
+
+# CPACK_DEBIAN_PACKAGE_EPOCH
+
+# Версия приложения в пакете
+set(CPACK_DEBIAN_PACKAGE_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+
+set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
+
 # Архитектура целевого процессора CPACK_DEBIAN_PACKAGE_ARCHITECTURE
 # устанавливается автоматически по архитектуре среды выполнения
+
 # Зависимости от других пакетов
 #set(CPACK_DEBIAN_PACKAGE_DEPENDS "libdouble-conversion3,libxcb-cursor0")
-# Обычно CPACK_PACKAGE_CONTACT
+
+#  Поставщик пакета (по умолчанию CPACK_PACKAGE_CONTACT)
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${CPACK_PACKAGE_CONTACT})
-# Описание пакета -  обычно CPACK_PACKAGE_DESCRIPTION_SUMMARY
+
+# Описание пакета (по умолчанию CPACK_PACKAGE_DESCRIPTION или
+# содержимое файла CPACK_PACKAGE_DESCRIPTION_FILE)
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
+
 # Секция пакета (admin, cli-mono, comm, database, debug, devel, doc, editors, education,
 # electronics, embedded, fonts, games, gnome, gnu-r, gnustep, graphics, hamradio, haskell,
 # httpd, interpreters, introspection, java, javascript, kde, kernel, libdevel, libs, lisp,
@@ -156,18 +177,25 @@ set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
 # php, python, ruby, rust, science, shells, sound, tasks, tex, text, utils, vcs, video, web,
 # x11, xfce, zope)
 # По умолчанию разработка - devel
-set(CPACK_DEBIAN_PACKAGE_SECTION devel)
+set(CPACK_DEBIAN_PACKAGE_SECTION misc)
+
+# Используемый формат архива пакета (по умолчанию gnutar)
+set(CPACK_DEBIAN_COMPRESSION_ARCHIVE gnutar)
+
+# Алгоритм сжатия пакета (lzma, xz, bzip2, gzip, zstd)
+set(CPACK_DEBIAN_COMPRESSION_TYPE gzip)
+
 # Приоритет установки (required, important, standard, optional, extra)
 # По умолчанию необязательно - optional
 set(CPACK_DEBIAN_PACKAGE_PRIORITY optional)
 
-# Имя файла пакета Debian
-#set(CPACK_DEBIAN_FILE_NAME ${PROJECT_NAME}.deb)
-set(CPACK_DEBIAN_PACKAGE_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
-set(CPACK_DEBIAN_COMPRESSION_ARCHIVE gnutar)
-# Алгоритм сжатия пакета (lzma, xz, bzip2, gzip, zstd)
-set(CPACK_DEBIAN_COMPRESSION_TYPE gzip)
+# Домашняя страница пакета (по умолчанию CMAKE_PROJECT_HOMEPAGE_URL)
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "${CMAKE_PROJECT_HOMEPAGE_URL}")
+
+# Создавать более качественный (если установлено ON) список зависимостей
+# CPACK_DEBIAN_PACKAGE_SHLIBDEPS
+# CPACK_DEBIAN_PACKAGE_SHLIBDEPS_PRIVATE_DIRS
+
 
 
 ##############################################################################
