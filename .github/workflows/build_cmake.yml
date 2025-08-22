@@ -479,7 +479,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: build/packaging/Candle-1.2.15-Darwin.dmg
-        name: Candle-1.2.15-${{ matrix.os }}.dmg
+        name: Candle-1.2.15-${{ matrix.config.os }}.dmg
 
 #  release:
 #    if: contains(github.ref, 'tags/v')
