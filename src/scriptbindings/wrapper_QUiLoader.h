@@ -40,14 +40,15 @@ public:
 
     qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ")...";
 
-    QUiLoader* self = get_selfptr();
+    QUiLoader* self = (QUiLoader*)get_selfptr();
 
-    QWidget *new_widget = self->load(_device, _parentWidget);
+    QWidget *new_widget = (QWidget*)self->load(_device, _parentWidget);
 
     qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ") -> " << (unsigned long long)new_widget;
 
-//  return wrapperFactory(new_widget->metaObject()->className(), new_widget);
-    return PointerToJsvalue(QWidget, new_widget);
+    return wrapperFactory(new_widget->metaObject()->className(), new_widget);
+//!!! Пока не выходит!
+//    return PointerToJsvalue(QWidget, new_widget);
   }
 
 //  QStringList availableWidgets() const;

@@ -843,7 +843,7 @@
     </message>
     <message>
         <location filename="../frmmain.cpp" line="3304"/>
-        <source>Loading plugins:</source>
+        <source>Loading plugins from</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -928,6 +928,11 @@ Temps écoulé: %1</translation>
         <translation>G-Code fichiers (*.nc *.ncc *.ngc *.tap *.txt);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
+        <location filename="../frmmain.cpp" line="3304"/>
+        <source>Loading plugins from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../frmmain.cpp" line="3797"/>
         <location filename="../frmmain.cpp" line="3972"/>
         <source>Can&apos;t open file:
@@ -1097,11 +1102,6 @@ Temps écoulé: %1</translation>
     <message>
         <location filename="../frmmain.cpp" line="2623"/>
         <source>Skip</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../frmmain.cpp" line="3304"/>
-        <source>Loading plugins:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

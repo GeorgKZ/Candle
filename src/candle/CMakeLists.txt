@@ -10,15 +10,15 @@ message(STATUS "################################################################
 message(STATUS "Проект '${CMAKE_PROJECT_NAME}', компонент '${MAIN_NAME}'")
 message(STATUS "##############################################################################")
 
-# RPATH, который будет использован на этапе установки
-set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib/candle/lib")
+# RPATH, который будет использован в Mac OS/OS X на этапе установки
+set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib/${PROJECT_NAME_LOWERCASE}/lib")
 
 ##############################################################################
 # Директории с файлами, необходимыми для сборки
 ##############################################################################
 
 # Путь к директории с исходными текстами
-set(SOURCES_PATH "${CMAKE_SOURCE_DIR}/src/candle")
+set(SOURCES_PATH "${CMAKE_SOURCE_DIR}/src/${MAIN_NAME}")
 
 # Список заголовков исходных текстов приложения
 file(GLOB SOURCE_HEADERS_LIST
@@ -51,6 +51,8 @@ add_definitions(
     -DVERSION_TWEAK=${PROJECT_VERSION_TWEAK}
     -DVERSION_STR="${PROJECT_VERSION}"
     -DPROJECT_NAME="${PROJECT_NAME}"
+    -DREL_PLUG_DIR="${REL_PLUG_DIR}"
+    -DREL_LIC_DIR="${REL_LIC_DIR}"
 )
 
 ##############################################################################
@@ -74,11 +76,11 @@ if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"
         "#define VER_FILEVERSION_STR      \"${PROJECT_VERSION}\"\n"
         "#define VER_PRODUCTVERSION       VER_FILEVERSION\n"
         "#define VER_PRODUCTVERSION_STR   VER_FILEVERSION_STR\n"
-        "#define VER_FILEDESCRIPTION_STR  \"${PROJECT_DESCRIPTION} ${BIT_WIDTH}-bit\"\n"
+        "#define VER_FILEDESCRIPTION_STR  \"${PROJECT_DESCRIPTION} ${TARGET_BIT_WIDTH}-bit\"\n"
         "#define VER_INTERNALNAME_STR     \"${MAIN_NAME}\"\n"
         "#define VER_LEGALCOPYRIGHT_STR   \"\"\n"
         "#define VER_ORIGINALFILENAME_STR \"${MAIN_NAME}.exe\"\n"
-        "#define VER_PRODUCTNAME_STR      \"${CMAKE_PROJECT_NAME} ${BIT_WIDTH}-bit for Win7, Win8, Win10, Win11\"\n"
+        "#define VER_PRODUCTNAME_STR      \"${CMAKE_PROJECT_NAME} ${TARGET_BIT_WIDTH}-bit for Win7, Win8, Win10, Win11\"\n"
         "\n"
         "VS_VERSION_INFO VERSIONINFO\n"
         "FILEVERSION     VER_FILEVERSION,0\n"
@@ -192,7 +194,7 @@ qt6_add_resources(${MAIN_NAME} "shaders"
 
 # Сформировать список изображений-ресурсов
 set(RESOURCE_IMAGES_PATH "${SOURCES_PATH}/images")
-file(GLOB RC_IMAGES "${RESOURCE_IMAGES_PATH}/*.ico" "${RESOURCE_IMAGES_PATH}/*.png" "${RESOURCE_IMAGES_PATH}/*.svg")
+file(GLOB_RECURSE RC_IMAGES "${RESOURCE_IMAGES_PATH}/*.ico" "${RESOURCE_IMAGES_PATH}/*.png" "${RESOURCE_IMAGES_PATH}/*.svg")
 foreach(IMAGE_PATH ${RC_IMAGES})
     file(RELATIVE_PATH IMAGE_FILENAME "${RESOURCE_IMAGES_PATH}" ${IMAGE_PATH})
     set(RESOURCE_IMAGES ${RESOURCE_IMAGES} "images/${IMAGE_FILENAME}")
@@ -224,11 +226,6 @@ target_link_libraries(${MAIN_NAME} PUBLIC
     Qt6::Multimedia
     Qt6::MultimediaWidgets
 )
-
-# !!! При сборке для Windows
-#if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-#    target_link_libraries(${MAIN_NAME} PRIVATE setupapi)
-#endif()
 
 ##############################################################################
 # Настройка ресурса с файлами переводов
@@ -287,9 +284,6 @@ qt6_add_resources(${MAIN_NAME} "translations"
     FILES ${QM_FILES}
 )
 
-# Файлы подсистем Qt, для которых требуются переводы
-set(QT_SYSTEMS "qt;qtbase;qtmultimedia;qtserialport")
-
 # Определить расположение файлов перевода
 if(DEFINED ENV{QT_ROOT})
     set(QT_TBASE "${QT_DIR}/../../../translations")
@@ -325,39 +319,11 @@ set_target_properties(${MAIN_NAME} PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
   MACOSX_BUNDLE_INFO_PLIST "${SOURCES_PATH}/Info.plist.in"
-  MACOSX_BUNDLE_GUI_IDENTIFIER com.github.GeorgKZ.Candle
+  MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.GeorgKZ.${PROJECT_NAME}"
   MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
   MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-  MACOSX_BUNDLE_ICON_FILE not_yet.icns
+  MACOSX_BUNDLE_ICON_FILE "${PROJECT_NAME_LOWERCASE}.icns"
 )
-
-##############################################################################
-# Установка
-##############################################################################
-
-if (CMAKE_CROSSCOMPILING)
-    message(DEBUG "Кросскомпиляция -- установка не будет производиться")
-else()
-    # Если исполняемый файл собран под Linux для выполнения под Linux
-    if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux") AND (CMAKE_SYSTEM_NAME STREQUAL "Linux"))
-        # Установка исполняемого файла в ~/.local/bin
-        message(DEBUG "Предусмотрена установка для выполнения под Linux")
-#       install(TARGETS ${MAIN_NAME} RUNTIME DESTINATION "~/.local/bin")
-    endif()
-    # Если исполняемый файл собран под Windows для выполнения под Windows
-    if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows") AND (CMAKE_SYSTEM_NAME STREQUAL "Windows"))
-        # Установка исполняемого файла в C:/Program Files/???
-        message(DEBUG "Предусмотрена установка для выполнения под Windows")
-#       install(TARGETS ${MAIN_NAME} RUNTIME) # DESTINATION "C:/Program Files/????")
-    endif()
-    # Если исполняемый файл собран под MacOS/OS X для выполнения под MacOS/OS X
-    if ((CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin") AND (CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
-        # Установка исполняемого файла в /Applications/???
-        message(DEBUG "Предусмотрена установка для выполнения под MacOS/OS X")
-#       install(TARGETS ${MAIN_NAME} RUNTIME) # DESTINATION "/Applications/????")
-    endif()
-endif()
-
 
 ##############################################################################
 # Формирование набора зависимостей
@@ -395,7 +361,7 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     install(TARGETS ${MAIN_NAME}
-      RUNTIME # DESTINATION .
+      RUNTIME
       BUNDLE DESTINATION .
     )
 

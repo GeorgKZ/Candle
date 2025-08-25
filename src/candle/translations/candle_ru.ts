@@ -977,9 +977,8 @@
         <translation>Неизвестная ошибка последовательного порта</translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3304"/>
         <source>Loading plugins:</source>
-        <translation>Загрузка плюгинов:</translation>
+        <translation type="vanished">Загрузка плюгинов:</translation>
     </message>
     <message>
         <location filename="../frmmain.cpp" line="4324"/>
@@ -1026,6 +1025,11 @@
         <location filename="../frmmain.cpp" line="839"/>
         <source>G-Code files (*.nc *.ncc *.ngc *.tap *.txt);;All files (*.*)</source>
         <translation>Файлы G-Code (*.nc *.ncc *.ngc *.tap *.txt);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="3304"/>
+        <source>Loading plugins from</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../frmmain.cpp" line="3861"/>

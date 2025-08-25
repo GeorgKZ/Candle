@@ -22,7 +22,7 @@ frmAbout::frmAbout(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QFile file(qApp->applicationDirPath() + "/LICENSE");
+    QFile file(qApp->applicationDirPath() + "/" + REL_LIC_DIR + "/LICENSE");
 
     if (file.open(QIODevice::ReadOnly)) {
         ui->txtLicense->setPlainText(file.readAll());

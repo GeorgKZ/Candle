@@ -6,7 +6,7 @@
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     set(CPACK_GENERATOR
-        "DEB"
+      "DEB"
     )
     set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
@@ -14,8 +14,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     set(CPACK_GENERATOR
-        # Bundle;DragNDrop
-        "DragNDrop"
+#     "Bundle"
+      "DragNDrop"  # Bundle не используется, это выбор или-или
     )
 
     set(CPACK_PACKAGING_INSTALL_PREFIX "/")
@@ -32,7 +32,8 @@ elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "M
     set(CPACK_GENERATOR
 # Для IFW необходим binarycreator
 #       "IFW;NSIS;ZIP"
-        "NSIS;ZIP"
+        "NSIS" 
+        "ZIP"
     )
     set(CPACK_PACKAGING_INSTALL_PREFIX "")
 
@@ -62,10 +63,10 @@ set(CPACK_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 
 # Имя поставщика
-set(CPACK_PACKAGE_VENDOR "${APPLICATION_VENDOR}")
+set(CPACK_PACKAGE_VENDOR "${PROJECT_VENDOR}")
 
 # Контактные данные поставщика установочного пакета
-set(CPACK_PACKAGE_CONTACT "${APPLICATION_MAINTAINER}")
+set(CPACK_PACKAGE_CONTACT "${PROJECT_MAINTAINER}")
 
 # Директория целевой среды выполненния, в которую будет выполнена установка
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PROJECT_NAME_LOWERCASE}-${CMAKE_PROJECT_VERSION})
@@ -99,7 +100,7 @@ set(CPACK_THREADS 4)
 #  set(CPACK_INSTALL_PREFIX "/")
 #endif()
 
-if (NOT WIN32)
+#if (NOT WIN32)
 # устанавливать префикс пути установки автоматически
 #  set(CPACK_SET_DESTDIR ON)
 
@@ -111,7 +112,7 @@ if (NOT WIN32)
  #       "${CMAKE_BINARY_DIR};Dependencies;Dependencies;/"
  #   )
  # endif()
-endif()
+#endif()
 
 ##############################################################################
 # Специфичные для создания пакетов-архивов (.7z, .tar, .tar.bz2, .tar.gz,
@@ -122,14 +123,18 @@ endif()
 ##############################################################################
 # Специфичные для создания пакета Bundle настройки
 # https://cmake.org/cmake/help/latest/cpack_gen/bundle.html
+# Особенности: один и более исполняемых файлов на пакет, нет необходимости
+# установки опции MACOS_BUNDLE для исполняемого файла, директива install
+# устанавливает файлы/директории в директорию Resources, автоматически
+# размещает библиотеки и зависимости
 ##############################################################################
 
 # Имя пакета
-set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+set(CPACK_BUNDLE_NAME "${PROJECT_NAME}-bundle")
 # Файл Info.plist приложения
 set(CPACK_BUNDLE_PLIST "${CMAKE_INSTALL_PREFIX}/${BUNDLE_CONTENT_PATH}/Info.plist")
 # Значок прилжения
-set(CPACK_BUNDLE_ICON "???")
+set(CPACK_BUNDLE_ICON "${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns")
 
 ##############################################################################
 # Специфичные для создания пакета Cygwin настройки
@@ -196,12 +201,61 @@ set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "${CMAKE_PROJECT_HOMEPAGE_URL}")
 # CPACK_DEBIAN_PACKAGE_SHLIBDEPS
 # CPACK_DEBIAN_PACKAGE_SHLIBDEPS_PRIVATE_DIRS
 
-
-
 ##############################################################################
 # Специфичные для создания пакета DragNDrop (.dmg) настройки
 # https://cmake.org/cmake/help/latest/cpack_gen/dmg.html
+# Особенности: только один исполняемый файл на пакет, необходимость
+# установки опции MACOS_BUNDLE для исполняемого файла
 ##############################################################################
+
+# Имя тома создаваемого образа (по умолчанию CPACK_PACKAGE_FILE_NAME)
+set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}-dragndrop")
+
+# Формат образа диска (по умолчанию UDZO):
+# UDRO (UDIF read-only), UDZO (UDIF zlib-compressed) или UDBZ (UDIF bzip2-compressed)
+set(CPACK_DMG_FORMAT UDZO)
+
+# Путь к пользовательскому файлу .DS_Store file. Этот файл используется для 
+# определения расположения/геометрии оконного менеджера Finder, а также расположения
+# компонентов (скрытые полоски инструментов, разположение значков и т.д.).
+# Этот файл должен быть создан при помощи Finder (вручную или скриптом).
+# CPACK_DMG_DS_STORE
+
+# Путь к пользовательскому файлу AppleScript. Этот скрипт используется для создания
+# файла .DS_Store, который определяет расположение/геометрию оконного менеджера Finder,
+# а также расположение компонентов (скрытые полоски инструментов, разположение значков и т.д.).
+# При этом нет необходимости использования CPACK_DMG_DS_STORE, так как файл .DS_Store будет создан скриптом.
+# CPACK_DMG_DS_STORE_SETUP_SCRIPT
+
+# Path to an image file to be used as the background. This file will be copied to .background/background.<ext>, where <ext> is the original image file extension. The background image is installed into the image before CPACK_DMG_DS_STORE_SETUP_SCRIPT is executed or CPACK_DMG_DS_STORE is installed. By default no background image is set.
+# CPACK_DMG_BACKGROUND_IMAGE
+
+# По умолчанию (OFF) включать символическую ссылку на директорию /Applications в образ диска.
+# При установке ON ссылка не включается в образ.
+set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK OFF)
+
+# Control whether CPACK_RESOURCE_FILE_LICENSE, if set to a non-default value, is used as the license agreement provided when mounting the DMG. If CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE is not set, cpack(1) defaults to off.
+# In a CMake project that uses the CPack module to generate CPackConfig.cmake, CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE must be explicitly enabled by the project to activate the SLA. See policy CMP0133.
+# CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE
+
+# Directory where license and menu files for different languages are stored. Setting this causes CPack to look for a <language>.menu.txt and <language>.license.txt or <language>.license.rtf file for every language defined in CPACK_DMG_SLA_LANGUAGES. If both this variable and CPACK_RESOURCE_FILE_LICENSE are set, CPack will only look for the menu files and use the same license file for all languages. If both <language>.license.txt and <language>.license.rtf exist, the .txt file will be used.
+# CPACK_DMG_SLA_DIR
+
+# Languages for which a license agreement is provided when mounting the generated DMG. A menu file consists of 9 lines of text. The first line is is the name of the language itself, uppercase, in English (e.g. German). The other lines are translations of the following strings:
+# CPACK_DMG_SLA_LANGUAGES
+
+# Формат файловой системы (по умолчанию HFS+):
+# Common values are APFS and HFS+.
+# CPACK_DMG_FILESYSTEM
+
+# Path to the hdiutil(1) command used to operate on disk image files on macOS. This variable can be used to override the automatically detected command (or specify its location if the auto-detection fails to find it).
+# CPACK_COMMAND_HDIUTIL
+
+# Path to the SetFile(1) command used to set extended attributes on files and directories on macOS. This variable can be used to override the automatically detected command (or specify its location if the auto-detection fails to find it).
+# CPACK_COMMAND_SETFILE
+
+# Path to the Rez(1) command used to compile resources on macOS. This variable can be used to override the automatically detected command (or specify its location if the auto-detection fails to find it).
+# CPACK_COMMAND_REZ
 
 ##############################################################################
 # https://cmake.org/cmake/help/latest/cpack_gen/innosetup.html

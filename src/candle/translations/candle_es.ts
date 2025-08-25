@@ -1043,11 +1043,6 @@ Tiempo transcurrido: %1</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frmmain.cpp" line="3304"/>
-        <source>Loading plugins:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../frmmain.cpp" line="3518"/>
         <source>Port opened</source>
         <translation>Puerto se abrió</translation>
@@ -1077,6 +1072,11 @@ Tiempo transcurrido: %1</translation>
         <location filename="../frmmain.cpp" line="839"/>
         <source>G-Code files (*.nc *.ncc *.ngc *.tap *.txt);;All files (*.*)</source>
         <translation>Archivos de G-Code (*.nc *.ncc *.ngc *.tap *.txt);;Todos los archivos (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../frmmain.cpp" line="3304"/>
+        <source>Loading plugins from</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../frmmain.cpp" line="3688"/>

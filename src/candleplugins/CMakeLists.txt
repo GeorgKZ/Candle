@@ -10,34 +10,7 @@ cmake_path(GET CMAKE_CURRENT_SOURCE_DIR STEM LAST_ONLY MAIN_NAME)
 ##############################################################################
 
 # Путь к директории с плюгинами
-set(SOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}") # "${CMAKE_SOURCE_DIR}/src/candleplugins")
-
-##############################################################################
-# Настройка в зависимости от целевой среды выполнения.
-##############################################################################
-
-# При сборке для работы в среде Linux
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
-    # Путь для установки плюгинов
-    set(DEST_DIR "share/candle/plugins")
-
-# При сборке для работы в среде MacOS/OS X
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-    # Путь для установки плюгинов
-    set(DEST_DIR "${BUNDLE_RESOURCE_PATH}/plugins")
-
-# При сборке для работы в среде Windows
-elseif ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
-
-    # Путь для установки плюгинов
-    set(DEST_DIR "candle_plugins")
-
-else()
-    message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
-endif()
-
+set(SOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 ##############################################################################
 # Обработка файлов с переводом
@@ -110,7 +83,7 @@ foreach(I ${SUBDIRS})
         install(FILES
             ${PLUGIN_PATH}/script.js
             ${UI_FILES}
-            DESTINATION ${DEST_DIR}/${I}
+            DESTINATION ${INST_PLUG_DIR}/${I}
         )
 
         # Установка скомпилированных файлов перевода
@@ -118,7 +91,7 @@ foreach(I ${SUBDIRS})
             string(SUBSTRING ${L} 0 2 LANG_F)
             install(FILES
                 "${TRANSLATE_PATH}/${I}_${LANG_F}.qm"
-                DESTINATION ${DEST_DIR}/${I}
+                DESTINATION ${INST_PLUG_DIR}/${I}
             )
         endforeach(L)
 
@@ -127,7 +100,7 @@ foreach(I ${SUBDIRS})
         if(IS_DIRECTORY ${IMG_PATH} AND EXISTS ${IMG_PATH})
             file(GLOB IMG_FILES ${IMG_PATH}/*)
             install(FILES ${IMG_FILES}
-                DESTINATION ${DEST_DIR}/${I}/images
+                DESTINATION ${INST_PLUG_DIR}/${I}/images
             )
         endif()
     endif()

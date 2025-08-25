@@ -67,7 +67,7 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(
     m_aimLineWidth = 1;
     m_aimPosition = QPoint(0,0);
 
-    permissionChecking();
+//    permissionChecking();
 
     QCameraDevice dev;
     if (QMediaDevices::videoInputs().empty()) {

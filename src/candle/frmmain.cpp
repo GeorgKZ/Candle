@@ -3296,12 +3296,12 @@ void frmMain::applySettings() {
 
 void frmMain::loadPlugins()
 {
-    QString pluginsDir = qApp->applicationDirPath() + "/candle_plugins/";
+    QString pluginsDir = qApp->applicationDirPath() + "/" + REL_PLUG_DIR + "/";
 
     // Get plugins list
     QStringList pl = QDir(pluginsDir).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    qInfo() << tr("Loading plugins:") << pl;
+    qInfo() << tr("Loading plugins from") << pluginsDir << ":" << pl;
 
     foreach (QString p, pl) {
 

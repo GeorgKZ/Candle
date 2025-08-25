@@ -23,25 +23,27 @@ set(CMAKE_INSTALL_PREFIX "${BUILD_PATH}/install" CACHE PATH "Install path prefix
 # Информация о проекте
 ##############################################################################
 
+include(Custom.cmake)
+
 # Имя, версия, описание проекта
-project(Candle
-    VERSION 1.2.15.1
-    DESCRIPTION "GRBL controller application with G-Code visualizer"
-    HOMEPAGE_URL "https://github.com/GeorgKZ/Candle"
-    LANGUAGES CXX
+project(${CUSTOM_PROJECT_NAME}
+    VERSION ${CUSTOM_VERSION}
+    DESCRIPTION ${CUSTOM_DESCRIPTION}
+    HOMEPAGE_URL ${CUSTOM_HOMEPAGE_URL}
+    LANGUAGES ${CUSTOM_LANGUAGES}
 )
 
 # Имя проекта, приведённое к нижнему регистру
 string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
 
 # Поставщик установочного пакета
-set(APPLICATION_VENDOR "GeorgKZ")
+set(PROJECT_VENDOR "${CUSTOM_PROJECT_VENDOR}")
 
 # Контактные данные поставщика установочного пакета
-set(APPLICATION_MAINTAINER "${APPLICATION_VENDOR} https://github.com/GeorgKZ")
+set(PROJECT_MAINTAINER "${CUSTOM_PROJECT_MAINTAINER}")
 
 # Путь к файлу значка ICO проекта
-set(ICON_FILE "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
+set(ICON_FILE "${CUSTOM_ICON_FILE}")
 
 ##############################################################################
 # Относительные пути для пакетов MacOS/OS X
@@ -63,7 +65,7 @@ set(BUNDLE_FRAMEWORK_PATH "${BUNDLE_CONTENT_PATH}/Frameworks")
 set(BUNDLE_RESOURCE_PATH "${BUNDLE_CONTENT_PATH}/Resources")
 
 # Путь к директории плюгинов Qt для MacOS/OS X
-set(BUNDLE_PLUGIN_PATH "${BUNDLE_CONTENT_PATH}/plugins")
+set(BUNDLE_PLUGIN_PATH "${BUNDLE_BINARY_PATH}")
 
 ##############################################################################
 # Установки, которые необходимо выполнить до поиска Qt
@@ -85,7 +87,7 @@ if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     # Путь, куда устанавливать динамические библиотеки
-    set(CMAKE_INSTALL_LIBDIR "lib/candle/lib"
+    set(CMAKE_INSTALL_LIBDIR "lib/${PROJECT_NAME_LOWERCASE}/lib"
       CACHE PATH "Object code libraries (lib)"
     )
     # Путь, куда устанавливать исполняемые файлы
@@ -108,7 +110,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 else()
     message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
 endif()
-
 
 ##############################################################################
 # Настройка местоположения Qt
@@ -160,6 +161,26 @@ set(QT_PLUGIN_LIST
   "xcbglintegrations"
 )
 
+# Подсистемы Qt, для которых требуются переводы
+set(QT_SYSTEMS "qt;qtbase;qtmultimedia;qtserialport")
+
+# Список необходимых для приложения модулей Qt
+set(QT_MODULES_LIST
+  "Core"                 # candle scriptbindings camera customdesigner
+  "Designer"             #                       camera
+  "Gui"                  # candle
+  "Multimedia"           # candle                camera customdesigner
+  "MultimediaWidgets"    # candle                camera customdesigner
+  "OpenGL"               # candle
+  "OpenGLWidgets"        # candle                camera
+  "Qml"                  # candle scriptbindings
+  "Quick"                # candle
+  "SerialPort"           # candle
+  "UiTools"              # candle scriptbindings
+  "UiPlugin"             #                              customdesigner
+  "Widgets"              # candle scriptbindings camera customdesigner
+)
+
 ##############################################################################
 # Директории, создаваемые для выполнения сборки
 ##############################################################################
@@ -171,6 +192,10 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_PATH})
 # Директория для промежуточных файлов
 set(MISC_PATH "${BUILD_PATH}/misc")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MISC_PATH})
+
+# Директория для заготовок значков Mac OS/OSX
+set(ICNS_PATH "${MISC_PATH}/icns.iconset")
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICNS_PATH})
 
 # Директория для файлов, для которых будут искаться зависимости
 set(FIND_DEPS_PATH "${MISC_PATH}/find_deps")
@@ -242,15 +267,28 @@ elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 ##############################################################################
-# Определение битности исполняемого файла
+# Определение битности целевого исполняемого файла
 ##############################################################################
 
 if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
-    set(BIT_WIDTH "64")
+    set(TARGET_BIT_WIDTH "64")
 elseif("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
-    set(BIT_WIDTH "32")
+    set(TARGET_BIT_WIDTH "32")
 else()
-    message(WARNING "Неизвестная битность исполняемого файла - ${CMAKE_SIZEOF_VOID_P} байт")
+    message(WARNING "Неизвестная битность целевого исполняемого файла - ${CMAKE_SIZEOF_VOID_P} байт")
+endif()
+
+##############################################################################
+# Определение архитектуры целевого исполняемого файла
+##############################################################################
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(TARGET_ARCH "${CMAKE_OSX_ARCHITECTURES}")
+    if ("^^${TRAGET_ARCH}" STREQUAL "^^")
+        set(TARGET_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+    endif()
+else()
+    set(TARGET_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
 ##############################################################################
@@ -332,7 +370,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
         "-Wno-poison-system-directories"
         "-Wno-global-constructors"
         "-Wno-ctad-maybe-unsupported"
-
+        "-Wno-missing-prototypes"
         # Временно
         "-Wno-implicit-float-conversion"
         "-Wno-implicit-int-conversion"
@@ -508,28 +546,73 @@ endif()
 # Настройка в зависимости от целевой среды выполнения.
 ##############################################################################
 
-# При сборке для работы в среде Linux
+# Если сборка предназначена для выполнения под Linux
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-# Параметры настройки RPATH - пути, где искать динамические библиотеки
+    # не выполнять установку RPATH (путь, где искать динамические библиотеки)
+    # на этапе сборки
+    set(CMAKE_SKIP_BUILD_RPATH TRUE)
+    # при сборке не применять RPATH этапа установки (CMAKE_INSTALL_RPATH)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
+    # don't add the automatically determined parts of the RPATH
+    # which point to directories outside the build tree to the install RPATH
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
-# не выполнять установку RPATH на этапе сборки
-set(CMAKE_SKIP_BUILD_RPATH TRUE)
-# при сборке не применять RPATH этапа установки (CMAKE_INSTALL_RPATH)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
-# don't add the automatically determined parts of the RPATH
-# which point to directories outside the build tree to the install RPATH
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+    # Путь для установки файла лицензии в установочном пакете
+    set(INST_LIC_PATH "share/doc/${PROJECT_NAME_LOWERCASE}")
 
+    # Путь к файлу лицензии относительно исполняемого файла
+    set(REL_LIC_DIR "../${INST_LIC_PATH}")
 
-# При сборке для работы в среде MacOS/OS X
+    # Путь для установки плюгинов приложения в установочном пакете
+    set(INST_PLUG_DIR "share/${PROJECT_NAME_LOWERCASE}/plugins")
+
+    # Путь к плюгинам приложения относительно исполняемого файла
+    set(REL_PLUG_DIR "../${INST_PLUG_DIR}")
+
+    # Путь для установки плюгинов Qt в установочном пакете
+    set(INST_QTPLUG_DIR "lib/${PROJECT_NAME_LOWERCASE}/plugins")
+
+# Если сборка предназначена для выполнения под MacOS / OS X
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-# При сборке для работы в среде Windows
+    # Путь для установки файла лицензии в установочном пакете
+    set(INST_LIC_PATH "${BUNDLE_RESOURCE_PATH}")
+
+    # Путь к файлу лицензии относительно исполняемого файла
+    set(REL_LIC_DIR "../../../${BUNDLE_RESOURCE_PATH}")
+
+    # Путь для установки плюгинов приложения в установочном пакете
+    set(INST_PLUG_DIR "${BUNDLE_RESOURCE_PATH}/plugins")
+
+    # Путь к плюгинам приложения относительно исполняемого файла
+    set(REL_PLUG_DIR "../../../${INST_PLUG_DIR}")
+
+    # Путь для установки плюгинов Qt в установочном пакете
+    set(INST_QTPLUG_DIR "${BUNDLE_PLUGIN_PATH}")
+
+# Если сборка предназначена для выполнения под Windows
 elseif((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
+    # Путь для установки файла лицензии в установочном пакете
+    set(INST_LIC_PATH ".")
+
+    # Путь к файлу лицензии относительно исполняемого файла
+    set(REL_LIC_DIR ".")
+
+    # Путь для установки плюгинов приложения в установочном пакете
+    set(INST_PLUG_DIR "${PROJECT_NAME_LOWERCASE}_plugins")
+
+    # Путь к плюгинам приложения относительно исполняемого файла
+    set(REL_PLUG_DIR "${INST_PLUG_DIR}")
+
+    # Путь для установки плюгинов Qt в установочном пакете
+    set(INST_QTPLUG_DIR "plugins")
+
 else()
-    message(WARNING "Неизвестная среда сборки " ${CMAKE_SYSTEM_NAME})
+
+    message(WARNING "Неизвестная среда выполнения " ${CMAKE_SYSTEM_NAME})
+
 endif()
 
 ##############################################################################
@@ -556,6 +639,63 @@ else()
     # Имя директории, где будет расположен исполняемый файл приложения
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BIN_PATH}/${CMAKE_BUILD_TYPE}")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${BIN_PATH}/${CMAKE_BUILD_TYPE}")
+endif()
+
+##############################################################################
+# Создание файлов для Mac OS/OS X
+##############################################################################
+
+# Если сборка предназначена для выполнения под MacOS / OS X
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+    ##############################################################################
+    # Создание файла значков *.icns
+    ##############################################################################
+
+    # Список исходных и результирующих имён битмапов
+    set(PNG_LIST
+      "icon_16.png"   "icon_16x16.png"
+      "icon_32.png"   "icon_16x16@2x.png"
+      "icon_32.png"   "icon_32x32.png"
+      "icon_64.png"   "icon_32x32@2x.png"
+      "icon_128.png"  "icon_128x128.png"
+      "icon_256.png"  "icon_128x128@2x.png"
+      "icon_256.png"  "icon_256x256.png"
+      "icon_512.png"  "icon_256x256@2x.png"
+      "icon_512.png"  "icon_512x512.png"
+      "icon_1024.png" "icon_512x512@2x.png"
+    )
+
+    # Выполнить копирование и переименование битмапов согласно списка
+    list(LENGTH PNG_LIST PNG_LIST_LEN)
+    math(EXPR PNG_LIST_LEN "${PNG_LIST_LEN} - 2") 
+    foreach(pos0 RANGE 0 "${PNG_LIST_LEN}" 2)
+        math(EXPR pos1 "${pos0} + 1") 
+        list(GET PNG_LIST "${pos0}" PNG_SRC)
+        list(GET PNG_LIST "${pos1}" PNG_DST)
+        file(COPY_FILE
+          "${CMAKE_SOURCE_DIR}/src/candle/images/icons_png/${PNG_SRC}"
+          "${ICNS_PATH}/${PNG_DST}"
+        )
+    endforeach()
+
+    # Преобразовать битмапы в файл icns
+    execute_process(COMMAND
+      iconutil
+      -c icns
+      "${ICNS_PATH}"
+      -o "${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns"
+    )
+
+    ##############################################################################
+    # Создание файла PkgInfo
+    ##############################################################################
+
+    file(WRITE
+      ${MISC_PATH}/PkgInfo
+      "APPL????\n"
+    )
+
 endif()
 
 ##############################################################################
@@ -595,6 +735,8 @@ message(STATUS "Компилятор ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "Генератор ${CMAKE_GENERATOR}")
 message(STATUS "Платформа ${CMAKE_CXX_PLATFORM_ID}")
 message(STATUS "Среда сборки ${CMAKE_HOST_SYSTEM_NAME}")
+message(STATUS "Целевая архитектура ${TARGET_ARCH}")
+message(STATUS "Целевая разрядность ${TARGET_BIT_WIDTH}")
 message(STATUS "Целевая среда исполнения ${CMAKE_SYSTEM_NAME}")
 if (CMAKE_BUILD_TYPE)
     message(STATUS "Конфигурация ${CMAKE_BUILD_TYPE}")
@@ -619,39 +761,35 @@ set(CMAKE_AUTOMOC ON)
 # Вывод сообщений об установке только если было изменение
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-# Если сборка предназначена для выполнения под Windows
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+# Установить файл лицензии
+message(DEBUG "Установить файл лицензии")
+install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+  DESTINATION ${INST_LIC_PATH}
+)
 
-    # Файл лицензии (этап конфигурации)
-    message(DEBUG "Установить файл лицензии")
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION .
-    )
-
-# Если сборка предназначена для выполнения под Linux
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
-    # Файл лицензии (этап конфигурации)
-    message(DEBUG "Установить файл лицензии")
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION "share/doc/candle"
-    )
-
+# Установить значки программы для Linux
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     #!!! Можно использовать один и тот же SVG для всех разрешений
-    # Значок программы (этап конфигурации)
     message(DEBUG "Установить файл значка программы")
-    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/candle_256.png
+    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/icons_png/icon_256.png
         DESTINATION "share/icons/hicolor/256x256/apps"
-        RENAME candle.png
+        RENAME "${PROJECT_NAME_LOWERCASE}.png"
     )
 # Если сборка предназначена для выполнения под MacOS / OS X
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-    # Файл лицензии (этап конфигурации)
-    message(DEBUG "Установить файл лицензии")
-    install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
-        DESTINATION "${BUNDLE_RESOURCE_PATH}"
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    install(FILES
+      "${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns"
+      DESTINATION "${BUNDLE_RESOURCE_PATH}"
     )
+endif()
+
+
+# Установить файл PkgInfo eсли сборка предназначена для выполнения под MacOS / OS X
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+     install(FILES
+       "${MISC_PATH}/PkgInfo"
+       DESTINATION "${BUNDLE_CONTENT_PATH}"
+     )   
 endif()
 
 # Установить найденные зависимости (включая свои библиотеки)
@@ -669,37 +807,19 @@ foreach(PLUGIN ${QT_PLUGIN_LIST})
     )
      # Установить файлы плюгина Qt
     foreach(FILE ${QT_PLUGIN_FILES_LIST})
-        if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
-            # Для конфигураций Release и MinSizeRel включать только библиотеки,
-            # без файлов отладочной информации
-            install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
-              DESTINATION "plugins/${PLUGIN}"
-            )
+        # Для конфигураций Release и MinSizeRel включать только библиотеки,
+        # без файлов отладочной информации
+        install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
+          DESTINATION "${INST_QTPLUG_DIR}/${PLUGIN}"
+        )
 
-        elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        # Для конфигураций Debug и RelWithDebInfo добавить файлы отладочной информации
+        install(DIRECTORY "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}.dSYM"
+          CONFIGURATIONS Debug RelWithDebInfo
+          DESTINATION "${INST_QTPLUG_DIR}/${PLUGIN}"
+        )
 
-            # Для конфигураций Release и MinSizeRel включать только библиотеки,
-            # без файлов отладочной информации
-            install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
-              DESTINATION "lib/candle/plugins/${PLUGIN}"
-            )
-
-        elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-            # Для конфигураций Release и MinSizeRel включать только библиотеки,
-            # без файлов отладочной информации
-            install(FILES "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}"
-              DESTINATION "${BUNDLE_PLUGIN_PATH}/${PLUGIN}"
-            )
-
-            # Для конфигураций Debug и RelWithDebInfo добавить файлы отладочной информации
-            install(DIRECTORY "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}.dSYM"
-              CONFIGURATIONS Debug RelWithDebInfo
-              DESTINATION "${BUNDLE_PLUGIN_PATH}/${PLUGIN}"
-            )
-
-        endif()
         # Дополнить список поиска зависимостей
         list(APPEND DEP_FILES_LIST "${QT_PLUGIN_PATH}/${PLUGIN}/${FILE}")
     endforeach(FILE)
@@ -724,8 +844,6 @@ add_subdirectory(src/candleplugins)
 ##############################################################################
 
 include(scripts/CPpack.cmake)
-
-#add_subdirectory(scripts)
 
 ##############################################################################
 # Статический анализ исходных текстов при помощи PVS-Studio
@@ -752,7 +870,7 @@ if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
     # Анализ приложения
     pvs_studio_add_target(TARGET analyze
         FORMAT errorfile-verbose
-        ANALYZE "candle" #${CMAKE_PROJECT_NAME}
+        ANALYZE "${PROJECT_NAME_LOWERCASE}"
         MODE GA;OP;CS;64
         LOG ${BUILD_PATH}/pvs_report.txt
 #       CONVERTER_ARGS -d V112,V122,V550,V601,V2014
@@ -793,7 +911,7 @@ find_package(Doxygen QUIET COMPONENTS dot)
 if (DOXYGEN_FOUND)
     # Настройка переменных окружения Доксигена для основной цели
     set(DOXYGEN_PROJECT_NAME            "${CMAKE_PROJECT_NAME}")
-    set(DOXYGEN_PROJECT_BRIEF           "Программа Candle")
+    set(DOXYGEN_PROJECT_BRIEF           "Программа ${PROJECT_NAME}")
     set(DOXYGEN_PROJECT_NUMBER          "${PROJECT_VERSION}")
     set(DOXYGEN_OUTPUT_DIRECTORY        "${DOC_PATH}")
     set(DOXYGEN_OUTPUT_LANGUAGE         "Russian")
