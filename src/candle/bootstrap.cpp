@@ -193,7 +193,7 @@ void bootstrap::setTranslator(const QString &translationFileName, QTranslator **
          * * Установить новый [транслятор](https://doc.qt.io/qt-6/qtranslator.html).
          */
         qApp->installTranslator(*translator);
-        qInfo() << "Translation" << translationFileName << "loaded abd installed";
+        qInfo() << "Translation" << translationFileName << "loaded and installed";
     }
 }
 
