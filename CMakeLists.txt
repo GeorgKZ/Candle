@@ -753,6 +753,12 @@ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
 
 # Установить значки программы для Linux
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+    # Установка значков:
+    # Файл формата SVG                  /usr/share/icons/hicolor/scalable/apps/${PROJECT_NAME_LOWERCASE}.svg
+    # Файл формата PNG, 48x48 пикселов: /usr/share/icons/hicolor/48x48/apps/${PROJECT_NAME_LOWERCASE}.png
+    # Файл формата XPM, 32x32 пикселов: /usr/share/pixmaps/${PROJECT_NAME_LOWERCASE}.xpm
+
     #!!! Можно использовать один и тот же SVG для всех разрешений
     message(DEBUG "Установить файл значка программы")
     install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/icons_png/icon_256.png
