@@ -1,0 +1,16 @@
+    execute_process(
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 16  --o ${ICONS_PATH}/icon_16.png
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 24  --o ${ICONS_PATH}/icon_24.png
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 32  --o ${ICONS_PATH}/icon_32.png
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 48  --o ${ICONS_PATH}/icon_48.png
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 64  --o ${ICONS_PATH}/icon_64.png
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 128 --o ${ICONS_PATH}/icon_128.png
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 256 --o ${ICONS_PATH}/icon_256.png
+      COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 32  --o ${ICONS_PATH}/icon_32.xpm
+      RESULT_VARIABLE result
+      OUTPUT_VARIABLE output
+      ERROR_VARIABLE  output_error
+    )
+    if (NOT result EQUAL 0)
+        message(FATAL_ERROR "SvgToRaster: Выполнение завершено с ошибкой ${result}. Выход.")
+    endif()

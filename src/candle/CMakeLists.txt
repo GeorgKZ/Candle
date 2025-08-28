@@ -375,6 +375,7 @@ set_target_properties(${MAIN_NAME} PROPERTIES
   MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
   MACOSX_BUNDLE_ICON_FILE "${PROJECT_NAME_LOWERCASE}.icns"
 )
+add_dependencies(${MAIN_NAME} MULTIPLE_ICONS)
 
 ##############################################################################
 # Формирование набора зависимостей

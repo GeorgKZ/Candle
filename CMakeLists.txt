@@ -5,36 +5,14 @@
 cmake_minimum_required(VERSION 3.9...3.28)
 
 ##############################################################################
-# Подготовка субмодулей к использованию
-##############################################################################
-
-# Указываем, что мы хотим использовать git submodule
-include(FetchContent)
-
-# Загружаем submodule
-FetchContent_Declare(
-    submodule
-    GIT_REPOSITORY https://github.com/username/repo.git
-    GIT_TAG master  # или укажите нужный тег
-)
-
-# Загружаем содержимое submodule
-FetchContent_MakeAvailable(submodule)
-
-# Добавляем исполняемый файл
-add_executable(MyExecutable main.cpp)
-
-# Линкуем submodule с исполняемым файлом
-target_link_libraries(MyExecutable PRIVATE submodule)
-
-
-
-##############################################################################
 # Установки, которые необходимо выполнить до директивы project(...)
 ##############################################################################
 
 # Директория для промежуточных и собранных файлов
-if(DEFINED ENV{BUILDDIR}) 
+if(DEFINED BUILDDIR) 
+    message(DEBUG "Директория сборки согласно переменной BUILDDIR=${BUILDDIR}")
+    cmake_path(SET BUILD_PATH NORMALIZE "${BUILDDIR}")
+elseif(DEFINED ENV{BUILDDIR}) 
     message(DEBUG "Директория сборки согласно окружению BUILDDIR=$ENV{BUILDDIR}")
     cmake_path(SET BUILD_PATH NORMALIZE "$ENV{BUILDDIR}")
 else()
@@ -633,15 +611,74 @@ else()
 endif()
 
 ##############################################################################
-# Создание файлов для Mac OS/OS X
+# Получить уровень выводимых сообщений
 ##############################################################################
 
-# Если сборка предназначена для выполнения под MacOS / OS X
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+cmake_language(GET_MESSAGE_LOG_LEVEL CMAKE_LOGGING_LEVEL)
+set(CMAKE_MESSAGE_LOG_LEVEL "${CMAKE_LOGGING_LEVEL}" CACHE STRING "Уровень журналирования")
+# Существуют следующие уровни выводимых сообщений:
+# FATAL_ERROR - серьёзная ошибка, вызывающая полную остановку сборки;
+# SEND_ERROR - серьёзная ошибка, вызывающая остановку сборки без остановки выполнения скрипта Cmake;
+# WARNING - предупреждение;
+# AUTHOR_WARNING - предупреждение разработчика;
+# DEPRECATION - ошибка или предупреждение об использовании устаревшей функции Cmake;
+# NOTICE - важное сообщение, выводимое на устройство stderr;
+# STATUS - краткое важное сообщение (это уровень по умолчанию);
+# VERBOSE - подробная информация об особенностях сборки;
+# DEBUG - подробная информация, необходимая только разработчику;
+# TRACE - сообщение о ходе сборки для точного отслеживания процесса.
+# Выводятся сообщения от указанного уровня (включая) и выше.
+# Устанавливается заданием параметра cmake, например cmake --log-level=DEBUG
 
-    ##############################################################################
-    # Создание файла значков *.icns
-    ##############################################################################
+##############################################################################
+# Сборка и установка субмодуля SvgToRaster
+##############################################################################
+
+include(scripts/build_ext_binary.cmake)
+
+build_ext_binary("SvgToRaster")
+
+##############################################################################
+# Создание файлов-значков (до компоновки исполняемого файла приложения)
+##############################################################################
+
+set(SVGTORASTER_EXE "${BUILD_PATH}/external/SvgToRaster/install/${CMAKE_INSTALL_BINDIR}/svgtoraster${CMAKE_EXECUTABLE_SUFFIX}")
+set(SOURCE_SVG "${CMAKE_SOURCE_DIR}/src/candle/images/icon.svg")
+
+# Команды создания набора файлов-значков
+add_custom_command(
+  OUTPUT ${ICONS_PATH}/icon_16.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 16   --o ${ICONS_PATH}/icon_16.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 24   --o ${ICONS_PATH}/icon_24.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 32   --o ${ICONS_PATH}/icon_32.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 48   --o ${ICONS_PATH}/icon_48.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 64   --o ${ICONS_PATH}/icon_64.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 128  --o ${ICONS_PATH}/icon_128.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 256  --o ${ICONS_PATH}/icon_256.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 512  --o ${ICONS_PATH}/icon_512.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 1024 --o ${ICONS_PATH}/icon_1024.png
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 32   --o ${ICONS_PATH}/icon_32.xpm
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG}          --o ${ICONS_PATH}/icon.ico
+  MAIN_DEPENDENCY ${SVGTORASTER_EXE}  # file-level dependency
+  DEPENDS SvgToRaster  # target-level dependency
+  COMMENT "Создание файлов-значков"
+  VERBATIM
+)
+
+# Цель, представляющая создание файлов-значков
+add_custom_target(MULTIPLE_ICONS ALL DEPENDS ${ICONS_PATH}/icon_16.png)
+
+# Если сборка предназначена для выполнения под Windows,
+# создать файл *.ico размером 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+
+# Если сборка предназначена для выполнения под linux,
+# создать файл *.png разного размера и файл *.xpm размером 32x32
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+# Если сборка предназначена для выполнения под MacOS / OS X,
+# создать файл *.icns
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     # Список исходных и результирующих имён битмапов
     set(PNG_LIST
@@ -678,9 +715,15 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
       -o "${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns"
     )
 
-    ##############################################################################
-    # Создание файла PkgInfo
-    ##############################################################################
+endif()
+
+##############################################################################
+# Создание файлов для Mac OS/OS X
+##############################################################################
+
+# Если сборка предназначена для выполнения под MacOS / OS X,
+# создать файл PkgInfo
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     file(WRITE
       ${MISC_PATH}/PkgInfo
@@ -692,23 +735,6 @@ endif()
 ##############################################################################
 # Вывод информации о проекте, инструментах, среде сборки и среде исполнения
 ##############################################################################
-
-# Получить уровень выводимых сообщений
-cmake_language(GET_MESSAGE_LOG_LEVEL CMAKE_LOGGING_LEVEL)
-set(CMAKE_MESSAGE_LOG_LEVEL "${CMAKE_LOGGING_LEVEL}" CACHE STRING "Уровень журналирования")
-# Существуют следующие уровни выводимых сообщений:
-# FATAL_ERROR - серьёзная ошибка, вызывающая полную остановку сборки;
-# SEND_ERROR - серьёзная ошибка, вызывающая остановку сборки без остановки выполнения скрипта Cmake;
-# WARNING - предупреждение;
-# AUTHOR_WARNING - предупреждение разработчика;
-# DEPRECATION - ошибка или предупреждение об использовании устаревшей функции Cmake;
-# NOTICE - важное сообщение, выводимое на устройство stderr;
-# STATUS - краткое важное сообщение (это уровень по умолчанию);
-# VERBOSE - подробная информация об особенностях сборки;
-# DEBUG - подробная информация, необходимая только разработчику;
-# TRACE - сообщение о ходе сборки для точного отслеживания процесса.
-# Выводятся сообщения от указанного уровня (включая) и выше.
-# Устанавливается заданием параметра cmake, например cmake --log-level=DEBUG
 
 message(STATUS "##############################################################################")
 message(STATUS "Проект '${CMAKE_PROJECT_NAME}' версии ${PROJECT_VERSION}")
@@ -754,17 +780,65 @@ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
 # Установить значки программы для Linux
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-    # Установка значков:
-    # Файл формата SVG                  /usr/share/icons/hicolor/scalable/apps/${PROJECT_NAME_LOWERCASE}.svg
-    # Файл формата PNG, 48x48 пикселов: /usr/share/icons/hicolor/48x48/apps/${PROJECT_NAME_LOWERCASE}.png
-    # Файл формата XPM, 32x32 пикселов: /usr/share/pixmaps/${PROJECT_NAME_LOWERCASE}.xpm
-
-    #!!! Можно использовать один и тот же SVG для всех разрешений
-    message(DEBUG "Установить файл значка программы")
-    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/icons_png/icon_256.png
-        DESTINATION "share/icons/hicolor/256x256/apps"
-        RENAME "${PROJECT_NAME_LOWERCASE}.png"
+    # Файл формата SVG
+    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/icon.svg
+      DESTINATION "share/icons/hicolor/scalable/apps"
+      RENAME "${PROJECT_NAME_LOWERCASE}.svg"
+      OPTIONAL
     )
+
+    # Файлы формата PNG разных размеров
+    set(PNG_SIZES "16;24;32;48;64;128;256")
+    foreach(SIZE ${PNG_SIZES})
+        install(FILES ${ICONS_PATH}/icon_${SIZE}.png
+          DESTINATION "share/icons/hicolor/${SIZE}x${SIZE}/apps"
+          RENAME "${PROJECT_NAME_LOWERCASE}.png"
+          OPTIONAL
+        )
+    endforeach(SIZE)
+
+#    # Файл формата PNG, 16x16 пикселов
+#    install(FILES ${ICONS_PATH}/icon_16.png
+#      DESTINATION "share/icons/hicolor/16x16/apps"
+#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
+#      OPTIONAL
+#    )
+#
+#    # Файл формата PNG, 24x24 пикселов
+#    install(FILES ${ICONS_PATH}/icon_24.png
+#      DESTINATION "share/icons/hicolor/24x24/apps"
+#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
+#      OPTIONAL
+#    )
+#
+#    # Файл формата PNG, 24x24 пикселов
+#    install(FILES ${ICONS_PATH}/icon_24.png
+#      DESTINATION "share/icons/hicolor/24x24/apps"
+#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
+#      OPTIONAL
+#    )
+#
+#    # Файл формата PNG, 48x48 пикселов
+#    install(FILES ${ICONS_PATH}/icon_48.png
+#      DESTINATION "share/icons/hicolor/48x48/apps"
+#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
+#      OPTIONAL
+#    )
+#
+#    # Файл формата PNG, 256x256 пикселов
+#    install(FILES ${ICONS_PATH}/icon_256.png
+#      DESTINATION "share/icons/hicolor/256x256/apps"
+#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
+#      OPTIONAL
+#    )
+
+    # Файл формата XPM, 32x32 пикселов
+    install(FILES ${ICONS_PATH}/icon_32.xpm
+      DESTINATION "share/pixmaps"
+      RENAME "${PROJECT_NAME_LOWERCASE}.xpm"
+      OPTIONAL
+    )
+
 # Если сборка предназначена для выполнения под MacOS / OS X
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     install(FILES
