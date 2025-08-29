@@ -642,31 +642,21 @@ build_ext_binary("SvgToRaster")
 # Создание файлов-значков (до компоновки исполняемого файла приложения)
 ##############################################################################
 
-set(SVGTORASTER_EXE "${BUILD_PATH}/external/SvgToRaster/install/${CMAKE_INSTALL_BINDIR}/svgtoraster${CMAKE_EXECUTABLE_SUFFIX}")
-set(SOURCE_SVG "${CMAKE_SOURCE_DIR}/src/candle/images/icon.svg")
-
-# Команды создания набора файлов-значков
-add_custom_command(
-  OUTPUT ${ICONS_PATH}/icon_16.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 16   --o ${ICONS_PATH}/icon_16.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 24   --o ${ICONS_PATH}/icon_24.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 32   --o ${ICONS_PATH}/icon_32.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 48   --o ${ICONS_PATH}/icon_48.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 64   --o ${ICONS_PATH}/icon_64.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 128  --o ${ICONS_PATH}/icon_128.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 256  --o ${ICONS_PATH}/icon_256.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 512  --o ${ICONS_PATH}/icon_512.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 1024 --o ${ICONS_PATH}/icon_1024.png
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 32   --o ${ICONS_PATH}/icon_32.xpm
-  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG}          --o ${ICONS_PATH}/icon.ico
-  MAIN_DEPENDENCY ${SVGTORASTER_EXE}  # file-level dependency
-  DEPENDS SvgToRaster  # target-level dependency
-  COMMENT "Создание файлов-значков"
-  VERBATIM
-)
+#set(SVGTORASTER_EXE "${BUILD_PATH}/external/SvgToRaster/install/${CMAKE_INSTALL_BINDIR}/svgtoraster${CMAKE_EXECUTABLE_SUFFIX}")
+#set(SOURCE_SVG "${CMAKE_SOURCE_DIR}/icons/icon.svg")
 
 # Цель, представляющая создание файлов-значков
-add_custom_target(MULTIPLE_ICONS ALL DEPENDS ${ICONS_PATH}/icon_16.png)
+add_custom_target(MULTIPLE_ICONS ALL
+  COMMAND ${CMAKE_COMMAND}
+    -DSVGTORASTER_EXE=${BUILD_PATH}/external/SvgToRaster/install/${CMAKE_INSTALL_BINDIR}/svgtoraster${CMAKE_EXECUTABLE_SUFFIX}
+    -DSOURCE_SVG=${CMAKE_SOURCE_DIR}/icons/icon.svg
+    -DICONS_PATH=${ICONS_PATH}
+    -P "${CMAKE_SOURCE_DIR}/scripts/build_icons.cmake"
+   COMMENT "Создание файлов-значков"
+   VERBATIM
+)
+# Зависимость от сборки субмодуля SvgToRaster
+add_dependencies(MULTIPLE_ICONS SvgToRaster)
 
 # Если сборка предназначена для выполнения под Windows,
 # создать файл *.ico размером 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
@@ -702,7 +692,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         list(GET PNG_LIST "${pos0}" PNG_SRC)
         list(GET PNG_LIST "${pos1}" PNG_DST)
         file(COPY_FILE
-          "${CMAKE_SOURCE_DIR}/src/candle/images/icons_png/${PNG_SRC}"
+          "${ICONS_PATH}/${PNG_SRC}"
           "${ICNS_PATH}/${PNG_DST}"
         )
     endforeach()
@@ -781,7 +771,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     # Файл формата SVG
-    install(FILES ${CMAKE_SOURCE_DIR}/src/candle/images/icon.svg
+    install(FILES ${CMAKE_SOURCE_DIR}/icons/icon.svg
       DESTINATION "share/icons/hicolor/scalable/apps"
       RENAME "${PROJECT_NAME_LOWERCASE}.svg"
       OPTIONAL
@@ -1064,7 +1054,7 @@ if (DOXYGEN_FOUND)
         # Команда удаления файла warnings.log нулевой длины
         ${CMAKE_COMMAND}
           -DFILENAME=warnings.log
-          -P "scripts/remove_zerofile.cmake"
+          -P "${CMAKE_SOURCE_DIR}/scripts/remove_zerofile.cmake"
         WORKING_DIRECTORY ${DOC_PATH}
         COMMENT "Удаление файлов нулевой длины"
         VERBATIM

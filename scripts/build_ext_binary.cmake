@@ -1,5 +1,6 @@
 ##############################################################################
-# Сборка и установка указанного субмодуля в директории /submodules
+# Функция сборки и установки указанного субмодуля в директории /submodules
+# Аргумент: EXT_NAME - имя субмодуля
 ##############################################################################
 
 include(ExternalProject)
@@ -28,7 +29,6 @@ function(build_ext_binary EXT_NAME)
       INSTALL_COMMAND      ${CMAKE_COMMAND}
         --install ${BUILD_PATH}/external/${EXT_NAME}/cmake
         --config ${CMAKE_BUILD_TYPE}
-#     LOG_DOWNLOAD         ON
       LOG_CONFIGURE        ON
       LOG_BUILD            ON
       LOG_INSTALL          ON

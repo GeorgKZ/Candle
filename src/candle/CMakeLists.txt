@@ -227,47 +227,68 @@ target_include_directories(${MAIN_NAME}
 # Сформировать список шрифтов-ресурсов
 set(RESOURCE_FONTS_PATH "${SOURCES_PATH}/fonts")
 file(GLOB RC_FONTS "${RESOURCE_FONTS_PATH}/*.ttf")
-foreach(FONT_PATH ${RC_FONTS})
-    file(RELATIVE_PATH FONT_FILENAME "${RESOURCE_FONTS_PATH}" ${FONT_PATH})
-    set(RESOURCE_FONTS ${RESOURCE_FONTS} "fonts/${FONT_FILENAME}")
-endforeach(FONT_PATH)
 
 # Добавить шрифты-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME} "fonts"
-    PREFIX "/"
-    BIG_RESOURCES
-    FILES ${RESOURCE_FONTS}
+qt6_add_resources(${MAIN_NAME}
+  # Имя, под которым ресурс будет сохранён
+  "candle_fonts"
+  # Путь, по которому ресурс будет доступен программе
+  PREFIX "/"
+  # Часть пути, которая будет отброшена
+  BASE ${SOURCES_PATH}
+  BIG_RESOURCES
+  # Путь к файлу. Доступ к файлу по пути PREFIX + (FILES - BASE).
+  FILES ${RC_FONTS}
 )
 
 # Сформировать список шейдеров-ресурсов
 set(RESOURCE_SHADERS_PATH "${SOURCES_PATH}/shaders")
 file(GLOB RC_SHADERS "${RESOURCE_SHADERS_PATH}/*.glsl")
-foreach(SHADER_PATH ${RC_SHADERS})
-    file(RELATIVE_PATH SHADER_FILENAME "${RESOURCE_SHADERS_PATH}" ${SHADER_PATH})
-    set(RESOURCE_SHADERS ${RESOURCE_SHADERS} "shaders/${SHADER_FILENAME}")
-endforeach(SHADER_PATH)
 
 # Добавить шейдеры-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME} "shaders"
-    PREFIX "/"
-    BIG_RESOURCES
-    FILES ${RESOURCE_SHADERS}
+qt6_add_resources(${MAIN_NAME}
+  # Имя, под которым ресурс будет сохранён
+  "candle_shaders"
+  # Путь, по которому ресурс будет доступен программе
+  PREFIX "/"
+  # Часть пути, которая будет отброшена
+  BASE ${SOURCES_PATH}
+  BIG_RESOURCES
+  # Путь к файлу. Доступ к файлу по пути PREFIX + (FILES - BASE).
+  FILES ${RC_SHADERS}
 )
 
 # Сформировать список изображений-ресурсов
 set(RESOURCE_IMAGES_PATH "${SOURCES_PATH}/images")
 file(GLOB_RECURSE RC_IMAGES "${RESOURCE_IMAGES_PATH}/*.ico" "${RESOURCE_IMAGES_PATH}/*.png" "${RESOURCE_IMAGES_PATH}/*.svg")
-foreach(IMAGE_PATH ${RC_IMAGES})
-    file(RELATIVE_PATH IMAGE_FILENAME "${RESOURCE_IMAGES_PATH}" ${IMAGE_PATH})
-    set(RESOURCE_IMAGES ${RESOURCE_IMAGES} "images/${IMAGE_FILENAME}")
-endforeach(IMAGE_PATH)
 
 # Добавить изображения-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME} "images"
-    PREFIX "/"
-    BIG_RESOURCES
-    FILES ${RESOURCE_IMAGES}
+qt6_add_resources(${MAIN_NAME}
+  # Имя, под которым ресурс будет сохранён
+  "candle_images"
+  # Путь, по которому ресурс будет доступен программе
+  PREFIX "images"
+  # Часть пути, которая будет отброшена
+  BASE "${SOURCES_PATH}/images/"
+  BIG_RESOURCES
+  # Путь к файлу. Доступ к файлу по пути PREFIX + (FILES - BASE).
+  FILES ${RC_IMAGES}
 )
+
+# Добавить созданные изображения-ресурсы из ICONS_PATH к ресурсам исполняемого файла
+file(GLOB_RECURSE RC_IMAGES "${ICONS_PATH}/*.png")
+qt6_add_resources(${MAIN_NAME}
+  # Имя, под которым ресурс будет сохранён
+  "candle_generated_images"
+  # Путь, по которому ресурс будет доступен программе
+  PREFIX "images"
+  # Часть пути, которая будет отброшена
+  BASE "${ICONS_PATH}/"
+  BIG_RESOURCES
+  # Путь к файлу. Доступ к файлу по пути PREFIX + (FILES - BASE).
+  FILES ${RC_IMAGES}
+)
+
 
 # Добавить необходимые библиотеки и библиотеки Qt
 target_link_libraries(${MAIN_NAME} PRIVATE
