@@ -21,9 +21,7 @@ execute_process(
   RESULT_VARIABLE result
   OUTPUT_VARIABLE output
   ERROR_VARIABLE  output_error
-#  ECHO_OUTPUT_VARIABLE
-#  ECHO_ERROR_VARIABLE
 )
 if(NOT result EQUAL 0)
-    message(FATAL_ERROR "Ошибка выполнения скрипта build_icons")
+  message(FATAL_ERROR "Ошибка выполнения скрипта build_icons: ${output_error}")
 endif()

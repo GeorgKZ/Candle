@@ -1,8 +1,7 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CMake Build Matrix](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml)
 
-Candle
------------
+Форк [Candle](https://github.com/Denvi/Candle)
+------------
 Приложение для управления станками с числовым программным управлением (далее - ЧПУ),
 имеющими контроллер "GRBL" v1.1 (далее - контроллер) с визуализацией управляющих программ
 (далее - УП) в форме G-кода, написанное на Qt.
@@ -14,6 +13,12 @@ Candle
 * Загрузка, редактирование, сохранение управляющих программ (далее - УП).
 * Визуализация УП.
 
+Лицензия:
+---------
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+
 Программно-аппаратные требования для выполнения программы "Candle":
 -------------------------------------------------------------------
 * Windows/Linux x86/Mac OS
@@ -22,7 +27,7 @@ Candle
 * свободное место на запоминающем устройстве не менее 20 Мб.
 
 Требования для сборки из исходных текстов:
-------------------
+------------------------------------------
 * Qt 6.X.X для используемого компилятора
 * Компилятор GCC, Clang в случае сборки для среды Linux
 * Компилятор Microsoft Visual Studio 2022 в случае сборки для среды Windows

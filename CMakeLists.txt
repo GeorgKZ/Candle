@@ -162,10 +162,6 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${BIN_PATH})
 set(MISC_PATH "${BUILD_PATH}/misc")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${MISC_PATH})
 
-# Директория для заготовок значков Mac OS/OSX
-set(ICNS_PATH "${MISC_PATH}/icns.iconset")
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICNS_PATH})
-
 # Директория для файлов, для которых будут искаться зависимости
 set(FIND_DEPS_PATH "${MISC_PATH}/find_deps")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${FIND_DEPS_PATH})
@@ -642,14 +638,30 @@ build_ext_binary("SvgToRaster")
 # Создание файлов-значков (до компоновки исполняемого файла приложения)
 ##############################################################################
 
-#set(SVGTORASTER_EXE "${BUILD_PATH}/external/SvgToRaster/install/${CMAKE_INSTALL_BINDIR}/svgtoraster${CMAKE_EXECUTABLE_SUFFIX}")
-#set(SOURCE_SVG "${CMAKE_SOURCE_DIR}/icons/icon.svg")
+# Найти исполняемый файл SvgToRaster
+find_program (
+  SVGTORASTER_EXE
+  NAMES svgtoraster svgtoraster.exe
+  HINTS "${BUILD_PATH}/external/SvgToRaster/install"
+  REQUIRED
+  NO_DEFAULT_PATH
+  NO_PACKAGE_ROOT_PATH
+  NO_CMAKE_PATH
+  NO_CMAKE_ENVIRONMENT_PATH
+  NO_SYSTEM_ENVIRONMENT_PATH
+  NO_CMAKE_SYSTEM_PATH
+  )
+
+# Если сборка предназначена для выполнения под Windows,
+# необходим файл ICO с битмапами 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
+# Если сборка предназначена для выполнения под Linux,
+# необходимы файлы PNG разного размера и файл *.xpm размером 32x32
 
 # Цель, представляющая создание файлов-значков
 add_custom_target(MULTIPLE_ICONS ALL
   COMMAND ${CMAKE_COMMAND}
-    -DSVGTORASTER_EXE=${BUILD_PATH}/external/SvgToRaster/install/${CMAKE_INSTALL_BINDIR}/svgtoraster${CMAKE_EXECUTABLE_SUFFIX}
-    -DSOURCE_SVG=${CMAKE_SOURCE_DIR}/icons/icon.svg
+    -DSVGTORASTER_EXE=${SVGTORASTER_EXE}
+    -DSOURCE_SVG=${CUSTOM_SVG_ICON_FILE}
     -DICONS_PATH=${ICONS_PATH}
     -P "${CMAKE_SOURCE_DIR}/scripts/build_icons.cmake"
    COMMENT "Создание файлов-значков"
@@ -658,52 +670,26 @@ add_custom_target(MULTIPLE_ICONS ALL
 # Зависимость от сборки субмодуля SvgToRaster
 add_dependencies(MULTIPLE_ICONS SvgToRaster)
 
-# Если сборка предназначена для выполнения под Windows,
-# создать файл *.ico размером 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-
-# Если сборка предназначена для выполнения под linux,
-# создать файл *.png разного размера и файл *.xpm размером 32x32
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
 # Если сборка предназначена для выполнения под MacOS / OS X,
-# создать файл *.icns
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+# создать файл ICNS из набора файлов PNG
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-    # Список исходных и результирующих имён битмапов
-    set(PNG_LIST
-      "icon_16.png"   "icon_16x16.png"
-      "icon_32.png"   "icon_16x16@2x.png"
-      "icon_32.png"   "icon_32x32.png"
-      "icon_64.png"   "icon_32x32@2x.png"
-      "icon_128.png"  "icon_128x128.png"
-      "icon_256.png"  "icon_128x128@2x.png"
-      "icon_256.png"  "icon_256x256.png"
-      "icon_512.png"  "icon_256x256@2x.png"
-      "icon_512.png"  "icon_512x512.png"
-      "icon_1024.png" "icon_512x512@2x.png"
+    # Аргументы:
+    # ICONS_PATH - путь, по которому расположены файлы PNG
+    # MISC_PATH - путь для размещения временных файлов
+    # ICNS_FILE - путь/имя созданного значка icns
+
+    add_custom_target(ICNS_ICONS ALL
+      COMMAND ${CMAKE_COMMAND}
+        -DICONS_PATH=${ICONS_PATH}
+        -DMISC_PATH=${MISC_PATH}
+        -DICNS_FILE=${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns
+        -P "${CMAKE_SOURCE_DIR}/scripts/build_icns.cmake"
+       COMMENT "Создание файла-значка ICNS"
+       VERBATIM
     )
-
-    # Выполнить копирование и переименование битмапов согласно списка
-    list(LENGTH PNG_LIST PNG_LIST_LEN)
-    math(EXPR PNG_LIST_LEN "${PNG_LIST_LEN} - 2") 
-    foreach(pos0 RANGE 0 "${PNG_LIST_LEN}" 2)
-        math(EXPR pos1 "${pos0} + 1") 
-        list(GET PNG_LIST "${pos0}" PNG_SRC)
-        list(GET PNG_LIST "${pos1}" PNG_DST)
-        file(COPY_FILE
-          "${ICONS_PATH}/${PNG_SRC}"
-          "${ICNS_PATH}/${PNG_DST}"
-        )
-    endforeach()
-
-    # Преобразовать битмапы в файл icns
-    execute_process(COMMAND
-      iconutil
-      -c icns
-      "${ICNS_PATH}"
-      -o "${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns"
-    )
+    # Зависимость от сборки субмодуля SvgToRaster
+    add_dependencies(ICNS_ICONS MULTIPLE_ICONS)
 
 endif()
 
@@ -771,7 +757,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     # Файл формата SVG
-    install(FILES ${CMAKE_SOURCE_DIR}/icons/icon.svg
+    install(FILES ${CUSTOM_SVG_ICON_FILE}
       DESTINATION "share/icons/hicolor/scalable/apps"
       RENAME "${PROJECT_NAME_LOWERCASE}.svg"
       OPTIONAL
@@ -786,41 +772,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
           OPTIONAL
         )
     endforeach(SIZE)
-
-#    # Файл формата PNG, 16x16 пикселов
-#    install(FILES ${ICONS_PATH}/icon_16.png
-#      DESTINATION "share/icons/hicolor/16x16/apps"
-#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
-#      OPTIONAL
-#    )
-#
-#    # Файл формата PNG, 24x24 пикселов
-#    install(FILES ${ICONS_PATH}/icon_24.png
-#      DESTINATION "share/icons/hicolor/24x24/apps"
-#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
-#      OPTIONAL
-#    )
-#
-#    # Файл формата PNG, 24x24 пикселов
-#    install(FILES ${ICONS_PATH}/icon_24.png
-#      DESTINATION "share/icons/hicolor/24x24/apps"
-#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
-#      OPTIONAL
-#    )
-#
-#    # Файл формата PNG, 48x48 пикселов
-#    install(FILES ${ICONS_PATH}/icon_48.png
-#      DESTINATION "share/icons/hicolor/48x48/apps"
-#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
-#      OPTIONAL
-#    )
-#
-#    # Файл формата PNG, 256x256 пикселов
-#    install(FILES ${ICONS_PATH}/icon_256.png
-#      DESTINATION "share/icons/hicolor/256x256/apps"
-#      RENAME "${PROJECT_NAME_LOWERCASE}.png"
-#      OPTIONAL
-#    )
 
     # Файл формата XPM, 32x32 пикселов
     install(FILES ${ICONS_PATH}/icon_32.xpm
@@ -1008,7 +959,7 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_WARN_NO_PARAMDOC        YES)
     set(DOXYGEN_WARN_LOGFILE            "${DOC_PATH}/warnings.log")
     set(DOXYGEN_FILE_PATTERNS           *.h *.hxx *.cpp *.md)
-    set(DOXYGEN_EXAMPLE_PATH            "${SOURCES_PATH}")
+#   set(DOXYGEN_EXAMPLE_PATH            "${SOURCES_PATH}")
     set(DOXYGEN_IMAGE_PATH              ${DOXY_IMAGES})
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE  "${CMAKE_SOURCE_DIR}/README.md")
     set(DOXYGEN_ALPHABETICAL_INDEX      NO)
@@ -1044,9 +995,10 @@ if (DOXYGEN_FOUND)
 
     # Формирование файлов документации html при помощи doxygen (начиная с CMAKE 3.9)
     doxygen_add_docs(html_doc_proc
-        ${SOURCES_PATH}
-        WORKING_DIRECTORY ${SOURCES_PATH}
-        COMMENT "Создание документации ${MAIN_NAME} в формате html"
+      "${CMAKE_SOURCE_DIR}/README.md"
+      "${CMAKE_SOURCE_DIR}/src"
+#     WORKING_DIRECTORY ${SOURCES_PATH}
+      COMMENT "Создание документации ${MAIN_NAME} в формате html"
     )
 
     # Удаление файла warnings.log, если он нулевой длины
