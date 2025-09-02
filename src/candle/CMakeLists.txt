@@ -63,7 +63,7 @@ add_definitions(
 if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"))
 
     # Строка ресурса, содержащая путь к файлу значка ICO
-    set(ICON_RESOURCE_STRING "IDI_ICON1 ICON DISCARDABLE \"${ICON_FILE}\"\n\n")
+    set(ICON_RESOURCE_STRING "IDI_ICON1 ICON DISCARDABLE \"${ICONS_PATH}/icon.ico\"\n\n")
 
     # Создать файл ресурса по шаблону
     file(WRITE

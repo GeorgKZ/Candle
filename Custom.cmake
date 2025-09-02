@@ -18,9 +18,6 @@ set(CUSTOM_PROJECT_MAINTAINER "${PROJECT_VENDOR} https://github.com/GeorgKZ")
 # Путь к файлу значка SVG проекта
 set(CUSTOM_SVG_ICON_FILE "${CMAKE_SOURCE_DIR}/icons/icon.svg")
 
-# Путь к файлу значка ICO проекта
-set(CUSTOM_ICON_FILE "${CMAKE_SOURCE_DIR}/src/candle/images/candle.ico")
-
 ##############################################################################
 # Настройки Qt
 ##############################################################################

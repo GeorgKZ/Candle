@@ -45,9 +45,6 @@ set(PROJECT_VENDOR "${CUSTOM_PROJECT_VENDOR}")
 # Контактные данные поставщика установочного пакета
 set(PROJECT_MAINTAINER "${CUSTOM_PROJECT_MAINTAINER}")
 
-# Путь к файлу значка ICO проекта
-set(ICON_FILE "${CUSTOM_ICON_FILE}")
-
 ##############################################################################
 # Относительные пути для пакетов MacOS/OS X
 ##############################################################################
@@ -638,20 +635,6 @@ build_ext_binary("SvgToRaster")
 # Создание файлов-значков (до компоновки исполняемого файла приложения)
 ##############################################################################
 
-# Найти исполняемый файл SvgToRaster
-find_program (
-  SVGTORASTER_EXE
-  NAMES svgtoraster svgtoraster.exe
-  HINTS "${BUILD_PATH}/external/SvgToRaster/install"
-  REQUIRED
-  NO_DEFAULT_PATH
-  NO_PACKAGE_ROOT_PATH
-  NO_CMAKE_PATH
-  NO_CMAKE_ENVIRONMENT_PATH
-  NO_SYSTEM_ENVIRONMENT_PATH
-  NO_CMAKE_SYSTEM_PATH
-  )
-
 # Если сборка предназначена для выполнения под Windows,
 # необходим файл ICO с битмапами 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
 # Если сборка предназначена для выполнения под Linux,
@@ -660,7 +643,7 @@ find_program (
 # Цель, представляющая создание файлов-значков
 add_custom_target(MULTIPLE_ICONS ALL
   COMMAND ${CMAKE_COMMAND}
-    -DSVGTORASTER_EXE=${SVGTORASTER_EXE}
+    -DSVGTORASTER_HINT=${BUILD_PATH}/external/SvgToRaster/install
     -DSOURCE_SVG=${CUSTOM_SVG_ICON_FILE}
     -DICONS_PATH=${ICONS_PATH}
     -P "${CMAKE_SOURCE_DIR}/scripts/build_icons.cmake"
@@ -996,6 +979,7 @@ if (DOXYGEN_FOUND)
     # Формирование файлов документации html при помощи doxygen (начиная с CMAKE 3.9)
     doxygen_add_docs(html_doc_proc
       "${CMAKE_SOURCE_DIR}/README.md"
+      "${CMAKE_SOURCE_DIR}/TODO.md"
       "${CMAKE_SOURCE_DIR}/src"
 #     WORKING_DIRECTORY ${SOURCES_PATH}
       COMMENT "Создание документации ${MAIN_NAME} в формате html"

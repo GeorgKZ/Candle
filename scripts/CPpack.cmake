@@ -276,10 +276,10 @@ set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK OFF)
 set(CPACK_NSIS_INSTALL_ROOT "C:\\Program Files")
 
 # Значок (*.ico) для установки пакета
-set(CPACK_NSIS_MUI_ICON "${ICON_FILE}")
+set(CPACK_NSIS_MUI_ICON "${ICONS_PATH}/icon.ico")
 
 # Значок (*.ico) для удаления пакета
-set(CPACK_NSIS_MUI_UNIICON "${ICON_FILE}")
+set(CPACK_NSIS_MUI_UNIICON "${ICONS_PATH}/icon.ico")
 
 # Не документировано
 #set(CPACK_NSIS_INSTALLER_MUI_ICON_CODE
@@ -436,7 +436,7 @@ set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
 # https://cmake.org/cmake/help/latest/cpack_gen/wix.html
 ##############################################################################
 
-set(CPACK_WIX_PRODUCT_ICON "${ICON_FILE}")
+set(CPACK_WIX_PRODUCT_ICON "${ICONS_PATH}/icon.ico")
 set(CPACK_WIX_UPGRADE_GUID "E6A093A5-83DE-47FA-B669-1DE0102BE92A")
 set(CPACK_WIX_LIGHT_EXTRA_FLAGS "-dcl:high") # set high compression
 
