@@ -36,6 +36,7 @@ execute_process(
   COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 1024 --o ${ICONS_PATH}/icon_1024.png
   COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 32   --o ${ICONS_PATH}/icon_32.xpm
   COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG} --s 16 24 32 48 64 128 256 --o ${ICONS_PATH}/icon.ico
+  COMMAND ${SVGTORASTER_EXE} --i ${SOURCE_SVG}          --o ${ICONS_PATH}/icon.icns
   RESULT_VARIABLE result
   OUTPUT_VARIABLE output
   ERROR_VARIABLE  output_error

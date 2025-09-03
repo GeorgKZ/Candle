@@ -639,6 +639,8 @@ build_ext_binary("SvgToRaster")
 # необходим файл ICO с битмапами 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
 # Если сборка предназначена для выполнения под Linux,
 # необходимы файлы PNG разного размера и файл *.xpm размером 32x32
+# Если сборка предназначена для выполнения под MacOS / OS X,
+# необходим файл *.icns
 
 # Цель, представляющая создание файлов-значков
 add_custom_target(MULTIPLE_ICONS ALL
@@ -652,29 +654,6 @@ add_custom_target(MULTIPLE_ICONS ALL
 )
 # Зависимость от сборки субмодуля SvgToRaster
 add_dependencies(MULTIPLE_ICONS SvgToRaster)
-
-# Если сборка предназначена для выполнения под MacOS / OS X,
-# создать файл ICNS из набора файлов PNG
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
-    # Аргументы:
-    # ICONS_PATH - путь, по которому расположены файлы PNG
-    # MISC_PATH - путь для размещения временных файлов
-    # ICNS_FILE - путь/имя созданного значка icns
-
-    add_custom_target(ICNS_ICONS ALL
-      COMMAND ${CMAKE_COMMAND}
-        -DICONS_PATH=${ICONS_PATH}
-        -DMISC_PATH=${MISC_PATH}
-        -DICNS_FILE=${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns
-        -P "${CMAKE_SOURCE_DIR}/scripts/build_icns.cmake"
-       COMMENT "Создание файла-значка ICNS"
-       VERBATIM
-    )
-    # Зависимость от сборки субмодуля SvgToRaster
-    add_dependencies(ICNS_ICONS MULTIPLE_ICONS)
-
-endif()
 
 ##############################################################################
 # Создание файлов для Mac OS/OS X
@@ -766,8 +745,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 # Если сборка предназначена для выполнения под MacOS / OS X
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     install(FILES
-      "${ICONS_PATH}/${PROJECT_NAME_LOWERCASE}.icns"
+      "${ICONS_PATH}/icon.icns"
       DESTINATION "${BUNDLE_RESOURCE_PATH}"
+      RENAME "${PROJECT_NAME_LOWERCASE}.icns"
     )
 endif()
 

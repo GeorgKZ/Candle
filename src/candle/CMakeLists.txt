@@ -396,12 +396,8 @@ set_target_properties(${MAIN_NAME} PROPERTIES
   MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
   MACOSX_BUNDLE_ICON_FILE "${PROJECT_NAME_LOWERCASE}.icns"
 )
+# Добавить зависимость от цели сборки файлов значков
 add_dependencies(${MAIN_NAME} MULTIPLE_ICONS)
-# Если сборка предназначена для выполнения под MacOS / OS X,
-# добавить зависимость от цели сборки файла *.icns
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    add_dependencies(${MAIN_NAME} ICNS_ICONS)
-endif()
 
 ##############################################################################
 # Формирование набора зависимостей

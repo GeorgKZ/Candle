@@ -69,3 +69,7 @@ bin
 
 #pdb
 *.pdb
+
+#Субмодули
+submodules/MathJax/*
+submodules/SvgToRaster/*
