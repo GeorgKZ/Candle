@@ -1,7 +1,7 @@
 [![CMake Build Matrix](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml)
 
 Форк [Candle](https://github.com/Denvi/Candle)
-------------
+============
 Приложение для управления станками с числовым программным управлением (далее - ЧПУ),
 имеющими контроллер "GRBL" v1.1 (далее - контроллер) с визуализацией управляющих программ
 (далее - УП) в форме G-кода, написанное на Qt.
@@ -14,14 +14,22 @@
 * Визуализация УП.
 
 Лицензия:
----------
+=========
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 
-Программно-аппаратные требования для выполнения программы "Candle":
+Требования программы "Candle":
+==============================
+
+Поддерживаемые платформы
+------------------------
+* Microsoft Windows
+* GNU/Linux
+* MacOS
+
+Аппаратные требования:
 -------------------------------------------------------------------
-* Windows/Linux x86/Mac OS
 * процессор, поддерживающий набор инструкций SSE2
 * графический адаптер, поддерживающий спецификацию OpenGL версии 2.0 и выше
 * свободное место на запоминающем устройстве не менее 20 Мб.
@@ -36,8 +44,7 @@
 * Ninja весии 1.X и более новой (только при использовании данного генератора)
 
 Загрузки исполняемых файлов:
-----------------------------
-
+============================
 * Windows: [candle_1.1.7.zip](https://github.com/Denvi/Candle/releases/download/v1.1/Candle_1.1.7.zip)
 * Linux: [candle_1.1.7.tar.gz](https://github.com/Denvi/Candle/releases/download/v1.1/Candle_1.1.7.tar.gz)
 
