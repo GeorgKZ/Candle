@@ -4,7 +4,6 @@
 
 - [ ] Убрать лишние/дублирующиеся значки в src/candle/images
 - [ ] Cmake: Доработать CmakeLists.txt для успешной сборки при наличии и отсутствии значка проекта формата SVG  
-- [ ] Исправить прокси-функции (в скрипте ошибка сваливания от CameraWidget, ColorPicker, StyledToolButton к базовому QWidget)  
 - [ ] Cmake: Устанавливать MathJax в нужное место при генерации документации  
 - [ ] Cmake, C++: Установить местоположение файлов конфигурации .ini в зависимости от используемой ОС  
 - [ ] Cmake: При поиске зависимостей сохранять пути к найденным библиотекам
@@ -23,3 +22,4 @@ dpkg -S /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-16.1.so
 ```
 ### Выполнено
 - [+] Cmake: Определять требуемые модули Qt по файлу Custom.cmake  
+- [+] C++, JavaScript: Исправить ошибку сваливания от CameraWidget, ColorPicker, StyledToolButton к базовому QWidget  

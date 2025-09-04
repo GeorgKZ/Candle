@@ -3,7 +3,7 @@
 
 // Vars
 var appPath = app.path;
-var pluginPath = script.path;
+var pluginPath = app.plugpath;
 var loader = new QUiLoader();
 var settings = new QSettings(pluginPath + "/settings.ini", QSettings.IniFormat);
 var deviceState = -1;
@@ -19,8 +19,11 @@ var uiSettings;
 function init()
 {
     loader.setWorkingDirectory(new QDir(pluginPath));
-    loader.addPluginPath(appPath);
-    loader.addPluginPath(appPath + "/libs");
+
+    loader.addPluginPath(appPath + "/" + app.libpath)
+
+//    loader.addPluginPath(appPath);
+//    loader.addPluginPath(appPath + "/libs");
     loader.setLanguageChangeEnabled(true);
 
     app.deviceStateChanged.connect(onAppDeviceStateChanged);

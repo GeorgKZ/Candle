@@ -28,6 +28,7 @@ set(QT_PLUGIN_LIST
   "accessiblebridge"
   "iconengines"
   "imageformats"
+  "multimedia"
   "permissions"
   "platforminputcontexts"
   "platforms"

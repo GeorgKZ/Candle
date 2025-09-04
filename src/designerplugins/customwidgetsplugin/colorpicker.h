@@ -1,11 +1,11 @@
 #ifndef COLORPICKER_H
 #define COLORPICKER_H
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QColorDialog>
+#include <QWidget>
+#include <QHBoxLayout>
+#include <QFrame>
+#include <QToolButton>
+#include <QColorDialog>
 #include <customwidgetsshared.h>
 
 class CUSTOMWIDGETS_DLLSPEC ColorPicker : public QWidget

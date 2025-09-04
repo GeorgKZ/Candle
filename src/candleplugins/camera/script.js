@@ -3,7 +3,7 @@
 
 // Vars
 var appPath = app.path;
-var pluginPath = script.path;
+var pluginPath = app.plugpath;
 var pluginName;
 var loader = new QUiLoader();
 var settings = new QSettings(pluginPath + "/settings.ini", QSettings.IniFormat);
@@ -26,7 +26,7 @@ function init()
 
     loader.setWorkingDirectory(new QDir(pluginPath));
 
-    loader.addPluginPath(appPath + "/" + script.libpath)
+    loader.addPluginPath(appPath + "/" + app.libpath)
 //    loader.addPluginPath(appPath);
 //    loader.addPluginPath(appPath + "/libs");
 //    loader.addPluginPath(pluginPath + "/candle_plugins")

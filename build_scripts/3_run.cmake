@@ -37,7 +37,7 @@
   file(REMOVE "${BUILDDIR}/log_run_errors.txt")
 
   # Вывод информации о работе с плюгинами Qt
-  # set(ENV{QT_DEBUG_PLUGINS} 1)
+  set(ENV{QT_DEBUG_PLUGINS} 1)
 
   # для Windows
   if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")

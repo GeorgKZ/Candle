@@ -1,4 +1,4 @@
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QDesignerCustomWidgetInterface>
 
 class SliderBoxPlugin: public QObject, public QDesignerCustomWidgetInterface
 {

@@ -3314,19 +3314,21 @@ void frmMain::loadPlugins()
 
             QJSEngine *se = new QJSEngine();
             register_wrappers(se);
-            QJSValue sv = newScript(se, this);
-
-            // Установить соответствие script.path в ява-скрипте директории скрипта
-            sv.setProperty("path", pluginsDir + p);
-            // Установить соответствие script.libpath в ява-скрипте директории библиотек
-            sv.setProperty("libpath", REL_LIB_DIR);
-            // Установть для движка класс script
-            se->globalObject().setProperty("script", sv);
 
             // Delegate objects
             // Main form
             QJSValue app = se->newQObject(&m_scriptFunctions);
+
+            // Установить соответствие app.plugpath в ява-скрипте директории скрипта
+            app.setProperty("plugpath", pluginsDir + p);
+
+            // Установить соответствие app.libpath в ява-скрипте директории библиотек
+            app.setProperty("libpath", REL_LIB_DIR);
+
+            // Установить соответствие app.libpath в ява-скрипте директории исп. файла приложения
             app.setProperty("path", qApp->applicationDirPath());
+
+            // Установть для движка класс app
             se->globalObject().setProperty("app", app);
 
             // Settings
@@ -3345,6 +3347,7 @@ void frmMain::loadPlugins()
             QStringList exceptionStackTrace;
 
             qInfo() << "Starting plugin:" << p;
+            QJSValue sv;
             sv = se->evaluate(script, p, 1, &exceptionStackTrace);
             if (sv.isError() || !exceptionStackTrace.isEmpty()) {
                 int errLine = sv.property("lineNumber").toInt();

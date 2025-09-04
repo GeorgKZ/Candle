@@ -1,8 +1,8 @@
 // This file is a part of "Candle" application.
 // Copyright 2015-2021 Hayrullin Denis Ravilevich
 
-#include <QtCore/QDebug>
-#include <QtCore/QEvent>
+#include <QDebug>
+#include <QEvent>
 #include "styledtoolbutton.h"
 
 StyledToolButton::StyledToolButton(QWidget *parent) : QToolButton(parent)

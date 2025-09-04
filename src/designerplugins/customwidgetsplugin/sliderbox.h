@@ -1,8 +1,8 @@
 #ifndef SLIDERBOX_H
 #define SLIDERBOX_H
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QTimer>
+#include <QWidget>
+#include <QTimer>
 #include "customwidgetsshared.h"
 
 namespace Ui {

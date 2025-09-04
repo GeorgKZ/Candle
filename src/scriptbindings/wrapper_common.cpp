@@ -1,32 +1,31 @@
 #include <string>
 
-#include <QtWidgets/QAbstractButton>
-#include <QtWidgets/QAbstractItemDelegate>
-#include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QBoxLayout>
-#include <QtGui/QColor>
-#include <QtWidgets/QComboBox>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtWidgets/QHeaderView>
-#include <QtGui/QIcon>
-#include <QtCore/QIODevice>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QLayoutItem>
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include <QtCore/QSize>
-#include <QtWidgets/QSizePolicy>
-#include <QtWidgets/QStyledItemDelegate>
-#include <QtWidgets/QTableView>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QTableWidgetItem>
-#include <QtUiTools/QUiLoader>
-#include <QtWidgets/QWidget>
-
-#include <QtWidgets/QSpinBox>
-#include <QtWidgets/QDoubleSpinBox>
-#include <QtWidgets/QPushButton>
+#include <QAbstractButton>
+#include <QAbstractItemDelegate>
+#include <QAbstractItemView>
+#include <QBoxLayout>
+#include <QColor>
+#include <QComboBox>
+#include <QDir>
+#include <QFile>
+#include <QHeaderView>
+#include <QIcon>
+#include <QIODevice>
+#include <QLayout>
+#include <QLayoutItem>
+#include <QObject>
+#include <QSettings>
+#include <QSize>
+#include <QSizePolicy>
+#include <QStyledItemDelegate>
+#include <QTableView>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QUiLoader>
+#include <QWidget>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QPushButton>
 
 #include "wrapper_common.h"
 #include "wrapper_Slider.h"
@@ -71,8 +70,6 @@
 #include "wrapper_QToolButton.h"
 #include "wrapper_QUiLoader.h"
 #include "wrapper_QWidget.h"
-
-#include "wrapper_Script.h"
 
 /**
  * \file
@@ -357,7 +354,7 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
   wfactory(className, QUiLoader, object);
   wfactory(className, QWidget, object);
 
-  // Кастомные виджеты
+  // Пользовательские виджеты
   wfactory(className, CameraWidget, object);
   wfactory(className, ColorPicker, object);
   wfactory(className, Slider, object);
@@ -437,8 +434,6 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
   wregister(SliderBox);
   wregister(IconDelegate);
   wregister(CodeDelegate);
-
-  qRegisterMetaType<CameraWidget>("CameraWidget");
 
   qDebug() << "register_wrappers - OK";
 }
@@ -571,9 +566,4 @@ void *jsvalueToObject_ptr(const char *waiting_className, const QJSValue &value, 
   void *ptr = (reinterpret_cast<wrapper_common*>(obj))->get_selfptr();
   qDebug() << "jsvalueToObject_ptr(" <<  waiting_className << ") - returning pointer of" << pureType;
   return ptr;
-}
-
-QJSValue newScript(QJSEngine *se, QObject* parent)
-{
-    return se->newQObject(new Script(parent));
 }
