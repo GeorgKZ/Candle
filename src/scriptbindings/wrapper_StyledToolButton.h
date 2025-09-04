@@ -88,6 +88,6 @@ private:
   }
 };
 
-//Q_DECLARE_METATYPE(wrapper_StyledToolButton)
+Q_DECLARE_METATYPE(wrapper_StyledToolButton)
 
 #endif // WRAPPER_STYLEDTOOLBUTTON_H

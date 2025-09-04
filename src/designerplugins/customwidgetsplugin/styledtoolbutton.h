@@ -55,4 +55,6 @@ private:
     QColor m_highlightColor;
 };
 
+Q_DECLARE_METATYPE(StyledToolButton)
+
 #endif // STYLEDTOOLBUTTON_H

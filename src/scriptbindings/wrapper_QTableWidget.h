@@ -156,5 +156,4 @@ public:
 
 Q_DECLARE_METATYPE(wrapper_QTableWidget)
 
-
 #endif // WRAPPER_QTABLEWIDGET_H

@@ -66,4 +66,6 @@ public:
   QModelIndex* get_selfptr();
 };
 
+Q_DECLARE_METATYPE(wrapper_QModelIndex)
+
 #endif // WRAPPER_QMODELINDEX_H

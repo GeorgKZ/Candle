@@ -1,7 +1,7 @@
 #ifndef CAMERAPLUGIN_H
 #define CAMERAPLUGIN_H
 
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QDesignerCustomWidgetInterface>
 
 class CameraPlugin: public QObject, QDesignerCustomWidgetInterface
 {

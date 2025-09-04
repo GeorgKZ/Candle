@@ -33,18 +33,14 @@ public:
 
   // QWidget *load(QIODevice *device, QWidget *parentWidget = nullptr);
   Q_INVOKABLE QJSValue load(const QJSValue &device, const QJSValue &parentWidget = QJSValue(QJSValue::UndefinedValue)) {
-//    QIODevice *_device = jsvalueToPointer(QIODevice, device);
-    QFile *_device = jsvalueToPointer(QFile, device);
+    QIODevice *_device = jsvalueToPointer(QIODevice, device);
     QWidget *_parentWidget = jsvalueToPointer(QWidget, parentWidget);
-
 
     qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ")...";
 
-    QUiLoader* self = (QUiLoader*)get_selfptr();
+    QWidget *new_widget = get_selfptr()->load(_device, _parentWidget);
 
-    QWidget *new_widget = (QWidget*)self->load(_device, _parentWidget);
-
-    qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ") -> " << (unsigned long long)new_widget;
+    qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ") -> " << (unsigned long long)new_widget << "[" << new_widget->metaObject()->className() << "]";
 
     return wrapperFactory(new_widget->metaObject()->className(), new_widget);
 //!!! Пока не выходит!

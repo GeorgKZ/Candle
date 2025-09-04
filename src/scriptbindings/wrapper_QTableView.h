@@ -144,5 +144,4 @@ public:
 
 Q_DECLARE_METATYPE(wrapper_QTableView)
 
-
 #endif // WRAPPER_QTABLEVIEW_H

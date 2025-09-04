@@ -3316,7 +3316,11 @@ void frmMain::loadPlugins()
             register_wrappers(se);
             QJSValue sv = newScript(se, this);
 
-            sv.setProperty("path", pluginsDir + p);            
+            // Установить соответствие script.path в ява-скрипте директории скрипта
+            sv.setProperty("path", pluginsDir + p);
+            // Установить соответствие script.libpath в ява-скрипте директории библиотек
+            sv.setProperty("libpath", REL_LIB_DIR);
+            // Установть для движка класс script
             se->globalObject().setProperty("script", sv);
 
             // Delegate objects

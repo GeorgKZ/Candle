@@ -37,7 +37,7 @@ set(QT_PLUGIN_LIST
 )
 
 # Подсистемы Qt, для которых требуются переводы
-set(QT_SYSTEMS "qt;qtbase;qtmultimedia;qtserialport")
+set(QT_SYSTEMS "qt;qtbase;qtdesigner;qtmultimedia;qtserialport")
 
 # Список необходимых для приложения модулей Qt
 set(QT_MODULES_LIST

@@ -185,7 +185,6 @@ public:
   }
 };
 
-//Q_DECLARE_METATYPE(wrapper_QLayout)
-//Q_DECLARE_METATYPE(wrapper_QLayout*)
+Q_DECLARE_METATYPE(wrapper_QLayout)
 
 #endif // WRAPPER_QLAYOUT_H

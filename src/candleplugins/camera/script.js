@@ -26,9 +26,10 @@ function init()
 
     loader.setWorkingDirectory(new QDir(pluginPath));
 
-    loader.addPluginPath(appPath);
-    loader.addPluginPath(appPath + "/libs");
-    loader.addPluginPath(pluginPath + "/candle_plugins")
+    loader.addPluginPath(appPath + "/" + script.libpath)
+//    loader.addPluginPath(appPath);
+//    loader.addPluginPath(appPath + "/libs");
+//    loader.addPluginPath(pluginPath + "/candle_plugins")
     loader.setLanguageChangeEnabled(true);
 
     app.settingsLoaded.connect(onAppSettingsLoaded);

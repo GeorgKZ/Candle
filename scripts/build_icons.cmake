@@ -6,8 +6,6 @@
 # ICONS_PATH - путь, по которому будут размещены созданные значки
 ##############################################################################
 
-message(STATUS "Hnt=${SVGTORASTER_HINT}")
-
 # Найти исполняемый файл SvgToRaster
 find_program (
   SVGTORASTER_EXE

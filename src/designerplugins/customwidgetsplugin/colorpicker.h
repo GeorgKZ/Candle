@@ -39,4 +39,6 @@ private:
     QColor m_color;
 };
 
+Q_DECLARE_METATYPE(ColorPicker)
+
 #endif // COLORPICKER_H

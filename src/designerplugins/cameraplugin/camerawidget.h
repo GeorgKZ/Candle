@@ -1,7 +1,7 @@
 #ifndef CAMERAWIDGET_H
 #define CAMERAWIDGET_H
 
-#include <QtWidgets/QGraphicsView>
+#include <QGraphicsView>
 #include "customwidgetsshared.h"
 
 class QScrollArea;
@@ -351,5 +351,7 @@ private:
      */
     virtual void showEvent(QShowEvent *e) override;
 };
+
+Q_DECLARE_METATYPE(CameraWidget)
 
 #endif

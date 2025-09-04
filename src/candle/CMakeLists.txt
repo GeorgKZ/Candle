@@ -53,6 +53,7 @@ add_definitions(
     -DPROJECT_NAME="${PROJECT_NAME}"
     -DREL_PLUG_DIR="${REL_PLUG_DIR}"
     -DREL_LIC_DIR="${REL_LIC_DIR}"
+    -DREL_LIB_DIR="${REL_LIB_DIR}"
 )
 
 ##############################################################################
@@ -187,17 +188,9 @@ endif()
 ##############################################################################
 
 # Требуемые компоненты Qt6
-find_package(Qt6 COMPONENTS Core REQUIRED)
-find_package(Qt6 COMPONENTS Gui REQUIRED)
-find_package(Qt6 COMPONENTS OpenGL REQUIRED)
-find_package(Qt6 COMPONENTS SerialPort REQUIRED)
-find_package(Qt6 COMPONENTS Qml REQUIRED)
-find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
-find_package(Qt6 COMPONENTS UiTools REQUIRED)
-find_package(Qt6 COMPONENTS Quick REQUIRED)
-find_package(Qt6 COMPONENTS Multimedia REQUIRED)
-find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
+foreach(lib ${QT_MODULES_LIST})
+    find_package(Qt6 COMPONENTS ${lib} REQUIRED)
+endforeach(lib)
 
 # Сформировать список файлов с описанием интерфейса
 file(GLOB UI "${SOURCES_PATH}/*.ui")
@@ -290,25 +283,19 @@ qt6_add_resources(${MAIN_NAME}
 )
 
 
-# Добавить необходимые библиотеки и библиотеки Qt
+# Добавить необходимые библиотеки
 target_link_libraries(${MAIN_NAME} PRIVATE
     scriptbindings
     cameraplugin
     customwidgetsplugin
 )
-target_link_libraries(${MAIN_NAME} PUBLIC
-    Qt6::Core
-    Qt6::Gui
-    Qt6::OpenGL
-    Qt6::SerialPort
-    Qt6::Qml
-    Qt6::OpenGLWidgets
-    Qt6::Widgets
-    Qt6::UiTools
-    Qt6::Quick
-    Qt6::Multimedia
-    Qt6::MultimediaWidgets
-)
+
+# Добавить библиотеки Qt
+foreach(lib ${QT_MODULES_LIST})
+    target_link_libraries(${MAIN_NAME} PUBLIC
+        Qt6::${lib}
+    )
+endforeach(lib)
 
 ##############################################################################
 # Настройка ресурса с файлами переводов
@@ -320,7 +307,7 @@ find_package(Qt6 COMPONENTS LinguistTools REQUIRED)
 # Обработать файлы перевода приложения для интеграции в исполняемый файл,
 # перебрать все поддерживаемые языки
 set(QM_FILES "")
-FOREACH(L ${QT_LANG})
+foreach(L ${QT_LANG})
     string(SUBSTRING ${L} 0 2 LANG_F)
 
     # Обновить файл перевода
@@ -346,7 +333,7 @@ FOREACH(L ${QT_LANG})
         DEPENDS ${QM_FILE}
     )
     list(APPEND QM_FILES ${QM_FILE})
-ENDFOREACH(L)
+endforeach(L)
 
 # Добавить переводы-ресурсы к ресурсам исполняемого файла
 qt6_add_resources(${MAIN_NAME} "translations"

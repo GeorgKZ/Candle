@@ -100,6 +100,8 @@ Q_SIGNALS:
     }
 };
 
+Q_DECLARE_METATYPE(wrapper_QSpinBox)
+
 class wrapper_QDoubleSpinBox : public wrapper_QAbstractSpinBox
 {
     Q_OBJECT
@@ -199,5 +201,7 @@ Q_SIGNALS:
         qDebug() << "wrapper_QDoubleSpinBox::destructor";
     }
 };
+
+Q_DECLARE_METATYPE(wrapper_QDoubleSpinBox)
 
 #endif // WRAPPER_QSPINBOX_H

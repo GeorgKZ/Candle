@@ -154,6 +154,6 @@ private:
   }
 };
 
-//Q_DECLARE_METATYPE(wrapper_SliderBox)
+Q_DECLARE_METATYPE(wrapper_SliderBox)
 
 #endif // WRAPPER_SLIDERBOX_H

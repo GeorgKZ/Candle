@@ -35,10 +35,9 @@ add_definitions(-DWRAPPER_EXPORT_SYMBOLS)
 ##############################################################################
 
 # Требуемые компоненты Qt6
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Qml)
-find_package(Qt6 REQUIRED COMPONENTS UiTools)
+foreach(lib ${QT_MODULES_LIST})
+    find_package(Qt6 COMPONENTS ${lib} REQUIRED)
+endforeach(lib)
 
 # Определение собираемой библиотеки, её зависимости
 add_library(${MAIN_NAME} SHARED
@@ -54,15 +53,19 @@ target_include_directories(${MAIN_NAME}
     PRIVATE ${CMAKE_SOURCE_DIR}/src
 )
 
-# Добавить необходимые библиотеки и библиотеки Qt
+# Добавить необходимые библиотеки
 target_link_libraries(${MAIN_NAME} PRIVATE
     customwidgetsplugin
     cameraplugin
-    Qt6::Core
-    Qt6::Widgets
-    Qt6::Qml
-    Qt6::UiTools
 )
+
+# Добавить библиотеки Qt
+foreach(lib ${QT_MODULES_LIST})
+    target_link_libraries(${MAIN_NAME} PUBLIC
+        Qt6::${lib}
+    )
+endforeach(lib)
+
 
 # Подготовка к поиску набора динамических библиотек, от которых зависит цель
 add_custom_target(get_deps_${MAIN_NAME} ALL
@@ -70,17 +73,3 @@ add_custom_target(get_deps_${MAIN_NAME} ALL
   COMMENT "Подготовка к поиску зависимостей цели ${MAIN_NAME}"
 )
 add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})
-
-##############################################################################
-# Формирование установочного набора
-##############################################################################
-
-# Будет установлено как зависимости
-
-# Вывод сообщений об установке только если было изменение
-#set(CMAKE_INSTALL_MESSAGE LAZY)
-
-# Библиотека
-#install(TARGETS ${MAIN_NAME}
-#  LIBRARY
-#)

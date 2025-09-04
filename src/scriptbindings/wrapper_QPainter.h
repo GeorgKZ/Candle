@@ -508,4 +508,6 @@ public:
   QPainter* get_selfptr();
 };
 
+Q_DECLARE_METATYPE(wrapper_QPainter)
+
 #endif // WRAPPER_QPAINTER_H

@@ -1,21 +1,21 @@
 #include "camerawidget.h"
 
-#include <QtGui/QMouseEvent>
-#include <QtGui/QPainter>
-#include <QtMultimedia/QCamera>
-#include <QtMultimedia/QCameraDevice>
-#include <QtMultimedia/QMediaCaptureSession>
-#include <QtMultimedia/QMediaDevices>
-#include <QtMultimediaWidgets/QGraphicsVideoItem>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QScrollBar>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QGraphicsScene>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QCamera>
+#include <QCameraDevice>
+#include <QMediaCaptureSession>
+#include <QMediaDevices>
+#include <QGraphicsVideoItem>
+#include <QApplication>
+#include <QScrollArea>
+#include <QMessageBox>
+#include <QScrollBar>
+#include <QVBoxLayout>
+#include <QGraphicsScene>
 
 #ifdef QT_FEATURE_permissions
-  #include <QtCore/QPermission>
+  #include <QPermission>
 #endif
 
 /**

@@ -32,4 +32,6 @@ private:
 
 };
 
+Q_DECLARE_METATYPE(Slider)
+
 #endif // SLIDER_H

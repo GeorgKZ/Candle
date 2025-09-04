@@ -86,4 +86,6 @@ private:
     QTimer m_timerValueChanged;
 };
 
+Q_DECLARE_METATYPE(SliderBox)
+
 #endif // SLIDERBOX_H

@@ -619,6 +619,5 @@ public:
 };
 
 Q_DECLARE_METATYPE(wrapper_QWidget)
-Q_DECLARE_METATYPE(wrapper_QWidget*)
 
 #endif // WRAPPER_QWIDGET_H

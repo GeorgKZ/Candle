@@ -36,12 +36,9 @@ add_definitions(-DCUSTOMWIDGETS_EXPORT)
 ##############################################################################
 
 # Требуемые компоненты Qt6
-find_package(Qt6 COMPONENTS Core REQUIRED)
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
-find_package(Qt6 COMPONENTS Designer REQUIRED)
-find_package(Qt6 COMPONENTS Multimedia REQUIRED)
-find_package(Qt6 COMPONENTS MultimediaWidgets REQUIRED)
-find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
+foreach(lib ${QT_MODULES_LIST})
+    find_package(Qt6 COMPONENTS ${lib} REQUIRED)
+endforeach(lib)
 
 # Определение собираемой библиотеки, её зависимости
 add_library(${MAIN_NAME} SHARED
@@ -56,14 +53,11 @@ target_include_directories(${MAIN_NAME}
 )
 
 # Добавить библиотеки Qt
-target_link_libraries(${MAIN_NAME} PRIVATE
-    Qt6::Core
-    Qt6::Widgets
-    Qt6::Designer
-    Qt6::Multimedia
-    Qt6::MultimediaWidgets
-    Qt6::OpenGLWidgets
+foreach(lib ${QT_MODULES_LIST})
+    target_link_libraries(${MAIN_NAME} PUBLIC
+        Qt6::${lib}
     )
+endforeach(lib)
 
 # Подготовка к поиску набора динамических библиотек, от которых зависит цель
 add_custom_target(get_deps_${MAIN_NAME} ALL
@@ -71,18 +65,3 @@ add_custom_target(get_deps_${MAIN_NAME} ALL
   COMMENT "Подготовка к поиску зависимостей цели ${MAIN_NAME}"
 )
 add_dependencies(get_deps_${MAIN_NAME} ${MAIN_NAME})
-
-
-##############################################################################
-# Формирование установочного набора
-##############################################################################
-
-# Будет установлено как зависимости
-
-# Вывод сообщений об установке только если было изменение
-#set(CMAKE_INSTALL_MESSAGE LAZY)
-
-# Библиотека
-#install(TARGETS ${MAIN_NAME}
-#  LIBRARY
-#)

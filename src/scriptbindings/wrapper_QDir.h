@@ -236,6 +236,6 @@ public:
   }
 };
 
-//Q_DECLARE_METATYPE(wrapper_QDir)
+Q_DECLARE_METATYPE(wrapper_QDir)
 
 #endif // WRAPPER_QDIR_H

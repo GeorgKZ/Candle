@@ -532,6 +532,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Путь к плюгинам приложения относительно исполняемого файла
     set(REL_PLUG_DIR "../${INST_PLUG_DIR}")
 
+    # Путь к библиотекам приложения относительно исполняемого файла
+     set(REL_LIB_DIR "../${CMAKE_INSTALL_LIBDIR}")
+
     # Путь для установки плюгинов Qt в установочном пакете
     set(INST_QTPLUG_DIR "lib/${PROJECT_NAME_LOWERCASE}/plugins")
 
@@ -550,6 +553,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     # Путь к плюгинам приложения относительно исполняемого файла
     set(REL_PLUG_DIR "../../../${INST_PLUG_DIR}")
 
+    # Путь к библиотекам приложения относительно исполняемого файла
+    set(REL_LIB_DIR "../../../${CMAKE_INSTALL_LIBDIR}")
+
     # Путь для установки плюгинов Qt в установочном пакете
     set(INST_QTPLUG_DIR "${BUNDLE_PLUGIN_PATH}")
 
@@ -567,6 +573,9 @@ elseif((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MS
 
     # Путь к плюгинам приложения относительно исполняемого файла
     set(REL_PLUG_DIR "${INST_PLUG_DIR}")
+
+    # Путь к библиотекам приложения относительно исполняемого файла
+    set(REL_LIB_DIR "${CMAKE_INSTALL_LIBDIR}")
 
     # Путь для установки плюгинов Qt в установочном пакете
     set(INST_QTPLUG_DIR "plugins")

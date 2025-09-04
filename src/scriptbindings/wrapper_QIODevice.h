@@ -287,8 +287,8 @@ public:
     }
 };
 
-//Q_DECLARE_METATYPE(wrapper_QIODeviceBase)
-//Q_DECLARE_METATYPE(wrapper_QIODevice)
-//Q_DECLARE_METATYPE(wrapper_QFileDevice)
+Q_DECLARE_METATYPE(wrapper_QIODeviceBase)
+Q_DECLARE_METATYPE(wrapper_QIODevice)
+Q_DECLARE_METATYPE(wrapper_QFileDevice)
 
 #endif // WRAPPER_QIODEVICE_H

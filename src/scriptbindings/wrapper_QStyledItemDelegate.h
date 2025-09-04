@@ -81,5 +81,4 @@ public:
 
 Q_DECLARE_METATYPE(wrapper_QStyledItemDelegate)
 
-
 #endif // WRAPPER_QSTYLEDITEMDELEGATE_H

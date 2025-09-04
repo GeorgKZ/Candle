@@ -105,6 +105,8 @@ public:
   }
 };
 
+Q_DECLARE_METATYPE(wrapper_QBoxLayout)
+
 class /* Q_WIDGETS_EXPORT */ wrapper_QHBoxLayout : public wrapper_QBoxLayout {
 
   Q_OBJECT
@@ -141,6 +143,8 @@ public:
   }
 };
 
+Q_DECLARE_METATYPE(wrapper_QHBoxLayout)
+
 class /* Q_WIDGETS_EXPORT */ wrapper_QVBoxLayout : public wrapper_QBoxLayout {
 
   Q_OBJECT
@@ -176,5 +180,7 @@ public:
     return static_cast<QVBoxLayout*>(wrapper_common::get_selfptr());
   }
 };
+
+Q_DECLARE_METATYPE(wrapper_QVBoxLayout)
 
 #endif // WRAPPER_QBOXLAYOUT_H

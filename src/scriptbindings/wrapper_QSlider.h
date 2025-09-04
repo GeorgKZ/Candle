@@ -89,4 +89,6 @@ public:
   }
 };
 
+Q_DECLARE_METATYPE(wrapper_QSlider)
+
 #endif // WRAPPER_QSLIDER_H

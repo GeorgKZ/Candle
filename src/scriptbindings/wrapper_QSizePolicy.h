@@ -111,4 +111,6 @@ public:
   }
 };
 
+Q_DECLARE_METATYPE(wrapper_QSizePolicy)
+
 #endif // WRAPPER_QSIZEPOLICY_H

@@ -287,4 +287,6 @@ public:
   }
 };
 
+Q_DECLARE_METATYPE(wrapper_CodeDelegate)
+
 #endif // WRAPPER_DELEGATE_H

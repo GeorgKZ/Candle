@@ -358,15 +358,14 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
   wfactory(className, QWidget, object);
 
   // Кастомные виджеты
+  wfactory(className, CameraWidget, object);
   wfactory(className, ColorPicker, object);
   wfactory(className, Slider, object);
   wfactory(className, SliderBox, object);
-  wfactory(className, CameraWidget, object);
   wfactory(className, StyledToolButton, object);
 
   qCritical() << "wrapperFactory("  << className << ") - unknown class name";
-  return qjsEngine(this)->toScriptValue<wrapper_QObject*>(new wrapper_QObject(static_cast<QObject*>(object)));
-
+  return qjsEngine(this)->toScriptValue<wrapper_QObject*>(new wrapper_QObject(object));
 }
 
 
@@ -438,6 +437,8 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
   wregister(SliderBox);
   wregister(IconDelegate);
   wregister(CodeDelegate);
+
+  qRegisterMetaType<CameraWidget>("CameraWidget");
 
   qDebug() << "register_wrappers - OK";
 }

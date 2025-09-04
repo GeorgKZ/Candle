@@ -274,6 +274,6 @@ public:
   }
 };
 
-//Q_DECLARE_METATYPE(wrapper_QFile)
+Q_DECLARE_METATYPE(wrapper_QFile)
 
 #endif // WRAPPER_QFILE_H
