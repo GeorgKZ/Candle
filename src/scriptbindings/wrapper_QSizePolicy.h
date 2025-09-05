@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QSIZEPOLICY_H
 #define WRAPPER_QSIZEPOLICY_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QSizePolicy>
+#include <QObject>
+#include <QSizePolicy>
 #include "wrapper_common.h"
 
 

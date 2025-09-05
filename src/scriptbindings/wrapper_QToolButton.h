@@ -1,10 +1,10 @@
 #ifndef WRAPPER_QTOOLBUTTON_H
 #define WRAPPER_QTOOLBUTTON_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QWidget>
-#include <QtCore/QString>
-#include <QtWidgets/QToolButton>
+#include <QObject>
+#include <QWidget>
+#include <QString>
+#include <QToolButton>
 #include "wrapper_QAbstractButton.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QToolButton : public wrapper_QAbstractButton {
@@ -43,14 +43,12 @@ public:
   // QSize sizeHint() const
   Q_INVOKABLE virtual QJSValue sizeHint() const override {
     QSize *size = new QSize(get_selfptr()->sizeHint());
-//  return wrapperFactory("QSize", size);
     return PointerToJsvalue(QSize, size);
   }
 
   // QSize minimumSizeHint()
   Q_INVOKABLE virtual QJSValue minimumSizeHint() const override {
     QSize *size = new QSize(get_selfptr()->minimumSizeHint());
-//  return wrapperFactory("QSize", size);
     return PointerToJsvalue(QSize, size);
   }
 

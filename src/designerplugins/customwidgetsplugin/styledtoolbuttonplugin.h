@@ -1,7 +1,7 @@
 #ifndef STYLEDTOOLBUTTONPLUGIN_H
 #define STYLEDTOOLBUTTONPLUGIN_H
 
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class StyledToolButtonPlugin: public QObject, public QDesignerCustomWidgetInterface
 {

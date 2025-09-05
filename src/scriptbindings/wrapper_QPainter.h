@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QPAINTER_H
 #define WRAPPER_QPAINTER_H
 
-#include <QtCore/QObject>
-#include <QtGui/QPainter>
+#include <QObject>
+#include <QPainter>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QPaintDevice : public wrapper_common {

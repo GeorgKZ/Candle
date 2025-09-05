@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QACTION_H
 #define WRAPPER_QACTION_H
 
-#include <QtCore/QObject>
-#include <QtGui/QAction>
+#include <QObject>
+#include <QAction>
 #include "wrapper_QObject.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QAction : public wrapper_QObject {

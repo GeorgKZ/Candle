@@ -1,10 +1,10 @@
 #ifndef WRAPPER_QPUSHBUTTON_H
 #define WRAPPER_QPUSHBUTTON_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QPushButton>
+#include <QObject>
+#include <QString>
+#include <QWidget>
+#include <QPushButton>
 #include "wrapper_QAbstractButton.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QPushButton : public wrapper_QAbstractButton {
@@ -50,14 +50,12 @@ public:
   // QSize sizeHint() const
   Q_INVOKABLE virtual QJSValue sizeHint() const override {
     QSize *size = new QSize(get_selfptr()->sizeHint());
-//    return wrapperFactory("QSize", size);
     return PointerToJsvalue(QSize, size);
   }
 
   // QSize minimumSizeHint()
   Q_INVOKABLE virtual QJSValue minimumSizeHint() const override {
     QSize *size = new QSize(get_selfptr()->minimumSizeHint());
-//    return wrapperFactory("QSize", size);
     return PointerToJsvalue(QSize, size);
   }
 

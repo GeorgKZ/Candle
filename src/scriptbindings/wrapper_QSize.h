@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QSIZE_H
 #define WRAPPER_QSIZE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QSize>
+#include <QObject>
+#include <QSize>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QSize : public wrapper_common {

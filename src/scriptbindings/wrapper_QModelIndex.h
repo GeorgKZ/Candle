@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QMODELINDEX_H
 #define WRAPPER_QMODELINDEX_H
 
-#include <QtCore/QObject>
-#include <QtCore/QModelIndex>
+#include <QObject>
+#include <QModelIndex>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QModelIndex : public wrapper_common {

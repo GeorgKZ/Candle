@@ -1,7 +1,7 @@
 #ifndef WRAPPER_QOBJECT_H
 #define WRAPPER_QOBJECT_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QObject : public wrapper_common {

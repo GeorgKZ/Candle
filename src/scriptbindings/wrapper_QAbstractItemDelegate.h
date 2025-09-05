@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QABSTRACTITEMDELEGATE_H
 #define WRAPPER_QABSTRACTITEMDELEGATE_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QAbstractItemDelegate>
+#include <QObject>
+#include <QAbstractItemDelegate>
 #include "wrapper_QObject.h"
 #include "wrapper_QWidget.h"
 #include "wrapper_QModelIndex.h"
@@ -52,7 +52,6 @@ Q_UNUSED(option)
 QStyleOptionViewItem o;
 
     QModelIndex *i = jsvalueToPointer(QModelIndex, index);
-//  return wrapperFactory("QWidget", get_selfptr()->createEditor(p, o, *i));
     return PointerToJsvalue(QWidget, get_selfptr()->createEditor(p, o, *i));
   }
 

@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QTABLEWIDGETITEM_H
 #define WRAPPER_QTABLEWIDGETITEM_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QTableWidget>
+#include <QObject>
+#include <QTableWidget>
 #include "wrapper_common.h"
 #include "wrapper_QIcon.h"
 #include "wrapper_QSize.h"

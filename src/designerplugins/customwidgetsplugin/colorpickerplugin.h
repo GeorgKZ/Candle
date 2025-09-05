@@ -1,7 +1,7 @@
 #ifndef COLORPICKERPLUGIN_H
 #define COLORPICKERPLUGIN_H
 
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class ColorPickerPlugin: public QObject, public QDesignerCustomWidgetInterface
 {

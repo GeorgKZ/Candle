@@ -1,9 +1,9 @@
 #ifndef WRAPPER_QABSTRACTBUTTON_H
 #define WRAPPER_QABSTRACTBUTTON_H
 
-#include <QtCore/QObject>
-#include <QtQml/QJSValue>
-#include <QtWidgets/QAbstractButton>
+#include <QObject>
+#include <QJSValue>
+#include <QAbstractButton>
 #include "wrapper_QWidget.h"
 #include "wrapper_QIcon.h"
 #include "wrapper_QSize.h"
@@ -52,14 +52,12 @@ public:
   // QIcon icon()
   Q_INVOKABLE QJSValue icon() const {
     QIcon *icon = new QIcon(get_selfptr()->icon());
-//  return wrapperFactory("QIcon", icon);
     return PointerToJsvalue(QIcon, icon);
   }
 
   // QSize iconSize()
   Q_INVOKABLE QJSValue iconSize() const {
     QSize *size = new QSize(get_selfptr()->iconSize());
-//  return wrapperFactory("QSize", size);
     return PointerToJsvalue(QSize, size);
   }
 

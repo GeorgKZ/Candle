@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QHEADERVIEW_H
 #define WRAPPER_QHEADERVIEW_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QHeaderView>
+#include <QObject>
+#include <QHeaderView>
 #include "wrapper_QAbstractItemView.h"
 #include "wrapper_QSize.h"
 
@@ -42,7 +42,6 @@ public:
 
   // QSize sizeHint() const
   Q_INVOKABLE virtual QJSValue sizeHint() const override {
-//  return wrapperFactory("QSize", new QSize(get_selfptr()->sizeHint()));
     return PointerToJsvalue(QSize, new QSize(get_selfptr()->sizeHint()));
   }
 

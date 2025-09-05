@@ -1,7 +1,7 @@
 #ifndef WRAPPER_QSPINBOX_H
 #define WRAPPER_QSPINBOX_H
 
-#include <QtWidgets/QSpinBox>
+#include <QSpinBox>
 #include "wrapper_QAbstractSpinBox.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QSpinBox : public wrapper_QAbstractSpinBox

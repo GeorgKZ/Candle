@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QFILE_H
 #define WRAPPER_QFILE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QFile>
+#include <QObject>
+#include <QFile>
 #include "wrapper_QIODevice.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QFile : public wrapper_QFileDevice {

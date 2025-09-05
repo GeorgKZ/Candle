@@ -1,7 +1,7 @@
 #ifndef WRAPPER_SLIDERBOX_H
 #define WRAPPER_SLIDERBOX_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "sliderbox.h"
 #include "wrapper_QWidget.h"
 

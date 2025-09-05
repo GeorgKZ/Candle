@@ -1,11 +1,11 @@
 #ifndef WRAPPER_QSETTINGS_H
 #define WRAPPER_QSETTINGS_H
 
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include <QtQml/QJSValue>
-#include <QtQml/QJSManagedValue>
-#include <QtWidgets/QWidget>
+#include <QObject>
+#include <QSettings>
+#include <QJSValue>
+#include <QJSManagedValue>
+#include <QWidget>
 #include "wrapper_QObject.h"
 #include "wrapper_QWidget.h"
 

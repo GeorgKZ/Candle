@@ -1,9 +1,9 @@
 #ifndef WRAPPER_STYLEDTOOLBUTTON_H
 #define WRAPPER_STYLEDTOOLBUTTON_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QToolButton>
+#include <QObject>
+#include <QWidget>
+#include <QToolButton>
 #include "styledtoolbutton.h"
 #include "wrapper_QWidget.h"
 #include "wrapper_QToolButton.h"
@@ -32,7 +32,6 @@ public:
 
   Q_INVOKABLE QJSValue backColor() const {
     QColor *color = new QColor(get_selfptr()->backColor());
-//  return wrapperFactory("QColor", color);
     return PointerToJsvalue(QColor, color);
   }
 
@@ -43,7 +42,6 @@ public:
 
   Q_INVOKABLE QJSValue foreColor() const {
     QColor *color = new QColor(get_selfptr()->foreColor());
-//    return wrapperFactory("QColor", color);
     return PointerToJsvalue(QColor, color);
   }
 
@@ -54,7 +52,6 @@ public:
 
   Q_INVOKABLE QJSValue highlightColor() const {
     QColor *color = new QColor(get_selfptr()->highlightColor());
-//    return wrapperFactory("QColor", color);
     return PointerToJsvalue(QColor, color);
   }
 

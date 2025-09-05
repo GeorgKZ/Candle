@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QPOINT_H
 #define WRAPPER_QPOINT_H
 
-#include <QtCore/QObject>
-#include <QtCore/QPoint>
+#include <QObject>
+#include <QPoint>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QPoint : public wrapper_common {

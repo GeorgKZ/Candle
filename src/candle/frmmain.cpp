@@ -3313,22 +3313,25 @@ void frmMain::loadPlugins()
         if (f.open(QFile::ReadOnly)) {
 
             QJSEngine *se = new QJSEngine();
+
+            // Зарегистрировать прокси-классы
             register_wrappers(se);
 
             // Delegate objects
-            // Main form
+
+            // Создать объект, соединяющий класс ScriptFinctions и класс "app" в яваскрипте
             QJSValue app = se->newQObject(&m_scriptFunctions);
 
-            // Установить соответствие app.plugpath в ява-скрипте директории скрипта
+            // Установить значение app.plugpath в ява-скрипте директории скрипта
             app.setProperty("plugpath", pluginsDir + p);
 
-            // Установить соответствие app.libpath в ява-скрипте директории библиотек
+            // Установить значение app.libpath в ява-скрипте директории библиотек
             app.setProperty("libpath", REL_LIB_DIR);
 
-            // Установить соответствие app.libpath в ява-скрипте директории исп. файла приложения
+            // Установить значение app.libpath в ява-скрипте директории исп. файла приложения
             app.setProperty("path", qApp->applicationDirPath());
 
-            // Установть для движка класс app
+            // Ввести в ява-скрипт класс "app"
             se->globalObject().setProperty("app", app);
 
             // Settings

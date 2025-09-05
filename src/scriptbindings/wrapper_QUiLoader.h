@@ -1,9 +1,9 @@
 #ifndef WRAPPER_QUILOADER_H
 #define WRAPPER_QUILOADER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QtQmlIntegration>
-#include <QtUiTools/QUiLoader>
+#include <QUiLoader>
 #include "wrapper_QDir.h"
 #include "wrapper_QFile.h"
 #include "wrapper_QWidget.h"

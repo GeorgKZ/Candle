@@ -257,9 +257,6 @@ bool 	isUrl() const
     return QVariant();
 }
 
-// #define wfactory(class, name, obj, par) do { if (strcmp(class, #name ) == 0) { 
-//  return qjsEngine(par)->toScriptValue< wrapper_##name *>(new wrapper_##name (( name *) object)); } } while(0)
-
 /**
  * \file
  * * \copybrief wrapper_common::wrapper_common(void*)
@@ -309,7 +306,22 @@ QJSValue wrapper_common::variantToJSValue(const QVariant &variant) const {
 }
 
 #define wfactory(class, name, obj) do { if (strcmp(class, #name ) == 0) { \
-  return qjsEngine(this)->toScriptValue< wrapper_##name *>( new wrapper_##name ( object ) ); } } while(0)
+  return PointerToJsvalue(name, object); } } while(0)
+
+QJSValue wrapper_common::PointerToJsvalue(QObject *object) const
+{
+    QMetaObject *mo = object->metaObject();
+    if (mo != nullptr)
+    {
+        const char *class_name = mo->className();
+        if (class_name != nullptr)
+        {
+            return wrapperFactory(class_name, object);
+        }
+    }
+    qCritical() << "wrapper_common::PointerToJsvalue(QObject*) - no meta name!";
+    return QJSValue();
+}
 
 QJSValue wrapper_common::wrapperFactory(const char *className, void *object) const {
 
@@ -362,7 +374,7 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
   wfactory(className, StyledToolButton, object);
 
   qCritical() << "wrapperFactory("  << className << ") - unknown class name";
-  return qjsEngine(this)->toScriptValue<wrapper_QObject*>(new wrapper_QObject(object));
+  return PointerToJsvalue(QObject, object);
 }
 
 
@@ -370,7 +382,7 @@ unsigned long long wrapper_common::get_selfvalue() const {
     return reinterpret_cast<unsigned long long>(selfptr_);
 }
 
-
+// Регистрация прокси-класса
 #define wregister(name) do { se->globalObject().setProperty( #name , se->newQMetaObject<wrapper_##name>() ); } while(0)
 
 /**
@@ -391,7 +403,6 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
   wregister(QBoxLayout);
   wregister(QVBoxLayout);
   wregister(QHBoxLayout);
-  wregister(QGridLayout);
 
   wregister(QColor);
   wregister(QComboBox);
@@ -401,7 +412,10 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
   wregister(QHeaderView);
   wregister(QIcon);
   wregister(QIODevice);
+
   wregister(QLayout);
+  wregister(QGridLayout);
+
   wregister(QLayoutItem);
   wregister(QLineEdit);
   wregister(QModelIndex);

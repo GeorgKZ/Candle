@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QLAYOUT_H
 #define WRAPPER_QLAYOUT_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QLayout>
+#include <QObject>
+#include <QLayout>
 #include "wrapper_QObject.h"
 
 class wrapper_QMargins;

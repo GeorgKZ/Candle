@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QDIR_H
 #define WRAPPER_QDIR_H
 
-#include <QtCore/QObject>
-#include <QtCore/QDir>
+#include <QObject>
+#include <QDir>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QDir : public wrapper_common {
@@ -175,7 +175,6 @@ public:
 
     Q_INVOKABLE QJSValue current()
     {
-//      return wrapperFactory("QDir", new QDir(QDir::current()));
         return PointerToJsvalue(QDir, new QDir(QDir::current()));
     }
 
@@ -183,7 +182,6 @@ public:
 
     Q_INVOKABLE QJSValue home()
     {
-//      return wrapperFactory("QDir", new QDir(QDir::home()));
         return PointerToJsvalue(QDir, new QDir(QDir::home()));
     }
 
@@ -191,7 +189,6 @@ public:
 
     Q_INVOKABLE QJSValue root()
     {
-//      return wrapperFactory("QDir", new QDir(QDir::root()));
         return PointerToJsvalue(QDir, new QDir(QDir::root()));
     }
 
@@ -199,7 +196,6 @@ public:
 
     Q_INVOKABLE QJSValue temp()
     {
-//      return wrapperFactory("QDir", new QDir(QDir::temp()));
         return PointerToJsvalue(QDir, new QDir(QDir::temp()));
     }
 

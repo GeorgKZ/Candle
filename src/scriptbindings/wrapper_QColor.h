@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QCOLOR_H
 #define WRAPPER_QCOLOR_H
 
-#include <QtCore/QObject>
-#include <QtGui/QColor>
+#include <QObject>
+#include <QColor>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QColor : public wrapper_common {

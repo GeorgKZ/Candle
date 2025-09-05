@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QCOMBOBOX_H
 #define WRAPPER_QCOMBOBOX_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QComboBox>
+#include <QObject>
+#include <QComboBox>
 #include "wrapper_QWidget.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QComboBox : public wrapper_QWidget {

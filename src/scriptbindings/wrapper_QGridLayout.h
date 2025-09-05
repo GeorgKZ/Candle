@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QGRIDLAYOUT_H
 #define WRAPPER_QGRIDLAYOUT_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QGridLayout>
+#include <QObject>
+#include <QGridLayout>
 #include "wrapper_QLayout.h"
 #include "wrapper_QWidget.h"
 
@@ -70,18 +70,21 @@ public:
 
   // void addWidget(QWidget *w)
   Q_INVOKABLE void addWidget(const QJSValue &widget) {
+    qDebug() << "wrapper_QGridLayout::addWidget(QWidget)";
     QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w);
   }
 
   // void addWidget(QWidget *, int row, int column, Qt::Alignment = Qt::Alignment());
   Q_INVOKABLE void addWidget(const QJSValue &widget, int row, int column, Qt::Alignment alignment = Qt::Alignment()) {
+    qDebug() << "wrapper_QGridLayout::addWidget(QWidget, int, int, Qt::Alignment)";
     QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w, row, column, alignment);
   }
 
   // void addWidget(QWidget *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = Qt::Alignment());
   Q_INVOKABLE void addWidget(const QJSValue &widget, int row, int column, int rowSpan, Qt::Alignment alignment = Qt::Alignment()) {
+    qDebug() << "wrapper_QGridLayout::addWidget(QWidget, int, int, int, Qt::Alignment)";
     QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w, row, column, rowSpan, alignment);
   }

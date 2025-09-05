@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QABSTRACTSPOINBOX_H
 #define WRAPPER_QABSTRACTSPOINBOX_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QAbstractSpinBox>
+#include <QObject>
+#include <QAbstractSpinBox>
 #include "wrapper_QWidget.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QAbstractSpinBox : public wrapper_QWidget {
@@ -183,14 +183,12 @@ public:
     // virtual QSize sizeHint() const override;
     Q_INVOKABLE QJSValue sizeHint() const override
     {
-//      return wrapperFactory("QSize", new QSize(get_selfptr()->sizeHint()));
         return PointerToJsvalue(QSize, new QSize(get_selfptr()->sizeHint()));
     }
 
     // virtual QSize minimumSizeHint() const override;
     Q_INVOKABLE QJSValue minimumSizeHint() const override
     {
-//      return wrapperFactory("QSize", new QSize(get_selfptr()->minimumSizeHint()));
         return PointerToJsvalue(QSize, new QSize(get_selfptr()->minimumSizeHint()));
     }
 

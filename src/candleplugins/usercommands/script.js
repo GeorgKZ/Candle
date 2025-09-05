@@ -275,6 +275,11 @@ console.log("JAVA: usercommands::updateButtons()");
 
     var t = uiSettings.findChild("tblButtons");
     var lay = uiWindow.layout().itemAt(0).layout(); // Widget -> layout -> first layout
+
+//!!! Должен быть получен QGridlayout!
+console.log("JAVA: usercommands::updateButtons() lay=" + lay);
+
+
     var k = lay.count();
     var c = t.rowCount;
 

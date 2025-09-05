@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QSTYLEDITEMDELEGATE_H
 #define WRAPPER_QSTYLEDITEMDELEGATE_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QStyledItemDelegate>
+#include <QObject>
+#include <QStyledItemDelegate>
 #include "wrapper_QAbstractItemDelegate.h"
 
 //!!! Использовать врапперы! QPainter, QStyleOptionViewItem, QModelIndex

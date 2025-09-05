@@ -1,7 +1,7 @@
 #ifndef WRAPPER_SLIDER_H
 #define WRAPPER_SLIDER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "slider.h"
 #include "wrapper_QSlider.h"
 

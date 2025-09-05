@@ -1,7 +1,7 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
-#include <QtWidgets/QWidget>
+#include <QWidget>
 #include <QSlider>
 #include <QPaintEvent>
 #include <QPainter>

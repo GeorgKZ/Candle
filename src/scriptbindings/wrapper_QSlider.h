@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QSLIDER_H
 #define WRAPPER_QSLIDER_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QSlider>
+#include <QObject>
+#include <QSlider>
 #include "wrapper_QWidget.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QSlider : public wrapper_QWidget { // wraper_QAbstractSlider

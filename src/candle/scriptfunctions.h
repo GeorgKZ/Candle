@@ -1,13 +1,13 @@
 #ifndef SCRIPTFUNCTIONS_H
 #define SCRIPTFUNCTIONS_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QDebug>
-#include <QtGui/QAction>
+#include <QObject>
+#include <QString>
+#include <QDebug>
+#include <QAction>
+#include <QJSValue>
 
 class frmMain;
-//class wrapper_QAction;
 
 class ScriptFunctions: public QObject
 {
@@ -19,6 +19,7 @@ public:
     frmMain *getFrmMain();
 
 public slots:
+
     void sendCommands(QString commands, int index = -100);
     void sendCommand(QString command, int index = -100, bool showInConsole = true);
     
@@ -33,10 +34,11 @@ public slots:
     int queueLength();
 
     int buttonSize();
-//    void addAction(wrapper_QAction *action);
-//    void removeAction(wrapper_QAction *action);    
+    void addAction(QJSValue action);
+    void removeAction(QJSValue action);
 
 signals:
+
     void responseReceived(QString command, int tableIndex, QString response);
     void statusReceived(QString status);
     void senderStateChanged(int state);
@@ -52,6 +54,7 @@ signals:
     void pluginsLoaded();
 
 private:
+
     frmMain *m_frmMain;
 };
 

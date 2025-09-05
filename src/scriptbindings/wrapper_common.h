@@ -1,14 +1,14 @@
 #ifndef WRAPPER_COMMON_H
 #define WRAPPER_COMMON_H
 
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
-#include <QtQml/QJSValue>
-#include <QtQml/QJSManagedValue>
-#include <QtQml/QJSEngine>
-#include <QtWidgets/QStyledItemDelegate>
+#include <QObject>
+#include <QVariant>
+#include <QJSValue>
+#include <QJSManagedValue>
+#include <QJSEngine>
+#include <QStyledItemDelegate>
 
-#include <QtCore/QString>
+#include <QString>
 #include <string>
 #include <typeinfo>
 #if defined(__GNUC__) || defined(__DOXYGEN__)
@@ -89,6 +89,13 @@ public:
      */
     #define PointerToJsvalue(class, object) \
         qjsEngine(this)->toScriptValue< wrapper_##class *>( new wrapper_##class ( object ) )
+
+    /**
+     * \brief Создание экземпляра прокси-класса по имени метаобъекта, содержащегося в объекте,
+     * и помещённого в контейнер JSValue
+     * \param [in] object указатель на объект, который будет храниться в контейнере JSValue
+     */
+    QJSValue PointerToJsvalue(QObject *object) const;
 
     /**
      * \brief Создание экземпляра прокси-класса указанного по имени типа, содержащего указатель

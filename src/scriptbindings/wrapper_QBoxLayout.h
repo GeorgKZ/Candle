@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QBOXLAYOUT_H
 #define WRAPPER_QBOXLAYOUT_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QBoxLayout>
+#include <QObject>
+#include <QBoxLayout>
 #include "wrapper_QLayout.h"
 #include "wrapper_QWidget.h"
 
@@ -37,12 +37,14 @@ public:
 
   // void addWidget(QWidget *, int stretch = 0, Qt::Alignment alignment = Qt::Alignment());
   Q_INVOKABLE void addWidget(const QJSValue &widget, int stretch = 0, Qt::Alignment alignment = Qt::Alignment()) {
+    qDebug() << "wrapper_QBoxLayout::addWidget(QWidget, int, Qt::Alignment)";
     QWidget *w = jsvalueToPointer(QWidget, widget);
     get_selfptr()->addWidget(w, stretch, alignment);
   }
 
   // addLayout(QLayout *layout, int stretch = 0);
   Q_INVOKABLE void addLayout(wrapper_QLayout *layout, int stretch = 0) {
+    qDebug() << "wrapper_QBoxLayout::addWidget(QLayout, int)";
     get_selfptr()->addLayout(layout->get_selfptr(), stretch);
   }
 

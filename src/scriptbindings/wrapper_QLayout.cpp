@@ -69,9 +69,8 @@ QJSValue wrapper_QLayout::widget() const {
 
 // virtual QLayout *layout();
 QJSValue wrapper_QLayout::layout() {
-  QLayout* layout = get_selfptr()->layout();
-  qDebug() << "wrapper_QLayout::layout() ->" << layout->metaObject()->className();
-  return wrapperFactory(layout->metaObject()->className(), layout);
+  qDebug() << "wrapper_QLayout::layout() ->" << get_selfptr()->layout()->metaObject()->className();
+  return wrapperFactory(get_selfptr()->layout()->metaObject()->className(), get_selfptr()->layout());
 //  return PointerToJsvalue(QLayout, layout);
 }
 
@@ -140,6 +139,8 @@ void wrapper_QLayout::update() {
 }
 
 void wrapper_QLayout::addWidget(const QJSValue &widget) {
+  qDebug() << "wrapper_QLayout::addWidget(QWidget)";
+
   QWidget *w = jsvalueToPointer(QWidget, widget);
   get_selfptr()->addWidget(w);
 }

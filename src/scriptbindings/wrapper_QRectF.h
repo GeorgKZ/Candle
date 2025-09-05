@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QRECTF_H
 #define WRAPPER_QRECTF_H
 
-#include <QtCore/QObject>
-#include <QtCore/QRectF>
+#include <QObject>
+#include <QRectF>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QRectF : public wrapper_common {

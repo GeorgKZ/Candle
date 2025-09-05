@@ -1,17 +1,17 @@
 #ifndef WRAPPER_DELEGATE_H
 #define WRAPPER_DELEGATE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QtCore>
-#include <QtCore/QString>
-#include <QtCore/QDir>
-#include <QtCore/QModelIndex>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QTableView>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QStyleOptionViewItem>
-#include <QtWidgets/QStyledItemDelegate>
+#include <QObject>
+#include <QtCore>
+#include <QString>
+#include <QDir>
+#include <QModelIndex>
+#include <QComboBox>
+#include <QTableView>
+#include <QHeaderView>
+#include <QTextEdit>
+#include <QStyleOptionViewItem>
+#include <QStyledItemDelegate>
 #include "wrapper_QAbstractItemDelegate.h"
 #include "wrapper_QStyledItemDelegate.h"
 

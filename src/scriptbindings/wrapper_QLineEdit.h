@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QLINEEDIT_H
 #define WRAPPER_QLINEEDIT_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QLineEdit>
+#include <QObject>
+#include <QLineEdit>
 #include "wrapper_QWidget.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QLineEdit : public wrapper_QWidget {

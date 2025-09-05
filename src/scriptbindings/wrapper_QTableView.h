@@ -1,10 +1,10 @@
 #ifndef WRAPPER_QTABLEVIEW_H
 #define WRAPPER_QTABLEVIEW_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QTableView>
-#include <QtWidgets/QHeaderView>
+#include <QObject>
+#include <QWidget>
+#include <QTableView>
+#include <QHeaderView>
 #include "wrapper_QAbstractItemView.h"
 #include "wrapper_QHeaderView.h"
 
@@ -44,13 +44,11 @@ public:
 
   // QHeaderView *horizontalHeader() const
   Q_INVOKABLE QJSValue horizontalHeader() const {
-//    return wrapperFactory("QHeaderView", get_selfptr()->horizontalHeader());
       return PointerToJsvalue(QHeaderView, get_selfptr()->horizontalHeader());
   }
 
   // QHeaderView *verticalHeader() const
   Q_INVOKABLE QJSValue verticalHeader() const {
-//    return wrapperFactory("QHeaderView", get_selfptr()->verticalHeader());
       return PointerToJsvalue(QHeaderView, get_selfptr()->verticalHeader());
   }
 

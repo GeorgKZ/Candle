@@ -1,10 +1,10 @@
 #ifndef WRAPPER_QABSTRACTITEMVIEW_H
 #define WRAPPER_QABSTRACTITEMVIEW_H
 
-#include <QtCore/QObject>
-#include <QtQml/QJSValue>
-#include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QStyledItemDelegate>
+#include <QObject>
+#include <QJSValue>
+#include <QAbstractItemView>
+#include <QStyledItemDelegate>
 #include "wrapper_QWidget.h"
 #include "wrapper_QSize.h"
 #include "wrapper_QAbstractItemDelegate.h"
@@ -160,7 +160,6 @@ public:
   // QSize iconSize() const;
   Q_INVOKABLE QJSValue iconSize() const {
     QSize* size = new QSize(get_selfptr()->iconSize());
-//  return wrapperFactory("QSize", size);
     return PointerToJsvalue(QSize, size);
   }
 
@@ -207,7 +206,6 @@ public:
   Q_INVOKABLE QJSValue itemDelegateForColumn(int column) const {
     qDebug() << "wrapper_QAbstractItemDelegate::itemDelegateForColumn(" << column << ")";
     QAbstractItemDelegate* val = get_selfptr()->itemDelegateForColumn(column);
-//  return wrapperFactory(val->metaObject()->className(), val);
     return PointerToJsvalue(QAbstractItemDelegate, val);
   }
 

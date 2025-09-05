@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QLAYOUTITEM_H
 #define WRAPPER_QLAYOUTITEM_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QLayoutItem>
+#include <QObject>
+#include <QLayoutItem>
 #include "wrapper_common.h"
 
 class wrapper_QWidget;

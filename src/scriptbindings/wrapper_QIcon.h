@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QICON_H
 #define WRAPPER_QICON_H
 
-#include <QtCore/QObject>
-#include <QtGui/QIcon>
+#include <QObject>
+#include <QIcon>
 #include "wrapper_common.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QIcon : public wrapper_common {

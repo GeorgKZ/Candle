@@ -1,9 +1,9 @@
 #ifndef WRAPPER_QIODEVICE_H
 #define WRAPPER_QIODEVICE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QIODevice>
-#include <QtCore/QFileDevice>
+#include <QObject>
+#include <QIODevice>
+#include <QFileDevice>
 #include "wrapper_common.h"
 #include "wrapper_QObject.h"
 

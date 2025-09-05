@@ -1,7 +1,7 @@
 #ifndef WRAPPER_CAMERAWIDGET_H
 #define WRAPPER_CAMERAWIDGET_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "camerawidget.h"
 #include "wrapper_QWidget.h"
 #include "wrapper_QSize.h"
@@ -82,7 +82,6 @@ public:
   Q_INVOKABLE  QJSValue resolution() const {
     qDebug() << "wrapper_CameraWidget::resolution()";
     QSize* p = new QSize(get_selfptr()->resolution());
-//  return wrapperFactory("QSize", p);
     return PointerToJsvalue(QSize, p);
   }
 
@@ -106,7 +105,6 @@ public:
 
   Q_INVOKABLE QJSValue pos() const {
     QPoint* p = new QPoint(get_selfptr()->pos());
-//  return wrapperFactory("QPoint", p);
     return PointerToJsvalue(QPoint, p);
   }
 
@@ -120,7 +118,6 @@ public:
   Q_INVOKABLE QJSValue aimPos() const {
     qDebug() << "wrapper_CameraWidget::aimPos()";
     QPoint* p = new QPoint(get_selfptr()->aimPos());
-//  return wrapperFactory("QPoint", p);
     return PointerToJsvalue(QPoint, p);
   }
 

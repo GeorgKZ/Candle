@@ -1,7 +1,7 @@
 #ifndef WRAPPER_COLORPICKER_H
 #define WRAPPER_COLORPICKER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "colorpicker.h"
 #include "wrapper_QWidget.h"
 #include "wrapper_QColor.h"
@@ -21,7 +21,6 @@ public:
 
   // QColor color() const
   Q_INVOKABLE QJSValue color() const {
-//  return wrapperFactory("QColor", new QColor(get_selfptr()->color()));
     return PointerToJsvalue(QColor, new QColor(get_selfptr()->color()));
   }
 

@@ -1,8 +1,8 @@
 #ifndef WRAPPER_QWIDGET_H
 #define WRAPPER_QWIDGET_H
 
-#include <QtCore/QObject>
-#include <QtWidgets/QWidget>
+#include <QObject>
+#include <QWidget>
 #include "wrapper_QObject.h"
 
 class WRAPPER_DLL_EXPORT wrapper_QWidget : public wrapper_QObject { // , public wrapper_QPaintDevice
