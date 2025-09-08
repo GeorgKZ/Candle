@@ -105,8 +105,6 @@ void bootstrap::init(int &argc, char **argv)
      * * Загрузить шрифты из ресурса программы для использования в программе.
      */
     foreach(const QString &fontName, QDir(":/fonts").entryList()) {  
-        QFileInfo fontFile(fontName);
-
         int fontID = QFontDatabase::addApplicationFont(QString(":/fonts/") + fontName);
         if (fontID == -1) {
             qCritical() << "Installing font ':/fonts/" << fontName << "' error";
