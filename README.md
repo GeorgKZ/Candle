@@ -1,4 +1,7 @@
 [![CMake Build Matrix](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml)
+[![License: GPL v3](doc/License_GPLv3.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Platforms: macOS, Windows, Linux](doc/Platform.svg)]()
+[![Framework: QT v6.X.X](doc/Qt6.svg)](https://www.qt.io/product/qt6)
 
 Форк [Candle](https://github.com/Denvi/Candle)
 ============
@@ -16,8 +19,7 @@
 Лицензия:
 =========
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
+Candle распространяется по лицензии [GNU GENERAL PUBLIC LICENSE Version 3](https://www.gnu.org/licenses/gpl-3.0).
 
 Требования программы "Candle":
 ==============================
