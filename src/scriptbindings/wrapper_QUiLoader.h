@@ -42,9 +42,7 @@ public:
 
     qDebug() << "wrapper_QUiLoader::load(" << (unsigned long long)_device << ") -> " << (unsigned long long)new_widget << "[" << new_widget->metaObject()->className() << "]";
 
-    return wrapperFactory(new_widget->metaObject()->className(), new_widget);
-//!!! Пока не выходит!
-//    return PointerToJsvalue(QWidget, new_widget);
+    return PointerToJsvalue(new_widget->metaObject()->className(), new_widget);
   }
 
 //  QStringList availableWidgets() const;

@@ -8,24 +8,24 @@
 QJSValue wrapper_QWidget::layout() const {
   QLayout* layout = get_selfptr()->layout();
   qDebug() << "wrapper_QWidget::layout() ->" << layout->metaObject()->className();
-  return PointerToJsvalue(QLayout, layout);
+  return PointerToJsvalue(layout);
 }
 
 // virtual QSize sizeHint() const;
 QJSValue wrapper_QWidget::sizeHint() const
 {
-    return PointerToJsvalue(QSize, new QSize(get_selfptr()->sizeHint()));
+    return PointerToJsvalueMacro(QSize, new QSize(get_selfptr()->sizeHint()));
 }
 
 // virtual QSize minimumSizeHint() const;
 QJSValue wrapper_QWidget::minimumSizeHint() const
 {
-    return PointerToJsvalue(QSize, new QSize(get_selfptr()->minimumSizeHint()));
+    return PointerToJsvalueMacro(QSize, new QSize(get_selfptr()->minimumSizeHint()));
 }
 
 QJSValue wrapper_QWidget::sizePolicy() const
 {
-    return PointerToJsvalue(QSizePolicy, new QSizePolicy(get_selfptr()->sizePolicy()));
+    return PointerToJsvalueMacro(QSizePolicy, new QSizePolicy(get_selfptr()->sizePolicy()));
 }
 
 void wrapper_QWidget::setSizePolicy(const QJSValue &sizepolicy) {

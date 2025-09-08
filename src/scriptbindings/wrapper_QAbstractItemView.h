@@ -160,7 +160,7 @@ public:
   // QSize iconSize() const;
   Q_INVOKABLE QJSValue iconSize() const {
     QSize* size = new QSize(get_selfptr()->iconSize());
-    return PointerToJsvalue(QSize, size);
+    return PointerToJsvalueMacro(QSize, size);
   }
 
   Q_INVOKABLE void setTextElideMode(Qt::TextElideMode mode) { get_selfptr()->setTextElideMode(mode); }
@@ -206,7 +206,7 @@ public:
   Q_INVOKABLE QJSValue itemDelegateForColumn(int column) const {
     qDebug() << "wrapper_QAbstractItemDelegate::itemDelegateForColumn(" << column << ")";
     QAbstractItemDelegate* val = get_selfptr()->itemDelegateForColumn(column);
-    return PointerToJsvalue(QAbstractItemDelegate, val);
+    return PointerToJsvalueMacro(QAbstractItemDelegate, val);
   }
 
 #if QT_DEPRECATED_SINCE(6, 0)

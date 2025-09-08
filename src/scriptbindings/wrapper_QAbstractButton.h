@@ -52,13 +52,13 @@ public:
   // QIcon icon()
   Q_INVOKABLE QJSValue icon() const {
     QIcon *icon = new QIcon(get_selfptr()->icon());
-    return PointerToJsvalue(QIcon, icon);
+    return PointerToJsvalueMacro(QIcon, icon);
   }
 
   // QSize iconSize()
   Q_INVOKABLE QJSValue iconSize() const {
     QSize *size = new QSize(get_selfptr()->iconSize());
-    return PointerToJsvalue(QSize, size);
+    return PointerToJsvalueMacro(QSize, size);
   }
 
 #ifndef QT_NO_SHORTCUT

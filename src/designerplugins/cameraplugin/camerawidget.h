@@ -12,7 +12,7 @@ class QMediaCaptureSession;
 class CameraWidget;
 
 /**
- * \brief Объявление класса \ref myGraphicsView "myGraphicsView"
+ * \brief Объявление класса виджета камеры \ref myGraphicsView "myGraphicsView"
  */
 class myGraphicsView: public QGraphicsView
 {

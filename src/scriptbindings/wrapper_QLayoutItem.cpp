@@ -59,15 +59,13 @@ void wrapper_QLayoutItem::invalidate() {
 
 // virtual QWidget *widget() const;
 QJSValue wrapper_QLayoutItem::widget() const {
-  return PointerToJsvalue(QWidget, get_selfptr()->widget());
+  return PointerToJsvalue(get_selfptr()->widget()); //!!!QWidget, get_selfptr()->widget());
 }
 
 // virtual QLayout *layout();
 QJSValue wrapper_QLayoutItem::layout() {
   qDebug() << "wrapper_QLayoutItem::layout() ->" << get_selfptr()->layout()->metaObject()->className();
-//!!! так будет получен только QLayout
-//    return PointerToJsvalue(QLayout, get_selfptr()->layout());
-  return wrapperFactory(get_selfptr()->layout()->metaObject()->className(), get_selfptr()->layout());
+  return PointerToJsvalue(get_selfptr()->layout()->metaObject()->className(), get_selfptr()->layout());
 }
 
 // virtual QSpacerItem *spacerItem();

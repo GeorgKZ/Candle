@@ -87,7 +87,7 @@ public:
      * \param [in] class имя класса, которому принадлежит объект
      * \param [in] object указатель на объект, который будет храниться в контейнере JSValue
      */
-    #define PointerToJsvalue(class, object) \
+    #define PointerToJsvalueMacro(class, object) \
         qjsEngine(this)->toScriptValue< wrapper_##class *>( new wrapper_##class ( object ) )
 
     /**
@@ -103,7 +103,7 @@ public:
      * \param [in] className имя класса, которому принадлежит объект
      * \param [in] object указатель на объект, который будет храниться в контейнере JSValue
      */
-    QJSValue wrapperFactory(const char *className, void *object) const;
+    QJSValue PointerToJsvalue(const char *className, void *object) const;
 
     /**
      * \brief Преобразование объекта из контейнера QVariant в контейнер JSValue

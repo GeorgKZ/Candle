@@ -42,7 +42,7 @@ public:
 
   // QSize sizeHint() const
   Q_INVOKABLE virtual QJSValue sizeHint() const override {
-    return PointerToJsvalue(QSize, new QSize(get_selfptr()->sizeHint()));
+    return PointerToJsvalueMacro(QSize, new QSize(get_selfptr()->sizeHint()));
   }
 
   Q_INVOKABLE void setVisible(bool v) { get_selfptr()->setVisible(v); }

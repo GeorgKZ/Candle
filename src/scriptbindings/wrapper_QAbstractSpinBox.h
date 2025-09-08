@@ -183,13 +183,13 @@ public:
     // virtual QSize sizeHint() const override;
     Q_INVOKABLE QJSValue sizeHint() const override
     {
-        return PointerToJsvalue(QSize, new QSize(get_selfptr()->sizeHint()));
+        return PointerToJsvalueMacro(QSize, new QSize(get_selfptr()->sizeHint()));
     }
 
     // virtual QSize minimumSizeHint() const override;
     Q_INVOKABLE QJSValue minimumSizeHint() const override
     {
-        return PointerToJsvalue(QSize, new QSize(get_selfptr()->minimumSizeHint()));
+        return PointerToJsvalueMacro(QSize, new QSize(get_selfptr()->minimumSizeHint()));
     }
 
 #if 0

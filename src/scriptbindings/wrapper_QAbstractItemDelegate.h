@@ -52,7 +52,7 @@ Q_UNUSED(option)
 QStyleOptionViewItem o;
 
     QModelIndex *i = jsvalueToPointer(QModelIndex, index);
-    return PointerToJsvalue(QWidget, get_selfptr()->createEditor(p, o, *i));
+    return PointerToJsvalue(get_selfptr()->createEditor(p, o, *i));
   }
 
   //!!! void destroyEditor(QWidget *editor, const QModelIndex &index) const

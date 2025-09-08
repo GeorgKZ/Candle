@@ -44,12 +44,12 @@ public:
 
   // QHeaderView *horizontalHeader() const
   Q_INVOKABLE QJSValue horizontalHeader() const {
-      return PointerToJsvalue(QHeaderView, get_selfptr()->horizontalHeader());
+      return PointerToJsvalueMacro(QHeaderView, get_selfptr()->horizontalHeader());
   }
 
   // QHeaderView *verticalHeader() const
   Q_INVOKABLE QJSValue verticalHeader() const {
-      return PointerToJsvalue(QHeaderView, get_selfptr()->verticalHeader());
+      return PointerToJsvalueMacro(QHeaderView, get_selfptr()->verticalHeader());
   }
 
   // void setHorizontalHeader(QHeaderView *header)

@@ -291,7 +291,7 @@ endif()
 ##############################################################################
 
 # Требуемая версия компилятора C++
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # clang
@@ -872,7 +872,7 @@ if ((EXISTS ${PVS_STUDIO_ANALYZER}) AND (EXISTS ${PVS_STUDIO_CONVERTER}))
         ANALYZE "${PROJECT_NAME_LOWERCASE}"
         MODE GA;OP;CS;64
         LOG ${BUILD_PATH}/pvs_report.txt
-#       CONVERTER_ARGS -d V112,V122,V550,V601,V2014
+        CONVERTER_ARGS -d V122
         BIN ${PVS_STUDIO_ANALYZER}
         CONVERTER ${PVS_STUDIO_CONVERTER}
     )

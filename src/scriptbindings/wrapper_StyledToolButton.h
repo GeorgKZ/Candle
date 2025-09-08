@@ -32,7 +32,7 @@ public:
 
   Q_INVOKABLE QJSValue backColor() const {
     QColor *color = new QColor(get_selfptr()->backColor());
-    return PointerToJsvalue(QColor, color);
+    return PointerToJsvalueMacro(QColor, color);
   }
 
   Q_INVOKABLE void setBackColor(const QJSValue &backColor) {
@@ -42,7 +42,7 @@ public:
 
   Q_INVOKABLE QJSValue foreColor() const {
     QColor *color = new QColor(get_selfptr()->foreColor());
-    return PointerToJsvalue(QColor, color);
+    return PointerToJsvalueMacro(QColor, color);
   }
 
   Q_INVOKABLE void setForeColor(const QJSValue &foreColor) {
@@ -52,7 +52,7 @@ public:
 
   Q_INVOKABLE QJSValue highlightColor() const {
     QColor *color = new QColor(get_selfptr()->highlightColor());
-    return PointerToJsvalue(QColor, color);
+    return PointerToJsvalueMacro(QColor, color);
   }
 
   Q_INVOKABLE void setHighlightColor(const QJSValue &highlightColor) {

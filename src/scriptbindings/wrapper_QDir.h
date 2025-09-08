@@ -175,28 +175,28 @@ public:
 
     Q_INVOKABLE QJSValue current()
     {
-        return PointerToJsvalue(QDir, new QDir(QDir::current()));
+        return PointerToJsvalueMacro(QDir, new QDir(QDir::current()));
     }
 
     Q_INVOKABLE static QString currentPath()  { return QDir::currentPath(); }
 
     Q_INVOKABLE QJSValue home()
     {
-        return PointerToJsvalue(QDir, new QDir(QDir::home()));
+        return PointerToJsvalueMacro(QDir, new QDir(QDir::home()));
     }
 
     Q_INVOKABLE static QString homePath()     { return QDir::homePath(); }
 
     Q_INVOKABLE QJSValue root()
     {
-        return PointerToJsvalue(QDir, new QDir(QDir::root()));
+        return PointerToJsvalueMacro(QDir, new QDir(QDir::root()));
     }
 
     Q_INVOKABLE static QString rootPath()     { return QDir::rootPath(); }
 
     Q_INVOKABLE QJSValue temp()
     {
-        return PointerToJsvalue(QDir, new QDir(QDir::temp()));
+        return PointerToJsvalueMacro(QDir, new QDir(QDir::temp()));
     }
 
     Q_INVOKABLE static QString tempPath()     { return QDir::tempPath(); }

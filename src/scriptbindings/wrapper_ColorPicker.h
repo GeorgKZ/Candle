@@ -21,7 +21,7 @@ public:
 
   // QColor color() const
   Q_INVOKABLE QJSValue color() const {
-    return PointerToJsvalue(QColor, new QColor(get_selfptr()->color()));
+    return PointerToJsvalueMacro(QColor, new QColor(get_selfptr()->color()));
   }
 
   Q_INVOKABLE void setColor(const QJSValue value_color) {

@@ -305,26 +305,26 @@ QJSValue wrapper_common::variantToJSValue(const QVariant &variant) const {
     return ::variantToJSValue(variant, qjsEngine(this));
 }
 
-#define wfactory(class, name, obj) do { if (strcmp(class, #name ) == 0) { \
-  return PointerToJsvalue(name, object); } } while(0)
-
 QJSValue wrapper_common::PointerToJsvalue(QObject *object) const
 {
-    QMetaObject *mo = object->metaObject();
+    const QMetaObject *mo = object->metaObject();
     if (mo != nullptr)
     {
         const char *class_name = mo->className();
         if (class_name != nullptr)
         {
-            return wrapperFactory(class_name, object);
+            return PointerToJsvalue(class_name, object);
         }
     }
     qCritical() << "wrapper_common::PointerToJsvalue(QObject*) - no meta name!";
     return QJSValue();
 }
 
-QJSValue wrapper_common::wrapperFactory(const char *className, void *object) const {
+#define wfactory(class, name, obj) do { if (strcmp(class, #name ) == 0) { \
+  return PointerToJsvalueMacro(name, object); } } while(0)
 
+QJSValue wrapper_common::PointerToJsvalue(const char *className, void *object) const
+{
   wfactory(className, QAbstractButton, object);
   wfactory(className, QAbstractItemDelegate, object);
   wfactory(className, QAbstractItemView, object);
@@ -373,8 +373,8 @@ QJSValue wrapper_common::wrapperFactory(const char *className, void *object) con
   wfactory(className, SliderBox, object);
   wfactory(className, StyledToolButton, object);
 
-  qCritical() << "wrapperFactory("  << className << ") - unknown class name";
-  return PointerToJsvalue(QObject, object);
+  qCritical() << "PointerToJsvalue("  << className << ") - unknown class name";
+  return PointerToJsvalueMacro(QObject, object);
 }
 
 
@@ -391,10 +391,7 @@ unsigned long long wrapper_common::get_selfvalue() const {
  */
 WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 
-//  globalEngine = se;
-
-  // Классы Qt
-
+  // Прокси-классы Qt
   wregister(QAbstractButton);
   wregister(QAbstractItemDelegate);
   wregister(QAbstractItemView);
@@ -440,7 +437,7 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
   wregister(QUiLoader);
   wregister(QWidget);
 
-  // Пользовательские виджеты
+  // Прокси-классы пользовательских виджетов
   wregister(StyledToolButton);
   wregister(CameraWidget);
   wregister(ColorPicker);
@@ -451,7 +448,6 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 
   qDebug() << "register_wrappers - OK";
 }
-
 
 /**
  * \file

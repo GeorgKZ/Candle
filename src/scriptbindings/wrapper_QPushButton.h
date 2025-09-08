@@ -50,13 +50,13 @@ public:
   // QSize sizeHint() const
   Q_INVOKABLE virtual QJSValue sizeHint() const override {
     QSize *size = new QSize(get_selfptr()->sizeHint());
-    return PointerToJsvalue(QSize, size);
+    return PointerToJsvalueMacro(QSize, size);
   }
 
   // QSize minimumSizeHint()
   Q_INVOKABLE virtual QJSValue minimumSizeHint() const override {
     QSize *size = new QSize(get_selfptr()->minimumSizeHint());
-    return PointerToJsvalue(QSize, size);
+    return PointerToJsvalueMacro(QSize, size);
   }
 
   // bool autoDefault() const;

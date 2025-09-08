@@ -82,7 +82,7 @@ public:
   Q_INVOKABLE  QJSValue resolution() const {
     qDebug() << "wrapper_CameraWidget::resolution()";
     QSize* p = new QSize(get_selfptr()->resolution());
-    return PointerToJsvalue(QSize, p);
+    return PointerToJsvalueMacro(QSize, p);
   }
 
   Q_INVOKABLE void setZoom(qreal zoom) {
@@ -105,7 +105,7 @@ public:
 
   Q_INVOKABLE QJSValue pos() const {
     QPoint* p = new QPoint(get_selfptr()->pos());
-    return PointerToJsvalue(QPoint, p);
+    return PointerToJsvalueMacro(QPoint, p);
   }
 
   Q_INVOKABLE void setAimPos(const QJSValue &aimPos) {
@@ -118,7 +118,7 @@ public:
   Q_INVOKABLE QJSValue aimPos() const {
     qDebug() << "wrapper_CameraWidget::aimPos()";
     QPoint* p = new QPoint(get_selfptr()->aimPos());
-    return PointerToJsvalue(QPoint, p);
+    return PointerToJsvalueMacro(QPoint, p);
   }
 
   Q_INVOKABLE void setAimSize(int aimSize) {
