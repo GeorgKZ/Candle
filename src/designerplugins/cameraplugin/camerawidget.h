@@ -1,3 +1,8 @@
+/**
+ * \file
+ * \brief Заголовочный файл с объявлением классов \ref myGraphicsView "myGraphicsView" и \ref CameraWidget "CameraWidget"
+ */
+
 #ifndef CAMERAWIDGET_H
 #define CAMERAWIDGET_H
 
@@ -21,6 +26,7 @@ public:
  
     /**
      * \brief Конструктор
+     *
      * \param [in] parent Родительский объект
      */
     myGraphicsView(CameraWidget *parent);
@@ -65,13 +71,29 @@ class CUSTOMWIDGETS_DLLSPEC CameraWidget: public QWidget
 {
     Q_OBJECT
 
+    /**
+     * \property availableCameras
+     * Список доступных камер
+     */
     Q_PROPERTY(QStringList availableCameras
         READ availableCameras)
+    /**
+     * \property availableResolutions
+     * Список доступных разрешений
+     */
     Q_PROPERTY(QStringList availableResolutions
         READ availableResolutions)
+    /**
+     * \property cameraName
+     * Имя камеры
+     */
     Q_PROPERTY(QString cameraName
         READ cameraName
         WRITE setCameraName)
+    /**
+     * \property resolution
+     * Текущее разрешение камеры
+     */
     Q_PROPERTY(QSize resolution
         READ resolution
         WRITE setResolution
@@ -84,19 +106,35 @@ class CUSTOMWIDGETS_DLLSPEC CameraWidget: public QWidget
         READ pos
         WRITE setPos
         NOTIFY posChanged)
+    /**
+     * \property aimPos
+     * Смещение перекрестия прицельных линий
+     */
     Q_PROPERTY(QPoint aimPos
         READ aimPos
         WRITE setAimPos
         NOTIFY aimPosChanged
         STORED false)
+    /**
+     * \property aimSize
+     * диаметр прицельной окружности
+     */
     Q_PROPERTY(int aimSize
         READ aimSize
         WRITE setAimSize
         NOTIFY aimSizeChanged)
+    /**
+     * \property aimLineWidth
+     * толщина линий прицельных элементов
+     */
     Q_PROPERTY(int aimLineWidth
         READ aimLineWidth
         WRITE setAimLineWidth
         NOTIFY aimLineWidthChanged)
+    /**
+     * \property aimColor
+     * цвет прицельных элементов
+     */
     Q_PROPERTY(int aimColor
         READ aimColor
         WRITE setAimColor
@@ -106,6 +144,7 @@ public:
 
     /**
      * \brief Конструктор
+     *
      * \param [in] parent Родительский объект
      */
     CameraWidget(QWidget *parent = nullptr);
@@ -117,36 +156,49 @@ public:
 
     /**
      * \brief Проверить, работает ли текущая камера
+     *
+     * \retval true если камера работает
+     * \retval false если камера не работает
      */
     bool isCameraActive() const;
 
     /**
      * \brief Получить список имён доступных камер
+     *
+     * \return список имён доступных камер
      */
     QStringList availableCameras() const;
 
     /**
      * \brief Получить список поддерживаемых разрешений текущей камеры
+     *
+     * \return список поддерживаемых разрешений текущей камеры
      */
     QStringList availableResolutions() const;
 
     /**
-     * \brief Переключиться на камеру с указанным именем, изображение которой
-     * выводится в окне "Камера"
+     * \brief Переключиться на камеру с указанным именем
      *
+     * \details
      * В том случае, когда камера с указанным именем отсутствует, текущая камера
      * и имя камеры не изменяются. В том случае, когда имя камеры пустое, в качестве текущей
      * камеры устанавливается "устройство по умолчанию" (фиктивная камера).
+     *
+     * \param [in] cameraName имя камеры, на которую надо переключиться
      */
     void setCameraName(QString cameraName);
 
     /**
      * \brief Получить имя текущей камеры, изображение которой выводится в окне "Камера"
+     *
+     * \return имя текущей камеры, изображение которой выводится в окне "Камера"
      */
     QString cameraName() const;
 
     /**
      * \brief Установить разрешение изображения, выводимого с текущей камеры
+     *
+     * \param [in] resolution разрешение камеры, которое требуется установить
      *
      * В том случае, когда в списке доступных разрешений указанное разрешение отсутствует,
      * текущее разрешение не изменяется.
@@ -155,115 +207,149 @@ public:
 
     /**
      * \brief Получить разрешение изображения, выводимого с текущей камеры
+     *
+     * \return разрешение изображения, выводимого с текущей камеры
      */
     QSize resolution() const;
 
     /**
      * \brief Установить коэффициент масштабирования изображения камеры
+     *
+     * \param [in] zoom коэффициент масштабирования изображения камеры, который требуется установить
      */
     void setZoom(qreal zoom);
 
     /**
      * \brief Получить коэффициент масштабирования изображения камеры
+     *
+     * \return коэффициент масштабирования изображения камеры
      */
     qreal zoom() const;
 
     /**
      * \brief Установить новые координаты сдвига видеокадра относительно окна виджета
+     *
+     * \param [in] pos координаты сдвига видеокадра относительно окна виджета, которые требуется установить
      */
     void setPos(const QPoint &pos);
 
     /**
      * \brief Получить координаты сдвига видеокадра относительно окна виджета
+     *
+     * \return координаты сдвига видеокадра относительно окна виджета
      */
     QPoint pos() const;
 
     /**
      * \brief Установить смещение перекрестия прицельных линий
+     *
+     * \param [in] aimPos смещение перекрестия прицельных линий, которое требуется установить
      */
     void setAimPos(const QPoint &aimPos);
 
     /**
      * \brief Получить смещение перекрестия прицельных линий
+     *
+     * \return смещение перекрестия прицельных линий
      */
     QPoint aimPos() const;
 
     /**
      * \brief Установить диаметр прицельной окружности
+     *
+     * \param [in] aimSize диаметр прицельной окружности, который требуется установить
      */
     void setAimSize(int aimSize);
 
     /**
      * \brief Получить диаметр прицельной окружности
+     *
+     * \return диаметр прицельной окружности
      */
     int aimSize() const;
 
     /**
      * \brief Установить толщину линий прицельных элементов
+     *
+     * \param [in] aimLineWidth толщина линий прицельных элементов, которую требуется установить
      */
     void setAimLineWidth(int aimLineWidth);
 
     /**
      * \brief Получить толщину линий прицельных элементов
+     *
+     * \return толщину линий прицельных элементов
      */
     int aimLineWidth() const;
 
     /**
      * \brief Установить цвет прицельных элементов
+     *
+     * \param [in] aimColor цвет прицельных элементов, который требуется установить
      */
     void setAimColor(int aimColor);
 
     /**
      * \brief Получить цвет прицельных элементов
+     *
+     * \return цвет прицельных элементов
      */
     int aimColor() const;
 
     /**
      * \brief Получить коэффициент масштабирования изображения камеры при отображении
+     *
+     * \return коэффициент масштабирования изображения камеры при отображении
      */
     qreal videoScale() const;
 
 signals:
 
     /**
-     * \brief Разрешение изображения, выводимого с текущей камеры, изменено
+     * \brief Сигнал изменения разрешения изображения, выводимого с текущей камеры
      */
     void resolutionChanged(const QSize &resolution);
 
     /**
-     * \brief Координаты сдвига видеокадра изменены
+     * \brief Сигнал изменения координат сдвига видеокадра
      */
     void posChanged(const QPoint &pos);
 
     /**
-     * \brief Относительное смещение (координаты) перекрестия прицельных линий изменено
+     * \brief Сигнал изменения относительного смещения (координат) перекрестия прицельных линий
      */
     void aimPosChanged(const QPoint &aimPos);
 
     /**
-     * \brief Диаметр прицельной окружности изменён
+     * \brief Сигнал изменения диаметра прицельной окружности
      */
     void aimSizeChanged(int aimSize);
 
     /**
-     * \brief Толщина линий прицельных элементов изменена
+     * \brief Сигнал изменения толщины линий прицельных элементов
      */
     void aimLineWidthChanged(int aimLineWidth);
 
     /**
-     * \brief Цвет прицельных элементов изменён
+     * \brief Сигнал изменения цвета прицельных элементов
      */
     void aimColorChanged(int aimColor);
 
     /**
-     * \brief Коэффициент масштабирования изображения камеры изменён
+     * \brief Сигнал изменения коэффициента масштабирования изображения камеры
      */
     void zoomChanged(qreal zoom);
 
 public slots:
 
+    /**
+     * \brief Слот начала работы камеры
+     */
     void start();
 
+    /**
+     * \brief Слот остановки работы камеры
+     */
     void stop();
 
 private slots:
@@ -328,12 +414,20 @@ private:
      */
     QPoint m_aimPosition;
 
+    /**
+     * \brief Вычислить и установить новый коэффициент масштабирования
+     * изображения камеры при отображении на основе масштаба
+     */
     void updateSize();
 
-    void updateCameras();
+//    void updateCameras();
 
-    void updateCameraDevice(QAction *action);
+//    void updateCameraDevice(QAction *action);
 
+    /**
+     * \brief Переключиться но новую камеру по ссылке на [QCameraDevice](https://doc.qt.io/qt-6/qcameradevice.html)
+     * \param [in] cameraDevice ссылка на [QCameraDevice](https://doc.qt.io/qt-6/qcameradevice.html)
+     */
     void setCamera(const QCameraDevice& cameraDevice);
 
     /**

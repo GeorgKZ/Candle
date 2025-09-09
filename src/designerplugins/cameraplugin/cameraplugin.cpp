@@ -1,13 +1,11 @@
-#include "cameraplugin.h"
-#include "camerawidget.h"
-
 /**
  * \file
- *
  * \brief Файл с определениями функций-членов класса \ref CameraPlugin "CameraPlugin"
  *
  * <BR>
  */
+#include "cameraplugin.h"
+#include "camerawidget.h"
 
 /**
  * \file

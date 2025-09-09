@@ -439,7 +439,7 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 
   // Прокси-классы пользовательских виджетов
   wregister(StyledToolButton);
-  wregister(CameraWidget);
+//  wregister(CameraWidget);
   wregister(ColorPicker);
   wregister(Slider);
   wregister(SliderBox);

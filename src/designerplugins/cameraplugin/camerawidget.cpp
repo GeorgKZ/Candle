@@ -1,5 +1,11 @@
-#include "camerawidget.h"
+/**
+ * \file
+ * \brief Файл с определениями функций-членов класса \ref CameraWidget "CameraWidget"
+ *
+ * <BR>
+ */
 
+#include "camerawidget.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include <QCamera>
@@ -20,12 +26,12 @@
 
 /**
  * \file
- *
- * \brief Файл с определениями функций-членов класса \ref CameraWidget "CameraWidget"
- *
- * <BR>
  * Функции, являющиеся методами класса \ref CameraWidget "CameraWidget":
  * <BR>
+ */
+
+ /**
+ * \file
  * * \copybrief CameraWidget::CameraWidget(QWidget *)
  */
 CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent), m_captureSession(new QMediaCaptureSession)
@@ -129,6 +135,10 @@ void CameraWidget::permissionChecking()
 #endif
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::~CameraWidget()
+ */
 CameraWidget::~CameraWidget()
 {
     m_scrollArea->deleteLater();
@@ -139,6 +149,10 @@ CameraWidget::~CameraWidget()
     m_view->deleteLater();
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setCameraName(QString)
+ */
 void CameraWidget::setCameraName(QString cameraName)
 {
     qDebug() << "CameraWidget::setCameraName(" << cameraName << ")";
@@ -158,11 +172,19 @@ void CameraWidget::setCameraName(QString cameraName)
     }
 }
 
+/**
+ * \file
+ * * Чтение параметра \ref CameraWidget::cameraName "cameraName"
+ */
 QString CameraWidget::cameraName() const
 {
     return m_cameraName;
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::availableCameras
+ */
 QStringList CameraWidget::availableCameras() const
 {
     QStringList l;
@@ -172,6 +194,10 @@ QStringList CameraWidget::availableCameras() const
     return l;
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::availableResolutions
+ */
 QStringList CameraWidget::availableResolutions() const
 {
     QStringList l;
@@ -181,6 +207,10 @@ QStringList CameraWidget::availableResolutions() const
     return l;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setCamera(const QCameraDevice&)
+ */
 void CameraWidget::setCamera(const QCameraDevice& cameraDevice)
 {
     if (m_camera == nullptr || m_camera->cameraDevice() != cameraDevice) {
@@ -220,28 +250,48 @@ void CameraWidget::setCamera(const QCameraDevice& cameraDevice)
     }
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::isCameraActive() const
+ */
 bool CameraWidget::isCameraActive() const
 {
     return m_camera->isActive();
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::start()
+ */
 void CameraWidget::start()
 {
     qDebug() << "CameraWidget::start()";
     m_camera->start();
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::stop()
+ */
 void CameraWidget::stop()
 {
     qDebug() << "CameraWidget::stop()";
     m_camera->stop();
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::videoScale() const
+ */
 qreal CameraWidget::videoScale() const
 {
     return m_videoScale;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::updateSize()
+ */
 void CameraWidget::updateSize()
 {
     qreal widthRatio = static_cast<qreal>(m_scrollArea->contentsRect().size().width()) / m_resolution.width();
@@ -253,6 +303,10 @@ void CameraWidget::updateSize()
     m_view->resize(m_videoScale * m_resolution);
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setResolution(const QSize&)
+ */
 void CameraWidget::setResolution(const QSize &resolution)
 {
     foreach(QCameraFormat f, m_camera->cameraDevice().videoFormats()) {
@@ -268,11 +322,19 @@ void CameraWidget::setResolution(const QSize &resolution)
     qDebug() << "CameraWidget::setResolution - ignoring wrong resolution";
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::resolution
+ */
 QSize CameraWidget::resolution() const
 {
     return m_resolution;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setZoom(qreal)
+ */
 void CameraWidget::setZoom(qreal zoom)
 {
     zoom = qBound<qreal>(1.0, zoom, 8.0);
@@ -283,11 +345,19 @@ void CameraWidget::setZoom(qreal zoom)
     }
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::zoom
+ */
 qreal CameraWidget::zoom() const
 {
     return m_zoom;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setPos(const QPoint&)
+ */
 void CameraWidget::setPos(const QPoint &position)
 {
     QPoint oldPos = pos();
@@ -301,12 +371,20 @@ void CameraWidget::setPos(const QPoint &position)
     }
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::pos
+ */
 QPoint CameraWidget::pos() const
 {
     return QPoint(m_scrollArea->horizontalScrollBar()->value(),
                   m_scrollArea->verticalScrollBar()->value());
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setAimPos(const QPoint&)
+ */
 void CameraWidget::setAimPos(const QPoint &aimPos)
 {
     int maxx = m_view->frameSize().width() - m_aimLineWidth;
@@ -322,11 +400,19 @@ void CameraWidget::setAimPos(const QPoint &aimPos)
     }
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::aimPos
+ */
 QPoint CameraWidget::aimPos() const
 {
     return m_aimPosition;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setAimSize(int)
+ */
 void CameraWidget::setAimSize(int aimSize)
 {
     if (aimSize >= 0 && m_aimSize != aimSize) {
@@ -335,11 +421,19 @@ void CameraWidget::setAimSize(int aimSize)
     }
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::aimSize
+ */
 int CameraWidget::aimSize() const
 {
     return m_aimSize;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setAimLineWidth(int)
+ */
 void CameraWidget::setAimLineWidth(int aimLineWidth)
 {
     if (m_aimLineWidth >= 0 && m_aimLineWidth != aimLineWidth) {
@@ -348,11 +442,19 @@ void CameraWidget::setAimLineWidth(int aimLineWidth)
     }
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::aimLineWidth
+ */
 int CameraWidget::aimLineWidth() const
 {
     return m_aimLineWidth;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::setAimColor(int)
+ */
 void CameraWidget::setAimColor(int aimColor)
 {
     if (m_aimColor != aimColor) {
@@ -361,11 +463,19 @@ void CameraWidget::setAimColor(int aimColor)
     }
 }
 
+/**
+ * \file
+ * * Чтение параметра CameraWidget::aimColor
+ */
 int CameraWidget::aimColor() const
 {
     return m_aimColor;
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::resizeEvent(QResizeEvent*)
+ */
 void CameraWidget::resizeEvent(QResizeEvent *e)
 {
     /**
@@ -402,6 +512,10 @@ void CameraWidget::resizeEvent(QResizeEvent *e)
     setPos(prevPos + aimPos() - prevAim);
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::hideEvent(QHideEvent*)
+ */
 void CameraWidget::hideEvent(QHideEvent *event)
 {
 //    qDebug() << "CameraWidget::hideEvent";
@@ -421,6 +535,10 @@ void CameraWidget::hideEvent(QHideEvent *event)
     }
 }
 
+/**
+ * \file
+ * * \copybrief CameraWidget::showEvent(QShowEvent*)
+ */
 void CameraWidget::showEvent(QShowEvent *event)
 {
 //    qDebug() << "CameraWidget::showEvent";
@@ -444,9 +562,23 @@ void CameraWidget::showEvent(QShowEvent *event)
     }
 }
 
+/**
+ * \file
+ * Функции, являющиеся методами класса \ref myGraphicsView "myGraphicsView":
+ * <BR>
+ */
+
+/**
+ * \file
+ * * \copybrief myGraphicsView::myGraphicsView(CameraWidget*)
+ */
 myGraphicsView::myGraphicsView(CameraWidget *parent) :
     QGraphicsView(static_cast<QWidget*>(parent)), m_parent(parent) {}
 
+/**
+ * \file
+ * * \copybrief myGraphicsView::paintEvent(QPaintEvent*)
+ */
 void myGraphicsView::paintEvent(QPaintEvent *event)
 {
     /**
@@ -501,6 +633,10 @@ void myGraphicsView::paintEvent(QPaintEvent *event)
     painter.drawEllipse(m_parent->aimPos(), m_parent->aimSize() / 2, m_parent->aimSize() / 2);
 }
 
+/**
+ * \file
+ * * \copybrief myGraphicsView::mouseMoveEvent(QMouseEvent*)
+ */
 void myGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     /**
@@ -542,6 +678,10 @@ void myGraphicsView::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+/**
+ * \file
+ * * \copybrief myGraphicsView::wheelEvent(QWheelEvent*)
+ */
 void myGraphicsView::wheelEvent(QWheelEvent *event)
 {
 
@@ -588,6 +728,10 @@ void myGraphicsView::wheelEvent(QWheelEvent *event)
     m_parent->setPos(prevPos + m_parent->aimPos() - prevAim);
 }
 
+/**
+ * \file
+ * * \copybrief myGraphicsView::mousePressEvent(QMouseEvent*)
+ */
 void myGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     /**
