@@ -382,8 +382,11 @@ unsigned long long wrapper_common::get_selfvalue() const {
     return reinterpret_cast<unsigned long long>(selfptr_);
 }
 
+
 // Регистрация прокси-класса
-#define wregister(name) do { se->globalObject().setProperty( #name , se->newQMetaObject<wrapper_##name>() ); } while(0)
+#define wregister(name) do { se->globalObject().setProperty( #name , se->newQMetaObject(&wrapper_##name::staticMetaObject) ); } while(0)
+
+//#define wregister(name) do { se->globalObject().setProperty( #name , se->newQMetaObject<wrapper_##name>() ); } while(0)
 
 /**
  * \file
@@ -438,13 +441,13 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
   wregister(QWidget);
 
   // Прокси-классы пользовательских виджетов
-  wregister(StyledToolButton);
+    wregister(StyledToolButton);
 //  wregister(CameraWidget);
-  wregister(ColorPicker);
-  wregister(Slider);
-  wregister(SliderBox);
-  wregister(IconDelegate);
-  wregister(CodeDelegate);
+//  wregister(ColorPicker);
+//  wregister(Slider);
+//  wregister(SliderBox);
+    wregister(IconDelegate);
+    wregister(CodeDelegate);
 
   qDebug() << "register_wrappers - OK";
 }

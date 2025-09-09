@@ -652,7 +652,7 @@ build_ext_binary("SvgToRaster")
 # необходим файл *.icns
 
 # Цель, представляющая создание файлов-значков
-add_custom_target(MULTIPLE_ICONS ALL
+add_custom_target(MULTIPLE_ICONS
   COMMAND ${CMAKE_COMMAND}
     -DSVGTORASTER_HINT=${BUILD_PATH}/external/SvgToRaster/install
     -DSOURCE_SVG=${CUSTOM_SVG_ICON_FILE}

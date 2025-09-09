@@ -120,6 +120,9 @@ private:
   QString m_pluginPath;
 };
 
+Q_DECLARE_METATYPE(IconDelegate)
+
+
 class wrapper_IconDelegate : public wrapper_QStyledItemDelegate {
 
   Q_OBJECT
@@ -152,6 +155,8 @@ public:
     qDebug() << "wrapper_IconDelegate::destructor(self=" << get_selfvalue() << ")";
   }
 };
+
+Q_DECLARE_METATYPE(wrapper_IconDelegate)
 
 
 class CodeDelegate : public QStyledItemDelegate {
@@ -253,6 +258,7 @@ public:
   Qt::Alignment m_alignment;
 };
 
+Q_DECLARE_METATYPE(CodeDelegate)
 
 class wrapper_CodeDelegate : public wrapper_QStyledItemDelegate {
 
@@ -267,7 +273,7 @@ public:
 public:
 
   // Конструктор из объекта
-  wrapper_CodeDelegate(void *self) : wrapper_QStyledItemDelegate(self) {
+  wrapper_CodeDelegate(CodeDelegate *self) : wrapper_QStyledItemDelegate(self) {
     qDebug() << "wrapper_CodeDelegate::constructor(self=" << get_selfvalue() << ")";
   }
 
