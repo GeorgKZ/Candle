@@ -446,8 +446,8 @@ WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se) {
 //  wregister(ColorPicker);
 //  wregister(Slider);
 //  wregister(SliderBox);
-    wregister(IconDelegate);
-    wregister(CodeDelegate);
+//    wregister(IconDelegate);
+//    wregister(CodeDelegate);
 
   qDebug() << "register_wrappers - OK";
 }

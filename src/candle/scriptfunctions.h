@@ -18,6 +18,8 @@ public:
     void setFrmMain(frmMain *f);
     frmMain *getFrmMain();
 
+    Q_INVOKABLE void registerType(QString name );
+
 public slots:
 
     void sendCommands(QString commands, int index = -100);

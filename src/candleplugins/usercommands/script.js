@@ -17,6 +17,10 @@ var uiSettings;
 
 function init()
 {
+    app.registerType("IconDelegate");
+    app.registerType("CodeDelegate");
+    app.registerType("StyledToolButton");
+
     loader.setWorkingDirectory(new QDir(pluginPath));
 
     loader.addPluginPath(appPath + "/" + app.libpath)

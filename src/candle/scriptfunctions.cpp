@@ -91,3 +91,13 @@ void ScriptFunctions::removeAction(QJSValue action)
 {
     m_frmMain->removeAction(jsvalueToPointer(QAction, action));
 }
+
+void ScriptFunctions::registerType(QString name )
+{
+//    QString wrapper_name = QString("wrapper_") + name;
+//    int typeId = QMetaType::type(wrapper_name.toUtf8().constData()); //!!! Deprecated!
+//    const QMetaObject *metaObject = QMetaType::metaObjectForType(typeId); //!!! Deprecated!
+//    QObject &o = *metaObject->newInstance();
+
+//    qjsEngine(this)->globalObject().setProperty( name, qjsEngine(this)->newQMetaObject(&o.staticMetaObject) );
+}

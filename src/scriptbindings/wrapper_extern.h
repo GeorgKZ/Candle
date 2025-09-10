@@ -8,9 +8,9 @@
 
 
 /**
- * \brief Регистрация прокси-классов в указанном JS Engine
+ * \brief Регистрация прокси-классов в указанном JS Engine для обеспечения возможности
+ * создания объектов зарегистрированных типов в ява-скрипте
  * \param [in] se указатель на используемый JS Engine
- *
  */
 WRAPPER_DLL_EXPORT void register_wrappers(QJSEngine *se);
 
