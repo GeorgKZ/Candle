@@ -167,9 +167,11 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${FIND_DEPS_PATH})
 set(FOUND_DEPS_PATH "${MISC_PATH}/found_deps")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${FOUND_DEPS_PATH})
 
-# Директория для файлов с изображениями значка
-set(ICONS_PATH "${BUILD_PATH}/icons")
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONS_PATH})
+# Директория для файлов с изображениями значка только при наличии исходного значка
+if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
+    set(ICONS_PATH "${BUILD_PATH}/icons")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ICONS_PATH})
+endif()
 
 # Директория для документации приложения
 set(DOC_PATH "${BUILD_PATH}/docs")
@@ -644,25 +646,29 @@ build_ext_binary("SvgToRaster")
 # Создание файлов-значков (до компоновки исполняемого файла приложения)
 ##############################################################################
 
-# Если сборка предназначена для выполнения под Windows,
-# необходим файл ICO с битмапами 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
-# Если сборка предназначена для выполнения под Linux,
-# необходимы файлы PNG разного размера и файл *.xpm размером 32x32
-# Если сборка предназначена для выполнения под MacOS / OS X,
-# необходим файл *.icns
+# Создание файлов-значков только при наличии исходного значка
+if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
 
-# Цель, представляющая создание файлов-значков
-add_custom_target(MULTIPLE_ICONS
-  COMMAND ${CMAKE_COMMAND}
-    -DSVGTORASTER_HINT=${BUILD_PATH}/external/SvgToRaster/install
-    -DSOURCE_SVG=${CUSTOM_SVG_ICON_FILE}
-    -DICONS_PATH=${ICONS_PATH}
-    -P "${CMAKE_SOURCE_DIR}/scripts/build_icons.cmake"
-   COMMENT "Создание файлов-значков"
-   VERBATIM
-)
-# Зависимость от сборки субмодуля SvgToRaster
-add_dependencies(MULTIPLE_ICONS SvgToRaster)
+    # Если сборка предназначена для выполнения под Windows,
+    # необходим файл ICO с битмапами 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
+    # Если сборка предназначена для выполнения под Linux,
+    # необходимы файлы PNG разного размера и файл *.xpm размером 32x32
+    # Если сборка предназначена для выполнения под MacOS / OS X,
+    # необходим файл *.icns
+
+    # Цель, представляющая создание файлов-значков
+    add_custom_target(MULTIPLE_ICONS
+      COMMAND ${CMAKE_COMMAND}
+        -DSVGTORASTER_HINT=${BUILD_PATH}/external/SvgToRaster/install
+        -DSOURCE_SVG=${CUSTOM_SVG_ICON_FILE}
+        -DICONS_PATH=${ICONS_PATH}
+        -P "${CMAKE_SOURCE_DIR}/scripts/build_icons.cmake"
+       COMMENT "Создание файлов-значков"
+       VERBATIM
+    )
+    # Зависимость от сборки субмодуля SvgToRaster
+    add_dependencies(MULTIPLE_ICONS SvgToRaster)
+endif()
 
 ##############################################################################
 # Создание файлов для Mac OS/OS X
@@ -671,12 +677,10 @@ add_dependencies(MULTIPLE_ICONS SvgToRaster)
 # Если сборка предназначена для выполнения под MacOS / OS X,
 # создать файл PkgInfo
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
     file(WRITE
       ${MISC_PATH}/PkgInfo
       "APPL????\n"
     )
-
 endif()
 
 ##############################################################################
@@ -724,42 +728,44 @@ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
   DESTINATION ${INST_LIC_PATH}
 )
 
-# Установить значки программы для Linux
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+# Установка значков при наличии исходного значка
+if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
+    # Установить значки программы для Linux
+    if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-    # Файл формата SVG
-    install(FILES ${CUSTOM_SVG_ICON_FILE}
-      DESTINATION "share/icons/hicolor/scalable/apps"
-      RENAME "${PROJECT_NAME_LOWERCASE}.svg"
-      OPTIONAL
-    )
-
-    # Файлы формата PNG разных размеров
-    set(PNG_SIZES "16;24;32;48;64;128;256")
-    foreach(SIZE ${PNG_SIZES})
-        install(FILES ${ICONS_PATH}/icon_${SIZE}.png
-          DESTINATION "share/icons/hicolor/${SIZE}x${SIZE}/apps"
-          RENAME "${PROJECT_NAME_LOWERCASE}.png"
+        # Файл формата SVG
+        install(FILES ${CUSTOM_SVG_ICON_FILE}
+          DESTINATION "share/icons/hicolor/scalable/apps"
+          RENAME "${PROJECT_NAME_LOWERCASE}.svg"
           OPTIONAL
         )
-    endforeach(SIZE)
 
-    # Файл формата XPM, 32x32 пикселов
-    install(FILES ${ICONS_PATH}/icon_32.xpm
-      DESTINATION "share/pixmaps"
-      RENAME "${PROJECT_NAME_LOWERCASE}.xpm"
-      OPTIONAL
-    )
+        # Файлы формата PNG разных размеров
+        set(PNG_SIZES "16;24;32;48;64;128;256")
+        foreach(SIZE ${PNG_SIZES})
+            install(FILES ${ICONS_PATH}/icon_${SIZE}.png
+              DESTINATION "share/icons/hicolor/${SIZE}x${SIZE}/apps"
+              RENAME "${PROJECT_NAME_LOWERCASE}.png"
+              OPTIONAL
+            )
+        endforeach(SIZE)
 
-# Если сборка предназначена для выполнения под MacOS / OS X
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    install(FILES
-      "${ICONS_PATH}/icon.icns"
-      DESTINATION "${BUNDLE_RESOURCE_PATH}"
-      RENAME "${PROJECT_NAME_LOWERCASE}.icns"
-    )
+        # Файл формата XPM, 32x32 пикселов
+        install(FILES ${ICONS_PATH}/icon_32.xpm
+          DESTINATION "share/pixmaps"
+          RENAME "${PROJECT_NAME_LOWERCASE}.xpm"
+          OPTIONAL
+        )
+
+    # Если сборка предназначена для выполнения под MacOS / OS X
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        install(FILES
+          "${ICONS_PATH}/icon.icns"
+          DESTINATION "${BUNDLE_RESOURCE_PATH}"
+          RENAME "${PROJECT_NAME_LOWERCASE}.icns"
+        )
+    endif()
 endif()
-
 
 # Установить файл PkgInfo eсли сборка предназначена для выполнения под MacOS / OS X
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -903,7 +909,7 @@ endif()
 # Использовать компонент для поиска Doxygen
 include(FindDoxygen)
 
-# Должны быть найдены doxygen и dot (начиная с CMAKE 3.9)
+# Должны быть найдены doxygen и dot
 find_package(Doxygen QUIET COMPONENTS dot)
 
 # Если doxygen найден, создать цели формирования файлов документации
@@ -934,7 +940,7 @@ if (DOXYGEN_FOUND)
 #   set(DOXYGEN_EXAMPLE_PATH            "${SOURCES_PATH}")
     set(DOXYGEN_IMAGE_PATH              ${DOXY_IMAGES})
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE  "${CMAKE_SOURCE_DIR}/README.md")
-    set(DOXYGEN_ALPHABETICAL_INDEX      NO)
+    set(DOXYGEN_ALPHABETICAL_INDEX      YES)
     set(DOXYGEN_HTML_STYLESHEET         "${CMAKE_SOURCE_DIR}/doc/stylesheet.css")
     set(DOXYGEN_GENERATE_TREEVIEW       YES)
     set(DOXYGEN_ENUM_VALUES_PER_LINE    1)
@@ -965,7 +971,7 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_MAX_DOT_GRAPH_DEPTH     1000)
     set(DOXYGEN_VERBATIM_HEADERS        NO)
 
-    # Формирование файлов документации html при помощи doxygen (начиная с CMAKE 3.9)
+    # Формирование файлов документации html при помощи doxygen
     doxygen_add_docs(html_doc_proc
       "${CMAKE_SOURCE_DIR}/README.md"
       "${CMAKE_SOURCE_DIR}/TODO.md"
