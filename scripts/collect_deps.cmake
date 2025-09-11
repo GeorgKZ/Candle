@@ -5,9 +5,19 @@
 
 include("${ROOT_DIR}/scripts/get_file_deps.cmake")
 
+# Список обработанных библиотек
+set(PROCESSED_LIST "")
+
 # Функция, выполняющая установку во временную директорию
 # указанной библиотеки и её зависимостей
 function(install_library_with_deps NAME)
+
+    # Проверить, может эта библиотека уже обработана
+    list(FIND PROCESSED_LIST "${NAME}" INDEX)
+    if(NOT (INDEX EQUAL -1))
+        return()
+    endif()
+    list(APPEND PROCESSED_LIST ${NAME})
 
     set(framework 0)
 
@@ -32,7 +42,7 @@ function(install_library_with_deps NAME)
 #       message(STATUS "FOUND application library ${NAME}")
 
     # !!!
-    # Проверить, может это библиотека приложения
+    # Проверить, может это системная библиотека приложения
     elseif((EXISTS "/lib/${NAME}") OR (EXISTS "/lib/x86_64-linux-gnu/${NAME}"))
 #       message(STATUS "FOUND system library ${NAME}")
         return()

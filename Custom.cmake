@@ -18,6 +18,21 @@ set(CUSTOM_PROJECT_MAINTAINER "${PROJECT_VENDOR} https://github.com/GeorgKZ")
 # Путь к файлу значка SVG проекта
 set(CUSTOM_SVG_ICON_FILE "${CMAKE_SOURCE_DIR}/icons/icon.svg")
 
+# Список компонентов проекта с путями, которые включаются как поддиректории
+set(PROJECT_MODULES_LIST
+  "designerplugins/cameraplugin"
+  "designerplugins/customwidgetsplugin"
+  "scriptbindings"
+  "candle"
+  "candleplugins"
+)
+
+# Путь к директории с изображениями для Doxygen
+set(CUSTOM_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/images;${CMAKE_SOURCE_DIR}/wiki/images")
+
+#  Использовать MathJax, использовать расширения
+set(CUSTOM_MATHJAX require ams mathtools textcomp unicode)
+
 ##############################################################################
 # Настройки Qt
 ##############################################################################

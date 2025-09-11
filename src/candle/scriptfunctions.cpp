@@ -94,7 +94,27 @@ void ScriptFunctions::removeAction(QJSValue action)
 
 void ScriptFunctions::registerType(QString name )
 {
-//    QString wrapper_name = QString("wrapper_") + name;
+    QString wrapper_name = QString("wrapper_") + name;
+    qDebug() << "Checking " + wrapper_name;
+    QMetaType mtype = QMetaType::fromName(wrapper_name.toUtf8().constData());
+    if (mtype.isValid())
+    {
+        void *classptr = mtype.create();
+        qDebug() << "Registered" + wrapper_name;
+        mtype.destroy(classptr);
+    }
+
+    qDebug() << "Checking " + name;
+    mtype = QMetaType::fromName(name.toUtf8().constData());
+    if (mtype.isValid())
+    {
+        void *classptr = mtype.create();
+        qDebug() << "Registered" + name;
+        mtype.destroy(classptr);
+    }
+
+
+
 //    int typeId = QMetaType::type(wrapper_name.toUtf8().constData()); //!!! Deprecated!
 //    const QMetaObject *metaObject = QMetaType::metaObjectForType(typeId); //!!! Deprecated!
 //    QObject &o = *metaObject->newInstance();
