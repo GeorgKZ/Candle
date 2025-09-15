@@ -6,28 +6,21 @@
 cmake_path(GET CMAKE_CURRENT_SOURCE_DIR STEM LAST_ONLY MAIN_NAME)
 
 ##############################################################################
-# Директории с файлами, необходимыми для сборки
-##############################################################################
-
-# Путь к директории с плюгинами
-set(SOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-
-##############################################################################
 # Обработка файлов с переводом
 ##############################################################################
 
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
-file(GLOB SUBDIRS RELATIVE ${SOURCES_PATH} ${SOURCES_PATH}/*)
+file(GLOB SUBDIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
 foreach(I ${SUBDIRS})
-    if(IS_DIRECTORY ${SOURCES_PATH}/${I} AND EXISTS ${SOURCES_PATH}/${I})
+    if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${I} AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${I})
 
         # Вывод информации о собираемом компоненте
         message(STATUS "##############################################################################")
         message(STATUS "Проект '${CMAKE_PROJECT_NAME}', компонент '${MAIN_NAME}': ${I}")
         message(STATUS "##############################################################################")
 
-        set(PLUGIN_PATH "${SOURCES_PATH}/${I}")
+        set(PLUGIN_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${I}")
         set(SRC_FILES "")
         if(EXISTS ${PLUGIN_PATH}/settings.ui)
             list(APPEND SRC_FILES ${PLUGIN_PATH}/settings.ui)
@@ -72,10 +65,10 @@ endforeach(I)
 # Вывод сообщений об установке только если было изменение
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-file(GLOB SUBDIRS RELATIVE ${SOURCES_PATH} ${SOURCES_PATH}/*)
+file(GLOB SUBDIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
 foreach(I ${SUBDIRS})
 
-    set(PLUGIN_PATH "${SOURCES_PATH}/${I}")
+    set(PLUGIN_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${I}")
     if(IS_DIRECTORY ${PLUGIN_PATH} AND EXISTS ${PLUGIN_PATH})
 
         # Установка яваскриптов и файлов ui

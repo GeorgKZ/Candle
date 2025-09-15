@@ -18,15 +18,11 @@ set(CMAKE_INSTALL_RPATH "\$ORIGIN")
 ##############################################################################
 
 # Список заголовков исходных текстов приложения
-file(GLOB SOURCE_HEADERS_LIST
-    ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin/*.h
-    ${CMAKE_SOURCE_DIR}/src/*.h
-)
+file(GLOB_RECURSE SOURCE_HEADERS_LIST "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+#    ${CMAKE_SOURCE_DIR}/src/*.h
 
 # Список файлов c++ исходных текстов приложения
-file(GLOB SOURCE_FILE_LIST
-    ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin/*.cpp
-)
+file(GLOB_RECURSE SOURCE_FILE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 # Определение для сборки библиотеки
 add_definitions(-DCUSTOMWIDGETS_EXPORT)
@@ -48,7 +44,7 @@ add_library(${MAIN_NAME} SHARED
 
 # Директории с включаемыми файлами
 target_include_directories(${MAIN_NAME}
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/designerplugins/cameraplugin
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     PRIVATE ${CMAKE_SOURCE_DIR}/src
 )
 

@@ -33,6 +33,9 @@ set(CUSTOM_IMAGES "${CMAKE_SOURCE_DIR}/screenshots;${CMAKE_SOURCE_DIR}/doc/image
 #  Использовать MathJax, использовать расширения
 set(CUSTOM_MATHJAX require ams mathtools textcomp unicode)
 
+# Аргументы анализатора PVS-Studio
+set(CUSTOM_PVS_ARGS "-d V122")
+
 ##############################################################################
 # Настройки Qt
 ##############################################################################

@@ -18,15 +18,11 @@ set(CMAKE_INSTALL_RPATH "\$ORIGIN")
 ##############################################################################
 
 # Список заголовков исходных текстов приложения
-file(GLOB SOURCE_HEADERS_LIST
-    ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin/*.h
-    ${CMAKE_SOURCE_DIR}/src/*.h
-)
+file(GLOB_RECURSE SOURCE_HEADERS_LIST "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+#    ${CMAKE_SOURCE_DIR}/src/*.h
 
 # Список файлов c++ исходных текстов приложения
-file(GLOB SOURCE_FILE_LIST
-    ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin/*.cpp
-)
+file(GLOB_RECURSE SOURCE_FILE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 # Список файлов, описывающих интерфейс
 set(UI
@@ -54,7 +50,7 @@ add_library(${MAIN_NAME} SHARED
 
 # Директории с включаемыми файлами
 target_include_directories(${MAIN_NAME}
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/designerplugins/customwidgetsplugin
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     PRIVATE ${CMAKE_SOURCE_DIR}/src
 )
 
