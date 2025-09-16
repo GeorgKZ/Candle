@@ -11,7 +11,8 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     set(ARCH_PATH "/var/tmp/archive")
     set(url_os "linux_x64")
-    set(compiler_id "linux_gcc_64")
+    set(compiler_id1 "gcc_64")
+    set(compiler_id "linux_${compiler_id1}")
     set(qt_dir "/opt/qt${qt_version_dotless}")
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
     set(ARCH_PATH "/tmp/archive")
@@ -61,17 +62,38 @@ foreach(mirror ${qt_mirrors})
         set(name ${CMAKE_MATCH_1})
         string(REGEX MATCH "<Version>(.*)</Version>" match "${section}")
         set(version ${CMAKE_MATCH_1})
+        #
+        message(STATUS "Загрузка ${display_name}")
 
+        set(dest_list "")
+        set(arch_list "")
+        set(PREFIX "@TargetDir@/${qt_version}/${compiler_id1}")
+        string(REGEX MATCHALL "<Argument>([^<]+)</Argument>" matches "${section}")
+        foreach(match IN LISTS matches)
+            string(REGEX REPLACE "<[^>]+>([^<]+)</[^>]+>" "\\1" content "${match}")
+            if(content MATCHES "^${PREFIX}")
+                string(REPLACE "${PREFIX}" "" content "${content}")
+                if(^^${content} STREQUAL "^^")
+                   list(APPEND dest_list ".")
+                else()
+                   list(APPEND dest_list ${content})
+                endif()
+            else()
+                list(APPEND arch_list ${content})
+            endif()
+        endforeach(match)
+        list(LENGTH arch_list arch_list_len)
 
-        string(REGEX MATCH "<Argument>(.*)</Argument>" match "${section}")
-        set(argument ${CMAKE_MATCH_0})
-        message(STATUS "ARG: ${argument}")
+        math(EXPR len "${arch_list_len} - 1")
 
+        foreach(i RANGE 0 ${len})
+            list(GET dest_list ${i} arg1)
+            list(GET arch_list ${i} arg2)
+            message(STATUS "ARG: ${arg1} <- ${arg2}")
+        endforeach(i)
 
         string(REGEX MATCH "<DownloadableArchives>(.*)</DownloadableArchives>" match "${section}")
         set(archive_list ${CMAKE_MATCH_1})
-        #
-        message(STATUS "Загрузка ${display_name}")
         #
         # Заменить запятую с пробелом на точку с запятой
         string(REPLACE ", " ";" archive_list "${archive_list}")
@@ -79,9 +101,9 @@ foreach(mirror ${qt_mirrors})
         foreach(archive ${archive_list})
             # Выполнить 10 попыток загрузки архива
             foreach(retry RANGE 10)
-                cmake_language(EVAL CODE
-                  "file(DOWNLOAD \"${qt_base_url}/${name}/${version}${archive}\" \"${ARCH_PATH}/${archive}\")"
-                )
+#                cmake_language(EVAL CODE
+#                  "file(DOWNLOAD \"${qt_base_url}/${name}/${version}${archive}\" \"${ARCH_PATH}/${archive}\")"
+#                )
                 # Если загрузка успешна (размер файла не равен нулю), завершить попытки загрузки
                 file(SIZE "${ARCH_PATH}/${archive}" fileSize)
                 if (fileSize GREATER 0)
@@ -89,10 +111,10 @@ foreach(mirror ${qt_mirrors})
                 endif()
             endforeach(retry)
             message(STATUS "Разжатие ${archive}")
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "${ARCH_PATH}/${archive}"
-              WORKING_DIRECTORY "${qt_dir}"
-              OUTPUT_QUIET
-            )
+#            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf "${ARCH_PATH}/${archive}"
+#              WORKING_DIRECTORY "${qt_dir}"
+#              OUTPUT_QUIET
+#            )
         endforeach(archive)
     endforeach(section)
     #
