@@ -641,6 +641,19 @@ endif()
 
 if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
 
+   # Файлы PNG, которые должны быть созданы
+   set(PNG_ICONS
+     "${ICONS_PATH}/icon_1024.png"
+     "${ICONS_PATH}/icon_512.png"
+     "${ICONS_PATH}/icon_256.png"
+     "${ICONS_PATH}/icon_128.png"
+     "${ICONS_PATH}/icon_64.png"
+     "${ICONS_PATH}/icon_48.png"
+     "${ICONS_PATH}/icon_32.png"
+     "${ICONS_PATH}/icon_24.png"
+     "${ICONS_PATH}/icon_16.png"
+   )
+
     # Если сборка предназначена для выполнения под Windows,
     # необходим файл ICO с битмапами 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
     # Если сборка предназначена для выполнения под Linux,
@@ -649,17 +662,21 @@ if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
     # необходим файл *.icns
 
     # Цель, представляющая создание файлов-значков
-    add_custom_target(MULTIPLE_ICONS
+    add_custom_command(
+      OUTPUT ${PNG_ICONS}
       COMMAND ${CMAKE_COMMAND}
         -DSVGTORASTER_HINT=${BUILD_PATH}/external/SvgToRaster/install
         -DSOURCE_SVG=${CUSTOM_SVG_ICON_FILE}
         -DICONS_PATH=${ICONS_PATH}
         -P "${CMAKE_SOURCE_DIR}/scripts/build_icons.cmake"
-       COMMENT "Создание файлов-значков"
-       VERBATIM
+      # Зависимость от сборки субмодуля SvgToRaster
+      DEPENDS SvgToRaster
+      COMMENT "Создание файлов-значков"
+      VERBATIM
     )
-    # Зависимость от сборки субмодуля SvgToRaster
-    add_dependencies(MULTIPLE_ICONS SvgToRaster)
+    # Цель, зависимая от значков PNG
+    add_custom_target(GENERATED_RESOURCE ALL DEPENDS ${PNG_ICONS})
+
 endif()
 
 ##############################################################################
@@ -963,7 +980,41 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_MAX_DOT_GRAPH_DEPTH     1000)
     set(DOXYGEN_VERBATIM_HEADERS        NO)
 
-    # Формирование файлов документации html при помощи doxygen
+#    # Формирование файлов документации html при помощи doxygen
+#    doxygen_add_docs(html_doc_proc
+#      "${CMAKE_SOURCE_DIR}/README.md"
+#      "${CMAKE_SOURCE_DIR}/TODO.md"
+#      "${CMAKE_SOURCE_DIR}/src"
+#      COMMENT "Создание документации ${MAIN_NAME} в формате html"
+#    )
+
+#    # Удаление файла warnings.log, если он нулевой длины
+#    add_custom_target(html_doc
+#        # Команда удаления файла warnings.log нулевой длины
+#        ${CMAKE_COMMAND}
+#          -DFILENAME=warnings.log
+#          -P "${CMAKE_SOURCE_DIR}/scripts/remove_zerofile.cmake"
+#        WORKING_DIRECTORY ${DOC_PATH}
+#        COMMENT "Удаление файла warnings.log нулевой длины"
+#        VERBATIM
+#    )
+#    add_dependencies(html_doc html_doc_proc)
+
+#    # Формирование файла документации pdf при помощи doxygen
+#    add_custom_target(pdf_doc
+#      COMMAND ${CMAKE_COMMAND}
+#        -DDOC_PATH=${DOC_PATH}
+#        -DINST_DOC_PATH=${CMAKE_INSTALL_PREFIX}/${INST_DOC_PATH}
+#        -DINST_DOC_FILE=${PROJECT_NAME_LOWERCASE}.pdf
+#        -P "${CMAKE_SOURCE_DIR}/scripts/produce_pdf.cmake"
+#        WORKING_DIRECTORY ${DOC_PATH}/latex
+#        COMMENT "Создание документации ${MAIN_NAME} в формате pdf"
+#        VERBATIM
+#    )
+#    add_dependencies(pdf_doc html_doc)
+
+
+    # Формирование файлов документации HTML при помощи Doxygen
     doxygen_add_docs(html_doc_proc
       "${CMAKE_SOURCE_DIR}/README.md"
       "${CMAKE_SOURCE_DIR}/TODO.md"
@@ -971,19 +1022,19 @@ if (DOXYGEN_FOUND)
       COMMENT "Создание документации ${MAIN_NAME} в формате html"
     )
 
-    # Удаление файла warnings.log, если он нулевой длины
+    # Установка документации HTML
     add_custom_target(html_doc
-        # Команда удаления файла warnings.log нулевой длины
-        ${CMAKE_COMMAND}
-          -DFILENAME=warnings.log
-          -P "${CMAKE_SOURCE_DIR}/scripts/remove_zerofile.cmake"
-        WORKING_DIRECTORY ${DOC_PATH}
-        COMMENT "Удаление файла warnings.log нулевой длины"
+      COMMAND ${CMAKE_COMMAND}
+        -DDOC_PATH=${DOC_PATH}
+        -DINST_DOC_PATH=${CMAKE_INSTALL_PREFIX}/${INST_DOC_PATH}
+        -DSOURCE_DOC_DIR=${CMAKE_SOURCE_DIR}/doc
+        -P "${CMAKE_SOURCE_DIR}/scripts/produce_html.cmake"
+        COMMENT "Установка документации в формате HTML"
         VERBATIM
     )
     add_dependencies(html_doc html_doc_proc)
 
-    # Формирование файла документации pdf при помощи doxygen
+    # Формирование и установка файла документации pdf
     add_custom_target(pdf_doc
       COMMAND ${CMAKE_COMMAND}
         -DDOC_PATH=${DOC_PATH}
@@ -991,9 +1042,9 @@ if (DOXYGEN_FOUND)
         -DINST_DOC_FILE=${PROJECT_NAME_LOWERCASE}.pdf
         -P "${CMAKE_SOURCE_DIR}/scripts/produce_pdf.cmake"
         WORKING_DIRECTORY ${DOC_PATH}/latex
-        COMMENT "Создание документации ${MAIN_NAME} в формате pdf"
+        COMMENT "Создание документации в формате pdf"
         VERBATIM
     )
-    add_dependencies(pdf_doc html_doc)
+    add_dependencies(pdf_doc html_doc_proc)
 
 endif(DOXYGEN_FOUND)

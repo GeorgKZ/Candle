@@ -53,51 +53,56 @@ if ((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR (CMAKE_SYSTEM_NAME STREQUAL "MSYS"
         set(ICON_RESOURCE_STRING "IDI_ICON1 ICON DISCARDABLE \"${ICONS_PATH}/icon.ico\"\n\n")
     endif()
 
-    # Создать файл ресурса по шаблону
-    file(WRITE
-      ${MISC_PATH}/${MAIN_NAME}.rc
+    set(RC_CONTENT
+      "${ICON_RESOURCE_STRING}\
+#include <windows.h>\n\
+\n\
+#define VER_FILEVERSION          ${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}\n\
+#define VER_FILEVERSION_STR      \"${PROJECT_VERSION}\"\n\
+#define VER_PRODUCTVERSION       VER_FILEVERSION\n\
+#define VER_PRODUCTVERSION_STR   VER_FILEVERSION_STR\n\
+#define VER_FILEDESCRIPTION_STR  \"${PROJECT_DESCRIPTION} ${TARGET_BIT_WIDTH}-bit\"\n\
+#define VER_INTERNALNAME_STR     \"${MAIN_NAME}\"\n\
+#define VER_LEGALCOPYRIGHT_STR   \"\"\n\
+#define VER_ORIGINALFILENAME_STR \"${MAIN_NAME}.exe\"\n\
+#define VER_PRODUCTNAME_STR      \"${CMAKE_PROJECT_NAME} ${TARGET_BIT_WIDTH}-bit for Win7, Win8, Win10, Win11\"\n\
+\n\
+VS_VERSION_INFO VERSIONINFO\n\
+FILEVERSION     VER_FILEVERSION,0\n\
+PRODUCTVERSION  VER_PRODUCTVERSION,0\n\
+BEGIN\n\
+    BLOCK \"StringFileInfo\"\n\
+    BEGIN\n\
+        BLOCK \"041904E3\"\n\
+        BEGIN\n\
+            VALUE \"FileDescription\",    VER_FILEDESCRIPTION_STR \"\\0\"\n\
+            VALUE \"FileVersion\",        VER_FILEVERSION_STR \"\\0\"\n\
+            VALUE \"InternalName\",       VER_INTERNALNAME_STR \"\\0\"\n\
+            VALUE \"LegalCopyright\",     VER_LEGALCOPYRIGHT_STR \"\\0\"\n\
+            VALUE \"OriginalFilename\",   VER_ORIGINALFILENAME_STR \"\\0\"\n\
+            VALUE \"ProductName\",        VER_PRODUCTNAME_STR \"\\0\"\n\
+            VALUE \"ProductVersion\",     VER_PRODUCTVERSION_STR \"\\0\"\n\
+        END\n\
+    END\n\
+\n\
+    BLOCK \"VarFileInfo\"\n\
+    BEGIN\n\
+        VALUE \"Translation\", 0x419, 1251\n\
+    END\n\
+END"
+    )
 
-      "${ICON_RESOURCE_STRING}"
-      "#include <windows.h>\n"
-      "\n"
-      "#define VER_FILEVERSION          ${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}\n"
-      "#define VER_FILEVERSION_STR      \"${PROJECT_VERSION}\"\n"
-      "#define VER_PRODUCTVERSION       VER_FILEVERSION\n"
-      "#define VER_PRODUCTVERSION_STR   VER_FILEVERSION_STR\n"
-      "#define VER_FILEDESCRIPTION_STR  \"${PROJECT_DESCRIPTION} ${TARGET_BIT_WIDTH}-bit\"\n"
-      "#define VER_INTERNALNAME_STR     \"${MAIN_NAME}\"\n"
-      "#define VER_LEGALCOPYRIGHT_STR   \"\"\n"
-      "#define VER_ORIGINALFILENAME_STR \"${MAIN_NAME}.exe\"\n"
-      "#define VER_PRODUCTNAME_STR      \"${CMAKE_PROJECT_NAME} ${TARGET_BIT_WIDTH}-bit for Win7, Win8, Win10, Win11\"\n"
-      "\n"
-      "VS_VERSION_INFO VERSIONINFO\n"
-      "FILEVERSION     VER_FILEVERSION,0\n"
-      "PRODUCTVERSION  VER_PRODUCTVERSION,0\n"
-      "BEGIN\n"
-      "    BLOCK \"StringFileInfo\"\n"
-      "    BEGIN\n"
-      "        BLOCK \"041904E3\"\n"
-      "        BEGIN\n"
-      "            VALUE \"FileDescription\",    VER_FILEDESCRIPTION_STR \"\\0\"\n"
-      "            VALUE \"FileVersion\",        VER_FILEVERSION_STR \"\\0\"\n"
-      "            VALUE \"InternalName\",       VER_INTERNALNAME_STR \"\\0\"\n"
-      "            VALUE \"LegalCopyright\",     VER_LEGALCOPYRIGHT_STR \"\\0\"\n"
-      "            VALUE \"OriginalFilename\",   VER_ORIGINALFILENAME_STR \"\\0\"\n"
-      "            VALUE \"ProductName\",        VER_PRODUCTNAME_STR \"\\0\"\n"
-      "            VALUE \"ProductVersion\",     VER_PRODUCTVERSION_STR \"\\0\"\n"
-      "        END\n"
-      "    END\n"
-      "\n"
-      "    BLOCK \"VarFileInfo\"\n"
-      "    BEGIN\n"
-      "        VALUE \"Translation\", 0x419, 1251\n"
-      "    END\n"
-      "END"
+    # Создать файл ресурса по шаблону
+    file(CONFIGURE OUTPUT ${MISC_PATH}/${MAIN_NAME}.rc
+      CONTENT
+      "${RC_CONTENT}"
+      ESCAPE_QUOTES
+      @ONLY
+      NEWLINE_STYLE WIN32
     )
 
     # Путь к файлу ресурсов для сборки исполняемого файла Windows
     set(RESOURCES_DEP "${MISC_PATH}/${MAIN_NAME}.rc")
-#    cmake_path(NATIVE_PATH LOCAL_RESOURCES_DEP NORMALIZE RESOURCES_DEP)
 
     # Добавить флаги для сборки консольного приложения Win32
     add_definitions(
@@ -183,7 +188,8 @@ endforeach(lib)
 file(GLOB UI "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
 
 # Зависимости исполняемого файла приложения
-qt_add_executable(${MAIN_NAME}
+qt_add_executable(${MAIN_NAME} MANUAL_FINALIZATION
+  WIN32
   MACOSX_BUNDLE
   ${SOURCE_FILE_LIST}
   ${SOURCE_HEADERS_LIST}
@@ -243,7 +249,7 @@ set(RESOURCE_IMAGES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/images")
 file(GLOB_RECURSE RC_IMAGES "${RESOURCE_IMAGES_PATH}/*.ico" "${RESOURCE_IMAGES_PATH}/*.png" "${RESOURCE_IMAGES_PATH}/*.svg")
 
 # Добавить изображения-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME}
+qt_add_resources(${MAIN_NAME}
   # Имя, под которым ресурс будет сохранён
   "candle_images"
   # Путь, по которому ресурс будет доступен программе
@@ -255,9 +261,9 @@ qt6_add_resources(${MAIN_NAME}
   FILES ${RC_IMAGES}
 )
 
-# Добавить созданные изображения-ресурсы из ICONS_PATH к ресурсам исполняемого файла
-file(GLOB_RECURSE RC_IMAGES "${ICONS_PATH}/*.png")
-qt6_add_resources(${MAIN_NAME}
+# Добавить созданные изображения-ресурсы из ${ICONS_PATH}/*.png
+# к ресурсам исполняемого файла
+qt_add_resources(${MAIN_NAME}
   # Имя, под которым ресурс будет сохранён
   "candle_generated_images"
   # Путь, по которому ресурс будет доступен программе
@@ -266,9 +272,8 @@ qt6_add_resources(${MAIN_NAME}
   BASE "${ICONS_PATH}/"
   BIG_RESOURCES
   # Путь к файлу. Доступ к файлу по пути PREFIX + (FILES - BASE).
-  FILES ${RC_IMAGES}
+  FILES "${PNG_ICONS}"
 )
-
 
 # Добавить необходимые библиотеки
 target_link_libraries(${MAIN_NAME} PRIVATE
@@ -378,8 +383,10 @@ endif()
 
 # Добавить зависимость от цели сборки файлов значков при их наличии
 if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
-    add_dependencies(${MAIN_NAME} MULTIPLE_ICONS)
+    add_dependencies(${MAIN_NAME} GENERATED_RESOURCE)
 endif()
+
+qt_finalize_target(${MAIN_NAME})
 
 ##############################################################################
 # Формирование набора зависимостей

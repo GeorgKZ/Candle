@@ -2,7 +2,6 @@
 
 ### Предстоит сделать
 
-- [ ] Cmake: Доработать сборку и установку документации html  
 - [ ] Cmake: Устанавливать MathJax в нужное место при генерации документации html  
 - [ ] Doxygen/LaTex: Доработать формирование абзацного отступа только там, где надо  
 - [ ] Images:Убрать лишние/дублирующиеся значки в src/candle/images  
@@ -33,3 +32,4 @@ dpkg -S /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-16.1.so
 - [+] Cmake: Определять требуемые модули Qt по файлу Custom.cmake  
 - [+] C++, JavaScript: Исправить ошибку сваливания от CameraWidget, ColorPicker, StyledToolButton к базовому QWidget  
 - [+] Cmake: Доработать CmakeLists.txt для успешной сборки при наличии и отсутствии значка проекта формата SVG  
+- [+] Cmake: Доработать сборку и установку документации html  
