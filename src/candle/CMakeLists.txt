@@ -215,7 +215,7 @@ set(RESOURCE_FONTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/fonts")
 file(GLOB RC_FONTS "${RESOURCE_FONTS_PATH}/*.ttf")
 
 # Добавить шрифты-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME}
+qt_add_resources(${MAIN_NAME}
   # Имя, под которым ресурс будет сохранён
   "candle_fonts"
   # Путь, по которому ресурс будет доступен программе
@@ -232,7 +232,7 @@ set(RESOURCE_SHADERS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/shaders")
 file(GLOB RC_SHADERS "${RESOURCE_SHADERS_PATH}/*.glsl")
 
 # Добавить шейдеры-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME}
+qt_add_resources(${MAIN_NAME}
   # Имя, под которым ресурс будет сохранён
   "candle_shaders"
   # Путь, по которому ресурс будет доступен программе
@@ -255,10 +255,24 @@ qt_add_resources(${MAIN_NAME}
   # Путь, по которому ресурс будет доступен программе
   PREFIX "images"
   # Часть пути, которая будет отброшена
-  BASE "${CMAKE_CURRENT_SOURCE_DIR}/images/"
+  BASE "${RESOURCE_IMAGES_PATH}/"
   BIG_RESOURCES
   # Путь к файлу. Доступ к файлу по пути PREFIX + (FILES - BASE).
   FILES ${RC_IMAGES}
+)
+
+# Добавить изображения-значки к ресурсам исполняемого файла
+file(GLOB_RECURSE RC_ICONS "${CMAKE_SOURCE_DIR}/icons/*.*")
+qt_add_resources(${MAIN_NAME}
+  # Имя, под которым ресурс будет сохранён
+  "candle_icons"
+  # Путь, по которому ресурс будет доступен программе
+  PREFIX "images"
+  # Часть пути, которая будет отброшена
+  BASE "${CMAKE_SOURCE_DIR}/icons/"
+  BIG_RESOURCES
+  # Путь к файлу. Доступ к файлу по пути PREFIX + (FILES - BASE).
+  FILES ${RC_ICONS}
 )
 
 # Добавить созданные изображения-ресурсы из ${ICONS_PATH}/*.png
@@ -328,7 +342,7 @@ foreach(L ${QT_LANG})
 endforeach(L)
 
 # Добавить переводы-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME} "translations"
+qt_add_resources(${MAIN_NAME} "translations"
     PREFIX "/translations"
     BIG_RESOURCES
     BASE ${TRANSLATE_PATH}
@@ -355,7 +369,7 @@ foreach(L ${QT_LANG})
 endforeach(L)
 
 # Добавить системные переводы-ресурсы к ресурсам исполняемого файла
-qt6_add_resources(${MAIN_NAME} "system_translations"
+qt_add_resources(${MAIN_NAME} "system_translations"
   PREFIX "/system_translations"
   BIG_RESOURCES
   BASE ${QT_TBASE}
@@ -383,7 +397,7 @@ endif()
 
 # Добавить зависимость от цели сборки файлов значков при их наличии
 if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
-    add_dependencies(${MAIN_NAME} GENERATED_RESOURCE)
+    add_dependencies(${MAIN_NAME} MULTIPLE_ICONS)
 endif()
 
 qt_finalize_target(${MAIN_NAME})

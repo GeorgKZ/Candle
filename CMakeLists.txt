@@ -641,18 +641,18 @@ endif()
 
 if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
 
-   # Файлы PNG, которые должны быть созданы
-   set(PNG_ICONS
-     "${ICONS_PATH}/icon_1024.png"
-     "${ICONS_PATH}/icon_512.png"
-     "${ICONS_PATH}/icon_256.png"
-     "${ICONS_PATH}/icon_128.png"
-     "${ICONS_PATH}/icon_64.png"
-     "${ICONS_PATH}/icon_48.png"
-     "${ICONS_PATH}/icon_32.png"
-     "${ICONS_PATH}/icon_24.png"
-     "${ICONS_PATH}/icon_16.png"
-   )
+    # Файлы PNG, которые должны быть созданы
+    set(PNG_ICONS
+      "${ICONS_PATH}/icon_1024.png"
+      "${ICONS_PATH}/icon_512.png"
+      "${ICONS_PATH}/icon_256.png"
+      "${ICONS_PATH}/icon_128.png"
+      "${ICONS_PATH}/icon_64.png"
+      "${ICONS_PATH}/icon_48.png"
+      "${ICONS_PATH}/icon_32.png"
+      "${ICONS_PATH}/icon_24.png"
+      "${ICONS_PATH}/icon_16.png"
+    )
 
     # Если сборка предназначена для выполнения под Windows,
     # необходим файл ICO с битмапами 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, 256x256
@@ -661,7 +661,7 @@ if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
     # Если сборка предназначена для выполнения под MacOS / OS X,
     # необходим файл *.icns
 
-    # Цель, представляющая создание файлов-значков
+    # Команда создания файлов-значков
     add_custom_command(
       OUTPUT ${PNG_ICONS}
       COMMAND ${CMAKE_COMMAND}
@@ -675,7 +675,7 @@ if((DEFINED CUSTOM_SVG_ICON_FILE) AND (EXISTS ${CUSTOM_SVG_ICON_FILE}))
       VERBATIM
     )
     # Цель, зависимая от значков PNG
-    add_custom_target(GENERATED_RESOURCE ALL DEPENDS ${PNG_ICONS})
+    add_custom_target(MULTIPLE_ICONS ALL DEPENDS ${PNG_ICONS})
 
 endif()
 
@@ -955,7 +955,7 @@ if (DOXYGEN_FOUND)
         set(DOXYGEN_USE_MATHJAX             YES)
         set(DOXYGEN_MATHJAX_VERSION         MathJax_3)
         set(DOXYGEN_MATHJAX_FORMAT          chtml)
-        set(DOXYGEN_MATHJAX_RELPATH         "../../../mathjax")
+        set(DOXYGEN_MATHJAX_RELPATH         "./")
         set(DOXYGEN_MATHJAX_EXTENSIONS      ${CUSTOM_MATHJAX})
     else()
         set(DOXYGEN_USE_MATHJAX             NO)
@@ -980,40 +980,6 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_MAX_DOT_GRAPH_DEPTH     1000)
     set(DOXYGEN_VERBATIM_HEADERS        NO)
 
-#    # Формирование файлов документации html при помощи doxygen
-#    doxygen_add_docs(html_doc_proc
-#      "${CMAKE_SOURCE_DIR}/README.md"
-#      "${CMAKE_SOURCE_DIR}/TODO.md"
-#      "${CMAKE_SOURCE_DIR}/src"
-#      COMMENT "Создание документации ${MAIN_NAME} в формате html"
-#    )
-
-#    # Удаление файла warnings.log, если он нулевой длины
-#    add_custom_target(html_doc
-#        # Команда удаления файла warnings.log нулевой длины
-#        ${CMAKE_COMMAND}
-#          -DFILENAME=warnings.log
-#          -P "${CMAKE_SOURCE_DIR}/scripts/remove_zerofile.cmake"
-#        WORKING_DIRECTORY ${DOC_PATH}
-#        COMMENT "Удаление файла warnings.log нулевой длины"
-#        VERBATIM
-#    )
-#    add_dependencies(html_doc html_doc_proc)
-
-#    # Формирование файла документации pdf при помощи doxygen
-#    add_custom_target(pdf_doc
-#      COMMAND ${CMAKE_COMMAND}
-#        -DDOC_PATH=${DOC_PATH}
-#        -DINST_DOC_PATH=${CMAKE_INSTALL_PREFIX}/${INST_DOC_PATH}
-#        -DINST_DOC_FILE=${PROJECT_NAME_LOWERCASE}.pdf
-#        -P "${CMAKE_SOURCE_DIR}/scripts/produce_pdf.cmake"
-#        WORKING_DIRECTORY ${DOC_PATH}/latex
-#        COMMENT "Создание документации ${MAIN_NAME} в формате pdf"
-#        VERBATIM
-#    )
-#    add_dependencies(pdf_doc html_doc)
-
-
     # Формирование файлов документации HTML при помощи Doxygen
     doxygen_add_docs(html_doc_proc
       "${CMAKE_SOURCE_DIR}/README.md"
@@ -1028,6 +994,7 @@ if (DOXYGEN_FOUND)
         -DDOC_PATH=${DOC_PATH}
         -DINST_DOC_PATH=${CMAKE_INSTALL_PREFIX}/${INST_DOC_PATH}
         -DSOURCE_DOC_DIR=${CMAKE_SOURCE_DIR}/doc
+        -DMATH_PATH=${CMAKE_SOURCE_DIR}/submodules/MathJax
         -P "${CMAKE_SOURCE_DIR}/scripts/produce_html.cmake"
         COMMENT "Установка документации в формате HTML"
         VERBATIM

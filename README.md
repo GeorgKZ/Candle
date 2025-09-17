@@ -1,6 +1,6 @@
 [![CMake Build Matrix](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml/badge.svg)](https://github.com/GeorgKZ/Candle/actions/workflows/build_cmake.yml)
 [![License: GPL v3](doc/License_GPLv3.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Platforms: macOS, Windows, Linux](doc/Platform.svg)]()
+[![Platforms: macOS, Windows, Linux](doc/Platform.svg)](https://support.microsoft.com/ru-ru/windows)
 [![Framework: QT v6.X.X](doc/Qt6.svg)](https://www.qt.io/product/qt6)
 
 Форк [Candle](https://github.com/Denvi/Candle)
