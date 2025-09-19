@@ -1,13 +1,13 @@
 // This file is a part of "Candle" application.
-// Copyright 2015-2021 Hayrullin Denis Ravilevich
+// Copyright 2015-2025 Hayrullin Denis Ravilevich
 
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-#include <QtCore/QTimer>
-#include <QtCore/QTime>
-#include <QtGui/QOpenGLFunctions>
-#include <QtOpenGLWidgets/QOpenGLWidget>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include <QTimer>
+#include <QTime>
 #include "drawers/shaderdrawable.h"
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
@@ -76,6 +76,9 @@ public:
     QString pinState() const;
     void setPinState(const QString &pinState);
 
+    bool perspective() const;
+    void setPerspective(bool perspective);
+
 signals:
 
     void rotationChanged();
@@ -96,6 +99,17 @@ private:
     QPoint m_lastPos;
     double m_zoom;
     double m_distance;
+
+    bool m_perspective;
+
+    QVector3D m_viewLowerBounds;
+    QVector3D m_viewUpperBounds;
+    QVector3D m_viewRanges;
+
+    QVector3D m_modelLowerBounds;
+    QVector3D m_modelUpperBounds;
+    QVector3D m_modelRanges;
+
     double m_xMin, m_xMax, m_yMin, m_yMax, m_zMin, m_zMax, m_xSize, m_ySize, m_zSize;
     double m_lineWidth;
     double m_pointSize;

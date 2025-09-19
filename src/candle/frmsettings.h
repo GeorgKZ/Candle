@@ -190,6 +190,8 @@ public:
     void setReferenceYPlus(bool value);
     bool referenceZPlus();
     void setReferenceZPlus(bool value);
+    bool invertedSliderControls();
+    void setInvertedSliderControls(bool value);
 
 signals:
     void settingsSetByDefault();

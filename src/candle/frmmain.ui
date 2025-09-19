@@ -21,7 +21,16 @@
     <normaloff>:/images/icon.svg</normaloff>:/images/icon.svg</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">
+    <string notr="true">#fraProgram QToolButton {
+	min-width: 1.75em;
+	min-height: 1.75em;
+}
+
+StyledToolButton[adjustSize=&quot;true&quot;] {
+	min-width: 2.5em;
+	min-height: 2.5em;
+}
+
 QDockWidget::title {
 	background-color: lightgray;
 	padding: 5 0 5 11;
@@ -31,23 +40,6 @@ QDockWidget::title {
 QDockWidget[floating=&quot;true&quot;]&gt;QWidget&gt;QWidget {
 	margin-left: 11;
 	margin-right: 11;
-}
-
-QDockWidget::close-button {
-	subcontrol-origin: padding;
-	subcontrol-position: right center;
-	position: absolute;
-	top: 2;
-	width: 24;
-}
-
-QDockWidget::float-button {
-	subcontrol-origin: padding;
-	subcontrol-position: right center;
-	position: absolute;
-	top: 2;
-	right: 20;
-	width: 24;
 }
 
 QToolBar#_spacerTop, QToolBar#_spacerLeft, QToolBar#_spacerRight {
@@ -98,61 +90,33 @@ QFrame#frameManualControlXY,#frameManualControlZ {
 	border-radius: 4px;
 }
 
-QSplitter::handle {
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-QSplitter::handle:vertical {
-	background-image: url(:/images/handle_horizontal.png);
-}
-
-QSplitter::handle:horizontal {
-	background-image: url(:/images/handle_vertical.png);
-}
-
 QTableView {
 	selection-background-color: #cdcdff;
 	selection-color: rgb(0, 0, 0);
 }
 
 QSlider::horizontal {
-	padding-top: 1px;
-	padding-bottom: 1px;
+        height: 1.25em;
 }
 
-QSlider::groove:horizontal {
-	border: 1px solid #999999;
-	height: 2px; 
-	background: #8f8f91;
-	margin: 2px 0;
+QSlider::candle:horizontal {
+        background-color: #A6A6A6;
+	border: 2px solid #606060;
+        border-radius: 4px;
 }
 
-QSlider::handle:horizontal {	
-	background-image: url(:/images/handle2s.png);
-	border: 0px;
-	width: 16px;
-	margin: -7px 0; 
+QSlider::handle:horizontal:disabled {	
+	background: lightgray;
 }
 
 QSlider::handle:horizontal:hover {
-	background-image: url(:/images/handle2sh.png);
+	background-color: #CACACA;
 }
 
 QMainWindow::separator {
 	width: 25;
 	height: 25;
-}
-
-QMainWindow::separator:vertical {
-	image: url(:/images/handle_vertical.png);
-}
-
-QMainWindow::separator:horizontal {
-	image: url(:/images/handle_horizontal.png);
-}
-
-   </string>
+}</string>
   </property>
   <property name="dockNestingEnabled">
    <bool>true</bool>
@@ -232,11 +196,11 @@ QLabel[overrided=&quot;false&quot;] {
            <property name="gridStyle">
             <enum>Qt::DashLine</enum>
            </property>
-           <attribute name="horizontalHeaderHighlightSections">
-            <bool>false</bool>
-           </attribute>
            <attribute name="horizontalHeaderMinimumSectionSize">
             <number>50</number>
+           </attribute>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
            </attribute>
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
@@ -355,7 +319,7 @@ QLabel[overrided=&quot;false&quot;] {
      <x>0</x>
      <y>0</y>
      <width>1469</width>
-     <height>31</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnuFile">
@@ -389,7 +353,9 @@ QLabel[overrided=&quot;false&quot;] {
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actAbout"/>
+    <addaction name="actHelpDocumentation"/>
+    <addaction name="separator"/>
+    <addaction name="actHelpAbout"/>
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
@@ -452,8 +418,8 @@ QLabel[overrided=&quot;false&quot;] {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>275</width>
-          <height>804</height>
+          <width>214</width>
+          <height>703</height>
          </rect>
         </property>
         <property name="acceptDrops">
@@ -1278,8 +1244,8 @@ QLabel[overrided=&quot;false&quot;] {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>200</width>
-          <height>801</height>
+          <width>240</width>
+          <height>726</height>
          </rect>
         </property>
         <property name="acceptDrops">
@@ -1657,12 +1623,6 @@ QLabel[overrided=&quot;false&quot;] {
                 <property name="icon">
                  <iconset resource="images.qrc">
                   <normaloff>:/images/unlock1.png</normaloff>:/images/unlock1.png</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>32</width>
-                  <height>32</height>
-                 </size>
                 </property>
                 <property name="adjustSize" stdset="0">
                  <bool>true</bool>
@@ -2290,8 +2250,15 @@ QLabel[overrided=&quot;false&quot;] {
                 </layout>
                </item>
                <item>
-                <layout class="QGridLayout" name="gridLayout_8">
-                 <item row="0" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                 <item>
+                  <widget class="QLabel" name="label_20">
+                   <property name="text">
+                    <string>Step:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="ComboBoxKey" name="cboJogStep">
                    <property name="editable">
                     <bool>true</bool>
@@ -2336,21 +2303,37 @@ QLabel[overrided=&quot;false&quot;] {
                    </item>
                   </widget>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_20">
-                   <property name="text">
-                    <string>Step:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
+                </layout>
+               </item>
+               <item>
+                <widget class="QSlider" name="sliJogStep">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>6</number>
+                 </property>
+                 <property name="pageStep">
+                  <number>1</number>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_12">
+                 <item>
                   <widget class="QLabel" name="label_22">
                    <property name="text">
                     <string>Feed:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1">
+                 <item>
                   <widget class="ComboBoxKey" name="cboJogFeed">
                    <property name="editable">
                     <bool>true</bool>
@@ -2391,6 +2374,25 @@ QLabel[overrided=&quot;false&quot;] {
                   </widget>
                  </item>
                 </layout>
+               </item>
+               <item>
+                <widget class="QSlider" name="sliJogFeed">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>5</number>
+                 </property>
+                 <property name="pageStep">
+                  <number>1</number>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QCheckBox" name="chkKeyboardControl">
@@ -2477,13 +2479,24 @@ QLabel[overrided=&quot;false&quot;] {
          <widget class="GLWidget" name="glwVisualizer" native="true"/>
         </item>
         <item>
-         <widget class="QToolButton" name="cmdFit">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
+          <widget class="QToolButton" name="cmdPerspective">
+          <property name="toolTip">
+           <string>Perspective view</string>
           </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="images.qrc">
+            <normaloff>:/images/perspective.png</normaloff>:/images/perspective.png</iconset>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="cmdFit">
           <property name="toolTip">
            <string>Fit</string>
           </property>
@@ -2504,12 +2517,6 @@ QLabel[overrided=&quot;false&quot;] {
         </item>
         <item>
          <widget class="QToolButton" name="cmdTop">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
           <property name="toolTip">
            <string>Top view</string>
           </property>
@@ -2530,12 +2537,6 @@ QLabel[overrided=&quot;false&quot;] {
         </item>
         <item>
          <widget class="QToolButton" name="cmdIsometric">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
           <property name="toolTip">
            <string>Isometric view</string>
           </property>
@@ -2556,12 +2557,6 @@ QLabel[overrided=&quot;false&quot;] {
         </item>
         <item>
          <widget class="QToolButton" name="cmdFront">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
           <property name="toolTip">
            <string>Front view</string>
           </property>
@@ -2582,12 +2577,6 @@ QLabel[overrided=&quot;false&quot;] {
         </item>
         <item>
          <widget class="QToolButton" name="cmdLeft">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
           <property name="toolTip">
            <string>Left view</string>
           </property>
@@ -2633,7 +2622,7 @@ QLabel[overrided=&quot;false&quot;] {
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="frame">
+      <widget class="QFrame" name="fraConsole">
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -2660,6 +2649,11 @@ QLabel[overrided=&quot;false&quot;] {
             <width>0</width>
             <height>1</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#txtConsole {
+  border: 1px solid gray;
+}</string>
           </property>
           <property name="readOnly">
            <bool>true</bool>
@@ -2784,14 +2778,8 @@ QLabel[overrided=&quot;false&quot;] {
   <!--
 
   <widget class="QDockWidget" name="dockUser">
-   <property name="minimumSize">
-    <size>
-     <width>105</width>
-     <height>160</height>
-    </size>
-   </property>
    <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
+    <set>Qt::LeftDockWidgetAtea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Plugins</string>
@@ -2820,8 +2808,8 @@ QLabel[overrided=&quot;false&quot;] {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>347</width>
-          <height>106</height>
+          <width>240</width>
+          <height>121</height>
          </rect>
         </property>
         <property name="acceptDrops">
@@ -2927,7 +2915,7 @@ QLabel[overrided=&quot;false&quot;] {
     <string>&amp;Settings</string>
    </property>
   </action>
-  <action name="actAbout">
+  <action name="actHelpAbout">
    <property name="text">
     <string>&amp;About</string>
    </property>
@@ -3213,6 +3201,11 @@ QLabel[overrided=&quot;false&quot;] {
   <action name="actControlFlood">
    <property name="text">
     <string>Flood</string>
+   </property>
+  </action>
+  <action name="actHelpDocumentation">
+   <property name="text">
+    <string>&amp;Documentation</string>
    </property>
   </action>
  </widget>
@@ -3871,8 +3864,72 @@ QLabel[overrided=&quot;false&quot;] {
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>309</x>
-     <y>570</y>
+     <x>332</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliJogStep</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>cboJogStep</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>36</x>
+     <y>634</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>236</x>
+     <y>605</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboJogStep</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>sliJogStep</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>253</x>
+     <y>602</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>117</x>
+     <y>633</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliJogFeed</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>cboJogFeed</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>65</x>
+     <y>697</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>265</x>
+     <y>669</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboJogFeed</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>sliJogFeed</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>321</x>
+     <y>666</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>697</y>
     </hint>
    </hints>
   </connection>

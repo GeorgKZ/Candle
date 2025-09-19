@@ -1,12 +1,12 @@
 // This file is a part of "Candle" application.
-// Copyright 2015-2021 Hayrullin Denis Ravilevich
+// Copyright 2015-2025 Hayrullin Denis Ravilevich
 
-#include <QtCore/QDebug>
-#include <QtGui/QDragEnterEvent>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QVBoxLayout>
+#include <QDebug>
+#include <QDragEnterEvent>
+#include <QFrame>
+#include <QGroupBox>
+#include <QVBoxLayout>
+#include <QApplication>
 #include <algorithm>
 #include "dropwidget.h"
 #include "widgetmimedata.h"
@@ -43,9 +43,8 @@ QStringList DropWidget::saveState()
 void DropWidget::dragEnterEvent(QDragEnterEvent *dee)
 {
     if (dee->mimeData()->hasFormat(WidgetMimeData::mimeType())) {
-        m_layoutIndex = -2;
+        m_layoutIndex = 0;
         dee->acceptProposedAction();
-
     }
 
     QWidget::dragEnterEvent(dee);
@@ -54,8 +53,11 @@ void DropWidget::dragEnterEvent(QDragEnterEvent *dee)
 void DropWidget::dragLeaveEvent(QDragLeaveEvent *dle)
 {
     QFrame *f = findChild<QFrame*>(QString(), Qt::FindDirectChildrenOnly);
-    if (f) f->setVisible(false);
-    // m_layoutIndex = -2;
+
+    if (f) {
+        f->setVisible(false);
+        repaint();
+    }
 
     QWidget::dragLeaveEvent(dle);
 }
@@ -97,23 +99,22 @@ void DropWidget::dragMoveEvent(QDragMoveEvent *dme)
              */
             int i;
             for (i = 0; i < yl.count(); ++i) {
+//!!! У автора while (i < yl.count() && y >= yl.at(i)) i++;
                 if (yl.at(i) > y) break;
             }
 
             /**
              * 5. Если полученное значение индекса не соответствует индексу layout виджета,
+             * присвоить индексу layout виджета полученное значение индекса,
              * вставить дочерний фрейм виджета с предыдущим индексом.
              */
-            if (i != m_layoutIndex) {
-                static_cast<QVBoxLayout*>(layout())->insertWidget(i - 1, f);
+            if (i != 0 && m_layoutIndex != i) {
+                m_layoutIndex = i;
+                static_cast<QVBoxLayout*>(this->layout())->insertWidget(i - 1, f);
                 if (!f->isVisible()) f->setVisible(true);
                 f->update();
+                repaint();
             }
-
-            /**
-             * 6. Присвоить индексу layout виджета полученное значение индекса.
-             */
-            m_layoutIndex = i;
         }
     }
 
@@ -122,14 +123,14 @@ void DropWidget::dragMoveEvent(QDragMoveEvent *dme)
 
 void DropWidget::dropEvent(QDropEvent *de)
 {
-    if (de->mimeData()->hasFormat(WidgetMimeData::mimeType())) {
+    if (m_layoutIndex && de->mimeData()->hasFormat(WidgetMimeData::mimeType())) {
         QFrame *f = findChild<QFrame*>(QString(), Qt::FindDirectChildrenOnly);
         if (f) {
             const WidgetMimeData *md = static_cast<const WidgetMimeData*>(de->mimeData());
-            f->setVisible(false);
-            f->update();
             static_cast<QVBoxLayout*>(layout())->insertWidget(m_layoutIndex - 1, md->widget());
             md->widget()->update();
+            f->setVisible(false);
+            f->update();
         }
     }
 }

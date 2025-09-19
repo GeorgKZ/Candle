@@ -136,7 +136,8 @@ private slots:
     void on_actRecentClear_triggered();
     void on_actFileExit_triggered();
     void on_actServiceSettings_triggered();
-    void on_actAbout_triggered();
+    void on_actHelpAbout_triggered();
+    void on_actHelpDocumentation_triggered();
     void on_actJogStepNext_triggered();
     void on_actJogStepPrevious_triggered();
     void on_actJogFeedNext_triggered();
@@ -172,6 +173,7 @@ private slots:
     void on_cmdLeft_clicked();
     void on_cmdIsometric_clicked();
     void on_cmdFit_clicked();
+    void on_cmdPerspective_toggled();
     void on_grpOverriding_toggled(bool checked);
     void on_grpSpindle_toggled(bool checked);
     void on_grpJog_toggled(bool checked);
@@ -336,10 +338,15 @@ private:
     QList<CommandAttributes> m_commands;
     QList<CommandQueue> m_queue;    
 
-    // Форма настроек
+    /**
+     * \brief Форма настроек
+     */
     frmSettings *m_settings;
-    // Форма "о программе"
-    frmAbout m_frmAbout;
+
+    /**
+     * \brief Форма "о программе"
+     */
+    frmAbout *m_about;
 
     // Filenames
     QString m_settingsFileName;

@@ -29,6 +29,7 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_shaderProgram(nul
     m_xPan = 0;
     m_yPan = 0;
     m_distance = 100;
+    m_perspective = false;
 
     m_xLookAt = 0;
     m_yLookAt = 0;
@@ -182,6 +183,19 @@ QString GLWidget::speedState() const
 void GLWidget::setSpeedState(const QString &additionalStatus)
 {
     m_speedState = additionalStatus;
+}
+
+bool GLWidget::perspective() const
+{
+    return m_perspective;
+}
+
+void GLWidget::setPerspective(bool perspective)
+{
+    m_perspective = perspective;
+
+    updateProjection();
+    updateView();
 }
 
 bool GLWidget::vsync() const
@@ -385,30 +399,95 @@ void GLWidget::updateProjection()
     // Reset projection
     m_projectionMatrix.setToIdentity();
 
-    double asp = (double)width() / height();
-    m_projectionMatrix.frustum((-0.5 + m_xPan) * asp, (0.5 + m_xPan) * asp, -0.5 + m_yPan, 0.5 + m_yPan, 2, m_distance * 2);
+    if (m_perspective) {
+        const double zNear = 2.0;
+        const double zFar = m_distance * 10;
+
+        double asp = (double)width() / height();
+        m_projectionMatrix.frustum(
+            (-0.5 + m_pan.x()) * asp,
+            (0.5 + m_pan.x()) * asp,
+            -0.5 + m_pan.y(),
+            0.5 + m_pan.y(),
+            zNear,
+            zFar
+        );
+
+        double z = m_distance + (m_viewUpperBounds + m_viewLowerBounds).z() / 2 * m_zoom;
+        m_planeDepth = (1 / z - 1 / zNear) / (1 / zFar - 1 / zNear) * 2 - 1;
+    } else {
+        const float paddingScale = 1.3f;
+
+        // Rollback plane to view
+        if (qFuzzyIsNull(m_viewRanges.length())) {
+            m_viewRanges = QVector3D(100, 100, 0) / paddingScale;
+        }
+        double screenToWorld = qMax(
+            m_viewRanges.x() / width(),
+            m_viewRanges.y() / height()
+        ) * paddingScale;
+
+        // 1000.0 - maximum z-coordinate
+        double clip = qMax(1000.0, (double) m_viewRanges.length());
+
+        m_projectionMatrix.ortho(
+            (-width() / 2 + m_pan.x() * width()) * screenToWorld / m_zoom,
+            (width() / 2 + m_pan.x() * width()) * screenToWorld / m_zoom,
+            (-height() / 2 + m_pan.y() * height()) * screenToWorld / m_zoom,
+            (height() / 2 + m_pan.y() * height()) * screenToWorld / m_zoom,
+            -clip,
+            clip
+        );
+
+        m_planeDepth = 0;
+    }
 }
 
 void GLWidget::updateView()
 {
-    // Set view matrix
-    m_viewMatrix.setToIdentity();
+    if (m_perspective) {
+        m_viewMatrix.setToIdentity();
 
-    double r = m_distance;
-    double angY = M_PI / 180 * m_yRot;
-    double angX = M_PI / 180 * m_xRot;
+        QPointF ang = m_rot * M_PI / 180;
 
-    QVector3D eye(r * cos(angX) * sin(angY) + m_xLookAt, r * sin(angX) + m_yLookAt, r * cos(angX) * cos(angY) + m_zLookAt);
-    QVector3D center(m_xLookAt, m_yLookAt, m_zLookAt);
-    QVector3D up(fabs(m_xRot) == 90 ? -sin(angY + (m_xRot < 0 ? M_PI : 0)) : 0, cos(angX), fabs(m_xRot) == 90 ? -cos(angY + (m_xRot < 0 ? M_PI : 0)) : 0);
+        QVector3D eye = m_lookAt + QVector3D(
+                cos(ang.x()) * sin(ang.y()),
+                sin(ang.x()),
+                cos(ang.x()) * cos(ang.y())
+        ) * m_distance;
 
-    m_viewMatrix.lookAt(eye, center, up.normalized());
+        QVector3D up(fabs(m_rot.x()) == 90 ? -sin(ang.y() + (m_rot.x() < 0 ? M_PI : 0)) : 0,
+                     cos(ang.x()),
+                     fabs(m_rot.x()) == 90 ? -cos(ang.y() + (m_rot.x() < 0 ? M_PI : 0)) : 0);
 
-    m_viewMatrix.translate(m_xLookAt, m_yLookAt, m_zLookAt);
-    m_viewMatrix.scale(m_zoom, m_zoom, m_zoom);
-    m_viewMatrix.translate(-m_xLookAt, -m_yLookAt, -m_zLookAt);
+        m_viewMatrix.lookAt(eye, m_lookAt, up.normalized());
 
-    m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0);
+        m_viewMatrix.translate(m_lookAt);
+        m_viewMatrix.scale(m_zoom);
+        m_viewMatrix.translate(-m_lookAt);
+
+        m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0);
+    } else {
+        m_viewMatrix.setToIdentity();
+
+        QPointF ang = m_rot * M_PI / 180;
+
+        QVector3D eye = m_lookAt + QVector3D(
+            cos(ang.x()) * sin(ang.y()),
+            sin(ang.x()),
+            cos(ang.x()) * cos(ang.y())
+        );
+
+        QVector3D up(fabs(m_rot.x()) == 90 ? -sin(ang.y() + (m_rot.x() < 0 ? M_PI : 0)) : 0,
+            cos(ang.x()),
+            fabs(m_rot.x()) == 90 ? -cos(ang.y() + (m_rot.x() < 0 ? M_PI : 0)) : 0);
+
+        m_viewMatrix.lookAt(eye, m_lookAt, up.normalized());
+        m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0);
+    }
+
+    QMatrix4x4 ivp = (m_projectionMatrix * m_viewMatrix).inverted();
+    m_windowSizeWorld = (ivp * QVector3D(0, 1, m_planeDepth) - ivp * QVector3D(0, 0, m_planeDepth)).length() * 2.0;
 }
 
 void GLWidget::paintGL() {
@@ -473,30 +552,29 @@ void GLWidget::paintGL() {
     QPen pen(m_colorText);
     painter.setPen(pen);
 
+    QFontMetrics fm(painter.font());
     double x = 10;
-    double y = this->height() - 60;
+    double y = this->height() - fm.height() * 3 - 10;
 
     painter.drawText(QPoint(x, y), QString("X: %1 ... %2").arg(m_xMin, 0, 'f', 3).arg(m_xMax, 0, 'f', 3));
-    painter.drawText(QPoint(x, y + 15), QString("Y: %1 ... %2").arg(m_yMin, 0, 'f', 3).arg(m_yMax, 0, 'f', 3));
-    painter.drawText(QPoint(x, y + 30), QString("Z: %1 ... %2").arg(m_zMin, 0, 'f', 3).arg(m_zMax, 0, 'f', 3));
-    painter.drawText(QPoint(x, y + 45), QString("%1 / %2 / %3").arg(m_xSize, 0, 'f', 3).arg(m_ySize, 0, 'f', 3).arg(m_zSize, 0, 'f', 3));
-
-    QFontMetrics fm(painter.font());
+    painter.drawText(QPoint(x, y + fm.height()), QString("Y: %1 ... %2").arg(m_yMin, 0, 'f', 3).arg(m_yMax, 0, 'f', 3));
+    painter.drawText(QPoint(x, y + fm.height() * 2), QString("Z: %1 ... %2").arg(m_zMin, 0, 'f', 3).arg(m_zMax, 0, 'f', 3));
+    painter.drawText(QPoint(x, y + fm.height() * 3), QString("%1 / %2 / %3").arg(m_xSize, 0, 'f', 3).arg(m_ySize, 0, 'f', 3).arg(m_zSize, 0, 'f', 3));
 
     painter.drawText(QPoint(x, fm.height() + 10), m_parserStatus);
     painter.drawText(QPoint(x, fm.height() * 2 + 10), m_speedState);
     painter.drawText(QPoint(x, fm.height() * 3 + 10), m_pinState);
 
     QString str = QString(tr("Vertices: %1")).arg(vertices);
-    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + 30), str);
+    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + fm.height() * 2), str);
     str = QString("FPS: %1").arg(m_fps);
-    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + 45), str);
+    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + fm.height() * 3), str);
 
     str = m_spendTime.toString("hh:mm:ss") + " / " + m_estimatedTime.toString("hh:mm:ss");
     painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y), str);
 
     str = m_bufferState;
-    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + 15), str);
+    painter.drawText(QPoint(this->width() - fm.horizontalAdvance(str) - 10, y + fm.height()), str);
 
     m_frames++;
 //!!! Нужно ли?
